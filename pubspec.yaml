@@ -36,6 +36,8 @@ dependencies:
   firebase_storage: ^3.1.6
   shared_preferences: ^0.5.7+3
   validators: ^2.0.0+1
+  image_picker: ^0.6.7+1
+  fluttertoast: ^4.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

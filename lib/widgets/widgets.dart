@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
@@ -291,10 +295,7 @@ Widget categores(Function selectCategory) {
   List<ListHirezontalImage> listImages;
   return Container(
     child: StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance
-          .collection('categories')
-          .where('table', isEqualTo: "category")
-          .snapshots(),
+      stream: Firestore.instance.collection('categories').snapshots(),
       builder:
           (BuildContext context, AsyncSnapshot<QuerySnapshot> asyncSnapshot) {
         if (asyncSnapshot.hasData) {
@@ -308,38 +309,42 @@ Widget categores(Function selectCategory) {
             ));
           }
 
-          return ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: listImages.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: InkWell(
-                    onTap: () {
-                      selectCategory(listImages[index].name);
-                    },
-                    child: Column(
-                      children: <Widget>[
-                        new Container(
-                          width: 100,
-                          height: 100,
-                          decoration: new BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: new DecorationImage(
-                              fit: BoxFit.fill,
-                              image: new NetworkImage(listImages[index].image),
+          return Container(
+            color: Colors.black12,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: listImages.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () {
+                        selectCategory(listImages[index].name);
+                      },
+                      child: Column(
+                        children: <Widget>[
+                          new Container(
+                            width: 100,
+                            height: 100,
+                            decoration: new BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: new DecorationImage(
+                                fit: BoxFit.fill,
+                                image:
+                                    new NetworkImage(listImages[index].image),
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(listImages[index].name),
-                      ],
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(listImages[index].name),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              });
+                  );
+                }),
+          );
         } else if (asyncSnapshot.hasError) {
           return Text('There was an error...');
         } else {
@@ -377,6 +382,10 @@ Widget subCatgory() {
               listImages.add(ListHirezontalImage(
                 asyncSnapshot.data.documents[0].data['items'][i]['name'],
                 asyncSnapshot.data.documents[0].data['items'][i]['image'],
+                description: asyncSnapshot.data.documents[0].data['items'][i]
+                    ['description'],
+                price: asyncSnapshot.data.documents[0].data['items'][i]
+                    ['price'],
               ));
             }
           } catch (e) {
@@ -384,7 +393,7 @@ Widget subCatgory() {
               child: Container(
                 height: 100,
                 width: 100,
-                child: CircularProgressIndicator(),
+                child: Text("Select From Catgory List"),
               ),
             );
           }
@@ -392,33 +401,146 @@ Widget subCatgory() {
           return Container(
             child: Column(
               children: [
-                Text(catgoryName),
+                Container(
+                  padding: const EdgeInsets.all(10.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
+                    ),
+                  ),
+                  child: Text(
+                    catgoryName,
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                ),
                 Expanded(
                   child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2),
+                          crossAxisCount: 3, childAspectRatio: 0.8),
                       itemCount: listImages.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: <Widget>[
-                              new Container(
-                                width: 100,
-                                height: 100,
-                                decoration: new BoxDecoration(
-                                  image: new DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: new NetworkImage(
-                                        listImages[index].image),
+                        return InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                                backgroundColor: Colors.transparent,
+                                context: context,
+                                builder: (context) => SingleChildScrollView(
+                                      child: Container(
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white70,
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(40),
+                                            topLeft: Radius.circular(40),
+                                          ),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2,
+                                              decoration: BoxDecoration(
+                                                image: new DecorationImage(
+                                                  fit: BoxFit.fill,
+                                                  image: new NetworkImage(
+                                                      listImages[index].image),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: Text(
+                                                listImages[index].name,
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: Text(
+                                                listImages[index].price,
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: 100,
+                                                child: Card(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      listImages[index]
+                                                          .description,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ));
+                          },
+                          onLongPress: () {
+                            Map<String, dynamic> itemMap = {
+                              "name": listImages[index].name,
+                              "description": listImages[index].description,
+                              "price": listImages[index].price,
+                              "image": listImages[index].image,
+                            };
+                            deleteItemDialog(
+                              context,
+                              listImages[index].name,
+                              catgoryName,
+                              itemMap,
+                              listImages[index].image,
+                              listImages[index].price,
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: <Widget>[
+                                new Container(
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  height: 100,
+                                  decoration: new BoxDecoration(
+                                    image: new DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image: new NetworkImage(
+                                          listImages[index].image),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Text(listImages[index].name),
-                            ],
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Text(listImages[index].name),
+                                Text(listImages[index].price),
+                              ],
+                            ),
                           ),
                         );
                       }),
@@ -465,7 +587,14 @@ TextEditingController itemPrice = TextEditingController();
 TextEditingController itemDis = TextEditingController();
 TextEditingController categoryName = TextEditingController();
 Widget secondPage(
-    BuildContext context, Function showItemTextFileds, Function isChanged) {
+  BuildContext context,
+  Function showItemTextFileds,
+  Function _takePictureForCatgory,
+  Function _takeFromGalaryForCatgory,
+  Function _takePictureForItems,
+  Function _takeFromGalaryForItems,
+  Function switchToCategoryPage,
+) {
   final halfMediaWidth = MediaQuery.of(context).size.width / 2.0;
   return Container(
     child: SingleChildScrollView(
@@ -474,28 +603,66 @@ Widget secondPage(
           DropDownMen(showItemTextFileds: showItemTextFileds),
           Visibility(
             visible: newCategory,
-            child: Container(
-              alignment: Alignment.topCenter,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    alignment: Alignment.topCenter,
-                    width: halfMediaWidth,
-                    child: MyTextFormField(
-                      editingController: categoryName,
-                      hintText: 'Category Name',
-                    ),
+            child: Column(
+              children: [
+                Container(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.topCenter,
+                        width: halfMediaWidth,
+                        child: MyTextFormField(
+                          editingController: categoryName,
+                          hintText: 'Category Name',
+                        ),
+                      ),
+                      imageStoredCategory != null
+                          ? InkWell(
+                              onTap: () {
+                                getImageForCatgory(_takePictureForCatgory,
+                                    _takeFromGalaryForCatgory, context);
+                              },
+                              child: Container(
+                                width: 70,
+                                height: 70,
+                                decoration: new BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  image: new DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: new FileImage(imageStoredCategory),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: InkWell(
+                                onTap: () {
+                                  getImageForCatgory(_takePictureForCatgory,
+                                      _takeFromGalaryForCatgory, context);
+                                },
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: new BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    image: new DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image: new AssetImage(
+                                          "assets/images/addImage.png"),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                    ],
                   ),
-                  Container(
-                    alignment: Alignment.topCenter,
-                    width: halfMediaWidth,
-                    child: MyTextFormField(
-                      hintText: 'Category Image',
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                Divider(
+                  thickness: 5,
+                )
+              ],
             ),
           ),
           Visibility(
@@ -511,7 +678,6 @@ Widget secondPage(
                         alignment: Alignment.topCenter,
                         width: halfMediaWidth,
                         child: MyTextFormField(
-                          isChanged: isChanged,
                           editingController: itemName,
                           hintText: 'Item Name',
                         ),
@@ -520,7 +686,6 @@ Widget secondPage(
                         alignment: Alignment.topCenter,
                         width: halfMediaWidth,
                         child: MyTextFormField(
-                          isChanged: isChanged,
                           editingController: itemPrice,
                           hintText: 'Price',
                           isNumber: true,
@@ -530,39 +695,120 @@ Widget secondPage(
                   ),
                 ),
                 MyTextFormField(
-                  isChanged: isChanged,
                   editingController: itemDis,
                   hintText: 'Description',
                 ),
-                MyTextFormField(
-                  hintText: 'Image',
+                imageStoredItems != null
+                    ? InkWell(
+                        onTap: () {
+                          getImageForCatgory(_takePictureForItems,
+                              _takeFromGalaryForItems, context);
+                        },
+                        child: Container(
+                          width: 70,
+                          height: 70,
+                          decoration: new BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            image: new DecorationImage(
+                              fit: BoxFit.fill,
+                              image: new FileImage(imageStoredItems),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: () {
+                            getImageForCatgory(_takePictureForItems,
+                                _takeFromGalaryForItems, context);
+                          },
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            decoration: new BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              image: new DecorationImage(
+                                fit: BoxFit.fill,
+                                image: new AssetImage(
+                                    "assets/images/addImage.png"),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                SizedBox(
+                  height: 70,
+                ),
+                RaisedButton(
+                  color: Colors.blueAccent,
+                  onPressed: () {
+                    if (itemName.text.isEmpty ||
+                        itemPrice.text.isEmpty ||
+                        itemDis.text.isEmpty ||
+                        imageStoredItems == null) {
+                      if (itemName.text.isEmpty) {
+                        errorToast("Enter Item Name");
+                      } else if (itemPrice.text.isEmpty) {
+                        errorToast("Enter Item Price");
+                      } else if (itemDis.text.isEmpty) {
+                        errorToast("Enter Item Desciption");
+                      } else {
+                        errorToast("Add Item Image");
+                      }
+                    } else {
+                      Map<String, dynamic> itemMap = {
+                        "name": itemName.text,
+                        "description": itemDis.text,
+                        "price": itemPrice.text,
+                        "image": urlImageItems,
+                      };
+                      Map<String, dynamic> itemMapForNew = {
+                        "category": categoryName.text,
+                        "items": FieldValue.arrayUnion([itemMap])
+                      };
+                      Map<String, dynamic> catgoryMap = {
+                        "name": categoryName.text,
+                        "image": urlImageCategory,
+                      };
+                      if (selectedCurrency == "New Category") {
+                        if (categoryName.text.isEmpty ||
+                            imageStoredCategory == null ||
+                            imageStoredItems == null ||
+                            urlImageCategory == null ||
+                            urlImageItems == null) {
+                          if (categoryName.text.isEmpty) {
+                            errorToast("Enter Category name");
+                          } else if (imageStoredCategory == null ||
+                              urlImageCategory == null) {
+                            errorToast("Add Category Image");
+                          } else {
+                            errorToast("Add Item Image");
+                          }
+                        } else {
+                          FirestoreFunctions().addNewItemToNewCategory(
+                              catgoryMap, itemMapForNew);
+                          showItemTextFileds();
+                          switchToCategoryPage();
+                        }
+                      } else {
+                        FirestoreFunctions().addNewItemRoExistCategory(
+                            itemMap, selectedCurrency);
+                        showItemTextFileds();
+                        switchToCategoryPage();
+                      }
+                    }
+                  },
+                  child: Text(
+                    'POST',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-          Visibility(
-            visible: showBtnPost,
-            child: RaisedButton(
-              color: Colors.blueAccent,
-              onPressed: () {
-                Map<String, dynamic> itemMap = {
-                  "name": itemName.text,
-                  "description": itemDis.text,
-                  "price": itemPrice.text,
-                  "image":
-                      "https://images-na.ssl-images-amazon.com/images/I/910zU0vyBrL._AC_UL1500_.jpg",
-                };
-                FirestoreFunctions()
-                    .addNewItemRoExistCategory(itemMap, selectedCurrency);
-              },
-              child: Text(
-                'POST',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          )
         ],
       ),
     ),
@@ -615,7 +861,7 @@ class _DropDownMenState extends State<DropDownMen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      height: 100,
       child: StreamBuilder(
           stream: Firestore.instance
               .collection("categories")
@@ -645,29 +891,208 @@ class _DropDownMenState extends State<DropDownMen> {
                   DropdownMenuItem(
                     child: Text(
                       snap,
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
                     ),
                     value: "$snap",
                   ),
                 );
               }
-              return DropdownButton(
-                items: currencyItems,
-                onChanged: (currencyValue) {
-                  setState(() {
-                    selectedCurrency = currencyValue;
-                  });
-                  widget.showItemTextFileds();
-                },
-                value: selectedCurrency,
-                isExpanded: false,
-                hint: new Text(
-                  "Choose Category",
-                  style: TextStyle(color: Colors.black),
+              return Container(
+                alignment: Alignment.center,
+                width: double.infinity,
+                child: DropdownButton(
+                  items: currencyItems,
+                  onChanged: (currencyValue) {
+                    setState(() {
+                      selectedCurrency = currencyValue;
+                    });
+                    widget.showItemTextFileds();
+                  },
+                  value: selectedCurrency,
+                  elevation: 0,
+                  icon: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Icon(Icons.menu),
+                  ),
+                  dropdownColor: Colors.grey[100],
+                  isExpanded: false,
+                  hint: new Text(
+                    "Choose Category",
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
               );
             }
           }),
     );
   }
+}
+
+File imageStoredCategory;
+String urlImageCategory;
+Future uploadImageForCatefory() async {
+  String fileName = '${DateTime.now()}.png';
+
+  StorageReference firebaseStorage =
+      FirebaseStorage.instance.ref().child(fileName);
+
+  StorageUploadTask uploadTask = firebaseStorage.putFile(imageStoredCategory);
+  await uploadTask.onComplete;
+  urlImageCategory = await firebaseStorage.getDownloadURL() as String;
+
+  if (urlImageCategory.isNotEmpty) {}
+}
+
+File imageStoredItems;
+String urlImageItems;
+Future uploadImageItems() async {
+  String fileName = '${DateTime.now()}.png';
+
+  StorageReference firebaseStorage =
+      FirebaseStorage.instance.ref().child(fileName);
+
+  StorageUploadTask uploadTask = firebaseStorage.putFile(imageStoredItems);
+  await uploadTask.onComplete;
+  urlImageItems = await firebaseStorage.getDownloadURL() as String;
+
+  if (urlImageItems.isNotEmpty) {}
+}
+
+getImageForCatgory(Function camera, Function gallery, BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) => Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Container(
+              height: 150.0,
+              width: 300.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FlatButton.icon(
+                        icon: Icon(Icons.camera),
+                        onPressed: () {
+                          camera();
+                          Navigator.pop(context);
+                        },
+                        label: Text(
+                          'Camera',
+                          style:
+                              TextStyle(color: Colors.purple, fontSize: 18.0),
+                        ),
+                      ),
+                      FlatButton.icon(
+                        icon: Icon(Icons.image),
+                        onPressed: () {
+                          gallery();
+                          Navigator.pop(context);
+                        },
+                        label: Text(
+                          'gallery',
+                          style:
+                              TextStyle(color: Colors.purple, fontSize: 18.0),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ));
+}
+
+deleteItemDialog(
+  BuildContext context,
+  String itemTextName,
+  String catgoryName,
+  itemMap,
+  String image,
+  String price,
+) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) => Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Container(
+              height: 300.0,
+              width: 300.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      "Delete",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      child: Image.network(
+                        image,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            itemTextName,
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "R.S. $price",
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  FlatButton.icon(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      FirestoreFunctions().deleteItem(catgoryName, itemMap);
+                      Navigator.pop(context);
+                    },
+                    label: Text(
+                      'OK',
+                      style: TextStyle(color: Colors.purple, fontSize: 18.0),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ));
+}
+
+errorToast(String text) {
+  Fluttertoast.showToast(
+      msg: text,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0);
 }

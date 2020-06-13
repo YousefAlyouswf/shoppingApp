@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/models/tabModels.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
@@ -64,7 +67,11 @@ class _MainPageState extends State<MainPage>
           secondPage(
             context,
             showItemTextFileds,
-            isChanged,
+            _takePictureForCatgory,
+            _takeFromGalaryForCatgory,
+            _takePictureForItems,
+            _takeFromGalaryForItems,
+            switchToCategoryPage,
           ),
         ],
       ),
@@ -76,14 +83,23 @@ class _MainPageState extends State<MainPage>
     catgoryName = name;
   }
 
-  isChanged(v) {
-    if (itemName.text.isNotEmpty &&
-        itemPrice.text.isNotEmpty &&
-        itemDis.text.isNotEmpty) {
-      showBtnPost = true;
+  switchToCategoryPage() {
+    setState(() {});
+
+    if (categoryName.text.isNotEmpty) {
+      catgoryName = categoryName.text;
     } else {
-      showBtnPost = false;
+      catgoryName = selectedCurrency;
     }
+
+    categoryName.clear();
+    itemName.clear();
+    itemPrice.clear();
+    itemDis.clear();
+    imageStoredCategory = null;
+    urlImageCategory = null;
+    imageStoredItems = null;
+    urlImageItems = null;
   }
 
   showItemTextFileds() {
@@ -98,5 +114,50 @@ class _MainPageState extends State<MainPage>
         }
       }
     });
+  }
+
+  final picker = ImagePicker();
+  _takeFromGalaryForCatgory() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        imageStoredCategory = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageForCatefory();
+  }
+
+  _takePictureForCatgory() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.camera, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        imageStoredCategory = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageForCatefory();
+  }
+
+  _takeFromGalaryForItems() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        imageStoredItems = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageItems();
+  }
+
+  _takePictureForItems() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.camera, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        imageStoredItems = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageItems();
   }
 }
