@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:shop_app/helper/HelperFunction.dart';
+
 import 'package:shop_app/widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
+  final Function onThemeChanged;
+
+  const HomePage({Key key, this.onThemeChanged}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -22,7 +24,7 @@ class _HomePageState extends State<HomePage> {
       onWillPop: _onBackPressed,
       child: Scaffold(
         appBar: appBar(),
-        drawer: drawer(context ),
+        drawer: drawer(context, widget.onThemeChanged),
         body: Stack(
           children: [
             Column(
@@ -42,9 +44,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
- 
-
 
   imageOnTap(int i) {
     isView = true;

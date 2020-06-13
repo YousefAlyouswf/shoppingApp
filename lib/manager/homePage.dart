@@ -16,7 +16,6 @@ class _HomePageManagerState extends State<HomePageManager> {
   PersistentBottomSheetController _sheetController;
   String _email;
   String _password;
-  String _displayName;
   bool _loading = false;
   bool _autoValidate = false;
   String errorMsg = "";

@@ -8,10 +8,14 @@ class HelperFunction {
     return await prefs.setBool(managerLogin, isUserLoggedIn);
   }
 
+  
+
   //Get Data
 
   static Future<bool> getManagerLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(managerLogin);
   }
+
+
 }
