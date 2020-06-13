@@ -1,6 +1,9 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:shop_app/helper/HelperFunction.dart';
+import 'package:shop_app/manager/homePage.dart';
+import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/drawerbody.dart';
 
 AppBar appBar({String text = "Shop App"}) {
@@ -72,6 +75,7 @@ Drawer drawer(BuildContext context) {
       onTap: () => print(drawerModel[i].text),
     ));
   }
+
   return Drawer(
     child: Column(
       children: [
@@ -124,7 +128,23 @@ Drawer drawer(BuildContext context) {
               applicationIcon: InkWell(
                 child: Icon(Icons.shopping_basket),
                 onDoubleTap: () {
-                  print("Hello");
+                  HelperFunction.getManagerLogin().then((value) {
+                    if (value == null) {
+                      value = false;
+                    }
+                    if (value) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainPage()),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HomePageManager()),
+                      );
+                    }
+                  });
                 },
               ),
             );
