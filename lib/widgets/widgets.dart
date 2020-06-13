@@ -253,26 +253,6 @@ Widget continaer(String text, Color color) {
   );
 }
 
-//Manager Screen
-Container listHorzintal(BuildContext context) {
-  return Container(
-    alignment: Alignment.topCenter,
-    height: MediaQuery.of(context).size.height / 3,
-    color: Colors.red,
-    child: ListView(
-      scrollDirection: Axis.horizontal,
-      children: [
-        continaer("Categories", Colors.yellow),
-        continaer("Images", Colors.orange),
-        continaer("bla bla", Colors.amber),
-        continaer("bla bla", Colors.deepOrange),
-        continaer("bla bla", Colors.green),
-        continaer("bla bla", Colors.lightBlue),
-      ],
-    ),
-  );
-}
-
 Widget managerBody() {
   return Expanded(
     child: Padding(
@@ -318,6 +298,10 @@ Widget categores(Function selectCategory) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
+                      onLongPress: () {
+                        deleteCategoryDialog(context, listImages[index].name,
+                            listImages[index].image);
+                      },
                       onTap: () {
                         selectCategory(listImages[index].name);
                       },
@@ -1073,6 +1057,67 @@ deleteItemDialog(
                     icon: Icon(Icons.delete),
                     onPressed: () {
                       FirestoreFunctions().deleteItem(catgoryName, itemMap);
+                      Navigator.pop(context);
+                    },
+                    label: Text(
+                      'OK',
+                      style: TextStyle(color: Colors.purple, fontSize: 18.0),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ));
+}
+
+deleteCategoryDialog(
+  BuildContext context,
+  String catgoryTextName,
+  String image,
+) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) => Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Container(
+              height: 300.0,
+              width: 300.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      "Delete",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      child: Image.network(
+                        image,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        catgoryTextName,
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  ),
+                  FlatButton.icon(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      FirestoreFunctions()
+                          .deleteCategory(catgoryTextName, image);
                       Navigator.pop(context);
                     },
                     label: Text(
