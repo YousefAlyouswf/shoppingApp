@@ -11,6 +11,7 @@ import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/homePage.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/drawerbody.dart';
+import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 
 AppBar appBar({String text = "Shop App"}) {
@@ -174,21 +175,7 @@ Drawer drawer(BuildContext context, Function onThemeChanged) {
 }
 
 //Image in the Header
-bool isView = false;
-List<AssetImage> images = [
-  AssetImage("assets/images/1.jpg"),
-  AssetImage("assets/images/2.jpg"),
-  AssetImage("assets/images/3.jpg"),
-  AssetImage("assets/images/4.jpg"),
-  AssetImage("assets/images/5.jpg"),
-  AssetImage("assets/images/6.jpg"),
-  AssetImage("assets/images/7.jpg"),
-  AssetImage("assets/images/8.jpg"),
-  AssetImage("assets/images/9.jpg"),
-  AssetImage("assets/images/10.jpg"),
-  AssetImage("assets/images/11.jpg"),
-  AssetImage("assets/images/12.jpg"),
-];
+
 List<NetworkImage> networkImage;
 List<NetworkImage> networkImage2;
 NetworkImage imageNetwork;
@@ -206,36 +193,9 @@ Widget imageCarousel(double height, Function imageOnTap) {
   );
 }
 
-Container imageView(Function closeImpageOntap) {
-  return isView
-      ? Container(
-          child: Column(
-            children: [
-              Container(
-                  width: double.infinity,
-                  height: 100,
-                  color: Colors.black54,
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                      onPressed: closeImpageOntap)),
-              Expanded(
-                child: PhotoView(
-                  filterQuality: FilterQuality.high,
-                  minScale: 0.4,
-                  backgroundDecoration: BoxDecoration(color: Colors.black54),
-                  imageProvider: imageNetwork,
-                ),
-              ),
-            ],
-          ),
-        )
-      : Container();
-}
+
+
+
 //End Image in the Header
 
 Widget continaer(String text, Color color) {

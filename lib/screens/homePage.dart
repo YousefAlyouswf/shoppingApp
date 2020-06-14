@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/database/firestore.dart';
+import 'package:shop_app/models/itemShow.dart';
 
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:shop_app/widgets/widgets2.dart';
@@ -17,7 +18,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getAllimagesFromFireStore();
-  
   }
 
   @override
@@ -59,13 +59,13 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       listViewHorznintal(selectCategory),
-                      
-                      Expanded(child: subCatgoryCustomer()),
+                      Expanded(child: subCatgoryCustomer(imageOnTapCustomer)),
                     ],
                   ),
                 ),
               ],
-            ),imageView(closeImpageOntap),
+            ),
+            imageViewBottomSheet(closeImpageOntap),
           ],
         ),
       ),
@@ -78,37 +78,49 @@ class _HomePageState extends State<HomePage> {
   }
 
   imageOnTap(int i) {
-    isView = true;
-    imageNetwork = networkImage2[i];
+    print(itemShow[i].itemName);
+    showtheBottomSheet(context, itemShow[i].image, itemShow[i].itemName,
+        itemShow[i].itemDes, itemShow[i].itemPrice, imageOnTapCustomer);
+    setState(() {});
+  }
+
+  imageOnTapCustomer(NetworkImage networkImage) {
+    isViewBottom = true;
+    imageBottomSheet = networkImage;
+    Navigator.pop(context);
     setState(() {});
   }
 
   closeImpageOntap() {
-    isView = false;
+    isViewBottom = false;
     setState(() {});
   }
 
   Future<bool> _onBackPressed() {
-    if (isView) {
+    if (isViewBottom) {
       return closeImpageOntap();
     } else {
       return null;
     }
   }
 
+  List<ItemShow> itemShow = new List();
   getAllimagesFromFireStore() async {
     try {
+      itemShow = new List();
       networkImage = new List();
       await FirestoreFunctions().getAllImages().then((value) {
         int listLength = value.length;
 
         if (listLength <= 4) {
           for (var i = 0; i < listLength; i++) {
-            networkImage.add(NetworkImage(value[i]));
+            networkImage.add(NetworkImage(value[i].image));
           }
+          itemShow = value;
         } else {
           for (var i = listLength - 4; i < listLength; i++) {
-            networkImage.add(NetworkImage(value[i]));
+            networkImage.add(NetworkImage(value[i].image));
+            itemShow.add(value[i]);
           }
         }
 
