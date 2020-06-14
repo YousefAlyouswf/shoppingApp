@@ -18,8 +18,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  
-
   Brightness brightness = Brightness.light;
   onThemeChanged() {
     if (brightness == Brightness.light) {
@@ -33,9 +31,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         //   scaffoldBackgroundColor: isDark ? Colors.grey[800] : Colors.white,
         brightness: brightness,

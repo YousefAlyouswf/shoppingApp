@@ -166,7 +166,7 @@ Drawer drawer(BuildContext context, Function onThemeChanged) {
           },
         ),
         SizedBox(
-          height: 150,
+          height: 70,
         )
       ],
     ),
@@ -175,7 +175,6 @@ Drawer drawer(BuildContext context, Function onThemeChanged) {
 
 //Image in the Header
 bool isView = false;
-AssetImage imageAsset;
 List<AssetImage> images = [
   AssetImage("assets/images/1.jpg"),
   AssetImage("assets/images/2.jpg"),
@@ -190,12 +189,15 @@ List<AssetImage> images = [
   AssetImage("assets/images/11.jpg"),
   AssetImage("assets/images/12.jpg"),
 ];
-Container imageCarousel(double height, Function imageOnTap) {
+List<NetworkImage> networkImage;
+List<NetworkImage> networkImage2;
+NetworkImage imageNetwork;
+Widget imageCarousel(double height, Function imageOnTap) {
   return Container(
     height: height,
     child: Carousel(
       boxFit: BoxFit.cover,
-      images: images,
+      images: networkImage2,
       animationCurve: Curves.fastOutSlowIn,
       autoplay: false,
       onImageTap: imageOnTap,
@@ -211,11 +213,13 @@ Container imageView(Function closeImpageOntap) {
             children: [
               Container(
                   width: double.infinity,
-                  color: Colors.black38,
+                  height: 100,
+                  color: Colors.black54,
                   alignment: Alignment.centerLeft,
                   child: IconButton(
                       icon: Icon(
                         Icons.arrow_back_ios,
+                        size: 40,
                         color: Colors.white,
                       ),
                       onPressed: closeImpageOntap)),
@@ -223,8 +227,8 @@ Container imageView(Function closeImpageOntap) {
                 child: PhotoView(
                   filterQuality: FilterQuality.high,
                   minScale: 0.4,
-                  backgroundDecoration: BoxDecoration(color: Colors.black38),
-                  imageProvider: imageAsset,
+                  backgroundDecoration: BoxDecoration(color: Colors.black54),
+                  imageProvider: imageNetwork,
                 ),
               ),
             ],
@@ -730,7 +734,8 @@ Widget secondPage(
                     if (itemName.text.isEmpty ||
                         itemPrice.text.isEmpty ||
                         itemDis.text.isEmpty ||
-                        imageStoredItems == null) {
+                        imageStoredItems == null ||
+                        urlImageItems == null) {
                       if (itemName.text.isEmpty) {
                         errorToast("Enter Item Name");
                       } else if (itemPrice.text.isEmpty) {

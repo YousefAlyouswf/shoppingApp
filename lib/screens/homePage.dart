@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/database/firestore.dart';
 
 import 'package:shop_app/widgets/widgets.dart';
+import 'package:shop_app/widgets/widgets2.dart';
 
 class HomePage extends StatefulWidget {
   final Function onThemeChanged;
@@ -14,6 +16,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    getAllimagesFromFireStore();
+  
   }
 
   @override
@@ -23,31 +27,59 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-        appBar: appBar(),
         drawer: drawer(context, widget.onThemeChanged),
         body: Stack(
           children: [
-            Column(
-              children: [
-                Expanded(
-                  child: ListView(
+            CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  iconTheme: new IconThemeData(color: Colors.white),
+                  title: Text(
+                    'Shop App',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.black38,
+                  floating: false,
+                  pinned: true,
+                  elevation: 8,
+                  expandedHeight: MediaQuery.of(context).size.height / 3,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: networkImage2 == null
+                        ? Center(
+                            child: Container(
+                              height: 100,
+                              width: 100,
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        : imageCarousel(imageShowSize, imageOnTap),
+                  ),
+                ),
+                SliverFillRemaining(
+                  child: Column(
                     children: [
-                      imageCarousel(imageShowSize, imageOnTap),
+                      listViewHorznintal(selectCategory),
+                      
+                      Expanded(child: subCatgoryCustomer()),
                     ],
                   ),
                 ),
               ],
-            ),
-            imageView(closeImpageOntap),
+            ),imageView(closeImpageOntap),
           ],
         ),
       ),
     );
   }
 
+  selectCategory(String name) {
+    setState(() {});
+    catgoryNameCustomer = name;
+  }
+
   imageOnTap(int i) {
     isView = true;
-    imageAsset = images[i];
+    imageNetwork = networkImage2[i];
     setState(() {});
   }
 
@@ -62,5 +94,27 @@ class _HomePageState extends State<HomePage> {
     } else {
       return null;
     }
+  }
+
+  getAllimagesFromFireStore() async {
+    try {
+      networkImage = new List();
+      await FirestoreFunctions().getAllImages().then((value) {
+        int listLength = value.length;
+
+        if (listLength <= 4) {
+          for (var i = 0; i < listLength; i++) {
+            networkImage.add(NetworkImage(value[i]));
+          }
+        } else {
+          for (var i = listLength - 4; i < listLength; i++) {
+            networkImage.add(NetworkImage(value[i]));
+          }
+        }
+
+        setState(() {});
+        networkImage2 = networkImage;
+      });
+    } catch (e) {}
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 class FirestoreFunctions {
   addNewItemRoExistCategory(itemMap, String category) async {
@@ -70,5 +71,21 @@ class FirestoreFunctions {
             .delete();
       });
     });
+  }
+
+  Future<List> getAllImages() async {
+    List<String> image = new List();
+    await Firestore.instance
+        .collection('subCategory')
+        .getDocuments()
+        .then((value) {
+      value.documents.forEach((element) async {
+        for (var i = 0; i < element.data['items'].length; i++) {
+          image.add(element.data['items'][i]['image']);
+        }
+      });
+    });
+
+    return Future.value(image);
   }
 }
