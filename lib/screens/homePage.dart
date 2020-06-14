@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/database/firestore.dart';
+import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 
 import 'package:shop_app/widgets/widgets.dart';
@@ -36,7 +37,8 @@ class _HomePageState extends State<HomePage> {
                   iconTheme: new IconThemeData(color: Colors.white),
                   title: Text(
                     'الدباس',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w800),
                   ),
                   backgroundColor: Colors.black38,
                   floating: false,
@@ -59,7 +61,9 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       listViewHorznintal(selectCategory),
-                      Expanded(child: subCatgoryCustomer(imageOnTapCustomer)),
+                      Expanded(
+                          child: subCatgoryCustomer(
+                              imageOnTapCustomer, fetchMyCart)),
                     ],
                   ),
                 ),
@@ -79,8 +83,14 @@ class _HomePageState extends State<HomePage> {
 
   imageOnTap(int i) {
     print(itemShow[i].itemName);
-    showtheBottomSheet(context, itemShow[i].image, itemShow[i].itemName,
-        itemShow[i].itemDes, itemShow[i].itemPrice, imageOnTapCustomer);
+    showtheBottomSheet(
+        context,
+        itemShow[i].image,
+        itemShow[i].itemName,
+        itemShow[i].itemDes,
+        itemShow[i].itemPrice,
+        imageOnTapCustomer,
+        fetchMyCart);
     setState(() {});
   }
 
@@ -120,5 +130,24 @@ class _HomePageState extends State<HomePage> {
         networkImage2 = networkImage;
       });
     } catch (e) {}
+  }
+
+  double sumPrice = 0;
+  Future<void> fetchMyCart() async {
+    cartToCheck = new List();
+    final dataList = await DBHelper.getData('cart');
+    setState(() {
+      cartToCheck = dataList
+          .map(
+            (item) => ItemShow(
+              id: item['id'],
+              itemName: item['name'],
+              itemPrice: item['price'],
+              itemDes: item['des'],
+              quantity: item['q'],
+            ),
+          )
+          .toList();
+    });
   }
 }

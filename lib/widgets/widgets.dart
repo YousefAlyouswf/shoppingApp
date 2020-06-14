@@ -10,27 +10,41 @@ import 'package:shop_app/manager/homePage.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/drawerbody.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
+import 'package:shop_app/screens/cart.dart';
 
-AppBar appBar({String text = "الدباس"}) {
+AppBar appBar(
+    {String text = "الدباس",
+    bool search = false,
+    bool cart = false,
+    BuildContext context}) {
   return AppBar(
     elevation: 0,
     title: Text(text),
-    actions: text == "Manager"
-        ? []
-        : <Widget>[
-            IconButton(
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                onPressed: () {}),
-            IconButton(
-                icon: Icon(
-                  Icons.shopping_cart,
-                  color: Colors.white,
-                ),
-                onPressed: () {})
-          ],
+    actions: <Widget>[
+      search
+          ? IconButton(
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              onPressed: () {},
+            )
+          : Container(),
+      cart
+          ? IconButton(
+              icon: Icon(
+                Icons.shopping_cart,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Cart()),
+                );
+              },
+            )
+          : Container()
+    ],
   );
 }
 
@@ -38,35 +52,42 @@ Drawer drawer(BuildContext context, Function onThemeChanged) {
   List<Widget> drawerBody;
   List<DrawerBodyModel> drawerModel = [
     DrawerBodyModel(
-      "Home Page",
+      "الرئيسية",
       Icon(
         Icons.home,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      "My Account",
+      "حسابي",
       Icon(
         Icons.person,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      "My Order",
+      "السلة",
+      Icon(
+        Icons.shopping_cart,
+        color: Colors.red,
+      ),
+    ),
+    DrawerBodyModel(
+      "طلباتي",
       Icon(
         Icons.shopping_basket,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      "Categories",
+      "الأقسام",
       Icon(
         Icons.dashboard,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      "Favourites",
+      "المفضلة",
       Icon(
         Icons.favorite,
         color: Colors.red,
@@ -78,7 +99,14 @@ Drawer drawer(BuildContext context, Function onThemeChanged) {
     drawerBody.add(ListTile(
       title: Text(drawerModel[i].text),
       leading: drawerModel[i].icon,
-      onTap: () => print(drawerModel[i].text),
+      onTap: () {
+        if (drawerModel[i].text == "السلة") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Cart()),
+          );
+        }
+      },
     ));
   }
 
@@ -112,21 +140,21 @@ Drawer drawer(BuildContext context, Function onThemeChanged) {
           thickness: 1,
         ),
         ListTile(
-          title: Text("Settings"),
+          title: Text("الإعدادات"),
           leading: Icon(
             Icons.settings,
           ),
           onTap: () {},
         ),
         ListTile(
-          title: Text("Dark Mode"),
+          title: Text("وضع الداكن"),
           leading: Icon(
             Icons.lightbulb_outline,
           ),
           onTap: onThemeChanged,
         ),
         ListTile(
-          title: Text("About"),
+          title: Text("معلومات التطبيق"),
           leading: Icon(
             Icons.help,
           ),

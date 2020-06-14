@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:shop_app/database/local_db.dart';
+import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 
 List<ListHirezontalImage> listImages;
@@ -108,7 +111,7 @@ Container imageViewBottomSheet(closeImpageOntap) {
 }
 
 String catgoryNameCustomer = "";
-Widget subCatgoryCustomer(Function imageOnTapCustomer) {
+Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
   List<ListHirezontalImage> listImages;
 
   return Container(
@@ -200,12 +203,14 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer) {
                         return InkWell(
                           onTap: () {
                             showtheBottomSheet(
-                                context,
-                                listImages[index].image,
-                                listImages[index].name,
-                                listImages[index].description,
-                                listImages[index].price,
-                                imageOnTapCustomer);
+                              context,
+                              listImages[index].image,
+                              listImages[index].name,
+                              listImages[index].description,
+                              listImages[index].price,
+                              imageOnTapCustomer,
+                              fetchMyCart,
+                            );
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -277,8 +282,9 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer) {
   );
 }
 
+List<ItemShow> cartToCheck = new List();
 showtheBottomSheet(BuildContext context, String image, String name, String des,
-    String price, Function imageOnTapCustomer) {
+    String price, Function imageOnTapCustomer, Function fetchMyCart) {
   showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
@@ -382,11 +388,59 @@ showtheBottomSheet(BuildContext context, String image, String name, String des,
                             size: 40,
                             color: Colors.green,
                           ),
-                          onPressed: () {})
+                          onPressed: () async {
+                            await fetchMyCart();
+                            int q = 0;
+                            int id;
+                            for (var i = 0; i < cartToCheck.length; i++) {
+                              if (cartToCheck[i].itemName == name &&
+                                  cartToCheck[i].itemPrice == price &&
+                                  cartToCheck[i].itemDes == des) {
+                                id = cartToCheck[i].id;
+                                q = int.parse(cartToCheck[i].quantity);
+                              }
+                            }
+                            q++;
+                            if (q == 1) {
+                              await DBHelper.insert(
+                                'cart',
+                                {
+                                  'name': name,
+                                  'price': price,
+                                  'image': image,
+                                  'des': des,
+                                  'q': q.toString()
+                                },
+                              ).whenComplete(
+                                  () => addCartToast("تم وضعها في سلتك"));
+                            } else {
+                              await DBHelper.updateData(
+                                  'cart',
+                                  {
+                                    'name': name,
+                                    'price': price,
+                                    'image': image,
+                                    'des': des,
+                                    'q': q.toString(),
+                                  },
+                                  id);
+                            }
+                          })
                     ],
                   ),
                 ],
               ),
             ),
           ));
+}
+
+addCartToast(String text) {
+  Fluttertoast.showToast(
+      msg: text,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      fontSize: 16.0);
 }
