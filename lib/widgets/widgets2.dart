@@ -137,11 +137,33 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer) {
           } catch (e) {
             return Center(
               child: Container(
-                height: 100,
+                height: 200,
                 width: MediaQuery.of(context).size.width * .9,
-                child: Text(
-                  "متجر الدباس يحتوي على جميع الماركات من الشنط والأحذية",
-                  textDirection: TextDirection.rtl,
+                child: Card(
+                  elevation: 10,
+                  color: Colors.amber,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Center(
+                          child: Text(
+                            "متجر الدباس",
+                            textDirection: TextDirection.rtl,
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          " يحتوي على جميع الماركات من الشنط والأحذية والإكسسوارات يحتوي على جميع الماركات من الشنط والأحذية والإكسسوارات يحتوي على جميع الماركات من الشنط والأحذية والإكسسوارات",
+                          textDirection: TextDirection.rtl,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             );
@@ -213,7 +235,8 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer) {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         Text(
-                                          "R.S. ${listImages[index].price}",
+                                          "${listImages[index].price} ر.س",
+                                          textDirection: TextDirection.rtl,
                                           style: TextStyle(color: Colors.white),
                                         ),
                                         Text(
@@ -300,7 +323,8 @@ showtheBottomSheet(BuildContext context, String image, String name, String des,
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          "R.S. $price",
+                          "$price ر.س",
+                          textDirection: TextDirection.rtl,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -331,10 +355,13 @@ showtheBottomSheet(BuildContext context, String image, String name, String des,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Text(
-                                      "وصف المنتج",
-                                      textDirection: TextDirection.rtl,
+                                    Center(
+                                      child: Text(
+                                        "وصف المنتج",
+                                        textDirection: TextDirection.rtl,
+                                      ),
                                     ),
                                     Text(
                                       des,
@@ -353,7 +380,7 @@ showtheBottomSheet(BuildContext context, String image, String name, String des,
                           icon: Icon(
                             Icons.add_shopping_cart,
                             size: 40,
-                            color: Colors.red,
+                            color: Colors.green,
                           ),
                           onPressed: () {})
                     ],

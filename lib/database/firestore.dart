@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:shop_app/models/itemShow.dart';
 
 class FirestoreFunctions {
@@ -82,18 +81,43 @@ class FirestoreFunctions {
         .then((value) {
       value.documents.forEach((element) async {
         for (var i = 0; i < element.data['items'].length; i++) {
-          image.add(
-            ItemShow(
-              itemName: element.data['items'][i]['name'],
-              itemPrice: element.data['items'][i]['price'],
-              itemDes: element.data['items'][i]['description'],
-              image: element.data['items'][i]['image']
-            ),
-          );
+       
+          if (element.data['items'][i]['show'] == true) {
+            image.add(
+              ItemShow(
+                  itemName: element.data['items'][i]['name'],
+                  itemPrice: element.data['items'][i]['price'],
+                  itemDes: element.data['items'][i]['description'],
+                  image: element.data['items'][i]['image']),
+            );
+          }
         }
       });
     });
 
     return Future.value(image);
+  }
+
+  changeShowStatus(String category, itemMapRemove, itemMapAdd) async {
+    await Firestore.instance
+        .collection('subCategory')
+        .where('category', isEqualTo: category)
+        .getDocuments()
+        .then((value) {
+      value.documents.forEach((element) async {
+        await Firestore.instance
+            .collection('subCategory')
+            .document(element.documentID)
+            .updateData({
+          "items": FieldValue.arrayRemove([itemMapRemove])
+        });
+        await Firestore.instance
+            .collection('subCategory')
+            .document(element.documentID)
+            .updateData({
+          "items": FieldValue.arrayUnion([itemMapAdd])
+        });
+      });
+    });
   }
 }

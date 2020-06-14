@@ -35,8 +35,8 @@ class _HomePageState extends State<HomePage> {
                 SliverAppBar(
                   iconTheme: new IconThemeData(color: Colors.white),
                   title: Text(
-                    'Shop App',
-                    style: TextStyle(color: Colors.white),
+                    'الدباس',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
                   ),
                   backgroundColor: Colors.black38,
                   floating: false,
@@ -111,17 +111,9 @@ class _HomePageState extends State<HomePage> {
       networkImage = new List();
       await FirestoreFunctions().getAllImages().then((value) {
         int listLength = value.length;
-
-        if (listLength <= 4) {
-          for (var i = 0; i < listLength; i++) {
-            networkImage.add(NetworkImage(value[i].image));
-          }
-          itemShow = value;
-        } else {
-          for (var i = listLength - 4; i < listLength; i++) {
-            networkImage.add(NetworkImage(value[i].image));
-            itemShow.add(value[i]);
-          }
+        for (var i = 0; i < listLength; i++) {
+          networkImage.add(NetworkImage(value[i].image));
+          itemShow.add(value[i]);
         }
 
         setState(() {});

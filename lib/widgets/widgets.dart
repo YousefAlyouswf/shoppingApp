@@ -1,20 +1,17 @@
 import 'dart:io';
-
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/homePage.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/drawerbody.dart';
-import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 
-AppBar appBar({String text = "Shop App"}) {
+AppBar appBar({String text = "الدباس"}) {
   return AppBar(
     elevation: 0,
     title: Text(text),
@@ -185,16 +182,15 @@ Widget imageCarousel(double height, Function imageOnTap) {
     child: Carousel(
       boxFit: BoxFit.cover,
       images: networkImage2,
-      animationCurve: Curves.fastOutSlowIn,
-      autoplay: false,
+      animationCurve: Curves.easeInExpo,
+      animationDuration: Duration(seconds: 1),
+      autoplay: true,
+      autoplayDuration: Duration(seconds: 5),
       onImageTap: imageOnTap,
       indicatorBgPadding: 10,
     ),
   );
 }
-
-
-
 
 //End Image in the Header
 
@@ -284,7 +280,7 @@ Widget categores(Function selectCategory) {
                             ),
                           ),
                           SizedBox(
-                            height: 15,
+                            height: 10,
                           ),
                           Text(listImages[index].name),
                         ],
@@ -334,6 +330,7 @@ Widget subCatgory() {
                     ['description'],
                 price: asyncSnapshot.data.documents[0].data['items'][i]
                     ['price'],
+                show: asyncSnapshot.data.documents[0].data['items'][i]['show'],
               ));
             }
           } catch (e) {
@@ -365,7 +362,7 @@ Widget subCatgory() {
                 Expanded(
                   child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3, childAspectRatio: 0.8),
+                          crossAxisCount: 3, childAspectRatio: 0.7),
                       itemCount: listImages.length,
                       itemBuilder: (BuildContext context, int index) {
                         return InkWell(
@@ -377,7 +374,7 @@ Widget subCatgory() {
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: Colors.white70,
+                                          color: Colors.black54,
                                           borderRadius: BorderRadius.only(
                                             topRight: Radius.circular(40),
                                             topLeft: Radius.circular(40),
@@ -389,11 +386,11 @@ Widget subCatgory() {
                                               height: MediaQuery.of(context)
                                                       .size
                                                       .width /
-                                                  2,
+                                                  3,
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width /
-                                                  2,
+                                                  3,
                                               decoration: BoxDecoration(
                                                 image: new DecorationImage(
                                                   fit: BoxFit.fill,
@@ -402,49 +399,146 @@ Widget subCatgory() {
                                                 ),
                                               ),
                                             ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(16.0),
-                                              child: Text(
-                                                listImages[index].name,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      16.0),
+                                                  child: Text(
+                                                    "${listImages[index].price} ر.س",
+                                                    textDirection:
+                                                        TextDirection.rtl,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      16.0),
+                                                  child: Text(
+                                                    listImages[index].name,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(16.0),
-                                              child: Text(
-                                                listImages[index].price,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(16.0),
-                                              child: Container(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                height: 100,
-                                                child: Card(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Text(
-                                                      listImages[index]
-                                                          .description,
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                            Row(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      16.0),
+                                                  child: Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            1.5,
+                                                    height: 200,
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      child: Card(
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              Center(
+                                                                child: Text(
+                                                                  "وصف المنتج",
+                                                                  textDirection:
+                                                                      TextDirection
+                                                                          .rtl,
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                listImages[
+                                                                        index]
+                                                                    .description,
+                                                                textDirection:
+                                                                    TextDirection
+                                                                        .rtl,
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
+                                                IconButton(
+                                                  icon: Icon(
+                                                    listImages[index].show
+                                                        ? Icons.cancel
+                                                        : Icons.check_circle,
+                                                    size: 40,
+                                                    color:
+                                                        listImages[index].show
+                                                            ? Colors.red
+                                                            : Colors.green,
+                                                  ),
+                                                  onPressed: () {
+                                                    Map<String, dynamic>
+                                                        itemMapRemove = {
+                                                      "name": listImages[index]
+                                                          .name,
+                                                      "description":
+                                                          listImages[index]
+                                                              .description,
+                                                      "price": listImages[index]
+                                                          .price,
+                                                      "image": listImages[index]
+                                                          .image,
+                                                      "show": false,
+                                                    };
+                                                    Map<String, dynamic>
+                                                        itemMapAdd = {
+                                                      "name": listImages[index]
+                                                          .name,
+                                                      "description":
+                                                          listImages[index]
+                                                              .description,
+                                                      "price": listImages[index]
+                                                          .price,
+                                                      "image": listImages[index]
+                                                          .image,
+                                                      "show": true,
+                                                    };
+                                                    if (listImages[index]
+                                                        .show) {
+                                                      FirestoreFunctions()
+                                                          .changeShowStatus(
+                                                        catgoryName,
+                                                        itemMapAdd,
+                                                        itemMapRemove,
+                                                      );
+                                                    } else {
+                                                      FirestoreFunctions()
+                                                          .changeShowStatus(
+                                                        catgoryName,
+                                                        itemMapRemove,
+                                                        itemMapAdd,
+                                                      );
+                                                    }
+
+                                                    Navigator.pop(context);
+                                                  },
+                                                )
+                                              ],
                                             ),
                                           ],
                                         ),
@@ -517,7 +611,7 @@ Widget subCatgory() {
 Widget firstPage(Function selectCategory) {
   return Column(
     children: [
-      Container(height: 150, child: categores(selectCategory)),
+      Container(height: 160, child: categores(selectCategory)),
       Divider(
         thickness: 5,
       ),
@@ -644,6 +738,7 @@ Widget secondPage(
                 ),
                 MyTextFormField(
                   editingController: itemDis,
+                  isMultiLine: true,
                   hintText: 'Description',
                 ),
                 imageStoredItems != null
@@ -711,6 +806,7 @@ Widget secondPage(
                         "description": itemDis.text,
                         "price": itemPrice.text,
                         "image": urlImageItems,
+                        "show": false,
                       };
                       Map<String, dynamic> itemMapForNew = {
                         "category": categoryName.text,
@@ -769,6 +865,7 @@ class MyTextFormField extends StatelessWidget {
   final bool isPassword;
   final bool isNumber;
   final Function isChanged;
+  final bool isMultiLine;
   final TextEditingController editingController;
   MyTextFormField({
     this.hintText,
@@ -776,6 +873,7 @@ class MyTextFormField extends StatelessWidget {
     this.isNumber = false,
     this.editingController,
     this.isChanged,
+    this.isMultiLine = false,
   });
   @override
   Widget build(BuildContext context) {
@@ -792,7 +890,10 @@ class MyTextFormField extends StatelessWidget {
           fillColor: Colors.grey[200],
         ),
         obscureText: isPassword ? true : false,
-        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+        maxLines: null,
+        keyboardType: isNumber
+            ? TextInputType.number
+            : isMultiLine ? TextInputType.multiline : TextInputType.text,
       ),
     );
   }
@@ -827,7 +928,9 @@ class _DropDownMenState extends State<DropDownMen> {
               currencyItems.add(
                 DropdownMenuItem(
                   child: Text(
-                    "New Category",
+                    "قسم جديد",
+                    textAlign: TextAlign.center,
+                    textDirection: TextDirection.rtl,
                     style: TextStyle(color: Colors.black),
                   ),
                   value: "New Category",
@@ -840,6 +943,7 @@ class _DropDownMenState extends State<DropDownMen> {
                   DropdownMenuItem(
                     child: Text(
                       snap,
+                      textDirection: TextDirection.rtl,
                       style: TextStyle(
                         color: Colors.black,
                       ),
@@ -868,7 +972,7 @@ class _DropDownMenState extends State<DropDownMen> {
                   dropdownColor: Colors.grey[100],
                   isExpanded: false,
                   hint: new Text(
-                    "Choose Category",
+                    "أختر القسم",
                     style: TextStyle(color: Colors.black),
                   ),
                 ),
