@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/address.dart';
@@ -15,8 +16,10 @@ class _CartState extends State<Cart> {
   List<ItemShow> cart = [];
   double sumPrice = 0;
   double eachPrice = 0;
+  int quantity = 0;
   Future<void> fetchMyCart() async {
     sumPrice = 0;
+
     final dataList = await DBHelper.getData('cart');
     setState(() {
       cart = dataList
@@ -41,6 +44,10 @@ class _CartState extends State<Cart> {
     for (var i = 0; i < cart.length; i++) {
       sumPrice +=
           double.parse(cart[i].quantity) * double.parse(cart[i].itemPrice);
+    }
+    quantity = 0;
+    for (var i = 0; i < cart.length; i++) {
+      quantity += int.parse(cart[i].quantity);
     }
   }
 
@@ -73,21 +80,32 @@ class _CartState extends State<Cart> {
                 ),
               ),
             ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text("${cart.length} المحتويات"),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Center(
-              child: Container(
-                height: 2,
-                width: MediaQuery.of(context).size.width * 0.9,
-                color: Colors.black,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text("$quantity المحتويات"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Container(
+                    child: FlatButton(
+                      onPressed: () {
+                        setState(() {
+                          deleteIcon = !deleteIcon;
+                        });
+                      },
+                      child: Text(
+                        "تعديل",
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Expanded(
               child: Padding(
@@ -103,95 +121,136 @@ class _CartState extends State<Cart> {
                     itemBuilder: (context, i) {
                       eachPrice = double.parse(cart[i].quantity) *
                           double.parse(cart[i].itemPrice);
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Dismissible(
-                          key: Key(cart[i].id.toString()),
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                            alignment: Alignment.centerRight,
-                            color: Colors.red,
-                            child: Icon(
-                              Icons.delete,
-                              size: 50,
-                              color: Colors.white,
+                      return InkWell(
+                        onTap: () {
+                          Fluttertoast.showToast(
+                              msg: "للحذف إسحب إلى اليسار",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.grey,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Dismissible(
+                            key: Key(cart[i].id.toString()),
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              alignment: Alignment.centerRight,
+                              color: Colors.red,
+                              child: Icon(
+                                Icons.delete,
+                                size: 50,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          onDismissed: (d) {
-                            DBHelper.deleteItem("cart", cart[i].id);
-                            fetchMyCart();
-                          },
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 70,
-                                      height: 70,
-                                      decoration: new BoxDecoration(
-                                        shape: BoxShape.rectangle,
-                                        image: new DecorationImage(
-                                          fit: BoxFit.fill,
-                                          image:
-                                              new NetworkImage(cart[i].image),
+                            onDismissed: (d) {
+                              DBHelper.deleteItem("cart", cart[i].id);
+                              fetchMyCart();
+                            },
+                            child: Container(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 70,
+                                        height: 70,
+                                        decoration: new BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          image: new DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image:
+                                                new NetworkImage(cart[i].image),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Container(
-                                      height: 130,
-                                      width: 170,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                      Container(
+                                        height: 130,
+                                        width: 170,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              cart[i].itemName,
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                            Text(
+                                              "$eachPrice ر.س",
+                                              textDirection: TextDirection.rtl,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Column(
                                         children: [
-                                          Text(
-                                            cart[i].itemName,
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w700),
+                                          Visibility(
+                                            visible: deleteIcon,
+                                            child: Container(
+                                              child: IconButton(
+                                                  icon: Icon(
+                                                    Icons.delete,
+                                                    color: Colors.red,
+                                                  ),
+                                                  onPressed: () {
+                                                    DBHelper.deleteItem(
+                                                        "cart", cart[i].id);
+                                                    fetchMyCart();
+                                                  }),
+                                            ),
                                           ),
-                                          Text(
-                                            "$eachPrice ر.س",
-                                            textDirection: TextDirection.rtl,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Column(
-                                      children: [
-                                        Visibility(
-                                          visible: deleteIcon,
-                                          child: Container(
-                                            child: IconButton(
-                                                icon: Icon(
-                                                  Icons.delete,
-                                                  color: Colors.red,
-                                                ),
-                                                onPressed: () {
-                                                  DBHelper.deleteItem(
-                                                      "cart", cart[i].id);
-                                                  fetchMyCart();
-                                                }),
-                                          ),
-                                        ),
-                                        Container(
-                                            height: 120,
-                                            alignment: Alignment.bottomCenter,
-                                            child: Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 40,
-                                                  child: FlatButton(
-                                                    onPressed: () {
-                                                      int q = int.parse(
-                                                          cart[i].quantity);
+                                          Container(
+                                              height: 120,
+                                              alignment: Alignment.bottomCenter,
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 40,
+                                                    child: FlatButton(
+                                                      onPressed: () {
+                                                        int q = int.parse(
+                                                            cart[i].quantity);
 
-                                                      if (q == 1) {
-                                                      } else {
-                                                        q--;
+                                                        if (q == 1) {
+                                                        } else {
+                                                          q--;
+                                                          DBHelper.updateData(
+                                                              "cart",
+                                                              {
+                                                                'q': q
+                                                                    .toString(),
+                                                              },
+                                                              cart[i].id);
+                                                          fetchMyCart();
+                                                        }
+                                                      },
+                                                      child: Text(
+                                                        "-",
+                                                        style: TextStyle(
+                                                            fontSize: 20),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    cart[i].quantity,
+                                                    style:
+                                                        TextStyle(fontSize: 20),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 40,
+                                                    child: FlatButton(
+                                                      onPressed: () {
+                                                        int q = int.parse(
+                                                            cart[i].quantity);
+                                                        q++;
+
                                                         DBHelper.updateData(
                                                             "cart",
                                                             {
@@ -199,57 +258,29 @@ class _CartState extends State<Cart> {
                                                             },
                                                             cart[i].id);
                                                         fetchMyCart();
-                                                      }
-                                                    },
-                                                    child: Text(
-                                                      "-",
-                                                      style: TextStyle(
-                                                          fontSize: 20),
+                                                      },
+                                                      child: Text("+"),
                                                     ),
                                                   ),
-                                                ),
-                                                Text(
-                                                  cart[i].quantity,
-                                                  style:
-                                                      TextStyle(fontSize: 20),
-                                                ),
-                                                SizedBox(
-                                                  width: 40,
-                                                  child: FlatButton(
-                                                    onPressed: () {
-                                                      int q = int.parse(
-                                                          cart[i].quantity);
-                                                      q++;
-
-                                                      DBHelper.updateData(
-                                                          "cart",
-                                                          {
-                                                            'q': q.toString(),
-                                                          },
-                                                          cart[i].id);
-                                                      fetchMyCart();
-                                                    },
-                                                    child: Text("+"),
-                                                  ),
-                                                ),
-                                              ],
-                                            )),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Center(
-                                  child: Container(
-                                    height: 1,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.9,
-                                    color: Colors.black54,
+                                                ],
+                                              )),
+                                        ],
+                                      )
+                                    ],
                                   ),
-                                ),
-                              ],
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Center(
+                                    child: Container(
+                                      height: 1,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
