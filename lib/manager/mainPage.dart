@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/models/tabModels.dart';
 import 'package:shop_app/widgets/widgets.dart';
+import 'package:shop_app/widgets/widgets2.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -39,6 +41,8 @@ class _MainPageState extends State<MainPage>
     _tabController.dispose();
   }
 
+  TextEditingController title = TextEditingController();
+  TextEditingController content = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,8 +53,57 @@ class _MainPageState extends State<MainPage>
               PopupMenuItem(
                 value: 1,
                 child: FlatButton(
-                  onPressed: () {},
-                  child: Text("تغيير أسم المتجر"),
+                  onPressed: () {
+                    showBottomSheet(
+                      backgroundColor: Colors.transparent,
+                      context: context,
+                      builder: (context) => Container(
+                        height: MediaQuery.of(context).size.height,
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            MyTextFormField(
+                              editingController: title,
+                              hintText: "العنوان",
+                            ),
+                            MyTextFormField(
+                              editingController: content,
+                              hintText: "المحتوى",
+                              isMultiLine: true,
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            Container(
+                              color: Colors.blue,
+                              padding: EdgeInsets.all(16.0),
+                              child: InkWell(
+                                onTap: () {
+                                  if (title.text.isEmpty) {
+                                    errorToast("أكتب عنوان الرسالة");
+                                  } else if (content.text.isEmpty) {
+                                    errorToast("أكتب محتوى الرسالة");
+                                  } else {
+                                    FirestoreFunctions().upDateAppInfo(
+                                        title.text, content.text);
+                                    addCartToast("تم تحديث الرسالة");
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                child: Text(
+                                  "أعرض",
+                                  textDirection: TextDirection.rtl,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 22),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text("رسالة العرض"),
                 ),
               ),
             ];

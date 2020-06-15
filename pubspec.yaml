@@ -43,6 +43,7 @@ dependencies:
   stripe_payment: ^1.0.7
   url_launcher: ^5.4.10
   translator: ^0.1.4
+  flutter_launcher_icons: ^0.7.5
 dev_dependencies:
   flutter_test:
     sdk: flutter

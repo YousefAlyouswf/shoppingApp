@@ -136,4 +136,14 @@ class FirestoreFunctions {
 
     return Future.value(appInfo);
   }
+
+  upDateAppInfo(String title, String content) async {
+    await Firestore.instance
+        .collection('app')
+        .document("1YGqmBXRZGQrsAdIvKin")
+        .updateData({
+      "title": title,
+      "content": content,
+    });
+  }
 }
