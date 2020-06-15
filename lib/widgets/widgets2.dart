@@ -5,9 +5,10 @@ import 'package:photo_view/photo_view.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
+import 'package:shop_app/widgets/widgets.dart';
 
 List<ListHirezontalImage> listImages;
-Widget listViewHorznintal(Function selectCategory) {
+Widget listViewHorznintal(Function selectCategory, var controller) {
   return Container(
     height: 160,
     child: StreamBuilder<QuerySnapshot>(
@@ -36,6 +37,9 @@ Widget listViewHorznintal(Function selectCategory) {
                     child: InkWell(
                       onTap: () {
                         selectCategory(listImages[index].name);
+                        double offest = MediaQuery.of(context).size.height / 2;
+                        controller.animateTo(offest,
+                            duration: Duration(seconds: 1), curve: Curves.ease);
                       },
                       child: Column(
                         children: <Widget>[
@@ -152,7 +156,9 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
                       children: [
                         Center(
                           child: Text(
-                            "متجر الدباس",
+                            appInfo[0].title.isEmpty
+                                ? Container()
+                                : appInfo[0].title,
                             textDirection: TextDirection.rtl,
                             style: TextStyle(
                               fontSize: 22,
@@ -161,7 +167,9 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
                           ),
                         ),
                         Text(
-                          " يحتوي على جميع الماركات من الشنط والأحذية والإكسسوارات يحتوي على جميع الماركات من الشنط والأحذية والإكسسوارات يحتوي على جميع الماركات من الشنط والأحذية والإكسسوارات",
+                          appInfo[0].content.isEmpty
+                              ? Container()
+                              : appInfo[0].content,
                           textDirection: TextDirection.rtl,
                         ),
                       ],

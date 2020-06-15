@@ -43,6 +43,19 @@ class _MainPageState extends State<MainPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          PopupMenuButton(itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                value: 1,
+                child: FlatButton(
+                  onPressed: () {},
+                  child: Text("تغيير أسم المتجر"),
+                ),
+              ),
+            ];
+          })
+        ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: TabBar(

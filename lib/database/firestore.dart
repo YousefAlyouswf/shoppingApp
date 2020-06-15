@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shop_app/models/appInfo.dart';
 import 'package:shop_app/models/itemShow.dart';
 
 class FirestoreFunctions {
@@ -81,7 +82,6 @@ class FirestoreFunctions {
         .then((value) {
       value.documents.forEach((element) async {
         for (var i = 0; i < element.data['items'].length; i++) {
-       
           if (element.data['items'][i]['show'] == true) {
             image.add(
               ItemShow(
@@ -119,5 +119,21 @@ class FirestoreFunctions {
         });
       });
     });
+  }
+
+  Future<List> getAppInfo() async {
+    List<AppInfoModel> appInfo = new List();
+    await Firestore.instance.collection('app').getDocuments().then((value) {
+      value.documents.forEach((element) async {
+        appInfo.add(
+          AppInfoModel(
+            element.data['title'],
+            element.data['content'],
+          ),
+        );
+      });
+    });
+
+    return Future.value(appInfo);
   }
 }

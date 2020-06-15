@@ -5,6 +5,7 @@ import 'package:shop_app/models/itemShow.dart';
 
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:shop_app/widgets/widgets2.dart';
+import 'package:translator/translator.dart';
 
 import 'cart.dart';
 
@@ -17,10 +18,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ScrollController controller;
   @override
   void initState() {
     super.initState();
+    controller = ScrollController();
+    getAppInfoFireBase();
     getAllimagesFromFireStore();
+    controller.addListener(_scrollListener);
+  }
+
+  double showFloatingBtn = 0.0;
+  _scrollListener() {
+    setState(() {
+      showFloatingBtn = controller.offset;
+    });
+
+    // if (controller.offset >= controller.position.maxScrollExtent &&
+    //     !controller.position.outOfRange) {
+
+    // }
+    // if (controller.offset <= controller.position.minScrollExtent &&
+    //     !controller.position.outOfRange) {
+    //   print("222");
+    // }
   }
 
   @override
@@ -30,30 +51,63 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-        drawer: drawer(context, widget.onThemeChanged),
-           floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Cart(onThemeChanged:widget.onThemeChanged)),
-            );
-          },
-          child: Icon(
-            Icons.shopping_cart,
-            color: Colors.white,
+        drawer: drawer(context, widget.onThemeChanged,
+            changeLangauge: changeLangauge),
+        floatingActionButton: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              showFloatingBtn > 300
+                  ? FloatingActionButton(
+                      elevation: 8,
+                      heroTag: "btn2",
+                      backgroundColor: Colors.green,
+                      onPressed: () {
+                        controller.animateTo(0.0,
+                            duration: Duration(seconds: 1), curve: Curves.ease);
+                      },
+                      child: Icon(
+                        Icons.arrow_upward,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    )
+                  : Container(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * .6,
+              ),
+              FloatingActionButton(
+                heroTag: "btn1",
+                backgroundColor: Colors.blue,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          Cart(onThemeChanged: widget.onThemeChanged),
+                    ),
+                  );
+                },
+                child: Icon(
+                  Icons.shopping_cart,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
         body: Stack(
           children: [
             CustomScrollView(
+              controller: controller,
               slivers: <Widget>[
                 SliverAppBar(
                   iconTheme: new IconThemeData(color: Colors.white),
                   title: Text(
-                    'الدباس',
+                    "الدباس",
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w800),
+                        color: Colors.white, fontWeight: FontWeight.w900),
                   ),
                   backgroundColor: Colors.black38,
                   floating: false,
@@ -75,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                 SliverFillRemaining(
                   child: Column(
                     children: [
-                      listViewHorznintal(selectCategory),
+                      listViewHorznintal(selectCategory, controller),
                       Expanded(
                           child: subCatgoryCustomer(
                               imageOnTapCustomer, fetchMyCart)),
@@ -147,6 +201,13 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {}
   }
 
+  getAppInfoFireBase() async {
+    await FirestoreFunctions().getAppInfo().then((value) {
+      setState(() {});
+      appInfo = value;
+    });
+  }
+
   double sumPrice = 0;
   Future<void> fetchMyCart() async {
     cartToCheck = new List();
@@ -163,6 +224,24 @@ class _HomePageState extends State<HomePage> {
             ),
           )
           .toList();
+    });
+  }
+
+  final translator = new GoogleTranslator();
+
+  changeLangauge() async {
+    // if (!isEnglish) {
+    //   after = [];
+    //   for (var i = 0; i < input.length; i++) {
+    //     await translator.translate(input[i], from: 'ar', to: 'en').then((s) {
+    //       setState(() {});
+    //       after.add(s);
+    //     });
+    //   }
+    // }
+
+    setState(() {
+      isEnglish = !isEnglish;
     });
   }
 }

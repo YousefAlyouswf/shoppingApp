@@ -8,10 +8,12 @@ import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/homePage.dart';
 import 'package:shop_app/manager/mainPage.dart';
+import 'package:shop_app/models/appInfo.dart';
 import 'package:shop_app/models/drawerbody.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 import 'package:shop_app/screens/cart.dart';
 
+List<AppInfoModel> appInfo = [];
 AppBar appBar(
     {String text = "الدباس",
     bool search = false,
@@ -48,46 +50,71 @@ AppBar appBar(
   );
 }
 
-Drawer drawer(BuildContext context, Function onThemeChanged) {
+bool isEnglish = false;
+List<String> after = [
+  'Home',
+  'My Account',
+  'Cart',
+  'My Order',
+  'Categories',
+  'Favorite',
+  'Settings',
+  'Dark Mode',
+  'App Info',
+];
+List<String> input = [
+  'الرئيسية',
+  'حسابي',
+  'السلة',
+  'طلباتي',
+  'الأقسام',
+  'المفضلة',
+  'الإعدادات',
+  'وضع الداكن',
+  'معلومات التطبيق'
+];
+
+Drawer drawer(BuildContext context, Function onThemeChanged,
+    {Function changeLangauge}) {
   List<Widget> drawerBody;
   List<DrawerBodyModel> drawerModel = [
     DrawerBodyModel(
-      "الرئيسية",
+      isEnglish ? after[0] : input[0],
       Icon(
         Icons.home,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      "حسابي",
+      isEnglish ? after[1] : input[1],
       Icon(
         Icons.person,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      "السلة",
+      isEnglish ? after[2] : input[2],
       Icon(
         Icons.shopping_cart,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      "طلباتي",
+      isEnglish ? after[3] : input[3],
       Icon(
         Icons.shopping_basket,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      "الأقسام",
+      isEnglish ? after[4] : input[4],
       Icon(
         Icons.dashboard,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      "المفضلة",
+      isEnglish ? after[5] : input[5],
       Icon(
         Icons.favorite,
         color: Colors.red,
@@ -140,21 +167,46 @@ Drawer drawer(BuildContext context, Function onThemeChanged) {
           thickness: 1,
         ),
         ListTile(
-          title: Text("الإعدادات"),
+          title: Text(isEnglish ? after[6] : input[6]),
           leading: Icon(
             Icons.settings,
           ),
-          onTap: () {},
+          onTap: () {
+            showModalBottomSheet(
+              backgroundColor: Colors.transparent,
+              context: context,
+              builder: (context) => SingleChildScrollView(
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(40),
+                      topLeft: Radius.circular(40),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      FlatButton(
+                        onPressed: changeLangauge,
+                        child: Text("تغيير اللغة"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
         ),
         ListTile(
-          title: Text("وضع الداكن"),
+          title: Text(isEnglish ? after[7] : input[7]),
           leading: Icon(
             Icons.lightbulb_outline,
           ),
           onTap: onThemeChanged,
         ),
         ListTile(
-          title: Text("معلومات التطبيق"),
+          title: Text(isEnglish ? after[8] : input[8]),
           leading: Icon(
             Icons.help,
           ),
@@ -192,7 +244,7 @@ Drawer drawer(BuildContext context, Function onThemeChanged) {
           },
         ),
         SizedBox(
-          height: 70,
+          height: 30,
         )
       ],
     ),

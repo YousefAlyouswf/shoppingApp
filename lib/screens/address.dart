@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/addressModel.dart';
 import 'package:shop_app/widgets/widgets.dart';
-import 'package:shop_app/widgets/widgets2.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Address extends StatefulWidget {
