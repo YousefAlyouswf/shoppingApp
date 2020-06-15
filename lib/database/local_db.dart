@@ -10,9 +10,11 @@ class DBHelper {
         dbPath,
         'shopping.db',
       ),
-      onCreate: (db, version) {
-        db.execute(
+      onCreate: (db, version) async {
+        await db.execute(
             "CREATE TABLE cart(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price TEXT, image TEXT, des TEXT, q TEXT)");
+        await db.execute(
+            "CREATE TABLE address(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, phone TEXT, userAddress TEXT)");
       },
       version: 1,
     );
@@ -20,10 +22,12 @@ class DBHelper {
 
   static Future<void> insert(String table, Map<String, Object> data) async {
     final db = await DBHelper.database();
-    db.insert(
+    db
+        .insert(
       table,
       data,
-    ).catchError((e){
+    )
+        .catchError((e) {
       print(e);
     });
   }
@@ -53,6 +57,32 @@ class DBHelper {
   }
 
   static Future<void> deleteItem(String table, int id) async {
+    final db = await DBHelper.database();
+
+    db.delete(table, where: 'id = ?', whereArgs: [id]);
+  }
+
+  ///----------------- USER ADDRESS
+
+  static Future<void> insertAddress(
+      String table, Map<String, Object> data) async {
+    final db = await DBHelper.database();
+    db
+        .insert(
+      table,
+      data,
+    )
+        .catchError((e) {
+      print(e);
+    });
+  }
+
+  static Future<List<Map<String, dynamic>>> getDataAddress(String table) async {
+    final db = await DBHelper.database();
+    return db.query(table);
+  }
+
+  static Future<void> deleteAddress(String table, int id) async {
     final db = await DBHelper.database();
 
     db.delete(table, where: 'id = ?', whereArgs: [id]);

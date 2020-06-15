@@ -6,6 +6,8 @@ import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:shop_app/widgets/widgets2.dart';
 
+import 'cart.dart';
+
 class HomePage extends StatefulWidget {
   final Function onThemeChanged;
 
@@ -29,6 +31,19 @@ class _HomePageState extends State<HomePage> {
       onWillPop: _onBackPressed,
       child: Scaffold(
         drawer: drawer(context, widget.onThemeChanged),
+           floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blue,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Cart(onThemeChanged:widget.onThemeChanged)),
+            );
+          },
+          child: Icon(
+            Icons.shopping_cart,
+            color: Colors.white,
+          ),
+        ),
         body: Stack(
           children: [
             CustomScrollView(

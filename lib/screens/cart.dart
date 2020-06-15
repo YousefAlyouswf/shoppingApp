@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
-import 'package:shop_app/widgets/widgets.dart';
+import 'package:shop_app/screens/address.dart';
 
 class Cart extends StatefulWidget {
+  final Function onThemeChanged;
+
+  const Cart({Key key, this.onThemeChanged}) : super(key: key);
   @override
   _CartState createState() => _CartState();
 }
@@ -30,15 +33,14 @@ class _CartState extends State<Cart> {
           .toList();
     });
 
- 
-
     for (var i = 0; i < cart.length; i++) {
       eachPrice =
           double.parse(cart[i].quantity) * double.parse(cart[i].itemPrice);
-    } 
-      
+    }
+
     for (var i = 0; i < cart.length; i++) {
-      sumPrice +=  double.parse(cart[i].quantity) * double.parse(cart[i].itemPrice);
+      sumPrice +=
+          double.parse(cart[i].quantity) * double.parse(cart[i].itemPrice);
     }
   }
 
@@ -88,15 +90,14 @@ class _CartState extends State<Cart> {
               ),
             ),
             Expanded(
-                          child: Padding(
+              child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
                   padding: EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  border: Border.all()
-                  ),
-                 // height: MediaQuery.of(context).size.height * 0.6,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      border: Border.all()),
+                  // height: MediaQuery.of(context).size.height * 0.6,
                   child: ListView.builder(
                     itemCount: cart.length,
                     itemBuilder: (context, i) {
@@ -132,7 +133,8 @@ class _CartState extends State<Cart> {
                                         shape: BoxShape.rectangle,
                                         image: new DecorationImage(
                                           fit: BoxFit.fill,
-                                          image: new NetworkImage(cart[i].image),
+                                          image:
+                                              new NetworkImage(cart[i].image),
                                         ),
                                       ),
                                     ),
@@ -201,14 +203,15 @@ class _CartState extends State<Cart> {
                                                     },
                                                     child: Text(
                                                       "-",
-                                                      style:
-                                                          TextStyle(fontSize: 20),
+                                                      style: TextStyle(
+                                                          fontSize: 20),
                                                     ),
                                                   ),
                                                 ),
                                                 Text(
                                                   cart[i].quantity,
-                                                  style: TextStyle(fontSize: 20),
+                                                  style:
+                                                      TextStyle(fontSize: 20),
                                                 ),
                                                 SizedBox(
                                                   width: 40,
@@ -256,13 +259,20 @@ class _CartState extends State<Cart> {
                 ),
               ),
             ),
-            
             Center(
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8,
                 color: Colors.blue,
                 child: FlatButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Address(
+                                amount: sumPrice.toString(),
+                                onThemeChanged: widget.onThemeChanged)),
+                      );
+                    },
                     icon: Icon(
                       Icons.payment,
                       color: Colors.white,
@@ -273,6 +283,20 @@ class _CartState extends State<Cart> {
                       style: TextStyle(color: Colors.white, fontSize: 22),
                     )),
               ),
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Center(
+                child: Text(
+                  "الرجوع للتسوق",
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 30,
             )
           ],
         ),
