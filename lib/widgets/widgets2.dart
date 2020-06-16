@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
@@ -83,7 +84,10 @@ Widget listViewHorznintal(Function selectCategory, var controller) {
 
 bool isViewBottom = false;
 NetworkImage imageBottomSheet;
-Container imageViewBottomSheet(closeImpageOntap) {
+int currentIndex = 0;
+String idImage;
+Container imageViewBottomSheet(closeImpageOntap, onPageChanged) {
+  
   return isViewBottom
       ? Container(
           child: Column(
@@ -101,12 +105,68 @@ Container imageViewBottomSheet(closeImpageOntap) {
                       ),
                       onPressed: closeImpageOntap)),
               Expanded(
-                child: PhotoView(
-                  filterQuality: FilterQuality.high,
-                  minScale: 0.4,
-                  backgroundDecoration: BoxDecoration(color: Colors.white),
-                  imageProvider: imageBottomSheet,
-                ),
+                child: StreamBuilder(
+                    stream: Firestore.instance
+                        .collection("images")
+                        .where("imageID", isEqualTo: idImage)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Text("Loading");
+                      } else {
+                        return Container(
+                            child: Column(
+                          children: [
+                            Expanded(
+                              child: PhotoViewGallery.builder(
+                                scrollPhysics: const BouncingScrollPhysics(),
+                                builder: (BuildContext context, int index) {
+                                  String listImage = snapshot
+                                      .data.documents[0].data['images'][index];
+                                  return PhotoViewGalleryPageOptions(
+                                    imageProvider: NetworkImage(listImage),
+                                    initialScale:
+                                        PhotoViewComputedScale.contained * 0.8,
+                                    minScale: PhotoViewComputedScale.contained,
+                                    heroAttributes:
+                                        PhotoViewHeroAttributes(tag: index),
+                                  );
+                                },
+                                itemCount: snapshot
+                                    .data.documents[0].data['images'].length,
+                                loadingBuilder: (context, event) => Center(
+                                  child: Container(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    child: CircularProgressIndicator(
+                                      value: event == null
+                                          ? 0
+                                          : event.cumulativeBytesLoaded /
+                                              event.expectedTotalBytes,
+                                    ),
+                                  ),
+                                ),
+                                backgroundDecoration:
+                                    BoxDecoration(color: Colors.white70),
+                                // pageController: widget.pageController,
+                                onPageChanged: onPageChanged,
+                              ),
+                            ),
+                            Container(
+                                width: double.infinity,
+                                color: Colors.black,
+                                child: Center(
+                                  child: Text(
+                                    "${snapshot.data.documents[0].data['images'].length} من ${currentIndex + 1}",
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.white),
+                                  ),
+                                ))
+                          ],
+                        ));
+                      }
+                    }),
               ),
             ],
           ),
@@ -139,6 +199,8 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
                     ['description'],
                 price: asyncSnapshot.data.documents[0].data['items'][i]
                     ['price'],
+                imageID: asyncSnapshot.data.documents[0].data['items'][i]
+                    ['imageID'],
               ));
             }
           } catch (e) {
@@ -218,6 +280,7 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
                               listImages[index].price,
                               imageOnTapCustomer,
                               fetchMyCart,
+                              listImages[index].imageID,
                             );
                           },
                           child: Padding(
@@ -291,9 +354,17 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
 }
 
 List<ItemShow> cartToCheck = new List();
-showtheBottomSheet(BuildContext context, String image, String name, String des,
-    String price, Function imageOnTapCustomer, Function fetchMyCart) {
+showtheBottomSheet(
+    BuildContext context,
+    String image,
+    String name,
+    String des,
+    String price,
+    Function imageOnTapCustomer,
+    Function fetchMyCart,
+    String imageID) {
   showModalBottomSheet(
+      elevation: 10,
       backgroundColor: Colors.transparent,
       context: context,
       builder: (context) => SingleChildScrollView(
@@ -310,26 +381,50 @@ showtheBottomSheet(BuildContext context, String image, String name, String des,
                 children: [
                   InkWell(
                     onTap: () {
-                      imageOnTapCustomer(NetworkImage(image));
+                      imageOnTapCustomer(NetworkImage(image), imageID);
+                      print(imageID);
                     },
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: MediaQuery.of(context).size.width / 3,
-                        width: MediaQuery.of(context).size.width / 3,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5),
-                          ),
-                          image: new DecorationImage(
-                            fit: BoxFit.fill,
-                            image: new NetworkImage(
-                              image,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: MediaQuery.of(context).size.width / 3,
+                          width: MediaQuery.of(context).size.width,
+                          child: StreamBuilder(
+                              stream: Firestore.instance
+                                  .collection("images")
+                                  .where("imageID", isEqualTo: imageID)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Text("Loading");
+                                } else {
+                                  return ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: snapshot.data.documents[0]
+                                          .data['images'].length,
+                                      itemBuilder: (context, i) {
+                                        String listImage = snapshot.data
+                                            .documents[0].data['images'][i];
+                                        print(listImage);
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            height: 100,
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                fit: BoxFit.fill,
+                                                image: NetworkImage(
+                                                  listImage,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                }
+                              }),
+                        )),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

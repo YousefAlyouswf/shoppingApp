@@ -561,7 +561,6 @@ Widget subCatgory(
                                                   ),
                                                 ),
                                               ),
-                                             
                                               Container(
                                                 height: 100,
                                                 width: double.infinity,
@@ -598,22 +597,31 @@ Widget subCatgory(
                                                                       'images'][i];
                                                               print(listImage);
                                                               return InkWell(
-                                                                onLongPress: (){
-                                                                  FirestoreFunctions().deleteImagesForList(snapshot
-                                                                .data
-                                                                .documents[0]
-                                                                .data['imageID'], listImage);
+                                                                onLongPress:
+                                                                    () {
+                                                                  FirestoreFunctions().deleteImagesForList(
+                                                                      snapshot
+                                                                          .data
+                                                                          .documents[
+                                                                              0]
+                                                                          .data['imageID'],
+                                                                      listImage);
                                                                 },
-                                                                                                                              child: Padding(
-                                                                  padding: const EdgeInsets.all(8.0),
-                                                                  child: Container(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .all(
+                                                                          8.0),
+                                                                  child:
+                                                                      Container(
                                                                     height: 100,
                                                                     width: 100,
                                                                     decoration:
                                                                         BoxDecoration(
                                                                       image:
                                                                           DecorationImage(
-                                                                              fit: BoxFit.fill,
+                                                                        fit: BoxFit
+                                                                            .fill,
                                                                         image:
                                                                             NetworkImage(
                                                                           listImage,
@@ -754,6 +762,9 @@ Widget subCatgory(
                                                             listImages[index]
                                                                 .image,
                                                         "show": false,
+                                                        "imageID":
+                                                            listImages[index]
+                                                                .imageID,
                                                       };
                                                       Map<String, dynamic>
                                                           itemMapAdd = {
@@ -770,6 +781,9 @@ Widget subCatgory(
                                                             listImages[index]
                                                                 .image,
                                                         "show": true,
+                                                        "imageID":
+                                                            listImages[index]
+                                                                .imageID,
                                                       };
                                                       if (listImages[index]
                                                           .show) {
