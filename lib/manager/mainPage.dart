@@ -129,7 +129,7 @@ class _MainPageState extends State<MainPage>
       body: TabBarView(
         controller: _tabController,
         children: [
-          firstPage(selectCategory),
+          firstPage(selectCategory, takeImageGalaryForList,takeImageCameraForList),
           secondPage(
             context,
             showItemTextFileds,
@@ -183,6 +183,27 @@ class _MainPageState extends State<MainPage>
   }
 
   final picker = ImagePicker();
+  takeImageGalaryForList(String imageID) async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        getImageForlistFile = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageForList(imageID);
+  }
+    takeImageCameraForList(String imageID) async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        getImageForlistFile = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageForList(imageID);
+  }
+
   _takeFromGalaryForCatgory() async {
     final pickedFile = await picker.getImage(
         source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);

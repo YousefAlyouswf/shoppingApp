@@ -31,15 +31,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       showFloatingBtn = controller.offset;
     });
-
-    // if (controller.offset >= controller.position.maxScrollExtent &&
-    //     !controller.position.outOfRange) {
-
-    // }
-    // if (controller.offset <= controller.position.minScrollExtent &&
-    //     !controller.position.outOfRange) {
-    //   print("222");
-    // }
   }
 
   @override

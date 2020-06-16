@@ -3,7 +3,7 @@ import 'package:shop_app/models/appInfo.dart';
 import 'package:shop_app/models/itemShow.dart';
 
 class FirestoreFunctions {
-  addNewItemRoExistCategory(itemMap, String category) async {
+  addNewItemRoExistCategory(itemMap, String category, String imageID) async {
     await Firestore.instance
         .collection('subCategory')
         .where("category", isEqualTo: category)
@@ -17,10 +17,15 @@ class FirestoreFunctions {
           "items": FieldValue.arrayUnion([itemMap])
         });
       });
-    }).catchError((e) => print("error fetching data: $e"));
+    }).whenComplete(() async {
+      await Firestore.instance.collection('images').document().setData({
+        'imageID': imageID,
+        'images': [],
+      });
+    });
   }
 
-  addNewItemToNewCategory(catgoryMap, itemMap) async {
+  addNewItemToNewCategory(catgoryMap, itemMap, String imageID) async {
     await Firestore.instance
         .collection('categories')
         .document("category")
@@ -28,6 +33,50 @@ class FirestoreFunctions {
       "collection": FieldValue.arrayUnion([catgoryMap])
     }).whenComplete(() async {
       await Firestore.instance.collection('subCategory').add(itemMap);
+    }).whenComplete(() async {
+      await Firestore.instance.collection('images').document().setData({
+        'imageID': imageID,
+        'images': [],
+      });
+    });
+  }
+
+  addImagesForList(String imageID, String url) async {
+    print(imageID);
+     print(url);
+    await Firestore.instance
+        .collection('images')
+        .where('imageID', isEqualTo: imageID)
+        .getDocuments()
+        .then((value) {
+      value.documents.forEach((element) async {
+        String id = element.documentID;
+        await Firestore.instance
+            .collection('images')
+            .document(id)
+            .updateData({
+          "images": FieldValue.arrayUnion([url])
+        });
+      });
+    });
+  }
+    deleteImagesForList(String imageID, String url) async {
+    print(imageID);
+     print(url);
+    await Firestore.instance
+        .collection('images')
+        .where('imageID', isEqualTo: imageID)
+        .getDocuments()
+        .then((value) {
+      value.documents.forEach((element) async {
+        String id = element.documentID;
+        await Firestore.instance
+            .collection('images')
+            .document(id)
+            .updateData({
+          "images": FieldValue.arrayRemove([url])
+        });
+      });
     });
   }
 
@@ -81,7 +130,8 @@ class FirestoreFunctions {
         .getDocuments()
         .then((value) {
       value.documents.forEach((element) async {
-        for (var i = 0; i < element.data['items'].length; i++) {
+        try {
+               for (var i = 0; i < element.data['items'].length; i++) {
           if (element.data['items'][i]['show'] == true) {
             image.add(
               ItemShow(
@@ -92,6 +142,9 @@ class FirestoreFunctions {
             );
           }
         }
+        } catch (e) {
+        }
+   
       });
     });
 

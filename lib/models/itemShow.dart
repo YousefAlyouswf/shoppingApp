@@ -5,6 +5,7 @@ class ItemShow {
   final String itemPrice;
   final String itemDes;
   final String image;
+  final String imageID;
 
   ItemShow({
     this.id,
@@ -13,5 +14,6 @@ class ItemShow {
     this.itemDes,
     this.image,
     this.quantity,
+    this.imageID,
   });
 }

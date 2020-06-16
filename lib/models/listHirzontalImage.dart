@@ -5,7 +5,8 @@ class ListHirezontalImage {
   String price;
   String category;
   bool show;
+  String imageID;
 
   ListHirezontalImage(this.name, this.image,
-      {this.description, this.price, this.category, this.show});
+      {this.description, this.price, this.category, this.show, this.imageID});
 }
