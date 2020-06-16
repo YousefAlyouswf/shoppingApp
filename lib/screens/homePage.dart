@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
-
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:shop_app/widgets/widgets2.dart';
-import 'package:translator/translator.dart';
-
 import 'cart.dart';
 
 class HomePage extends StatefulWidget {
   final Function onThemeChanged;
-
-  const HomePage({Key key, this.onThemeChanged}) : super(key: key);
+  final Function changeLangauge;
+  const HomePage({Key key, this.onThemeChanged, this.changeLangauge})
+      : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -52,7 +50,7 @@ class _HomePageState extends State<HomePage> {
       onWillPop: _onBackPressed,
       child: Scaffold(
         drawer: drawer(context, widget.onThemeChanged,
-            changeLangauge: changeLangauge),
+            changeLangauge: widget.changeLangauge),
         floatingActionButton: Container(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -84,8 +82,9 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          Cart(onThemeChanged: widget.onThemeChanged),
+                      builder: (context) => Cart(
+                          onThemeChanged: widget.onThemeChanged,
+                          changeLangauge: widget.changeLangauge),
                     ),
                   );
                 },
@@ -224,24 +223,6 @@ class _HomePageState extends State<HomePage> {
             ),
           )
           .toList();
-    });
-  }
-
-  final translator = new GoogleTranslator();
-
-  changeLangauge() async {
-    // if (!isEnglish) {
-    //   after = [];
-    //   for (var i = 0; i < input.length; i++) {
-    //     await translator.translate(input[i], from: 'ar', to: 'en').then((s) {
-    //       setState(() {});
-    //       after.add(s);
-    //     });
-    //   }
-    // }
-
-    setState(() {
-      isEnglish = !isEnglish;
     });
   }
 }

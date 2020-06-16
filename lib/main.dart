@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/screens/homePage.dart';
+import 'package:shop_app/widgets/widgets.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -27,6 +29,17 @@ class _MyAppState extends State<MyApp> {
     setState(() {});
   }
 
+ 
+ 
+  changeLangauge() async {
+ 
+
+    setState(() {
+      isEnglish = !isEnglish;
+    });
+  
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,7 +51,7 @@ class _MyAppState extends State<MyApp> {
         //   scaffoldBackgroundColor: isDark ? Colors.grey[800] : Colors.white,
         brightness: brightness,
       ),
-      home: HomePage(onThemeChanged: onThemeChanged),
+      home: HomePage(onThemeChanged: onThemeChanged,changeLangauge:changeLangauge ),
     );
   }
 }

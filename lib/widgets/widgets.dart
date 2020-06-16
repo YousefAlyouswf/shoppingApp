@@ -13,6 +13,82 @@ import 'package:shop_app/models/drawerbody.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 import 'package:shop_app/screens/cart.dart';
 
+List<String> english = [
+  'Home',
+  'My Account',
+  'Cart',
+  'My Order',
+  'Categories',
+  'Favorite',
+  'Settings',
+  'Dark Mode',
+  'App Info',
+  'Guest',
+  'اللغة العربية',
+  'Shopping Cart',
+  'Items',
+  'Edit',
+  'To delete drag to left',
+  'R.S.',
+  'Buy R.S',
+  "Continue Shopping",
+  "Shipping Info",
+  "Choose Your Address",
+  "New Address",
+  "Continue",
+  "Personal Info",
+  "Full Name",
+  "Phone",
+  "Address",
+  "Type your national Address",
+  "Search",
+  "OR",
+  "City",
+  "District",
+  "Street",
+  "House Number",
+  "Type Full Name",
+  "Phone Number 10 Digits",
+  "Correct your Address",
+];
+List<String> arabic = [
+  'الرئيسية',
+  'حسابي',
+  'السلة',
+  'طلباتي',
+  'الأقسام',
+  'المفضلة',
+  'الإعدادات',
+  'وضع الداكن',
+  'معلومات التطبيق',
+  'زائر',
+  'English',
+  'سلة التسوق',
+  'المحتويات',
+  'تعديل',
+  "للحذف إسحب إلى اليسار",
+  'ر.س.',
+  'ر.س  شراء',
+  "الرجوع للتسوق",
+  "معلومات الشحن",
+  "أختر عنوانك",
+  "عنوان جديد",
+  "متابعه",
+  "البيانات الشخصية",
+  "الأسم كامل",
+  "رقم الجوال",
+  "العنوان",
+  "أدخل عنوانك الوطني هنا",
+  "إبحث",
+  "أو",
+  "المدينة",
+  "الحي",
+  "الشارع",
+  "رقم المنزل",
+  "أكتب الأسم كامل",
+  "رقم الجوال 10 أرقام",
+  "أكتب العنوان بالشكل الصحيح",
+];
 List<AppInfoModel> appInfo = [];
 AppBar appBar(
     {String text = "الدباس",
@@ -51,70 +127,47 @@ AppBar appBar(
 }
 
 bool isEnglish = false;
-List<String> after = [
-  'Home',
-  'My Account',
-  'Cart',
-  'My Order',
-  'Categories',
-  'Favorite',
-  'Settings',
-  'Dark Mode',
-  'App Info',
-];
-List<String> input = [
-  'الرئيسية',
-  'حسابي',
-  'السلة',
-  'طلباتي',
-  'الأقسام',
-  'المفضلة',
-  'الإعدادات',
-  'وضع الداكن',
-  'معلومات التطبيق'
-];
-
 Drawer drawer(BuildContext context, Function onThemeChanged,
-    {Function changeLangauge}) {
+    {Function changeLangauge, Function fetchMyCart}) {
   List<Widget> drawerBody;
   List<DrawerBodyModel> drawerModel = [
     DrawerBodyModel(
-      isEnglish ? after[0] : input[0],
+      isEnglish ? english[0] : arabic[0],
       Icon(
         Icons.home,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      isEnglish ? after[1] : input[1],
+      isEnglish ? english[1] : arabic[1],
       Icon(
         Icons.person,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      isEnglish ? after[2] : input[2],
+      isEnglish ? english[2] : arabic[2],
       Icon(
         Icons.shopping_cart,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      isEnglish ? after[3] : input[3],
+      isEnglish ? english[3] : arabic[3],
       Icon(
         Icons.shopping_basket,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      isEnglish ? after[4] : input[4],
+      isEnglish ? english[4] : arabic[4],
       Icon(
         Icons.dashboard,
         color: Colors.red,
       ),
     ),
     DrawerBodyModel(
-      isEnglish ? after[5] : input[5],
+      isEnglish ? english[5] : arabic[5],
       Icon(
         Icons.favorite,
         color: Colors.red,
@@ -141,7 +194,7 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
     child: Column(
       children: [
         UserAccountsDrawerHeader(
-          accountName: Text("زائر"),
+          accountName: Text(isEnglish ? english[9] : arabic[9]),
           accountEmail: Text("yousef.alyouswf1989@gmail.com"),
           currentAccountPicture: GestureDetector(
             child: CircleAvatar(
@@ -167,7 +220,7 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
           thickness: 1,
         ),
         ListTile(
-          title: Text(isEnglish ? after[6] : input[6]),
+          title: Text(isEnglish ? english[6] : arabic[6]),
           leading: Icon(
             Icons.settings,
           ),
@@ -175,38 +228,44 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
             showModalBottomSheet(
               backgroundColor: Colors.transparent,
               context: context,
-              builder: (context) => SingleChildScrollView(
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(40),
-                      topLeft: Radius.circular(40),
+              builder: (context) => StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setState) {
+                return SingleChildScrollView(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(40),
+                        topLeft: Radius.circular(40),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        FlatButton(
+                          onPressed: () {
+                            changeLangauge();
+                            fetchMyCart();
+                          },
+                          child: Text(isEnglish ? english[10] : arabic[10]),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Column(
-                    children: [
-                      FlatButton(
-                        onPressed: changeLangauge,
-                        child: Text("تغيير اللغة"),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                );
+              }),
             );
           },
         ),
         ListTile(
-          title: Text(isEnglish ? after[7] : input[7]),
+          title: Text(isEnglish ? english[7] : arabic[7]),
           leading: Icon(
             Icons.lightbulb_outline,
           ),
           onTap: onThemeChanged,
         ),
         ListTile(
-          title: Text(isEnglish ? after[8] : input[8]),
+          title: Text(isEnglish ? english[8] : arabic[8]),
           leading: Icon(
             Icons.help,
           ),
@@ -631,6 +690,7 @@ Widget subCatgory() {
                               "description": listImages[index].description,
                               "price": listImages[index].price,
                               "image": listImages[index].image,
+                              'show': listImages[index].show,
                             };
                             deleteItemDialog(
                               context,

@@ -8,7 +8,10 @@ import 'package:url_launcher/url_launcher.dart';
 class Address extends StatefulWidget {
   final String amount;
   final Function onThemeChanged;
-  const Address({Key key, this.amount, this.onThemeChanged}) : super(key: key);
+  final Function changeLangauge;
+  const Address(
+      {Key key, this.amount, this.onThemeChanged, this.changeLangauge})
+      : super(key: key);
 
   @override
   _AddressState createState() => _AddressState();
@@ -45,6 +48,8 @@ class _AddressState extends State<Address> {
         preAddress = true;
       });
     }
+
+    
   }
 
   bool preAddress = false;
@@ -67,9 +72,10 @@ class _AddressState extends State<Address> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text("معلومات الشحن"),
+        title: new Text(isEnglish ? english[18] : arabic[18]),
       ),
-      drawer: drawer(context, widget.onThemeChanged),
+      drawer: drawer(context, widget.onThemeChanged,
+          changeLangauge: widget.changeLangauge),
       body: Column(
         children: [
           Expanded(
@@ -86,7 +92,7 @@ class _AddressState extends State<Address> {
                       child: Column(
                         children: [
                           Text(
-                            "أختر عنوانك",
+                            isEnglish ? english[19] : arabic[19],
                             textDirection: TextDirection.rtl,
                             style: TextStyle(
                               fontSize: 22,
@@ -100,12 +106,14 @@ class _AddressState extends State<Address> {
                                   child: Card(
                                     child: ListTile(
                                       onTap: () {},
-                                      onLongPress: () {
-                                        DBHelper.deleteAddress(
-                                            "address", addressList[index].id);
-                                        fetchAddress();
-                                      },
                                       title: Text(addressList[index].name),
+                                      trailing: IconButton(
+                                          icon: Icon(Icons.delete),
+                                          onPressed: () {
+                                            DBHelper.deleteAddress("address",
+                                                addressList[index].id);
+                                            fetchAddress();
+                                          }),
                                       subtitle: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -136,7 +144,7 @@ class _AddressState extends State<Address> {
                             height: 30,
                           ),
                           Text(
-                            "البيانات الشخصية",
+                            isEnglish ? english[22] : arabic[22],
                             textDirection: TextDirection.rtl,
                             style: TextStyle(
                               fontSize: 22,
@@ -148,14 +156,16 @@ class _AddressState extends State<Address> {
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: MyTextFormField(
                                   editingController: name,
-                                  hintText: "الأسم كامل",
+                                  hintText:
+                                      isEnglish ? english[23] : arabic[23],
                                 ),
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: MyTextFormField(
                                   editingController: phone,
-                                  hintText: "رقم الجوال",
+                                  hintText:
+                                      isEnglish ? english[24] : arabic[24],
                                   isNumber: true,
                                 ),
                               ),
@@ -169,7 +179,7 @@ class _AddressState extends State<Address> {
                             color: Colors.black,
                           ),
                           Text(
-                            "العنوان",
+                            isEnglish ? english[25] : arabic[25],
                             textDirection: TextDirection.rtl,
                             style: TextStyle(
                               fontSize: 22,
@@ -181,7 +191,8 @@ class _AddressState extends State<Address> {
                                 width: MediaQuery.of(context).size.width * .7,
                                 child: MyTextFormField(
                                   editingController: nationalAddress,
-                                  hintText: "أدخل عنوانك الوطني هنا",
+                                  hintText:
+                                      isEnglish ? english[26] : arabic[26],
                                 ),
                               ),
                               InkWell(
@@ -193,7 +204,7 @@ class _AddressState extends State<Address> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(20))),
                                   child: Text(
-                                    "إبحث",
+                                    isEnglish ? english[27] : arabic[27],
                                     textDirection: TextDirection.rtl,
                                     style: TextStyle(
                                         fontSize: 22, color: Colors.white),
@@ -214,7 +225,7 @@ class _AddressState extends State<Address> {
                                 width: MediaQuery.of(context).size.width / 3,
                               ),
                               Text(
-                                "أو",
+                                isEnglish ? english[28] : arabic[28],
                                 textDirection: TextDirection.rtl,
                                 style: TextStyle(
                                   fontSize: 22,
@@ -236,14 +247,16 @@ class _AddressState extends State<Address> {
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: MyTextFormField(
                                   editingController: city,
-                                  hintText: "المدينة",
+                                  hintText:
+                                      isEnglish ? english[29] : arabic[29],
                                 ),
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: MyTextFormField(
                                   editingController: ditrict,
-                                  hintText: "الحي",
+                                  hintText:
+                                      isEnglish ? english[30] : arabic[30],
                                 ),
                               ),
                             ],
@@ -254,14 +267,16 @@ class _AddressState extends State<Address> {
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: MyTextFormField(
                                   editingController: street,
-                                  hintText: "أسم الشارع",
+                                  hintText:
+                                      isEnglish ? english[31] : arabic[31],
                                 ),
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: MyTextFormField(
                                   editingController: house,
-                                  hintText: "رقم المنزل",
+                                  hintText:
+                                      isEnglish ? english[32] : arabic[32],
                                 ),
                               ),
                             ],
@@ -289,7 +304,7 @@ class _AddressState extends State<Address> {
                     color: Colors.blue,
                     child: Center(
                       child: Text(
-                        "عنوان جديد",
+                        isEnglish ? english[20] : arabic[20],
                         textDirection: TextDirection.rtl,
                         style: TextStyle(
                             fontSize: 22,
@@ -302,9 +317,13 @@ class _AddressState extends State<Address> {
               : InkWell(
                   onTap: () {
                     if (name.text.length < 5) {
-                      errorToast("أكتب الأسم كامل");
+                      isEnglish
+                          ? errorToast(english[33])
+                          : errorToast(arabic[33]);
                     } else if (phone.text.length < 10) {
-                      errorToast("رقم الجوال 10 أرقام");
+                      isEnglish
+                          ? errorToast(english[34])
+                          : errorToast(arabic[34]);
                     } else {
                       if (nationalAddress.text.length > 10 ||
                           (city.text.isNotEmpty &&
@@ -312,8 +331,9 @@ class _AddressState extends State<Address> {
                               street.text.isNotEmpty &&
                               house.text.isNotEmpty)) {
                         if (nationalAddress.text.isEmpty) {
-                          String address =
-                              "المدينة ${city.text}- الحي ${ditrict.text}- الشارع ${street.text}- رقم المنزل ${house.text}";
+                          String address = isEnglish
+                              ? "City ${city.text} - District ${ditrict.text} - Street ${street.text} - House# ${house.text}"
+                              : "المدينة ${city.text} - الحي ${ditrict.text} - الشارع ${street.text} - رقم المنزل ${house.text}";
 
                           DBHelper.insertAddress('address', {
                             'name': name.text,
@@ -328,7 +348,9 @@ class _AddressState extends State<Address> {
                           });
                         }
                       } else {
-                        errorToast("أكتب العنوان بالشكل الصحيح");
+                        isEnglish
+                            ? errorToast(english[35])
+                            : errorToast(arabic[35]);
                       }
                     }
                   },
@@ -338,7 +360,7 @@ class _AddressState extends State<Address> {
                     color: Colors.blue,
                     child: Center(
                       child: Text(
-                        "متابعه",
+                        isEnglish ? english[21] : arabic[21],
                         textDirection: TextDirection.rtl,
                         style: TextStyle(
                             fontSize: 22,
