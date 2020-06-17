@@ -16,6 +16,7 @@ import 'package:uuid/uuid.dart';
 import 'package:shop_app/manager/edit.dart';
 
 var uuid = Uuid();
+
 List<String> english = [
   'Home',
   'My Account',
@@ -276,7 +277,7 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
             showAboutDialog(
               context: context,
               applicationName: "SHOP APP",
-              applicationVersion: "0.0.1",
+              applicationVersion: "0.0.2",
               applicationLegalese: "Developed by Yousef Al Yousef",
               useRootNavigator: false,
               children: [Icon(Icons.developer_board)],

@@ -1,0 +1,4 @@
+enum DeviceScreen{
+  Mobile,
+  Tablet
+}

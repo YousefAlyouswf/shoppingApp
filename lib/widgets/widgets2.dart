@@ -38,7 +38,7 @@ Widget listViewHorznintal(Function selectCategory, var controller) {
                     child: InkWell(
                       onTap: () {
                         selectCategory(listImages[index].name);
-                        double offest = MediaQuery.of(context).size.height / 2;
+                        double offest = MediaQuery.of(context).size.height / 3.7;
                         controller.animateTo(offest,
                             duration: Duration(seconds: 1), curve: Curves.ease);
                       },

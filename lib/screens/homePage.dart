@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double imageShowSize = height / 3;
+    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
@@ -116,7 +117,8 @@ class _HomePageState extends State<HomePage> {
                               child: CircularProgressIndicator(),
                             ),
                           )
-                        : imageCarousel(imageShowSize, imageOnTap),
+                        :  imageCarousel(imageShowSize, imageOnTap)
+                           ,
                   ),
                 ),
                 SliverFillRemaining(
