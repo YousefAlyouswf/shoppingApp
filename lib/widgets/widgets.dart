@@ -13,6 +13,7 @@ import 'package:shop_app/models/drawerbody.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 import 'package:shop_app/screens/cart.dart';
 import 'package:uuid/uuid.dart';
+import 'package:shop_app/manager/edit.dart';
 
 var uuid = Uuid();
 List<String> english = [
@@ -524,7 +525,7 @@ Widget subCatgory(
                         return InkWell(
                           onTap: () {
                             showBottomSheet(
-                                backgroundColor: Colors.transparent,
+                                backgroundColor: Colors.black87,
                                 context: context,
                                 builder: (context) =>
                                     StatefulBuilder(builder: (BuildContext
@@ -543,24 +544,6 @@ Widget subCatgory(
                                           ),
                                           child: Column(
                                             children: [
-                                              Container(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    3,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    3,
-                                                decoration: BoxDecoration(
-                                                  image: new DecorationImage(
-                                                    fit: BoxFit.fill,
-                                                    image: new NetworkImage(
-                                                        listImages[index]
-                                                            .image),
-                                                  ),
-                                                ),
-                                              ),
                                               Container(
                                                 height: 100,
                                                 width: double.infinity,
@@ -599,13 +582,17 @@ Widget subCatgory(
                                                               return InkWell(
                                                                 onLongPress:
                                                                     () {
-                                                                  FirestoreFunctions().deleteImagesForList(
-                                                                      snapshot
-                                                                          .data
-                                                                          .documents[
-                                                                              0]
-                                                                          .data['imageID'],
-                                                                      listImage);
+                                                                  if (i == 0) {
+                                                                    errorToast(
+                                                                        "لا يمكن حذف أول صورة من هذا المكان");
+                                                                  } else {
+                                                                    FirestoreFunctions().deleteImagesForList(
+                                                                        snapshot
+                                                                            .data
+                                                                            .documents[0]
+                                                                            .data['imageID'],
+                                                                        listImage);
+                                                                  }
                                                                 },
                                                                 child: Padding(
                                                                   padding:
@@ -653,8 +640,40 @@ Widget subCatgory(
                                                   }),
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                    MainAxisAlignment
+                                                        .spaceAround,
                                                 children: [
+                                                  IconButton(
+                                                      icon: Icon(Icons.edit,
+                                                          color: Colors.blue),
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) => EditItem(
+                                                                listImages[
+                                                                        index]
+                                                                    .name,
+                                                                listImages[
+                                                                        index]
+                                                                    .image,
+                                                                listImages[
+                                                                        index]
+                                                                    .price,
+                                                                listImages[
+                                                                        index]
+                                                                    .description,
+                                                                listImages[
+                                                                        index]
+                                                                    .imageID,
+                                                                listImages[
+                                                                        index]
+                                                                    .show,
+                                                                catgoryName),
+                                                          ),
+                                                        ).then((value) => Navigator.pop(context));
+                                                        
+                                                      }),
                                                   Padding(
                                                     padding:
                                                         const EdgeInsets.all(
@@ -681,70 +700,16 @@ Widget subCatgory(
                                                               FontWeight.bold),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            16.0),
-                                                    child: Container(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              1.5,
-                                                      height: 200,
-                                                      child:
-                                                          SingleChildScrollView(
-                                                        child: Card(
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .end,
-                                                              children: [
-                                                                Center(
-                                                                  child: Text(
-                                                                    "وصف المنتج",
-                                                                    textDirection:
-                                                                        TextDirection
-                                                                            .rtl,
-                                                                  ),
-                                                                ),
-                                                                Text(
-                                                                  listImages[
-                                                                          index]
-                                                                      .description,
-                                                                  textDirection:
-                                                                      TextDirection
-                                                                          .rtl,
-                                                                  style: TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
                                                   IconButton(
                                                     icon: Icon(
-                                                      listImages[index].show
+                                                      !listImages[index].show
                                                           ? Icons.cancel
                                                           : Icons.check_circle,
                                                       size: 40,
-                                                      color:
-                                                          listImages[index].show
-                                                              ? Colors.red
-                                                              : Colors.green,
+                                                      color: !listImages[index]
+                                                              .show
+                                                          ? Colors.red
+                                                          : Colors.green,
                                                     ),
                                                     onPressed: () {
                                                       Map<String, dynamic>
@@ -801,11 +766,54 @@ Widget subCatgory(
                                                           itemMapAdd,
                                                         );
                                                       }
-
+                                                      setState(() {});
                                                       Navigator.pop(context);
                                                     },
                                                   )
                                                 ],
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(16.0),
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  height: 200,
+                                                  child: SingleChildScrollView(
+                                                    child: Card(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            Center(
+                                                              child: Text(
+                                                                "وصف المنتج",
+                                                                textDirection:
+                                                                    TextDirection
+                                                                        .rtl,
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              listImages[index]
+                                                                  .description,
+                                                              textDirection:
+                                                                  TextDirection
+                                                                      .rtl,
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -1109,19 +1117,13 @@ Widget secondPage(
                           }
                         } else {
                           FirestoreFunctions().addNewItemToNewCategory(
-                            catgoryMap,
-                            itemMapForNew,
-                            uui,
-                          );
+                              catgoryMap, itemMapForNew, uui, urlImageItems);
                           showItemTextFileds();
                           switchToCategoryPage();
                         }
                       } else {
                         FirestoreFunctions().addNewItemRoExistCategory(
-                          itemMap,
-                          selectedCurrency,
-                          uui,
-                        );
+                            itemMap, selectedCurrency, uui, urlImageItems);
                         showItemTextFileds();
                         switchToCategoryPage();
                       }

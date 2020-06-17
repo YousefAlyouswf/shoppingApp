@@ -3,7 +3,8 @@ import 'package:shop_app/models/appInfo.dart';
 import 'package:shop_app/models/itemShow.dart';
 
 class FirestoreFunctions {
-  addNewItemRoExistCategory(itemMap, String category, String imageID) async {
+  addNewItemRoExistCategory(
+      itemMap, String category, String imageID, String url) async {
     await Firestore.instance
         .collection('subCategory')
         .where("category", isEqualTo: category)
@@ -20,12 +21,13 @@ class FirestoreFunctions {
     }).whenComplete(() async {
       await Firestore.instance.collection('images').document().setData({
         'imageID': imageID,
-        'images': [],
+        'images': [url],
       });
     });
   }
 
-  addNewItemToNewCategory(catgoryMap, itemMap, String imageID) async {
+  addNewItemToNewCategory(
+      catgoryMap, itemMap, String imageID, String url) async {
     await Firestore.instance
         .collection('categories')
         .document("category")
@@ -36,14 +38,14 @@ class FirestoreFunctions {
     }).whenComplete(() async {
       await Firestore.instance.collection('images').document().setData({
         'imageID': imageID,
-        'images': [],
+        'images': [url],
       });
     });
   }
 
   addImagesForList(String imageID, String url) async {
     print(imageID);
-     print(url);
+    print(url);
     await Firestore.instance
         .collection('images')
         .where('imageID', isEqualTo: imageID)
@@ -51,18 +53,16 @@ class FirestoreFunctions {
         .then((value) {
       value.documents.forEach((element) async {
         String id = element.documentID;
-        await Firestore.instance
-            .collection('images')
-            .document(id)
-            .updateData({
+        await Firestore.instance.collection('images').document(id).updateData({
           "images": FieldValue.arrayUnion([url])
         });
       });
     });
   }
-    deleteImagesForList(String imageID, String url) async {
-    print(imageID);
-     print(url);
+
+  deleteFirstImagesFormList(
+      String imageID, String urlRemove, String urlAdd) async {
+  
     await Firestore.instance
         .collection('images')
         .where('imageID', isEqualTo: imageID)
@@ -70,10 +70,27 @@ class FirestoreFunctions {
         .then((value) {
       value.documents.forEach((element) async {
         String id = element.documentID;
-        await Firestore.instance
-            .collection('images')
-            .document(id)
-            .updateData({
+        await Firestore.instance.collection('images').document(id).updateData({
+          "images": FieldValue.arrayRemove([urlRemove])
+        });
+        await Firestore.instance.collection('images').document(id).updateData({
+          "images": FieldValue.arrayUnion([urlAdd])
+        });
+      });
+    });
+  }
+
+  deleteImagesForList(String imageID, String url) async {
+    print(imageID);
+    print(url);
+    await Firestore.instance
+        .collection('images')
+        .where('imageID', isEqualTo: imageID)
+        .getDocuments()
+        .then((value) {
+      value.documents.forEach((element) async {
+        String id = element.documentID;
+        await Firestore.instance.collection('images').document(id).updateData({
           "images": FieldValue.arrayRemove([url])
         });
       });
@@ -131,20 +148,18 @@ class FirestoreFunctions {
         .then((value) {
       value.documents.forEach((element) async {
         try {
-               for (var i = 0; i < element.data['items'].length; i++) {
-          if (element.data['items'][i]['show'] == true) {
-            image.add(
-              ItemShow(
-                  itemName: element.data['items'][i]['name'],
-                  itemPrice: element.data['items'][i]['price'],
-                  itemDes: element.data['items'][i]['description'],
-                  image: element.data['items'][i]['image']),
-            );
+          for (var i = 0; i < element.data['items'].length; i++) {
+            if (element.data['items'][i]['show'] == true) {
+              image.add(
+                ItemShow(
+                    itemName: element.data['items'][i]['name'],
+                    itemPrice: element.data['items'][i]['price'],
+                    itemDes: element.data['items'][i]['description'],
+                    image: element.data['items'][i]['image']),
+              );
+            }
           }
-        }
-        } catch (e) {
-        }
-   
+        } catch (e) {}
       });
     });
 
@@ -152,6 +167,29 @@ class FirestoreFunctions {
   }
 
   changeShowStatus(String category, itemMapRemove, itemMapAdd) async {
+    await Firestore.instance
+        .collection('subCategory')
+        .where('category', isEqualTo: category)
+        .getDocuments()
+        .then((value) {
+      value.documents.forEach((element) async {
+        await Firestore.instance
+            .collection('subCategory')
+            .document(element.documentID)
+            .updateData({
+          "items": FieldValue.arrayRemove([itemMapRemove])
+        });
+        await Firestore.instance
+            .collection('subCategory')
+            .document(element.documentID)
+            .updateData({
+          "items": FieldValue.arrayUnion([itemMapAdd])
+        });
+      });
+    });
+  }
+
+  Future<void> upDateItems(String category, itemMapRemove, itemMapAdd) async {
     await Firestore.instance
         .collection('subCategory')
         .where('category', isEqualTo: category)

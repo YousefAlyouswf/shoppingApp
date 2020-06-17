@@ -87,7 +87,6 @@ NetworkImage imageBottomSheet;
 int currentIndex = 0;
 String idImage;
 Container imageViewBottomSheet(closeImpageOntap, onPageChanged) {
-  
   return isViewBottom
       ? Container(
           child: Column(
@@ -412,6 +411,7 @@ showtheBottomSheet(
                                             height: 100,
                                             width: 100,
                                             decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(15)),
                                               image: DecorationImage(
                                                 fit: BoxFit.fill,
                                                 image: NetworkImage(
@@ -427,7 +427,7 @@ showtheBottomSheet(
                         )),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -450,86 +450,83 @@ showtheBottomSheet(
                               fontSize: 22),
                         ),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width / 1.5,
-                          height: 200,
-                          child: SingleChildScrollView(
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Center(
-                                      child: Text(
-                                        "وصف المنتج",
-                                        textDirection: TextDirection.rtl,
-                                      ),
-                                    ),
-                                    Text(
-                                      des,
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                           IconButton(
+                        icon: Icon(
+                          Icons.add_shopping_cart,
+                          size: 40,
+                          color: Colors.green,
                         ),
-                      ),
-                      IconButton(
-                          icon: Icon(
-                            Icons.add_shopping_cart,
-                            size: 40,
-                            color: Colors.green,
-                          ),
-                          onPressed: () async {
-                            await fetchMyCart();
-                            int q = 0;
-                            int id;
-                            for (var i = 0; i < cartToCheck.length; i++) {
-                              if (cartToCheck[i].itemName == name &&
-                                  cartToCheck[i].itemPrice == price &&
-                                  cartToCheck[i].itemDes == des) {
-                                id = cartToCheck[i].id;
-                                q = int.parse(cartToCheck[i].quantity);
-                              }
+                        onPressed: () async {
+                          await fetchMyCart();
+                          int q = 0;
+                          int id;
+                          for (var i = 0; i < cartToCheck.length; i++) {
+                            if (cartToCheck[i].itemName == name &&
+                                cartToCheck[i].itemPrice == price &&
+                                cartToCheck[i].itemDes == des) {
+                              id = cartToCheck[i].id;
+                              q = int.parse(cartToCheck[i].quantity);
                             }
-                            q++;
-                            if (q == 1) {
-                              await DBHelper.insert(
+                          }
+                          q++;
+                          if (q == 1) {
+                            await DBHelper.insert(
+                              'cart',
+                              {
+                                'name': name,
+                                'price': price,
+                                'image': image,
+                                'des': des,
+                                'q': q.toString()
+                              },
+                            ).whenComplete(
+                                () => addCartToast("تم وضعها في سلتك"));
+                          } else {
+                            await DBHelper.updateData(
                                 'cart',
                                 {
                                   'name': name,
                                   'price': price,
                                   'image': image,
                                   'des': des,
-                                  'q': q.toString()
+                                  'q': q.toString(),
                                 },
-                              ).whenComplete(
-                                  () => addCartToast("تم وضعها في سلتك"));
-                            } else {
-                              await DBHelper.updateData(
-                                  'cart',
-                                  {
-                                    'name': name,
-                                    'price': price,
-                                    'image': image,
-                                    'des': des,
-                                    'q': q.toString(),
-                                  },
-                                  id);
-                            }
-                          })
+                                id);
+                          }
+                        },
+                      )
                     ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      width: double.infinity ,
+                      height: 200,
+                      child: SingleChildScrollView(
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    "وصف المنتج",
+                                    textDirection: TextDirection.rtl,
+                                  ),
+                                ),
+                                Text(
+                                  des,
+                                  textDirection: TextDirection.rtl,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

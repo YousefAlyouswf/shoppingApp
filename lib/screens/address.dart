@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_app/database/local_db.dart';
@@ -48,8 +50,6 @@ class _AddressState extends State<Address> {
         preAddress = true;
       });
     }
-
-    
   }
 
   bool preAddress = false;
@@ -416,6 +416,8 @@ class MyTextFormField extends StatelessWidget {
           filled: true,
           // fillColor: Colors.grey,
         ),
+        minLines: isMultiLine ? 5 : 1,
+        maxLines: isMultiLine ?100:1,
         keyboardType: isNumber
             ? TextInputType.number
             : isMultiLine ? TextInputType.multiline : TextInputType.text,
