@@ -288,7 +288,7 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
             showAboutDialog(
               context: context,
               applicationName: "SHOP APP",
-              applicationVersion: "0.0.2",
+              applicationVersion: "0.0.3",
               applicationLegalese: "Developed by Yousef Al Yousef",
               useRootNavigator: false,
               children: [Icon(Icons.developer_board)],
@@ -500,6 +500,8 @@ Widget subCatgory(
                 show: asyncSnapshot.data.documents[0].data['items'][i]['show'],
                 imageID: asyncSnapshot.data.documents[0].data['items'][i]
                     ['imageID'],
+                buyPrice: asyncSnapshot.data.documents[0].data['items'][i]
+                    ['buyPrice'],
               ));
             }
           } catch (e) {
@@ -691,14 +693,31 @@ Widget subCatgory(
                                                     padding:
                                                         const EdgeInsets.all(
                                                             16.0),
-                                                    child: Text(
-                                                      "${listImages[index].price} ر.س",
-                                                      textDirection:
-                                                          TextDirection.rtl,
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                    child: Column(
+                                                      children: [
+                                                        Text(
+                                                          "${listImages[index].price} ر.س",
+                                                          textDirection:
+                                                              TextDirection.rtl,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          "${listImages[index].buyPrice} ر.س",
+                                                          textDirection:
+                                                              TextDirection.rtl,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   Padding(
@@ -924,6 +943,8 @@ TextEditingController itemName = TextEditingController();
 TextEditingController itemPrice = TextEditingController();
 TextEditingController itemDis = TextEditingController();
 TextEditingController categoryName = TextEditingController();
+TextEditingController itemBuyPrice = TextEditingController();
+
 Widget secondPage(
   BuildContext context,
   Function showItemTextFileds,
@@ -952,7 +973,7 @@ Widget secondPage(
                         width: halfMediaWidth,
                         child: MyTextFormField(
                           editingController: categoryName,
-                          hintText: 'Category Name',
+                          hintText: 'أسم القسم',
                         ),
                       ),
                       imageStoredCategory != null
@@ -1017,7 +1038,7 @@ Widget secondPage(
                         width: halfMediaWidth,
                         child: MyTextFormField(
                           editingController: itemName,
-                          hintText: 'Item Name',
+                          hintText: 'أسم المنتج',
                         ),
                       ),
                       Container(
@@ -1025,17 +1046,35 @@ Widget secondPage(
                         width: halfMediaWidth,
                         child: MyTextFormField(
                           editingController: itemPrice,
-                          hintText: 'Price',
+                          hintText: 'سعر البيع',
                           isNumber: true,
                         ),
                       ),
                     ],
                   ),
                 ),
-                MyTextFormField(
-                  editingController: itemDis,
-                  isMultiLine: true,
-                  hintText: 'Description',
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      alignment: Alignment.topCenter,
+                      width: halfMediaWidth,
+                      child: MyTextFormField(
+                        editingController: itemDis,
+                        isMultiLine: true,
+                        hintText: 'الوصف',
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topCenter,
+                      width: halfMediaWidth,
+                      child: MyTextFormField(
+                        editingController: itemBuyPrice,
+                        hintText: 'سعر الشراء',
+                        isNumber: true,
+                      ),
+                    ),
+                  ],
                 ),
                 imageStoredItems != null
                     ? InkWell(
@@ -1104,7 +1143,8 @@ Widget secondPage(
                         "price": itemPrice.text,
                         "image": urlImageItems,
                         "show": false,
-                        "imageID": uui
+                        "imageID": uui,
+                        'buyPrice': itemBuyPrice.text,
                       };
                       Map<String, dynamic> itemMapForNew = {
                         "category": categoryName.text,
@@ -1143,7 +1183,7 @@ Widget secondPage(
                     }
                   },
                   child: Text(
-                    'POST',
+                    'إظافة',
                     style: TextStyle(
                       color: Colors.white,
                     ),

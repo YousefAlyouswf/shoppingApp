@@ -4,7 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shop_app/screens/gmapForDelvir.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:shop_app/widgets/widgets2.dart';
 
@@ -18,7 +20,21 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
   TextEditingController phone = TextEditingController();
   TextEditingController id = TextEditingController();
   TextEditingController pass = TextEditingController();
+  TextEditingController city = TextEditingController();
   bool isloading = false;
+  LatLng customerLocation;
+  void updateLocation(LatLng location) {
+    setState(() => customerLocation = location);
+  }
+
+  moveToMapScreen() async {
+    final location = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => GmapForDeliver()),
+    );
+    updateLocation(location);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,6 +88,38 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                       ),
                     ],
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(color: Colors.orange),
+                            child: InkWell(
+                              onTap: moveToMapScreen,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "أختر المنطقة الأقرب لك",
+                                  textDirection: TextDirection.rtl,
+                                ),
+                              ),
+                            ),
+                          ),
+                          customerLocation == null
+                              ? Text("لم يتم أختيار")
+                              : Text("تم تحديد الموقع بنجاح"),
+                        ],
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: MyTextFormFieldAccount(
+                          editingController: city,
+                          hintText: "المدينة",
+                        ),
+                      ),
+                    ],
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -103,6 +151,10 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                           errorToast("رقم الهوية مكون من عشرة أرقام فقط");
                         } else if (pass.text.length < 6) {
                           errorToast("كلمة المرور يجب ان تتكون من 6 خانات");
+                        } else if (customerLocation == null) {
+                          errorToast("يجب تحديد أقرب مكان لتوصيل الطلبات");
+                        } else if (city.text.length < 2) {
+                          errorToast("أكتب أسم المدينة المتواجد فيها");
                         } else {
                           checkIDs().then((value) {
                             if (value) {
@@ -155,7 +207,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
   String idURL;
   idImage() async {
     final pickedFile = await picker.getImage(
-        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
+        source: ImageSource.gallery, imageQuality: 50, maxWidth: 600);
     setState(() {
       try {
         idFile = File(pickedFile.path);
@@ -167,7 +219,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
   String licURL;
   idLicImage() async {
     final pickedFile = await picker.getImage(
-        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
+        source: ImageSource.gallery, imageQuality: 50, maxWidth: 600);
     setState(() {
       try {
         idLic = File(pickedFile.path);
@@ -179,7 +231,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
   String carURL;
   idCarImage() async {
     final pickedFile = await picker.getImage(
-        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
+        source: ImageSource.gallery, imageQuality: 50, maxWidth: 600);
     setState(() {
       try {
         idCar = File(pickedFile.path);
@@ -224,7 +276,10 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
           'idImage': idURL,
           'licImage': licURL,
           'carImage': carURL,
-          'accept': 'أنتظار'
+          'accept': '0',
+          'lat': customerLocation.latitude,
+          'long': customerLocation.longitude,
+          'city': city.text
         });
         addRequestToast("طلبك قيد الدراسة");
         Navigator.pop(context);
