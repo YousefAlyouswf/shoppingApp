@@ -201,6 +201,8 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
                     ['price'],
                 imageID: asyncSnapshot.data.documents[0].data['items'][i]
                     ['imageID'],
+                buyPrice: asyncSnapshot.data.documents[0].data['items'][i]
+                    ['buyPrice'],
               ));
             }
           } catch (e) {
@@ -281,6 +283,7 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
                               imageOnTapCustomer,
                               fetchMyCart,
                               listImages[index].imageID,
+                              listImages[index].buyPrice,
                             );
                           },
                           child: Padding(
@@ -355,14 +358,16 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
 
 List<ItemShow> cartToCheck = new List();
 showtheBottomSheet(
-    BuildContext context,
-    String image,
-    String name,
-    String des,
-    String price,
-    Function imageOnTapCustomer,
-    Function fetchMyCart,
-    String imageID) {
+  BuildContext context,
+  String image,
+  String name,
+  String des,
+  String price,
+  Function imageOnTapCustomer,
+  Function fetchMyCart,
+  String imageID,
+  String buyPrice,
+) {
   showModalBottomSheet(
       elevation: 10,
       backgroundColor: Colors.transparent,
@@ -479,7 +484,8 @@ showtheBottomSheet(
                                 'price': price,
                                 'image': image,
                                 'des': des,
-                                'q': q.toString()
+                                'q': q.toString(),
+                                'buyPrice': buyPrice
                               },
                             ).whenComplete(
                                 () => addCartToast("تم وضعها في سلتك"));
@@ -492,6 +498,7 @@ showtheBottomSheet(
                                   'image': image,
                                   'des': des,
                                   'q': q.toString(),
+                                  'buyPrice': buyPrice
                                 },
                                 id);
                           }

@@ -47,6 +47,7 @@ dependencies:
   flutter_launcher_icons: ^0.7.5
   google_maps_flutter: ^0.5.28+1
   location: ^3.0.2
+  device_info: ^0.4.2+4
 
   
 

@@ -12,9 +12,9 @@ class DBHelper {
       ),
       onCreate: (db, version) async {
         await db.execute(
-            "CREATE TABLE cart(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price TEXT, image TEXT, des TEXT, q TEXT)");
+            "CREATE TABLE cart(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price TEXT, image TEXT, des TEXT, q TEXT, buyPrice TEXT)");
         await db.execute(
-            "CREATE TABLE address(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, phone TEXT, userAddress TEXT)");
+            "CREATE TABLE address(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, phone TEXT, userAddress TEXT, lat TEXT, long TEXT)");
       },
       version: 1,
     );
@@ -60,6 +60,12 @@ class DBHelper {
     final db = await DBHelper.database();
 
     db.delete(table, where: 'id = ?', whereArgs: [id]);
+  }
+
+  static Future<void> deleteAllItem(String table) async {
+    final db = await DBHelper.database();
+
+    db.delete(table);
   }
 
   ///----------------- USER ADDRESS

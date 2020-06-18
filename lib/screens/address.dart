@@ -6,17 +6,22 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/addressModel.dart';
 import 'package:shop_app/screens/gmap.dart';
+import 'package:shop_app/screens/payment.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
 class Address extends StatefulWidget {
   final String amount;
   final Function onThemeChanged;
   final Function changeLangauge;
+  final String buyPrice;
+  final String price;
   const Address({
     Key key,
     this.amount,
     this.onThemeChanged,
     this.changeLangauge,
+    this.buyPrice,
+    this.price,
   }) : super(key: key);
 
   @override
@@ -39,10 +44,12 @@ class _AddressState extends State<Address> {
       addressList = dataList
           .map(
             (item) => AddressModel(
-              item['name'],
-              item['phone'],
-              item['userAddress'],
+              name: item['name'],
+              phone: item['phone'],
+              address: item['userAddress'],
               id: item['id'],
+              lat: item['lat'],
+              long: item['long'],
             ),
           )
           .toList();
@@ -110,14 +117,34 @@ class _AddressState extends State<Address> {
                               itemBuilder: (context, index) {
                                 String address = addressList[index].address;
 
-                                if (address.substring(0, 6) == "LatLng") {
+                                if (address == "") {
                                   address = "العنوان من الخريطة";
                                 }
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Card(
                                     child: ListTile(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Payment(
+                                              price: widget.price,
+                                              buyPrice: widget.buyPrice,
+                                              onThemeChanged:
+                                                  widget.onThemeChanged,
+                                              changeLangauge:
+                                                  widget.changeLangauge,
+                                              name: addressList[index].name,
+                                              phone: addressList[index].phone,
+                                              address:
+                                                  addressList[index].address,
+                                              lat: addressList[index].lat,
+                                              long: addressList[index].long,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                       title: Text(addressList[index].name),
                                       trailing: IconButton(
                                           icon: Icon(Icons.delete),
@@ -371,14 +398,49 @@ class _AddressState extends State<Address> {
                             'name': name.text,
                             'phone': phone.text,
                             'userAddress': address,
+                            'lat': '',
+                            'long': '',
                           });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Payment(
+                                price: widget.price,
+                                buyPrice: widget.buyPrice,
+                                onThemeChanged: widget.onThemeChanged,
+                                changeLangauge: widget.changeLangauge,
+                                name: name.text,
+                                phone: phone.text,
+                                address: address,
+                              ),
+                            ),
+                          );
                         } else {
                           DBHelper.insertAddress('address', {
                             'name': name.text,
                             'phone': phone.text,
-                            'userAddress': customerLocation.toString(),
+                            'userAddress': '',
+                            'lat': customerLocation.latitude.toString(),
+                            'long': customerLocation.longitude.toString(),
                           });
+                          print(customerLocation.latitude.toString());
                         }
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Payment(
+                              price: widget.price,
+                              buyPrice: widget.buyPrice,
+                              onThemeChanged: widget.onThemeChanged,
+                              changeLangauge: widget.changeLangauge,
+                              name: name.text,
+                              phone: phone.text,
+                              lat: customerLocation.latitude.toString(),
+                              long: customerLocation.longitude.toString(),
+                            ),
+                          ),
+                        );
                       } else {
                         isEnglish
                             ? errorToast(english[35])

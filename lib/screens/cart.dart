@@ -18,7 +18,9 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   List<ItemShow> cart = [];
   double sumPrice = 0;
+  double sumBuyPrice = 0;
   double eachPrice = 0;
+  double eachBuyPrice = 0;
   int quantity = 0;
   List<String> englishItem = [];
   List<String> arabicItem = [];
@@ -26,19 +28,19 @@ class _CartState extends State<Cart> {
   final translator = new GoogleTranslator();
   Future<void> fetchMyCart() async {
     sumPrice = 0;
-
+    sumBuyPrice = 0;
     final dataList = await DBHelper.getData('cart');
     setState(() {
       cart = dataList
           .map(
             (item) => ItemShow(
-              id: item['id'],
-              itemName: item['name'],
-              itemPrice: item['price'],
-              image: item['image'],
-              itemDes: item['des'],
-              quantity: item['q'],
-            ),
+                id: item['id'],
+                itemName: item['name'],
+                itemPrice: item['price'],
+                image: item['image'],
+                itemDes: item['des'],
+                quantity: item['q'],
+                buyPrice: item['buyPrice']),
           )
           .toList();
     });
@@ -46,11 +48,17 @@ class _CartState extends State<Cart> {
     for (var i = 0; i < cart.length; i++) {
       eachPrice =
           double.parse(cart[i].quantity) * double.parse(cart[i].itemPrice);
+      eachBuyPrice =
+          double.parse(cart[i].quantity) * double.parse(cart[i].buyPrice);
     }
 
     for (var i = 0; i < cart.length; i++) {
       sumPrice +=
           double.parse(cart[i].quantity) * double.parse(cart[i].itemPrice);
+    }
+    for (var i = 0; i < cart.length; i++) {
+      sumBuyPrice +=
+          double.parse(cart[i].quantity) * double.parse(cart[i].buyPrice);
     }
     quantity = 0;
     for (var i = 0; i < cart.length; i++) {
@@ -151,7 +159,7 @@ class _CartState extends State<Cart> {
                   child: items.length == 0
                       ? Container(
                           child: Center(
-                            child: CircularProgressIndicator(),
+                            child: Text("السلة فارغة"),
                           ),
                         )
                       : ListView.builder(
@@ -353,10 +361,14 @@ class _CartState extends State<Cart> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Address(
-                                amount: sumPrice.toString(),
-                                onThemeChanged: widget.onThemeChanged,
-                                changeLangauge: widget.changeLangauge)),
+                          builder: (context) => Address(
+                            amount: sumPrice.toString(),
+                            onThemeChanged: widget.onThemeChanged,
+                            changeLangauge: widget.changeLangauge,
+                            buyPrice: sumBuyPrice.toString(),
+                            price: sumPrice.toString(),
+                          ),
+                        ),
                       );
                     },
                     icon: Icon(
