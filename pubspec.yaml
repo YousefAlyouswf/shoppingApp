@@ -45,6 +45,8 @@ dependencies:
   url_launcher: ^5.4.10
   translator: ^0.1.4
   flutter_launcher_icons: ^0.7.5
+  google_maps_flutter: ^0.5.28+1
+  location: ^3.0.2
 
   
 

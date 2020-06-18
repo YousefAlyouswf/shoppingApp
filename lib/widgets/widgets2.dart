@@ -38,7 +38,8 @@ Widget listViewHorznintal(Function selectCategory, var controller) {
                     child: InkWell(
                       onTap: () {
                         selectCategory(listImages[index].name);
-                        double offest = MediaQuery.of(context).size.height / 3.7;
+                        double offest =
+                            MediaQuery.of(context).size.height / 3.7;
                         controller.animateTo(offest,
                             duration: Duration(seconds: 1), curve: Curves.ease);
                       },
@@ -411,7 +412,8 @@ showtheBottomSheet(
                                             height: 100,
                                             width: 100,
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(Radius.circular(15)),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(15)),
                                               image: DecorationImage(
                                                 fit: BoxFit.fill,
                                                 image: NetworkImage(
@@ -450,7 +452,7 @@ showtheBottomSheet(
                               fontSize: 22),
                         ),
                       ),
-                           IconButton(
+                      IconButton(
                         icon: Icon(
                           Icons.add_shopping_cart,
                           size: 40,
@@ -493,6 +495,7 @@ showtheBottomSheet(
                                 },
                                 id);
                           }
+                          Navigator.pop(context);
                         },
                       )
                     ],
@@ -500,7 +503,7 @@ showtheBottomSheet(
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Container(
-                      width: double.infinity ,
+                      width: double.infinity,
                       height: 200,
                       child: SingleChildScrollView(
                         child: Card(
@@ -518,8 +521,7 @@ showtheBottomSheet(
                                 Text(
                                   des,
                                   textDirection: TextDirection.rtl,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),

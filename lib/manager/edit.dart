@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,7 +27,6 @@ class _EditItemState extends State<EditItem> {
   TextEditingController des = TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     name.text = widget.name;
     price.text = widget.price;

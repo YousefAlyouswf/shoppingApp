@@ -45,7 +45,7 @@ List<String> english = [
   "Phone",
   "Address",
   "Type your national Address",
-  "Search",
+  "Select from map",
   "OR",
   "City",
   "District",
@@ -83,7 +83,7 @@ List<String> arabic = [
   "رقم الجوال",
   "العنوان",
   "أدخل عنوانك الوطني هنا",
-  "إبحث",
+  "حدد من الخريطة",
   "أو",
   "المدينة",
   "الحي",
@@ -1508,5 +1508,15 @@ errorToast(String text) {
       timeInSecForIosWeb: 1,
       backgroundColor: Colors.red,
       textColor: Colors.white,
+      fontSize: 16.0);
+}
+infoToast(String text) {
+  Fluttertoast.showToast(
+      msg: text,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.yellow[100],
+      textColor: Colors.black,
       fontSize: 16.0);
 }

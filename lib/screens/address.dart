@@ -2,25 +2,28 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/addressModel.dart';
+import 'package:shop_app/screens/gmap.dart';
 import 'package:shop_app/widgets/widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Address extends StatefulWidget {
   final String amount;
   final Function onThemeChanged;
   final Function changeLangauge;
-  const Address(
-      {Key key, this.amount, this.onThemeChanged, this.changeLangauge})
-      : super(key: key);
+  const Address({
+    Key key,
+    this.amount,
+    this.onThemeChanged,
+    this.changeLangauge,
+  }) : super(key: key);
 
   @override
   _AddressState createState() => _AddressState();
 }
 
 class _AddressState extends State<Address> {
-  TextEditingController nationalAddress = TextEditingController();
   TextEditingController city = TextEditingController();
   TextEditingController ditrict = TextEditingController();
   TextEditingController street = TextEditingController();
@@ -52,6 +55,7 @@ class _AddressState extends State<Address> {
     }
   }
 
+  LatLng customerLocation;
   bool preAddress = false;
   @override
   void initState() {
@@ -59,13 +63,16 @@ class _AddressState extends State<Address> {
     fetchAddress();
   }
 
-  _launchURL() async {
-    const url = 'https://maps.address.gov.sa/Home/Index?lang=en';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+  void updateLocation(LatLng location) {
+    setState(() => customerLocation = location);
+  }
+
+  moveToMapScreen() async {
+    final location = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Gmap()),
+    );
+    updateLocation(location);
   }
 
   @override
@@ -101,6 +108,11 @@ class _AddressState extends State<Address> {
                           Expanded(
                             child: ListView.separated(
                               itemBuilder: (context, index) {
+                                String address = addressList[index].address;
+
+                                if (address.substring(0, 6) == "LatLng") {
+                                  address = "العنوان من الخريطة";
+                                }
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Card(
@@ -119,7 +131,7 @@ class _AddressState extends State<Address> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text("${addressList[index].phone}"),
-                                          Text("${addressList[index].address}")
+                                          Text("$address")
                                         ],
                                       ),
                                     ),
@@ -186,17 +198,20 @@ class _AddressState extends State<Address> {
                             ),
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Container(
-                                width: MediaQuery.of(context).size.width * .7,
-                                child: MyTextFormField(
-                                  editingController: nationalAddress,
-                                  hintText:
-                                      isEnglish ? english[26] : arabic[26],
-                                ),
+                                width: 100,
+                                height: 100,
+                                child: customerLocation == null
+                                    ? Container()
+                                    : Center(
+                                        child:
+                                            Text("تم تحديد موقع التوصيل بنجاح"),
+                                      ),
                               ),
                               InkWell(
-                                onTap: _launchURL,
+                                onTap: moveToMapScreen,
                                 child: Container(
                                   padding: EdgeInsets.all(16.0),
                                   decoration: BoxDecoration(
@@ -216,71 +231,88 @@ class _AddressState extends State<Address> {
                           SizedBox(
                             height: 30,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Container(
-                                height: 1,
-                                color: Colors.grey,
-                                width: MediaQuery.of(context).size.width / 3,
-                              ),
-                              Text(
-                                isEnglish ? english[28] : arabic[28],
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(
-                                  fontSize: 22,
+                          customerLocation != null
+                              ? Container()
+                              : Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Container(
+                                      height: 1,
+                                      color: Colors.grey,
+                                      width:
+                                          MediaQuery.of(context).size.width / 3,
+                                    ),
+                                    Text(
+                                      isEnglish ? english[28] : arabic[28],
+                                      textDirection: TextDirection.rtl,
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 1,
+                                      color: Colors.grey,
+                                      width:
+                                          MediaQuery.of(context).size.width / 3,
+                                    )
+                                  ],
                                 ),
-                              ),
-                              Container(
-                                height: 1,
-                                color: Colors.grey,
-                                width: MediaQuery.of(context).size.width / 3,
-                              )
-                            ],
-                          ),
                           SizedBox(
                             height: 30,
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width / 2,
-                                child: MyTextFormField(
-                                  editingController: city,
-                                  hintText:
-                                      isEnglish ? english[29] : arabic[29],
+                          customerLocation != null
+                              ? Container()
+                              : Row(
+                                  children: [
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: MyTextFormField(
+                                        editingController: city,
+                                        hintText: isEnglish
+                                            ? english[29]
+                                            : arabic[29],
+                                      ),
+                                    ),
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: MyTextFormField(
+                                        editingController: ditrict,
+                                        hintText: isEnglish
+                                            ? english[30]
+                                            : arabic[30],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width / 2,
-                                child: MyTextFormField(
-                                  editingController: ditrict,
-                                  hintText:
-                                      isEnglish ? english[30] : arabic[30],
+                          customerLocation != null
+                              ? Container()
+                              : Row(
+                                  children: [
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: MyTextFormField(
+                                        editingController: street,
+                                        hintText: isEnglish
+                                            ? english[31]
+                                            : arabic[31],
+                                      ),
+                                    ),
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: MyTextFormField(
+                                        editingController: house,
+                                        hintText: isEnglish
+                                            ? english[32]
+                                            : arabic[32],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width / 2,
-                                child: MyTextFormField(
-                                  editingController: street,
-                                  hintText:
-                                      isEnglish ? english[31] : arabic[31],
-                                ),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width / 2,
-                                child: MyTextFormField(
-                                  editingController: house,
-                                  hintText:
-                                      isEnglish ? english[32] : arabic[32],
-                                ),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ),
@@ -325,12 +357,12 @@ class _AddressState extends State<Address> {
                           ? errorToast(english[34])
                           : errorToast(arabic[34]);
                     } else {
-                      if (nationalAddress.text.length > 10 ||
+                      if (customerLocation != null ||
                           (city.text.isNotEmpty &&
                               ditrict.text.isNotEmpty &&
                               street.text.isNotEmpty &&
                               house.text.isNotEmpty)) {
-                        if (nationalAddress.text.isEmpty) {
+                        if (customerLocation == null) {
                           String address = isEnglish
                               ? "City ${city.text} - District ${ditrict.text} - Street ${street.text} - House# ${house.text}"
                               : "المدينة ${city.text} - الحي ${ditrict.text} - الشارع ${street.text} - رقم المنزل ${house.text}";
@@ -344,7 +376,7 @@ class _AddressState extends State<Address> {
                           DBHelper.insertAddress('address', {
                             'name': name.text,
                             'phone': phone.text,
-                            'userAddress': nationalAddress.text,
+                            'userAddress': customerLocation.toString(),
                           });
                         }
                       } else {
@@ -417,7 +449,7 @@ class MyTextFormField extends StatelessWidget {
           // fillColor: Colors.grey,
         ),
         minLines: isMultiLine ? 5 : 1,
-        maxLines: isMultiLine ?100:1,
+        maxLines: isMultiLine ? 100 : 1,
         keyboardType: isNumber
             ? TextInputType.number
             : isMultiLine ? TextInputType.multiline : TextInputType.text,
