@@ -53,7 +53,7 @@ class _GmapState extends State<Gmap> {
 
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
-      infoToast("دور بيتك بنفسك :(");
+     
       setState(() {
         long = 46.674976;
         lat =  24.711906;

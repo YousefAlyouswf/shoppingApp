@@ -12,6 +12,7 @@ import 'package:shop_app/models/appInfo.dart';
 import 'package:shop_app/models/drawerbody.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 import 'package:shop_app/screens/cart.dart';
+import 'package:shop_app/screens/myAccount.dart';
 import 'package:uuid/uuid.dart';
 import 'package:shop_app/manager/edit.dart';
 
@@ -19,7 +20,7 @@ var uuid = Uuid();
 
 List<String> english = [
   'Home',
-  'My Account',
+  'deliver',
   'Cart',
   'My Order',
   'Categories',
@@ -57,7 +58,7 @@ List<String> english = [
 ];
 List<String> arabic = [
   'الرئيسية',
-  'حسابي',
+  'المندوب',
   'السلة',
   'طلباتي',
   'الأقسام',
@@ -143,13 +144,6 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
       ),
     ),
     DrawerBodyModel(
-      isEnglish ? english[1] : arabic[1],
-      Icon(
-        Icons.person,
-        color: Colors.red,
-      ),
-    ),
-    DrawerBodyModel(
       isEnglish ? english[2] : arabic[2],
       Icon(
         Icons.shopping_cart,
@@ -177,6 +171,13 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
         color: Colors.red,
       ),
     ),
+    DrawerBodyModel(
+      isEnglish ? english[1] : arabic[1],
+      Icon(
+        Icons.person,
+        color: Colors.red,
+      ),
+    ),
   ];
   drawerBody = new List();
   for (var i = 0; i < drawerModel.length; i++) {
@@ -184,10 +185,20 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
       title: Text(drawerModel[i].text),
       leading: drawerModel[i].icon,
       onTap: () {
-        if (drawerModel[i].text == "السلة") {
+        String basketWord = isEnglish ? english[2] : arabic[2];
+        String homeWord = isEnglish ? english[0] : arabic[0];
+        String myAccountWord = isEnglish ? english[1] : arabic[1];
+        if (drawerModel[i].text == basketWord) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => Cart()),
+          );
+        } else if (drawerModel[i].text == homeWord) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        } else if (drawerModel[i].text == myAccountWord) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MyAccount()),
           );
         }
       },
@@ -672,8 +683,9 @@ Widget subCatgory(
                                                                     .show,
                                                                 catgoryName),
                                                           ),
-                                                        ).then((value) => Navigator.pop(context));
-                                                        
+                                                        ).then((value) =>
+                                                            Navigator.pop(
+                                                                context));
                                                       }),
                                                   Padding(
                                                     padding:
@@ -1510,6 +1522,7 @@ errorToast(String text) {
       textColor: Colors.white,
       fontSize: 16.0);
 }
+
 infoToast(String text) {
   Fluttertoast.showToast(
       msg: text,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/models/tabModels.dart';
+import 'package:shop_app/widgets/employeeWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:shop_app/widgets/widgets2.dart';
 
@@ -17,12 +18,16 @@ class _MainPageState extends State<MainPage>
   TabController _tabController;
   List<TabModels> pages = [
     TabModels(
-      "Catgories",
+      "الأقسام",
       Icon(Icons.dashboard),
     ),
     TabModels(
-      "Add New",
+      "إظافة",
       Icon(Icons.add),
+    ),
+      TabModels(
+      "المندوبين",
+      Icon(Icons.people),
     ),
   ];
 
@@ -122,6 +127,10 @@ class _MainPageState extends State<MainPage>
                 text: pages[1].text,
                 icon: pages[1].icon,
               ),
+               Tab(
+                text: pages[2].text,
+                icon: pages[2].icon,
+              ),
             ],
           ),
         ),
@@ -139,6 +148,7 @@ class _MainPageState extends State<MainPage>
             _takeFromGalaryForItems,
             switchToCategoryPage,
           ),
+          employeeList()
         ],
       ),
     );
