@@ -9,6 +9,7 @@ import 'package:shop_app/widgets/widgets.dart';
 
 import 'package:translator/translator.dart';
 import 'package:device_info/device_info.dart';
+import 'package:uuid/uuid.dart';
 
 class Payment extends StatefulWidget {
   final Function onThemeChanged;
@@ -74,11 +75,14 @@ class _PaymentState extends State<Payment> {
 
   AndroidDeviceInfo androidInfo;
   IosDeviceInfo iosDeviceInfo;
+  var uuid = Uuid();
+  String uid;
   @override
   void initState() {
     fetchMyCart();
     super.initState();
     deviceID();
+    uid = uuid.v1();
   }
 
   void deviceID() async {
@@ -107,6 +111,9 @@ class _PaymentState extends State<Payment> {
           child: InkWell(
             onTap: () {
               Firestore.instance.collection('order').add({
+                'orderID': uid.substring(0, 13),
+                'date': DateTime.now().toString(),
+                'status': '0',
                 'address': widget.address,
                 'lat': widget.lat,
                 'long': widget.long,

@@ -13,6 +13,7 @@ import 'package:shop_app/models/drawerbody.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 import 'package:shop_app/screens/cart.dart';
 import 'package:shop_app/screens/myAccount.dart';
+import 'package:shop_app/screens/myOrder.dart';
 import 'package:uuid/uuid.dart';
 import 'package:shop_app/manager/edit.dart';
 
@@ -181,6 +182,7 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
         String basketWord = isEnglish ? english[2] : arabic[2];
         String homeWord = isEnglish ? english[0] : arabic[0];
         String myAccountWord = isEnglish ? english[1] : arabic[1];
+        String myOrderWord = isEnglish ? english[3] : arabic[3];
         if (drawerModel[i].text == basketWord) {
           Navigator.push(
             context,
@@ -192,6 +194,11 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => MyAccount()),
+          );
+        }else if(drawerModel[i].text == myOrderWord){
+           Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MyOrder()),
           );
         }
       },
