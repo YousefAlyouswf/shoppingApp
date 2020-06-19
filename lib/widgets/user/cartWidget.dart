@@ -139,11 +139,26 @@ Widget invoiceTable(Function fetchMyCart) {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          items[i],
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            cart[i].sizeChose == ''
+                                                ? Container()
+                                                : Text(
+                                                    "(${cart[i].sizeChose})",
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w300),
+                                                  ),
+                                            Text(
+                                              items[i],
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ],
                                         ),
                                         Text(
                                           isEnglish

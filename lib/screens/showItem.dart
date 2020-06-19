@@ -38,6 +38,7 @@ class _ShowItemState extends State<ShowItem> {
   String sizeChose = '';
   @override
   Widget build(BuildContext context) {
+    print(widget.imageID);
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
@@ -158,22 +159,27 @@ class _ShowItemState extends State<ShowItem> {
                                   'q': q.toString(),
                                   'buyPrice': widget.buyPrice,
                                   'size': '',
+                                  'productID': widget.imageID,
                                 },
                               ).whenComplete(
                                   () => addCartToast("تم وضعها في سلتك"));
                             } else {
                               await DBHelper.updateData(
-                                  'cart',
-                                  {
-                                    'name': widget.name,
-                                    'price': widget.price,
-                                    'image': widget.image,
-                                    'des': widget.des,
-                                    'q': q.toString(),
-                                    'buyPrice': widget.buyPrice,
-                                    'size': '',
-                                  },
-                                  id);
+                                      'cart',
+                                      {
+                                        'name': widget.name,
+                                        'price': widget.price,
+                                        'image': widget.image,
+                                        'des': widget.des,
+                                        'q': q.toString(),
+                                        'buyPrice': widget.buyPrice,
+                                        'size': '',
+                                        'productID': widget.imageID,
+                                      },
+                                      id)
+                                  .whenComplete(
+                                      () => addCartToast("تم وضعها في سلتك"));
+                              ;
                             }
                             Navigator.pop(context);
                           } else {
@@ -203,22 +209,26 @@ class _ShowItemState extends State<ShowItem> {
                                     'q': q.toString(),
                                     'buyPrice': widget.buyPrice,
                                     'size': sizeChose,
+                                    'productID': widget.imageID,
                                   },
                                 ).whenComplete(
                                     () => addCartToast("تم وضعها في سلتك"));
                               } else {
                                 await DBHelper.updateData(
-                                    'cart',
-                                    {
-                                      'name': widget.name,
-                                      'price': widget.price,
-                                      'image': widget.image,
-                                      'des': widget.des,
-                                      'q': q.toString(),
-                                      'buyPrice': widget.buyPrice,
-                                      'size': sizeChose,
-                                    },
-                                    id);
+                                        'cart',
+                                        {
+                                          'name': widget.name,
+                                          'price': widget.price,
+                                          'image': widget.image,
+                                          'des': widget.des,
+                                          'q': q.toString(),
+                                          'buyPrice': widget.buyPrice,
+                                          'size': sizeChose,
+                                          'productID': widget.imageID,
+                                        },
+                                        id)
+                                    .whenComplete(
+                                        () => addCartToast("تم وضعها في سلتك"));
                               }
                               Navigator.pop(context);
                             }

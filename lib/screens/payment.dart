@@ -60,6 +60,8 @@ class _PaymentState extends State<Payment> {
               itemDes: item['des'],
               quantity: item['q'],
               buyPrice: item['buyPrice'],
+              sizeChose: item['size'],
+              productID: item['productID'],
             ),
           )
           .toList();
@@ -71,6 +73,8 @@ class _PaymentState extends State<Payment> {
         'quantity': cart[i].quantity,
         'buyPrice': cart[i].buyPrice,
         'sellPrice': cart[i].itemPrice,
+        'size': cart[i].sizeChose,
+        'productID': cart[i].productID,
       });
     }
   }
@@ -98,7 +102,6 @@ class _PaymentState extends State<Payment> {
 
   @override
   Widget build(BuildContext context) {
-    print(androidInfo.androidId);
     return Scaffold(
       appBar: appBar(),
       drawer: drawer(context, widget.onThemeChanged,

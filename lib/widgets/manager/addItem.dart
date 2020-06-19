@@ -328,6 +328,7 @@ Widget addItem(
                       }
                     } else {
                       String uui = uuid.v1();
+                      uui = uui.substring(0, 8);
                       Map<String, dynamic> sizeWordMap = {
                         'XS': xs,
                         'S': s,

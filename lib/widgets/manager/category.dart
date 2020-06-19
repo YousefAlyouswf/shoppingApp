@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/manager/edit.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
+import 'package:shop_app/models/sizeListModel.dart';
 
 import '../widgets.dart';
 import 'addItem.dart';
@@ -27,6 +28,7 @@ Widget categoryScreen(
   );
 }
 
+List<SizeListModel> sizes = [];
 File getImageForlistFile;
 String getImageForlistURL;
 String catgoryName = "";
@@ -48,6 +50,37 @@ Widget subCatgory(
                 asyncSnapshot.data.documents[0].data['items'].length;
             listImages = List();
             for (var i = 0; i < listLength; i++) {
+              sizes = [];
+
+              if (asyncSnapshot
+                      .data.documents[0].data['items'][i]['size'].length !=
+                  0) {
+                sizes = [];
+                if (asyncSnapshot
+                        .data.documents[0].data['items'][i]['size'].length ==
+                    8) {
+                  for (var j = 35;
+                      j <
+                          asyncSnapshot.data.documents[0]
+                                  .data['items'][i]['size'].length +
+                              35;
+                      j++) {
+                    var value = asyncSnapshot.data.documents[0].data['items'][i]
+                        ['size'][j.toString()];
+
+                    sizes.add(SizeListModel(j.toString(), value));
+                  }
+                } else {
+                  List<String> sizeWord = ['XS', 'S', 'M', 'L', 'XL'];
+                  for (var j = 0; j < 5; j++) {
+                    var value = asyncSnapshot.data.documents[0].data['items'][i]
+                        ['size'][sizeWord[j]];
+
+                    sizes.add(SizeListModel(sizeWord[j], value));
+                  }
+                }
+              }
+
               listImages.add(ListHirezontalImage(
                 name: asyncSnapshot.data.documents[0].data['items'][i]['name'],
                 image: asyncSnapshot.data.documents[0].data['items'][i]
@@ -61,6 +94,7 @@ Widget subCatgory(
                     ['imageID'],
                 buyPrice: asyncSnapshot.data.documents[0].data['items'][i]
                     ['buyPrice'],
+                sizeModel: sizes,
               ));
             }
           } catch (e) {
@@ -151,7 +185,6 @@ Widget subCatgory(
                                                                               0]
                                                                           .data[
                                                                       'images'][i];
-                                                              print(listImage);
                                                               return InkWell(
                                                                 onLongPress:
                                                                     () {
@@ -304,7 +337,20 @@ Widget subCatgory(
                                                     ),
                                                     onPressed: () {
                                                       Map<String, dynamic>
+                                                          sizingMap =
+                                                          Map.fromIterable(
+                                                              listImages[index]
+                                                                  .sizeModel,
+                                                              key: (e) =>
+                                                                  e.sizeName,
+                                                              value: (e) =>
+                                                                  e.value);
+
+                                                      Map<String, dynamic>
                                                           itemMapRemove = {
+                                                        "buyPrice":
+                                                            listImages[index]
+                                                                .buyPrice,
                                                         "name":
                                                             listImages[index]
                                                                 .name,
@@ -321,9 +367,13 @@ Widget subCatgory(
                                                         "imageID":
                                                             listImages[index]
                                                                 .imageID,
+                                                        'size': sizingMap
                                                       };
                                                       Map<String, dynamic>
                                                           itemMapAdd = {
+                                                        "buyPrice":
+                                                            listImages[index]
+                                                                .buyPrice,
                                                         "name":
                                                             listImages[index]
                                                                 .name,
@@ -340,6 +390,7 @@ Widget subCatgory(
                                                         "imageID":
                                                             listImages[index]
                                                                 .imageID,
+                                                        'size': sizingMap
                                                       };
                                                       if (listImages[index]
                                                           .show) {
@@ -413,13 +464,19 @@ Widget subCatgory(
                                     }));
                           },
                           onLongPress: () {
+                            Map<String, dynamic> sizingMap = Map.fromIterable(
+                                listImages[index].sizeModel,
+                                key: (e) => e.sizeName,
+                                value: (e) => e.value);
                             Map<String, dynamic> itemMap = {
+                              'buyPrice': listImages[index].buyPrice,
                               "name": listImages[index].name,
                               "description": listImages[index].description,
                               "price": listImages[index].price,
                               "image": listImages[index].image,
                               'show': listImages[index].show,
                               'imageID': listImages[index].imageID,
+                              'size': sizingMap,
                             };
                             deleteItemDialog(
                               context,

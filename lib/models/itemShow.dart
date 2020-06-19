@@ -8,6 +8,8 @@ class ItemShow {
   final String imageID;
   final String buyPrice;
   final List<String> size;
+  final String sizeChose;
+  final String productID;
 
   ItemShow({
     this.id,
@@ -19,5 +21,7 @@ class ItemShow {
     this.imageID,
     this.buyPrice,
     this.size,
+    this.sizeChose,
+    this.productID,
   });
 }

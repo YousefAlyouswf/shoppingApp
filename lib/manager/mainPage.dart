@@ -201,6 +201,8 @@ class _MainPageState extends State<MainPage>
     itemName.clear();
     itemPrice.clear();
     itemDis.clear();
+    itemBuyPrice.clear();
+    checkedSize = false;
     imageStoredCategory = null;
     urlImageCategory = null;
     imageStoredItems = null;

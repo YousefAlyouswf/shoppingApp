@@ -12,7 +12,7 @@ class DBHelper {
       ),
       onCreate: (db, version) async {
         await db.execute(
-            "CREATE TABLE cart(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price TEXT, image TEXT, des TEXT, q TEXT, buyPrice TEXT, size TEXT)");
+            "CREATE TABLE cart(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price TEXT, image TEXT, des TEXT, q TEXT, buyPrice TEXT, size TEXT, productID TEXT)");
         await db.execute(
             "CREATE TABLE address(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, phone TEXT, userAddress TEXT, lat TEXT, long TEXT)");
       },

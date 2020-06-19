@@ -23,13 +23,16 @@ class _CartState extends State<Cart> {
       cart = dataList
           .map(
             (item) => ItemShow(
-                id: item['id'],
-                itemName: item['name'],
-                itemPrice: item['price'],
-                image: item['image'],
-                itemDes: item['des'],
-                quantity: item['q'],
-                buyPrice: item['buyPrice']),
+              id: item['id'],
+              itemName: item['name'],
+              itemPrice: item['price'],
+              image: item['image'],
+              itemDes: item['des'],
+              quantity: item['q'],
+              buyPrice: item['buyPrice'],
+              sizeChose: item['size'],
+              productID: item['productID'],
+            ),
           )
           .toList();
     });
@@ -83,6 +86,7 @@ class _CartState extends State<Cart> {
     if (totalAfterTax == delivery) {
       totalAfterTax = 0.0;
     }
+    print(cart[0].productID);
   }
 
   getTaxAndDeliveryPrice() async {

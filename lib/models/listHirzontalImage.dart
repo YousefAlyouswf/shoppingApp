@@ -1,3 +1,5 @@
+import 'package:shop_app/models/sizeListModel.dart';
+
 class ListHirezontalImage {
   String name;
   String image;
@@ -8,9 +10,10 @@ class ListHirezontalImage {
   bool show;
   String imageID;
   List<String> size;
+  List<SizeListModel> sizeModel;
 
-  ListHirezontalImage(
-    { this.name,
+  ListHirezontalImage({
+    this.name,
     this.image,
     this.description,
     this.price,
@@ -19,5 +22,6 @@ class ListHirezontalImage {
     this.imageID,
     this.buyPrice,
     this.size,
+    this.sizeModel,
   });
 }
