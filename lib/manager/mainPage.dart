@@ -159,6 +159,22 @@ class _MainPageState extends State<MainPage>
             _takePictureForItems,
             _takeFromGalaryForItems,
             switchToCategoryPage,
+            checkBoxFuncation,
+            chooseWordSized,
+            chooseNumSized,
+            changeXS,
+            changeS,
+            changeM,
+            changeL,
+            changeXL,
+            change35,
+            change36,
+            change37,
+            change38,
+            change39,
+            change40,
+            change41,
+            change42,
           ),
           orders(context, searchOrder),
           employeeList(),
@@ -275,6 +291,105 @@ class _MainPageState extends State<MainPage>
   searchOrder(String search) {
     setState(() {
       orderNumber = search;
+    });
+  }
+
+  checkBoxFuncation(newValue) {
+    setState(() {
+      checkedSize = newValue;
+    });
+  }
+
+  chooseWordSized() {
+    setState(() {
+      sizeWord = true;
+      sizeNum = false;
+    });
+  }
+
+  chooseNumSized() {
+    setState(() {
+      sizeNum = true;
+      sizeWord = false;
+    });
+  }
+
+  changeXS() {
+    setState(() {
+      xs = !xs;
+    });
+  }
+
+  changeS() {
+    setState(() {
+      s = !s;
+    });
+  }
+
+  changeM() {
+    setState(() {
+      m = !m;
+    });
+  }
+
+  changeL() {
+    setState(() {
+      l = !l;
+    });
+  }
+
+  changeXL() {
+    setState(() {
+      xl = !xl;
+    });
+  }
+  //Numbers
+
+  change35() {
+    setState(() {
+      s35 = !s35;
+    });
+  }
+
+  change36() {
+    setState(() {
+      s36 = !s36;
+    });
+  }
+
+  change37() {
+    setState(() {
+      s37 = !s37;
+    });
+  }
+
+  change38() {
+    setState(() {
+      s38 = !s38;
+    });
+  }
+
+  change39() {
+    setState(() {
+      s39 = !s39;
+    });
+  }
+
+  change40() {
+    setState(() {
+      s40 = !s40;
+    });
+  }
+
+  change41() {
+    setState(() {
+      s41 = !s41;
+    });
+  }
+
+  change42() {
+    setState(() {
+      s42 = !s42;
     });
   }
 }

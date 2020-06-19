@@ -16,7 +16,9 @@ TextEditingController itemPrice = TextEditingController();
 TextEditingController itemDis = TextEditingController();
 TextEditingController categoryName = TextEditingController();
 TextEditingController itemBuyPrice = TextEditingController();
-
+bool checkedSize = false;
+bool sizeWord = false;
+bool sizeNum = false;
 Widget addItem(
   BuildContext context,
   Function showItemTextFileds,
@@ -25,6 +27,22 @@ Widget addItem(
   Function _takePictureForItems,
   Function _takeFromGalaryForItems,
   Function switchToCategoryPage,
+  Function checkBoxFuncation,
+  Function chooseWordSized,
+  Function chooseNumSized,
+  Function changeXS,
+  Function changeS,
+  Function changeM,
+  Function changeL,
+  Function changeXL,
+  Function change35,
+  Function change36,
+  Function change37,
+  Function change38,
+  Function change39,
+  Function change40,
+  Function change41,
+  Function change42,
 ) {
   final halfMediaWidth = MediaQuery.of(context).size.width / 2.0;
   return Container(
@@ -188,6 +206,83 @@ Widget addItem(
                         ),
                       ),
                 SizedBox(
+                  height: 20,
+                ),
+                CheckboxListTile(
+                  title: Text("يوجد مقاسات؟"),
+                  value: checkedSize,
+                  onChanged: checkBoxFuncation,
+                  controlAffinity:
+                      ListTileControlAffinity.leading, //  <-- leading Checkbox
+                ),
+                Visibility(
+                  visible: checkedSize,
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colors.amber[100], border: Border.all()),
+                            child: InkWell(
+                                onTap: chooseNumSized,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("مقاس أرقام"),
+                                )),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colors.amber[100], border: Border.all()),
+                            child: InkWell(
+                                onTap: chooseWordSized,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("مقاس حجم"),
+                                )),
+                          ),
+                        ],
+                      ),
+                      Visibility(
+                        visible: sizeWord,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              buttonSize("XS", changeXS, xs),
+                              buttonSize("S", changeS, s),
+                              buttonSize("M", changeM, m),
+                              buttonSize("L", changeL, l),
+                              buttonSize("XL", changeXL, xl),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: sizeNum,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              buttonSize("35", change35, s35),
+                              buttonSize("36", change36, s36),
+                              buttonSize("37", change37, s37),
+                              buttonSize("38", change38, s38),
+                              buttonSize("39", change39, s39),
+                              buttonSize("40", change40, s40),
+                              buttonSize("41", change41, s41),
+                              buttonSize("42", change42, s42),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
                   height: 70,
                 ),
                 RaisedButton(
@@ -196,19 +291,60 @@ Widget addItem(
                     if (itemName.text.isEmpty ||
                         itemPrice.text.isEmpty ||
                         itemDis.text.isEmpty ||
+                        itemBuyPrice.text.isEmpty ||
                         imageStoredItems == null ||
+                        (checkedSize && !xs && !s && !m && !l && !xl) &&
+                            (checkedSize &&
+                                !s35 &&
+                                !s36 &&
+                                !s37 &&
+                                !s38 &&
+                                !s39 &&
+                                !s40 &&
+                                !s41 &&
+                                !s42) ||
                         urlImageItems == null) {
                       if (itemName.text.isEmpty) {
-                        errorToast("Enter Item Name");
+                        errorToast("أسم المنتج");
                       } else if (itemPrice.text.isEmpty) {
-                        errorToast("Enter Item Price");
+                        errorToast("سعر البيع");
+                      } else if (itemBuyPrice.text.isEmpty) {
+                        errorToast('سعر الشراء');
                       } else if (itemDis.text.isEmpty) {
-                        errorToast("Enter Item Desciption");
+                        errorToast("الوصف");
+                      } else if (checkedSize && !xs && !s && !m && !l && !xl ||
+                          checkedSize &&
+                              !s35 &&
+                              !s36 &&
+                              !s37 &&
+                              !s38 &&
+                              !s39 &&
+                              !s40 &&
+                              !s41 &&
+                              !s42) {
+                        errorToast("أختر المقاسات");
                       } else {
-                        errorToast("Add Item Image");
+                        errorToast("لا توجد صورة");
                       }
                     } else {
                       String uui = uuid.v1();
+                      Map<String, dynamic> sizeWordMap = {
+                        'XS': xs,
+                        'S': s,
+                        'M': m,
+                        'L': l,
+                        'XL': xl,
+                      };
+                      Map<String, dynamic> sizeNumMap = {
+                        '35': s35,
+                        '36': s36,
+                        '37': s37,
+                        '38': s38,
+                        '39': s39,
+                        '40': s40,
+                        '41': s41,
+                        '42': s42,
+                      };
                       Map<String, dynamic> itemMap = {
                         "name": itemName.text,
                         "description": itemDis.text,
@@ -217,6 +353,9 @@ Widget addItem(
                         "show": false,
                         "imageID": uui,
                         'buyPrice': itemBuyPrice.text,
+                        'size': checkedSize
+                            ? sizeNum ? sizeNumMap : sizeWordMap
+                            : {},
                       };
                       Map<String, dynamic> itemMapForNew = {
                         "category": categoryName.text,
@@ -408,8 +547,6 @@ Future uploadImageForCatefory() async {
   if (urlImageCategory.isNotEmpty) {}
 }
 
-
-
 File imageStoredItems;
 String urlImageItems;
 Future uploadImageItems() async {
@@ -471,3 +608,34 @@ getImageForCatgory(Function camera, Function gallery, BuildContext context) {
     ),
   );
 }
+
+Widget buttonSize(String label, Function toggle, bool size) {
+  return Container(
+    decoration: BoxDecoration(
+      border: Border.all(),
+      color: size ? Colors.green[200] : Colors.grey[200],
+    ),
+    child: InkWell(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(label),
+      ),
+      onTap: toggle,
+    ),
+  );
+}
+
+bool s35 = false,
+    s36 = false,
+    s37 = false,
+    s38 = false,
+    s39 = false,
+    s40 = false,
+    s41 = false,
+    s42 = false;
+
+bool xs = false;
+bool s = false;
+bool m = false;
+bool l = false;
+bool xl = false;

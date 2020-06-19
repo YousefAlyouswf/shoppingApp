@@ -6,6 +6,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
+import 'package:shop_app/screens/showItem.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
 List<ListHirezontalImage> listImages;
@@ -22,8 +23,10 @@ Widget listViewHorznintal(Function selectCategory, var controller) {
           listImages = List();
           for (var i = 0; i < listLength; i++) {
             listImages.add(ListHirezontalImage(
-              asyncSnapshot.data.documents[0].data['collection'][i]['name'],
-              asyncSnapshot.data.documents[0].data['collection'][i]['image'],
+              name: asyncSnapshot.data.documents[0].data['collection'][i]
+                  ['name'],
+              image: asyncSnapshot.data.documents[0].data['collection'][i]
+                  ['image'],
             ));
           }
 
@@ -95,7 +98,7 @@ Container imageViewBottomSheet(closeImpageOntap, onPageChanged) {
               Container(
                   width: double.infinity,
                   height: 100,
-                  color: Colors.white,
+                  color:  Colors.white70,
                   alignment: Alignment.centerLeft,
                   child: IconButton(
                       icon: Icon(
@@ -154,7 +157,7 @@ Container imageViewBottomSheet(closeImpageOntap, onPageChanged) {
                             ),
                             Container(
                                 width: double.infinity,
-                                color: Colors.black,
+                                color: Colors.purple,
                                 child: Center(
                                   child: Text(
                                     "${snapshot.data.documents[0].data['images'].length} من ${currentIndex + 1}",
@@ -174,6 +177,7 @@ Container imageViewBottomSheet(closeImpageOntap, onPageChanged) {
       : Container();
 }
 
+List<String> sizes = [];
 String catgoryNameCustomer = "";
 Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
   List<ListHirezontalImage> listImages;
@@ -191,10 +195,25 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
             int listLength =
                 asyncSnapshot.data.documents[0].data['items'].length;
             listImages = List();
+
             for (var i = 0; i < listLength; i++) {
+              sizes = [];
+              for (var j = 35;
+                  j <
+                      asyncSnapshot.data.documents[0].data['items'][i]['size']
+                              .length +
+                          35;
+                  j++) {
+                var value = asyncSnapshot.data.documents[0].data['items'][i]
+                    ['size'][j.toString()];
+                if (value) {
+                  sizes.add(j.toString());
+                }
+              }
               listImages.add(ListHirezontalImage(
-                asyncSnapshot.data.documents[0].data['items'][i]['name'],
-                asyncSnapshot.data.documents[0].data['items'][i]['image'],
+                name: asyncSnapshot.data.documents[0].data['items'][i]['name'],
+                image: asyncSnapshot.data.documents[0].data['items'][i]
+                    ['image'],
                 description: asyncSnapshot.data.documents[0].data['items'][i]
                     ['description'],
                 price: asyncSnapshot.data.documents[0].data['items'][i]
@@ -203,6 +222,7 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
                     ['imageID'],
                 buyPrice: asyncSnapshot.data.documents[0].data['items'][i]
                     ['buyPrice'],
+                size: sizes,
               ));
             }
           } catch (e) {
@@ -274,16 +294,31 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
                       itemBuilder: (BuildContext context, int index) {
                         return InkWell(
                           onTap: () {
-                            showtheBottomSheet(
+                            // showtheBottomSheet(
+                            //   context,
+                            //   listImages[index].image,
+                            //   listImages[index].name,
+                            //   listImages[index].description,
+                            //   listImages[index].price,
+                            //   imageOnTapCustomer,
+                            //   fetchMyCart,
+                            //   listImages[index].imageID,
+                            //   listImages[index].buyPrice,
+                            //   listImages[index].size,
+                            // );
+                            Navigator.push(
                               context,
-                              listImages[index].image,
-                              listImages[index].name,
-                              listImages[index].description,
-                              listImages[index].price,
-                              imageOnTapCustomer,
-                              fetchMyCart,
-                              listImages[index].imageID,
-                              listImages[index].buyPrice,
+                              MaterialPageRoute(
+                                  builder: (context) => ShowItem(
+                                        image: listImages[index].image,
+                                        name: listImages[index].name,
+                                        des: listImages[index].description,
+                                        price: listImages[index].price,
+                                        fetchMyCart: fetchMyCart,
+                                        imageID: listImages[index].imageID,
+                                        buyPrice: listImages[index].buyPrice,
+                                        size: listImages[index].size,
+                                      )),
                             );
                           },
                           child: Padding(
@@ -367,16 +402,16 @@ showtheBottomSheet(
   Function fetchMyCart,
   String imageID,
   String buyPrice,
+  List size,
 ) {
   showModalBottomSheet(
-      elevation: 10,
-      backgroundColor: Colors.transparent,
+      elevation: 0,
+      //  backgroundColor: Colors.transparent,
       context: context,
       builder: (context) => SingleChildScrollView(
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.black54,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(40),
                   topLeft: Radius.circular(40),
@@ -387,7 +422,6 @@ showtheBottomSheet(
                   InkWell(
                     onTap: () {
                       imageOnTapCustomer(NetworkImage(image), imageID);
-                      print(imageID);
                     },
                     child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -410,7 +444,7 @@ showtheBottomSheet(
                                       itemBuilder: (context, i) {
                                         String listImage = snapshot.data
                                             .documents[0].data['images'][i];
-                                        print(listImage);
+
                                         return Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
@@ -442,21 +476,19 @@ showtheBottomSheet(
                           "$price ر.س",
                           textDirection: TextDirection.rtl,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 22),
+                              fontWeight: FontWeight.bold, fontSize: 22),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          name,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 22),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(16.0),
+                      //   child: Text(
+                      //     name,
+                      //     style: TextStyle(
+                      //         fontWeight: FontWeight.bold,
+
+                      //         fontSize: 22),
+                      //   ),
+                      // ),
                       IconButton(
                         icon: Icon(
                           Icons.add_shopping_cart,
@@ -507,11 +539,35 @@ showtheBottomSheet(
                       )
                     ],
                   ),
+                  Text("المقاس"),
+                  Container(
+                    height: 33,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: size.length,
+                        itemBuilder: (context, i) {
+                          return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 8.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(),
+                            ),
+                            child: InkWell(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Center(
+                                  child: Text(size[i]),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Container(
                       width: double.infinity,
-                      height: 200,
+                      height: 170,
                       child: SingleChildScrollView(
                         child: Card(
                           child: Padding(

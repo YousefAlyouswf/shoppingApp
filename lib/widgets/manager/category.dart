@@ -49,8 +49,9 @@ Widget subCatgory(
             listImages = List();
             for (var i = 0; i < listLength; i++) {
               listImages.add(ListHirezontalImage(
-                asyncSnapshot.data.documents[0].data['items'][i]['name'],
-                asyncSnapshot.data.documents[0].data['items'][i]['image'],
+                name: asyncSnapshot.data.documents[0].data['items'][i]['name'],
+                image: asyncSnapshot.data.documents[0].data['items'][i]
+                    ['image'],
                 description: asyncSnapshot.data.documents[0].data['items'][i]
                     ['description'],
                 price: asyncSnapshot.data.documents[0].data['items'][i]
@@ -475,6 +476,7 @@ Widget subCatgory(
     ),
   );
 }
+
 Widget categores(Function selectCategory) {
   List<ListHirezontalImage> listImages;
   return Container(
@@ -488,8 +490,10 @@ Widget categores(Function selectCategory) {
           listImages = List();
           for (var i = 0; i < listLength; i++) {
             listImages.add(ListHirezontalImage(
-              asyncSnapshot.data.documents[0].data['collection'][i]['name'],
-              asyncSnapshot.data.documents[0].data['collection'][i]['image'],
+              name: asyncSnapshot.data.documents[0].data['collection'][i]
+                  ['name'],
+              image: asyncSnapshot.data.documents[0].data['collection'][i]
+                  ['image'],
             ));
           }
 
@@ -548,6 +552,7 @@ Widget categores(Function selectCategory) {
     ),
   );
 }
+
 Future uploadImageForList(String imageID) async {
   String fileName = '${DateTime.now()}.png';
 
@@ -561,7 +566,9 @@ Future uploadImageForList(String imageID) async {
   if (getImageForlistURL.isNotEmpty) {
     await FirestoreFunctions().addImagesForList(imageID, getImageForlistURL);
   }
-}deleteItemDialog(
+}
+
+deleteItemDialog(
   BuildContext context,
   String itemTextName,
   String catgoryName,

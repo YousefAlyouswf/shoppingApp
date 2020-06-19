@@ -7,7 +7,17 @@ class ListHirezontalImage {
   String category;
   bool show;
   String imageID;
+  List<String> size;
 
-  ListHirezontalImage(this.name, this.image,
-      {this.description, this.price, this.category, this.show, this.imageID, this.buyPrice});
+  ListHirezontalImage(
+    { this.name,
+    this.image,
+    this.description,
+    this.price,
+    this.category,
+    this.show,
+    this.imageID,
+    this.buyPrice,
+    this.size,
+  });
 }

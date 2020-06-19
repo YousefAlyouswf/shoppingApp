@@ -194,7 +194,7 @@ Widget orders(BuildContext context, Function searchOrder) {
                                   },
                                   child: Card(
                                     color: status != '3'
-                                        ? Colors.red[100]
+                                        ? Colors.red[50]
                                         : Colors.white,
                                     child: Column(
                                       children: [

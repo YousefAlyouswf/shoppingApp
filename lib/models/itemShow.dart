@@ -7,6 +7,7 @@ class ItemShow {
   final String image;
   final String imageID;
   final String buyPrice;
+  final List<String> size;
 
   ItemShow({
     this.id,
@@ -17,5 +18,6 @@ class ItemShow {
     this.quantity,
     this.imageID,
     this.buyPrice,
+    this.size,
   });
 }

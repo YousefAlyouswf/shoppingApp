@@ -38,103 +38,95 @@ class _HomePageState extends State<HomePage> {
     double height = MediaQuery.of(context).size.height;
     double imageShowSize = height / 3;
     // var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    return WillPopScope(
-      onWillPop: _onBackPressed,
-      child: Scaffold(
-        drawer: drawer(context, widget.onThemeChanged,
-            changeLangauge: widget.changeLangauge),
-        floatingActionButton: isViewBottom
-            ? Container()
-            : Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    showFloatingBtn > 300
-                        ? FloatingActionButton(
-                            elevation: 8,
-                            heroTag: "btn2",
-                            backgroundColor: Colors.green,
-                            onPressed: () {
-                              controller.animateTo(0.0,
-                                  duration: Duration(seconds: 1),
-                                  curve: Curves.ease);
-                            },
-                            child: Icon(
-                              Icons.arrow_upward,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          )
-                        : Container(),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .6,
-                    ),
-                    FloatingActionButton(
-                      heroTag: "btn1",
-                      backgroundColor: Colors.blue,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Cart(
-                                onThemeChanged: widget.onThemeChanged,
-                                changeLangauge: widget.changeLangauge),
+    return Scaffold(
+      drawer: drawer(context, widget.onThemeChanged,
+          changeLangauge: widget.changeLangauge),
+      floatingActionButton: isViewBottom
+          ? Container()
+          : Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  showFloatingBtn > 300
+                      ? FloatingActionButton(
+                          elevation: 8,
+                          heroTag: "btn2",
+                          backgroundColor: Colors.green,
+                          onPressed: () {
+                            controller.animateTo(0.0,
+                                duration: Duration(seconds: 1),
+                                curve: Curves.ease);
+                          },
+                          child: Icon(
+                            Icons.arrow_upward,
+                            color: Colors.white,
+                            size: 30,
                           ),
-                        );
-                      },
-                      child: Icon(
-                        Icons.shopping_cart,
-                        color: Colors.white,
-                      ),
+                        )
+                      : Container(),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .6,
+                  ),
+                  FloatingActionButton(
+                    heroTag: "btn1",
+                    backgroundColor: Colors.blue,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Cart(
+                              onThemeChanged: widget.onThemeChanged,
+                              changeLangauge: widget.changeLangauge),
+                        ),
+                      );
+                    },
+                    child: Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-        body: Stack(
-          children: [
-            CustomScrollView(
-              controller: controller,
-              slivers: <Widget>[
-                SliverAppBar(
-                  iconTheme: new IconThemeData(color: Colors.white),
-                  title: Text(
-                    "تنوتو",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w900),
-                  ),
-                  backgroundColor: Colors.black38,
-                  floating: false,
-                  pinned: true,
-                  elevation: 8,
-                  expandedHeight: MediaQuery.of(context).size.height / 3,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: networkImage2 == null
-                        ? Center(
-                            child: Container(
-                              height: 100,
-                              width: 100,
-                              child: CircularProgressIndicator(),
-                            ),
-                          )
-                        : imageCarousel(imageShowSize, imageOnTap),
-                  ),
-                ),
-                SliverFillRemaining(
-                  child: Column(
-                    children: [
-                      listViewHorznintal(selectCategory, controller),
-                      Expanded(
-                          child: subCatgoryCustomer(
-                              imageOnTapCustomer, fetchMyCart)),
-                    ],
-                  ),
-                ),
+            ),
+      body: CustomScrollView(
+        controller: controller,
+        slivers: <Widget>[
+          SliverAppBar(
+            iconTheme: new IconThemeData(color: Colors.white),
+            title: Text(
+              "تنوتو",
+              style: TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w900),
+            ),
+            backgroundColor: Colors.black38,
+            floating: false,
+            pinned: true,
+            elevation: 8,
+            expandedHeight: MediaQuery.of(context).size.height / 3,
+            flexibleSpace: FlexibleSpaceBar(
+              background: networkImage2 == null
+                  ? Center(
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : imageCarousel(imageShowSize, imageOnTap),
+            ),
+          ),
+          SliverFillRemaining(
+            child: Column(
+              children: [
+                listViewHorznintal(selectCategory, controller),
+                Expanded(
+                    child: subCatgoryCustomer(
+                        null, fetchMyCart)),
               ],
             ),
-            imageViewBottomSheet(closeImpageOntap, onPageChanged),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -147,40 +139,22 @@ class _HomePageState extends State<HomePage> {
   imageOnTap(int i) {
     print(itemShow[i].itemName);
     showtheBottomSheet(
-      context,
-      itemShow[i].image,
-      itemShow[i].itemName,
-      itemShow[i].itemDes,
-      itemShow[i].itemPrice,
-      imageOnTapCustomer,
-      fetchMyCart,
-      itemShow[i].imageID,
-      itemShow[i].buyPrice,
-    );
+        context,
+        itemShow[i].image,
+        itemShow[i].itemName,
+        itemShow[i].itemDes,
+        itemShow[i].itemPrice,
+        null,
+        fetchMyCart,
+        itemShow[i].imageID,
+        itemShow[i].buyPrice,
+        itemShow[i].size,
+        );
     setState(() {});
   }
 
-  imageOnTapCustomer(NetworkImage networkImage, String imageID) {
-    isViewBottom = true;
-    imageBottomSheet = networkImage;
-    idImage = imageID;
-    currentIndex = 0;
-    Navigator.pop(context);
-    setState(() {});
-  }
+ 
 
-  closeImpageOntap() {
-    isViewBottom = false;
-    setState(() {});
-  }
-
-  Future<bool> _onBackPressed() {
-    if (isViewBottom) {
-      return closeImpageOntap();
-    } else {
-      return null;
-    }
-  }
 
   List<ItemShow> itemShow = new List();
   getAllimagesFromFireStore() async {
@@ -226,10 +200,5 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void onPageChanged(int index) {
-    currentIndex = 0;
-    setState(() {
-      currentIndex = index;
-    });
-  }
+
 }
