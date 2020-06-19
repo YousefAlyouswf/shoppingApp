@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/models/tabModels.dart';
-import 'package:shop_app/widgets/employeeWidget.dart';
+import 'package:shop_app/widgets/manager/addItem.dart';
+import 'package:shop_app/widgets/manager/category.dart';
+import 'package:shop_app/widgets/manager/employeeWidget.dart';
+import 'package:shop_app/widgets/manager/order.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:shop_app/widgets/widgets2.dart';
 
@@ -146,9 +149,9 @@ class _MainPageState extends State<MainPage>
       body: TabBarView(
         controller: _tabController,
         children: [
-          firstPage(
+          categoryScreen(
               selectCategory, takeImageGalaryForList, takeImageCameraForList),
-          secondPage(
+          addItem(
             context,
             showItemTextFileds,
             _takePictureForCatgory,
@@ -157,7 +160,7 @@ class _MainPageState extends State<MainPage>
             _takeFromGalaryForItems,
             switchToCategoryPage,
           ),
-          orders(context,searchOrder),
+          orders(context, searchOrder),
           employeeList(),
         ],
       ),
