@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:shop_app/manager/gmapManager.dart';
 import 'package:shop_app/models/myOrderModel.dart';
-import 'package:shop_app/screens/address.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Widget employeeList() {
@@ -252,11 +252,11 @@ Widget orders(BuildContext context, Function searchOrder) {
               stream: orderNumber == ""
                   ? Firestore.instance
                       .collection('order')
-                      .orderBy('status')
+                      .orderBy('date', descending: true)
                       .snapshots()
                   : Firestore.instance
                       .collection('order')
-                      .orderBy('status')
+                      .orderBy('date', descending: true)
                       .where('orderID', isEqualTo: orderNumber)
                       .snapshots(),
               builder: (context, snapshot) {
@@ -279,7 +279,14 @@ Widget orders(BuildContext context, Function searchOrder) {
                             ));
                           }
                           String status = ds['status'];
+                          DateTime orderDate = DateTime.parse(ds['date']);
+                          var formatter = new intl.DateFormat('dd/MM/yyyy');
+                          var timeFormat = new intl.DateFormat.jm();
+                          String formatDate = formatter.format(orderDate);
+                          String formatTime = timeFormat.format(orderDate);
 
+                          String formatted =
+                              "تاريخ الطلب $formatDate  $formatTime";
                           return Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
@@ -381,6 +388,7 @@ Widget orders(BuildContext context, Function searchOrder) {
                                     );
                                   },
                                   child: Card(
+                                    color: status != '3'? Colors.red[100]:Colors.white,
                                     child: Column(
                                       children: [
                                         InkWell(
@@ -839,6 +847,11 @@ Widget orders(BuildContext context, Function searchOrder) {
                                                         ),
                                                       ],
                                                     ),
+                                                    Text(
+                                                      formatted,
+                                                      textDirection:
+                                                          TextDirection.rtl,
+                                                    )
                                                   ],
                                                 ),
                                               ),

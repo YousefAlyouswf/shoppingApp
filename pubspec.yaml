@@ -49,6 +49,8 @@ dependencies:
   location: ^3.0.2
   device_info: ^0.4.2+4
   flutter_polyline_points: ^0.1.0
+  intl: ^0.16.1
+
 
   
 

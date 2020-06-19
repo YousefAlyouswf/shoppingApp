@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                 SliverAppBar(
                   iconTheme: new IconThemeData(color: Colors.white),
                   title: Text(
-                    "الدباس",
+                    "تنوتو",
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.w900),
                   ),

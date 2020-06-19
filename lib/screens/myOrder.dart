@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shop_app/models/myOrderModel.dart';
 import 'package:shop_app/widgets/widgets.dart';
+import 'package:intl/intl.dart' as intl;
 
 class MyOrder extends StatefulWidget {
   @override
@@ -44,7 +45,7 @@ class _MyOrderState extends State<MyOrder> {
             stream: Firestore.instance
                 .collection('order')
                 .where("userID", isEqualTo: userID)
-                .orderBy('status')
+                .orderBy('date', descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -66,12 +67,18 @@ class _MyOrderState extends State<MyOrder> {
                           ));
                         }
                         String status = ds['status'];
+                        DateTime orderDate = DateTime.parse(ds['date']);
+                        var formatter = new intl.DateFormat('dd/MM/yyyy');
+                        var timeFormat = new intl.DateFormat.jm();
+                        String formatDate = formatter.format(orderDate);
+                        String formatTime = timeFormat.format(orderDate);
 
+                        String formatted="تاريخ الطلب $formatDate\n $formatTime";
                         return Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Container(
-                              height: 220,
+                              height: 240,
                               color: Colors.grey,
                               child: InkWell(
                                 onTap: () {
@@ -373,7 +380,22 @@ class _MyOrderState extends State<MyOrder> {
                                                         MainAxisAlignment
                                                             .spaceAround,
                                                     children: [
-                                                      FlatButton.icon(
+                                                   Text(formatted),
+                                                      Text(
+                                                        '${ds['total']} ر.س',
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        style: TextStyle(
+                                                            fontSize: 22),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                           FlatButton.icon(
                                                         icon: Icon(
                                                           Icons.delete,
                                                           color:
@@ -453,20 +475,15 @@ class _MyOrderState extends State<MyOrder> {
                                                         label:
                                                             Text("الغاء الطلب"),
                                                       ),
-                                                      Text(
-                                                        '${ds['total']} ر.س',
-                                                        textDirection:
-                                                            TextDirection.rtl,
-                                                        style: TextStyle(
-                                                            fontSize: 22),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Container(
-                                                    width: double.infinity,
-                                                    alignment: Alignment.centerRight,
-                                                    child: Text(
-                                                        "السعر شامل الضريبة والتوصيل"),
+                                                        Container(
+                                                         
+                                                          alignment:
+                                                              Alignment.centerRight,
+                                                          child: Text(
+                                                              "السعر شامل الضريبة والتوصيل"),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ],
                                               ),

@@ -97,7 +97,7 @@ List<String> arabic = [
 ];
 List<AppInfoModel> appInfo = [];
 AppBar appBar(
-    {String text = "الدباس",
+    {String text = "تنوتو",
     bool search = false,
     bool cart = false,
     BuildContext context}) {
@@ -287,7 +287,7 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
           onTap: () {
             showAboutDialog(
               context: context,
-              applicationName: "SHOP APP",
+              applicationName: "تنوتو",
               applicationVersion: "0.0.4",
               applicationLegalese: "Developed by Yousef Al Yousef",
               useRootNavigator: false,

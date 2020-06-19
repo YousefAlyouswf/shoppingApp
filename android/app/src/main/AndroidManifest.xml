@@ -12,7 +12,7 @@
     <application
     
         android:name="io.flutter.app.FlutterApplication"
-        android:label="الدباس"
+        android:label="تنوتو"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
@@ -49,6 +49,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
              <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyAzLkePqSPAmJHrE21azqulYbsg7MAaI9E"/>
+               android:value="AIzaSyDDYcLMRVB_DYsqm_pVbgYtPDKsYBKqd8U"/>
     </application>
 </manifest>

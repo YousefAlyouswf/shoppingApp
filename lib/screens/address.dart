@@ -415,6 +415,8 @@ class _AddressState extends State<Address> {
                                 name: name.text,
                                 phone: phone.text,
                                 address: address,
+                                lat: '',
+                                long: '',
                               ),
                             ),
                           );
@@ -426,25 +428,23 @@ class _AddressState extends State<Address> {
                             'lat': customerLocation.latitude.toString(),
                             'long': customerLocation.longitude.toString(),
                           });
-                          print(customerLocation.latitude.toString());
-                        }
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Payment(
-                              totalAfterTax: widget.totalAfterTax,
-                              price: widget.price,
-                              buyPrice: widget.buyPrice,
-                              onThemeChanged: widget.onThemeChanged,
-                              changeLangauge: widget.changeLangauge,
-                              name: name.text,
-                              phone: phone.text,
-                              lat: customerLocation.latitude.toString(),
-                              long: customerLocation.longitude.toString(),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Payment(
+                                totalAfterTax: widget.totalAfterTax,
+                                price: widget.price,
+                                buyPrice: widget.buyPrice,
+                                onThemeChanged: widget.onThemeChanged,
+                                changeLangauge: widget.changeLangauge,
+                                name: name.text,
+                                phone: phone.text,
+                                lat: customerLocation.latitude.toString(),
+                                long: customerLocation.longitude.toString(),
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       } else {
                         isEnglish
                             ? errorToast(english[35])
