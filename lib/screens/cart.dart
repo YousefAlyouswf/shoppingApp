@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/database/local_db.dart';
@@ -22,6 +23,7 @@ class _CartState extends State<Cart> {
   double eachPrice = 0;
   double eachBuyPrice = 0;
   int quantity = 0;
+  double totalAfterTax = 0;
   List<String> englishItem = [];
   List<String> arabicItem = [];
   List<String> items = [];
@@ -85,13 +87,32 @@ class _CartState extends State<Cart> {
       setState(() {});
       items = englishItem;
     }
+    totalAfterTax = sumPrice * tax / 100 + sumPrice + delivery;
+    if (totalAfterTax == delivery) {
+      totalAfterTax = 0.0;
+    }
   }
 
   bool deleteIcon = false;
+
+  int tax = 0;
+  int delivery = 0;
+  getTaxAndDeliveryPrice() async {
+    await Firestore.instance.collection('app').getDocuments().then((value) {
+      value.documents.forEach((element) {
+        setState(() {
+          tax = element['tax'];
+          delivery = element['delivery'];
+        });
+      });
+    });
+    fetchMyCart();
+  }
+
   @override
   void initState() {
-    fetchMyCart();
     super.initState();
+    getTaxAndDeliveryPrice();
   }
 
   @override
@@ -352,6 +373,26 @@ class _CartState extends State<Cart> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Container(
+                width: double.infinity,
+                child: Text(
+                  "سعر الضريبة $tax%",
+                  textDirection: TextDirection.rtl,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Container(
+                width: double.infinity,
+                child: Text(
+                  "سعر التوصيل $delivery",
+                  textDirection: TextDirection.rtl,
+                ),
+              ),
+            ),
             Center(
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8,
@@ -362,7 +403,7 @@ class _CartState extends State<Cart> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => Address(
-                            amount: sumPrice.toString(),
+                            totalAfterTax: totalAfterTax.toString(),
                             onThemeChanged: widget.onThemeChanged,
                             changeLangauge: widget.changeLangauge,
                             buyPrice: sumBuyPrice.toString(),
@@ -377,8 +418,8 @@ class _CartState extends State<Cart> {
                     ),
                     label: Text(
                       isEnglish
-                          ? "$sumPrice ${english[16]}"
-                          : "$sumPrice ${arabic[16]}",
+                          ? "$totalAfterTax ${english[16]}"
+                          : "$totalAfterTax ${arabic[16]}",
                       textDirection: TextDirection.rtl,
                       style: TextStyle(color: Colors.white, fontSize: 22),
                     )),

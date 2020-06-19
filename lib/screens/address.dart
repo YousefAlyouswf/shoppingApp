@@ -10,14 +10,14 @@ import 'package:shop_app/screens/payment.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
 class Address extends StatefulWidget {
-  final String amount;
+  final String totalAfterTax;
   final Function onThemeChanged;
   final Function changeLangauge;
   final String buyPrice;
   final String price;
   const Address({
     Key key,
-    this.amount,
+    this.totalAfterTax,
     this.onThemeChanged,
     this.changeLangauge,
     this.buyPrice,
@@ -129,6 +129,8 @@ class _AddressState extends State<Address> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => Payment(
+                                              totalAfterTax:
+                                                  widget.totalAfterTax,
                                               price: widget.price,
                                               buyPrice: widget.buyPrice,
                                               onThemeChanged:
@@ -405,6 +407,7 @@ class _AddressState extends State<Address> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => Payment(
+                                totalAfterTax: widget.totalAfterTax,
                                 price: widget.price,
                                 buyPrice: widget.buyPrice,
                                 onThemeChanged: widget.onThemeChanged,
@@ -430,6 +433,7 @@ class _AddressState extends State<Address> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => Payment(
+                              totalAfterTax: widget.totalAfterTax,
                               price: widget.price,
                               buyPrice: widget.buyPrice,
                               onThemeChanged: widget.onThemeChanged,

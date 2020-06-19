@@ -25,7 +25,11 @@ class _MainPageState extends State<MainPage>
       "إظافة",
       Icon(Icons.add),
     ),
-      TabModels(
+    TabModels(
+      "الطلبات",
+      Icon(Icons.people),
+    ),
+    TabModels(
       "المندوبين",
       Icon(Icons.people),
     ),
@@ -127,9 +131,13 @@ class _MainPageState extends State<MainPage>
                 text: pages[1].text,
                 icon: pages[1].icon,
               ),
-               Tab(
+              Tab(
                 text: pages[2].text,
                 icon: pages[2].icon,
+              ),
+              Tab(
+                text: pages[3].text,
+                icon: pages[3].icon,
               ),
             ],
           ),
@@ -138,7 +146,8 @@ class _MainPageState extends State<MainPage>
       body: TabBarView(
         controller: _tabController,
         children: [
-          firstPage(selectCategory, takeImageGalaryForList,takeImageCameraForList),
+          firstPage(
+              selectCategory, takeImageGalaryForList, takeImageCameraForList),
           secondPage(
             context,
             showItemTextFileds,
@@ -148,7 +157,8 @@ class _MainPageState extends State<MainPage>
             _takeFromGalaryForItems,
             switchToCategoryPage,
           ),
-          employeeList()
+          orders(context,searchOrder),
+          employeeList(),
         ],
       ),
     );
@@ -203,7 +213,8 @@ class _MainPageState extends State<MainPage>
     });
     uploadImageForList(imageID);
   }
-    takeImageCameraForList(String imageID) async {
+
+  takeImageCameraForList(String imageID) async {
     final pickedFile = await picker.getImage(
         source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
     setState(() {
@@ -256,5 +267,11 @@ class _MainPageState extends State<MainPage>
       } catch (e) {}
     });
     uploadImageItems();
+  }
+
+  searchOrder(String search) {
+    setState(() {
+      orderNumber = search;
+    });
   }
 }

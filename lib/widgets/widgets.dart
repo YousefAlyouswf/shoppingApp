@@ -288,7 +288,7 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
             showAboutDialog(
               context: context,
               applicationName: "SHOP APP",
-              applicationVersion: "0.0.3",
+              applicationVersion: "0.0.4",
               applicationLegalese: "Developed by Yousef Al Yousef",
               useRootNavigator: false,
               children: [Icon(Icons.developer_board)],

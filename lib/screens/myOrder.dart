@@ -71,372 +71,411 @@ class _MyOrderState extends State<MyOrder> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             Container(
-                              height: 400,
+                              height: 220,
                               color: Colors.grey,
-                              child: Card(
-                                child: Column(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        Clipboard.setData(new ClipboardData(
-                                            text: ds['orderID']));
-                                        Scaffold.of(context)
-                                          ..showSnackBar(
-                                            new SnackBar(
-                                              duration: Duration(seconds: 1),
-                                              content: new Text("تم النسخ"),
-                                            ),
-                                          );
-                                      },
-                                      child: Text(
-                                        "رقم الفاتورة: ${ds['orderID']}",
-                                        textDirection: TextDirection.rtl,
-                                        style: TextStyle(fontSize: 19),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Stack(
-                                        children: [
-                                          Positioned.fill(
-                                            child: Align(
-                                              alignment: Alignment(0, -0.3),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 16.0),
-                                                child: Container(
-                                                  height: 3,
-                                                  width: double.infinity,
-                                                  color: Colors.black45,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  Container(
-                                                    height: 50,
-                                                    width: 50,
-                                                    decoration: BoxDecoration(
-                                                      gradient: LinearGradient(
-                                                        colors: status == "0"
-                                                            ? [
-                                                                Colors
-                                                                    .lightGreen,
-                                                                Colors
-                                                                    .green[800]
-                                                              ]
-                                                            : [
-                                                                Colors.grey,
-                                                                Colors.white
-                                                              ],
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(50),
-                                                      ),
-                                                    ),
-                                                    child: Icon(Icons.store),
-                                                  ),
-                                                  Text("أستلمنا طلبك")
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  Container(
-                                                    height: 50,
-                                                    width: 50,
-                                                    decoration: BoxDecoration(
-                                                      gradient: LinearGradient(
-                                                        colors: status == "1"
-                                                            ? [
-                                                                Colors
-                                                                    .lightGreen,
-                                                                Colors
-                                                                    .green[800]
-                                                              ]
-                                                            : [
-                                                                Colors.grey,
-                                                                Colors.white
-                                                              ],
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(50),
-                                                      ),
-                                                    ),
-                                                    child: Icon(
-                                                        Icons.shopping_basket),
-                                                  ),
-                                                  Text("جاهز للتوصيل")
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  Container(
-                                                    height: 50,
-                                                    width: 50,
-                                                    decoration: BoxDecoration(
-                                                      gradient: LinearGradient(
-                                                        colors: status == "2"
-                                                            ? [
-                                                                Colors
-                                                                    .lightGreen,
-                                                                Colors
-                                                                    .green[800]
-                                                              ]
-                                                            : [
-                                                                Colors.grey,
-                                                                Colors.white
-                                                              ],
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(50),
-                                                      ),
-                                                    ),
-                                                    child: Icon(
-                                                        Icons.directions_car),
-                                                  ),
-                                                  Text("طلبك فالطريق")
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  Container(
-                                                    height: 50,
-                                                    width: 50,
-                                                    decoration: BoxDecoration(
-                                                      gradient: LinearGradient(
-                                                        colors: status == "3"
-                                                            ? [
-                                                                Colors
-                                                                    .lightGreen,
-                                                                Colors
-                                                                    .green[800]
-                                                              ]
-                                                            : [
-                                                                Colors.grey,
-                                                                Colors.white
-                                                              ],
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(50),
-                                                      ),
-                                                    ),
-                                                    child: Icon(Icons.home),
-                                                  ),
-                                                  Text("تم التوصيل")
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: Column(
+                              child: InkWell(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) => Container(
+                                      color: Colors.grey[100],
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: [
+                                            Table(
+                                              columnWidths: {
+                                                0: FractionColumnWidth(0.5)
+                                              },
+                                              border: TableBorder.all(),
+                                              textDirection: TextDirection.rtl,
                                               children: [
-                                                Flexible(
-                                                  child: Container(
-                                                    color: Colors.grey[100],
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Column(
-                                                        children: [
-                                                          Table(
-                                                            columnWidths: {
-                                                              0: FractionColumnWidth(
-                                                                  0.5)
-                                                            },
-                                                            border: TableBorder
-                                                                .all(),
-                                                            textDirection:
-                                                                TextDirection
-                                                                    .rtl,
-                                                            children: [
-                                                              TableRow(
-                                                                  children: [
-                                                                    Center(
-                                                                        child: Text(
-                                                                            "المنتج")),
-                                                                    Center(
-                                                                        child: Text(
-                                                                            "العدد")),
-                                                                    Center(
-                                                                        child: Text(
-                                                                            "السعر")),
-                                                                  ])
-                                                            ],
-                                                          ),
-                                                          Expanded(
-                                                            child: ListView
-                                                                .builder(
-                                                                    itemCount:
-                                                                        myOrderList
-                                                                            .length,
-                                                                    itemBuilder:
-                                                                        (context,
-                                                                            index) {
-                                                                      return Container(
-                                                                          child:
-                                                                              Table(
-                                                                        columnWidths: {
-                                                                          0: FractionColumnWidth(
-                                                                              0.5)
-                                                                        },
-                                                                        border:
-                                                                            TableBorder.all(),
-                                                                        textDirection:
-                                                                            TextDirection.rtl,
-                                                                        children: [
-                                                                          TableRow(
-                                                                              children: [
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.all(8.0),
-                                                                                  child: Align(
-                                                                                    alignment: Alignment.centerRight,
-                                                                                    child: Text(myOrderList[index].name),
-                                                                                  ),
-                                                                                ),
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.all(8.0),
-                                                                                  child: Center(
-                                                                                    child: Text(myOrderList[index].quatity),
-                                                                                  ),
-                                                                                ),
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.all(8.0),
-                                                                                  child: Center(
-                                                                                    child: Text(myOrderList[index].price),
-                                                                                  ),
-                                                                                ),
-                                                                              ])
-                                                                        ],
-                                                                      ));
-                                                                    }),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    FlatButton.icon(
-                                                      icon: Icon(
-                                                        Icons.delete,
-                                                        color: Colors.red[300],
-                                                      ),
-                                                      onPressed: () {
-                                                        if (status == "0") {
-                                                          showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (BuildContext
-                                                                          context) =>
-                                                                      Dialog(
-                                                                        shape:
-                                                                            RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(12.0),
-                                                                        ),
-                                                                        child:
-                                                                            Container(
-                                                                          height:
-                                                                              300.0,
-                                                                          width:
-                                                                              300.0,
-                                                                          child:
-                                                                              Column(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceAround,
-                                                                            children: <Widget>[
-                                                                              Center(
-                                                                                child: Text(
-                                                                                  "إلغاء الطلب",
-                                                                                  style: TextStyle(fontSize: 20),
-                                                                                ),
-                                                                              ),
-                                                                              Padding(
-                                                                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                                                child: Container(child: Text("سوف يتم الغاء طلبك")),
-                                                                              ),
-                                                                              Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                                children: [
-                                                                                  FlatButton(
-                                                                                    onPressed: () {
-                                                                                      Firestore.instance.collection('order').where('orderID', isEqualTo: ds['orderID']).where('userID', isEqualTo: ds['userID']).getDocuments().then((value) {
-                                                                                        value.documents.forEach((element) {
-                                                                                          Firestore.instance.collection('order').document(element.documentID).delete();
-                                                                                        });
-                                                                                      });
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: Text(
-                                                                                      'تأكيد',
-                                                                                      style: TextStyle(color: Colors.purple, fontSize: 18.0),
-                                                                                    ),
-                                                                                  ),
-                                                                                  FlatButton(
-                                                                                    onPressed: () {
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: Text(
-                                                                                      'خروج',
-                                                                                      style: TextStyle(color: Colors.purple, fontSize: 18.0),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      ));
-                                                        } else {
-                                                          errorToast(
-                                                              "لا يكمنك إلغاء الطلب");
-                                                        }
+                                                TableRow(children: [
+                                                  Center(child: Text("المنتج")),
+                                                  Center(child: Text("العدد")),
+                                                  Center(child: Text("السعر")),
+                                                ])
+                                              ],
+                                            ),
+                                            Expanded(
+                                              child: ListView.builder(
+                                                  itemCount: myOrderList.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return Container(
+                                                        child: Table(
+                                                      columnWidths: {
+                                                        0: FractionColumnWidth(
+                                                            0.5)
                                                       },
-                                                      label:
-                                                          Text("الغاء الطلب"),
-                                                    ),
-                                                    Text(
-                                                      '${ds['priceForSell']} ر.س',
+                                                      border: TableBorder.all(),
                                                       textDirection:
                                                           TextDirection.rtl,
-                                                          style: TextStyle(fontSize: 22),
+                                                      children: [
+                                                        TableRow(children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Align(
+                                                              alignment: Alignment
+                                                                  .centerRight,
+                                                              child: Text(
+                                                                  myOrderList[
+                                                                          index]
+                                                                      .name),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Center(
+                                                              child: Text(
+                                                                  myOrderList[
+                                                                          index]
+                                                                      .quatity),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Center(
+                                                              child: Text(
+                                                                  myOrderList[
+                                                                          index]
+                                                                      .price),
+                                                            ),
+                                                          ),
+                                                        ])
+                                                      ],
+                                                    ));
+                                                  }),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Card(
+                                  child: Column(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          Clipboard.setData(new ClipboardData(
+                                              text: ds['orderID']));
+                                          Scaffold.of(context)
+                                            ..showSnackBar(
+                                              new SnackBar(
+                                                duration: Duration(seconds: 1),
+                                                content: new Text("تم النسخ"),
+                                              ),
+                                            );
+                                        },
+                                        child: Text(
+                                          "رقم الطلب: ${ds['orderID']}",
+                                          textDirection: TextDirection.rtl,
+                                          style: TextStyle(fontSize: 19),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Stack(
+                                          children: [
+                                            Positioned.fill(
+                                              child: Align(
+                                                alignment: Alignment(0, -0.3),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 16.0),
+                                                  child: Container(
+                                                    height: 3,
+                                                    width: double.infinity,
+                                                    color: Colors.black45,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      decoration: BoxDecoration(
+                                                        gradient:
+                                                            LinearGradient(
+                                                          colors: status == "0"
+                                                              ? [
+                                                                  Colors
+                                                                      .lightGreen,
+                                                                  Colors.green[
+                                                                      800]
+                                                                ]
+                                                              : [
+                                                                  Colors.grey,
+                                                                  Colors.white
+                                                                ],
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(50),
+                                                        ),
+                                                      ),
+                                                      child: Icon(Icons.store),
+                                                    ),
+                                                    Text(
+                                                      "أستلمنا طلبك",
+                                                      style: TextStyle(
+                                                        color: status == "0"
+                                                            ? Colors.black
+                                                            : Colors.grey,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      decoration: BoxDecoration(
+                                                        gradient:
+                                                            LinearGradient(
+                                                          colors: status == "1"
+                                                              ? [
+                                                                  Colors
+                                                                      .lightGreen,
+                                                                  Colors.green[
+                                                                      800]
+                                                                ]
+                                                              : [
+                                                                  Colors.grey,
+                                                                  Colors.white
+                                                                ],
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(50),
+                                                        ),
+                                                      ),
+                                                      child: Icon(Icons
+                                                          .shopping_basket),
+                                                    ),
+                                                    Text(
+                                                      "جاهز للتوصيل",
+                                                      style: TextStyle(
+                                                        color: status == "1"
+                                                            ? Colors.black
+                                                            : Colors.grey,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      decoration: BoxDecoration(
+                                                        gradient:
+                                                            LinearGradient(
+                                                          colors: status == "2"
+                                                              ? [
+                                                                  Colors
+                                                                      .lightGreen,
+                                                                  Colors.green[
+                                                                      800]
+                                                                ]
+                                                              : [
+                                                                  Colors.grey,
+                                                                  Colors.white
+                                                                ],
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(50),
+                                                        ),
+                                                      ),
+                                                      child: Icon(
+                                                          Icons.directions_car),
+                                                    ),
+                                                    Text(
+                                                      "طلبك فالطريق",
+                                                      style: TextStyle(
+                                                        color: status == "2"
+                                                            ? Colors.black
+                                                            : Colors.grey,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      decoration: BoxDecoration(
+                                                        gradient:
+                                                            LinearGradient(
+                                                          colors: status == "3"
+                                                              ? [
+                                                                  Colors
+                                                                      .lightGreen,
+                                                                  Colors.green[
+                                                                      800]
+                                                                ]
+                                                              : [
+                                                                  Colors.grey,
+                                                                  Colors.white
+                                                                ],
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(50),
+                                                        ),
+                                                      ),
+                                                      child: Icon(Icons.home),
+                                                    ),
+                                                    Text(
+                                                      "تم التوصيل",
+                                                      style: TextStyle(
+                                                        color: status == "3"
+                                                            ? Colors.black
+                                                            : Colors.grey,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
                                               ],
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      FlatButton.icon(
+                                                        icon: Icon(
+                                                          Icons.delete,
+                                                          color:
+                                                              Colors.red[300],
+                                                        ),
+                                                        onPressed: () {
+                                                          if (status == "0") {
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (BuildContext
+                                                                            context) =>
+                                                                        Dialog(
+                                                                          shape:
+                                                                              RoundedRectangleBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(12.0),
+                                                                          ),
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                300.0,
+                                                                            width:
+                                                                                300.0,
+                                                                            child:
+                                                                                Column(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                              children: <Widget>[
+                                                                                Center(
+                                                                                  child: Text(
+                                                                                    "إلغاء الطلب",
+                                                                                    style: TextStyle(fontSize: 20),
+                                                                                  ),
+                                                                                ),
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                                                  child: Container(child: Text("سوف يتم الغاء طلبك")),
+                                                                                ),
+                                                                                Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                                  children: [
+                                                                                    FlatButton(
+                                                                                      onPressed: () {
+                                                                                        Firestore.instance.collection('order').where('orderID', isEqualTo: ds['orderID']).where('userID', isEqualTo: ds['userID']).getDocuments().then((value) {
+                                                                                          value.documents.forEach((element) {
+                                                                                            Firestore.instance.collection('order').document(element.documentID).delete();
+                                                                                          });
+                                                                                        });
+                                                                                        Navigator.pop(context);
+                                                                                      },
+                                                                                      child: Text(
+                                                                                        'تأكيد',
+                                                                                        style: TextStyle(color: Colors.purple, fontSize: 18.0),
+                                                                                      ),
+                                                                                    ),
+                                                                                    FlatButton(
+                                                                                      onPressed: () {
+                                                                                        Navigator.pop(context);
+                                                                                      },
+                                                                                      child: Text(
+                                                                                        'خروج',
+                                                                                        style: TextStyle(color: Colors.purple, fontSize: 18.0),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ));
+                                                          } else {
+                                                            errorToast(
+                                                                "لا يكمنك إلغاء الطلب");
+                                                          }
+                                                        },
+                                                        label:
+                                                            Text("الغاء الطلب"),
+                                                      ),
+                                                      Text(
+                                                        '${ds['total']} ر.س',
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        style: TextStyle(
+                                                            fontSize: 22),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Container(
+                                                    width: double.infinity,
+                                                    alignment: Alignment.centerRight,
+                                                    child: Text(
+                                                        "السعر شامل الضريبة والتوصيل"),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

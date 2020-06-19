@@ -21,6 +21,7 @@ class Payment extends StatefulWidget {
   final String long;
   final String buyPrice;
   final String price;
+  final String totalAfterTax;
 
   const Payment({
     Key key,
@@ -33,6 +34,7 @@ class Payment extends StatefulWidget {
     this.long,
     this.buyPrice,
     this.price,
+    this.totalAfterTax,
   }) : super(key: key);
   @override
   _PaymentState createState() => _PaymentState();
@@ -115,6 +117,7 @@ class _PaymentState extends State<Payment> {
                 'date': DateTime.now().toString(),
                 'status': '0',
                 'address': widget.address,
+                'total': widget.totalAfterTax,
                 'lat': widget.lat,
                 'long': widget.long,
                 'name': widget.name,
