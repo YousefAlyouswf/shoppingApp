@@ -495,8 +495,11 @@ class _MyOrderState extends State<MyOrder> {
                                                         Container(
                                                           alignment: Alignment
                                                               .centerRight,
-                                                          child: Text(
-                                                              "السعر شامل الضريبة والتوصيل"),
+                                                          child: noDelvier
+                                                              ? Text(
+                                                                  "السعر شامل الضريبة")
+                                                              : Text(
+                                                                  "السعر شامل الضريبة والتوصيل"),
                                                         ),
                                                       ],
                                                     ),

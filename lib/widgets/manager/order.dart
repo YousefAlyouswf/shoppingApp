@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:shop_app/manager/gmapManager.dart';
+import 'package:shop_app/widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 String orderNumber;
@@ -82,6 +83,15 @@ Widget orders(BuildContext context, Function searchOrder) {
 
                           String formatted =
                               "تاريخ الطلب $formatDate  $formatTime";
+                          bool mapNavgation;
+                          if (ds['lat'] == '' ||
+                              ds['long'] == '' ||
+                              ds['lat'] == null ||
+                              ds['long'] == null) {
+                            mapNavgation = false;
+                          } else {
+                            mapNavgation = true;
+                          }
                           return Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
@@ -368,74 +378,80 @@ Widget orders(BuildContext context, Function searchOrder) {
                                                     ),
                                                   ),
                                                   noDelvier
-                                                    ? Container()
-                                                    : InkWell(
-                                                    onLongPress: () {
-                                                      Firestore.instance
-                                                          .collection('order')
-                                                          .where('orderID',
-                                                              isEqualTo:
-                                                                  ds['orderID'])
-                                                          .getDocuments()
-                                                          .then((value) {
-                                                        value.documents
-                                                            .forEach((element) {
-                                                          Firestore.instance
-                                                              .collection(
-                                                                  'order')
-                                                              .document(element
-                                                                  .documentID)
-                                                              .updateData({
-                                                            'status': '2'
-                                                          });
-                                                        });
-                                                      });
-                                                    },
-                                                    child: Column(
-                                                      children: [
-                                                        Container(
-                                                          height: 50,
-                                                          width: 50,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            gradient:
-                                                                LinearGradient(
-                                                              colors:
-                                                                  status == "2"
-                                                                      ? [
-                                                                          Colors
-                                                                              .lightGreen,
-                                                                          Colors
-                                                                              .green[800]
-                                                                        ]
-                                                                      : [
-                                                                          Colors
-                                                                              .grey,
-                                                                          Colors
-                                                                              .white
-                                                                        ],
-                                                            ),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(
-                                                              Radius.circular(
-                                                                  50),
-                                                            ),
+                                                      ? Container()
+                                                      : InkWell(
+                                                          onLongPress: () {
+                                                            Firestore.instance
+                                                                .collection(
+                                                                    'order')
+                                                                .where(
+                                                                    'orderID',
+                                                                    isEqualTo: ds[
+                                                                        'orderID'])
+                                                                .getDocuments()
+                                                                .then((value) {
+                                                              value.documents
+                                                                  .forEach(
+                                                                      (element) {
+                                                                Firestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'order')
+                                                                    .document(
+                                                                        element
+                                                                            .documentID)
+                                                                    .updateData({
+                                                                  'status': '2'
+                                                                });
+                                                              });
+                                                            });
+                                                          },
+                                                          child: Column(
+                                                            children: [
+                                                              Container(
+                                                                height: 50,
+                                                                width: 50,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  gradient:
+                                                                      LinearGradient(
+                                                                    colors:
+                                                                        status ==
+                                                                                "2"
+                                                                            ? [
+                                                                                Colors.lightGreen,
+                                                                                Colors.green[800]
+                                                                              ]
+                                                                            : [
+                                                                                Colors.grey,
+                                                                                Colors.white
+                                                                              ],
+                                                                  ),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .all(
+                                                                    Radius
+                                                                        .circular(
+                                                                            50),
+                                                                  ),
+                                                                ),
+                                                                child: Icon(Icons
+                                                                    .directions_car),
+                                                              ),
+                                                              Text(
+                                                                "طلبك فالطريق",
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: status == "2"
+                                                                      ? Colors
+                                                                          .black
+                                                                      : Colors
+                                                                          .grey,
+                                                                ),
+                                                              )
+                                                            ],
                                                           ),
-                                                          child: Icon(Icons
-                                                              .directions_car),
                                                         ),
-                                                        Text(
-                                                          "طلبك فالطريق",
-                                                          style: TextStyle(
-                                                            color: status == "2"
-                                                                ? Colors.black
-                                                                : Colors.grey,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
                                                   InkWell(
                                                     onLongPress: () {
                                                       Firestore.instance
@@ -493,9 +509,9 @@ Widget orders(BuildContext context, Function searchOrder) {
                                                               Icon(Icons.home),
                                                         ),
                                                         Text(
-                                                           noDelvier
-                                                    ? "تم التسليم"
-                                                    :"تم التوصيل",
+                                                          noDelvier
+                                                              ? "تم التسليم"
+                                                              : "تم التوصيل",
                                                           style: TextStyle(
                                                             color: status == "3"
                                                                 ? Colors.black
@@ -611,8 +627,11 @@ Widget orders(BuildContext context, Function searchOrder) {
                                                       width: double.infinity,
                                                       alignment:
                                                           Alignment.centerRight,
-                                                      child: Text(
-                                                          "السعر شامل الضريبة والتوصيل"),
+                                                      child: noDelvier
+                                                          ? Text(
+                                                              "السعر شامل الضريبة")
+                                                          : Text(
+                                                              "السعر شامل الضريبة والتوصيل"),
                                                     ),
                                                     Row(
                                                       mainAxisAlignment:
@@ -625,29 +644,58 @@ Widget orders(BuildContext context, Function searchOrder) {
                                                                 "tel://${ds['phone']}"),
                                                             child: Text(
                                                                 ds['phone'])),
-                                                        FlatButton.icon(
-                                                          onPressed: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        GmapManager(
-                                                                  latLng:
-                                                                      LatLng(
-                                                                    double.parse(
-                                                                        ds['lat']),
-                                                                    double.parse(
-                                                                        ds['long']),
-                                                                  ),
-                                                                ),
+                                                        noDelvier
+                                                            ? Container()
+                                                            : FlatButton.icon(
+                                                                onPressed: () {
+                                                                  if (mapNavgation) {
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                GmapManager(
+                                                                          latLng:
+                                                                              LatLng(
+                                                                            double.parse(ds['lat']),
+                                                                            double.parse(ds['long']),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  } else {
+                                                                    showModalBottomSheet(
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (context) =>
+                                                                              Container(
+                                                                        color: Colors
+                                                                            .grey[100],
+                                                                        width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width,
+                                                                        child: Padding(
+                                                                            padding: const EdgeInsets.all(8.0),
+                                                                            child: Container(
+                                                                              height: MediaQuery.of(context).size.height / 2,
+                                                                              child: Text(
+                                                                                ds['address'],
+                                                                                textDirection: TextDirection.rtl,
+                                                                                textAlign: TextAlign.end,
+                                                                                style: TextStyle(fontSize: 22),
+                                                                              ),
+                                                                            )),
+                                                                      ),
+                                                                    );
+                                                                  }
+                                                                },
+                                                                icon: Icon(
+                                                                    Icons.map),
+                                                                label: Text(
+                                                                    "موقع التوصيل"),
                                                               ),
-                                                            );
-                                                          },
-                                                          icon: Icon(Icons.map),
-                                                          label: Text(
-                                                              "موقع التوصيل"),
-                                                        ),
                                                       ],
                                                     ),
                                                     Text(
