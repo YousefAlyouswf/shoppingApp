@@ -35,6 +35,7 @@ class ShowItem extends StatefulWidget {
 }
 
 class _ShowItemState extends State<ShowItem> {
+  String sizeChose = '';
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -133,33 +134,21 @@ class _ShowItemState extends State<ShowItem> {
                           color: Colors.green,
                         ),
                         onPressed: () async {
-                          await widget.fetchMyCart();
-                          int q = 0;
-                          int id;
-                          for (var i = 0; i < cartToCheck.length; i++) {
-                            if (cartToCheck[i].itemName == widget.name &&
-                                cartToCheck[i].itemPrice == widget.price &&
-                                cartToCheck[i].itemDes == widget.des) {
-                              id = cartToCheck[i].id;
-                              q = int.parse(cartToCheck[i].quantity);
+                          if (widget.size.length == 0) {
+                            await widget.fetchMyCart();
+                            int q = 0;
+                            int id;
+                            for (var i = 0; i < cartToCheck.length; i++) {
+                              if (cartToCheck[i].itemName == widget.name &&
+                                  cartToCheck[i].itemPrice == widget.price &&
+                                  cartToCheck[i].itemDes == widget.des) {
+                                id = cartToCheck[i].id;
+                                q = int.parse(cartToCheck[i].quantity);
+                              }
                             }
-                          }
-                          q++;
-                          if (q == 1) {
-                            await DBHelper.insert(
-                              'cart',
-                              {
-                                'name': widget.name,
-                                'price': widget.price,
-                                'image': widget.image,
-                                'des': widget.des,
-                                'q': q.toString(),
-                                'buyPrice': widget.buyPrice
-                              },
-                            ).whenComplete(
-                                () => addCartToast("تم وضعها في سلتك"));
-                          } else {
-                            await DBHelper.updateData(
+                            q++;
+                            if (q == 1) {
+                              await DBHelper.insert(
                                 'cart',
                                 {
                                   'name': widget.name,
@@ -167,18 +156,80 @@ class _ShowItemState extends State<ShowItem> {
                                   'image': widget.image,
                                   'des': widget.des,
                                   'q': q.toString(),
-                                  'buyPrice': widget.buyPrice
+                                  'buyPrice': widget.buyPrice,
+                                  'size': '',
                                 },
-                                id);
+                              ).whenComplete(
+                                  () => addCartToast("تم وضعها في سلتك"));
+                            } else {
+                              await DBHelper.updateData(
+                                  'cart',
+                                  {
+                                    'name': widget.name,
+                                    'price': widget.price,
+                                    'image': widget.image,
+                                    'des': widget.des,
+                                    'q': q.toString(),
+                                    'buyPrice': widget.buyPrice,
+                                    'size': '',
+                                  },
+                                  id);
+                            }
+                            Navigator.pop(context);
+                          } else {
+                            if (sizeChose == '') {
+                              errorToast("أختر المقاس");
+                            } else {
+                              await widget.fetchMyCart();
+                              int q = 0;
+                              int id;
+                              for (var i = 0; i < cartToCheck.length; i++) {
+                                if (cartToCheck[i].itemName == widget.name &&
+                                    cartToCheck[i].itemPrice == widget.price &&
+                                    cartToCheck[i].itemDes == widget.des) {
+                                  id = cartToCheck[i].id;
+                                  q = int.parse(cartToCheck[i].quantity);
+                                }
+                              }
+                              q++;
+                              if (q == 1) {
+                                await DBHelper.insert(
+                                  'cart',
+                                  {
+                                    'name': widget.name,
+                                    'price': widget.price,
+                                    'image': widget.image,
+                                    'des': widget.des,
+                                    'q': q.toString(),
+                                    'buyPrice': widget.buyPrice,
+                                    'size': sizeChose,
+                                  },
+                                ).whenComplete(
+                                    () => addCartToast("تم وضعها في سلتك"));
+                              } else {
+                                await DBHelper.updateData(
+                                    'cart',
+                                    {
+                                      'name': widget.name,
+                                      'price': widget.price,
+                                      'image': widget.image,
+                                      'des': widget.des,
+                                      'q': q.toString(),
+                                      'buyPrice': widget.buyPrice,
+                                      'size': sizeChose,
+                                    },
+                                    id);
+                              }
+                              Navigator.pop(context);
+                            }
                           }
-                          Navigator.pop(context);
                         },
                       )
                     ],
                   ),
-                  Text("المقاس"),
+                  widget.size.length == 0 ? Container() : Text("المقاس"),
                   Container(
-                    height: 33,
+                    height: 50,
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: widget.size.length,
@@ -186,12 +237,20 @@ class _ShowItemState extends State<ShowItem> {
                           return Container(
                             margin: EdgeInsets.symmetric(horizontal: 8.0),
                             decoration: BoxDecoration(
+                              color: sizeChose == widget.size[i]
+                                  ? Colors.green
+                                  : Colors.white,
                               border: Border.all(),
                             ),
                             child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  sizeChose = widget.size[i];
+                                });
+                              },
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
                                 child: Center(
                                   child: Text(widget.size[i]),
                                 ),
@@ -204,9 +263,10 @@ class _ShowItemState extends State<ShowItem> {
                     padding: const EdgeInsets.all(16.0),
                     child: Container(
                       width: double.infinity,
-                      height: 170,
+                      height: MediaQuery.of(context).size.height / 3,
                       child: SingleChildScrollView(
                         child: Card(
+                          elevation: 10,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(

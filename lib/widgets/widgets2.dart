@@ -98,7 +98,7 @@ Container imageViewBottomSheet(closeImpageOntap, onPageChanged) {
               Container(
                   width: double.infinity,
                   height: 100,
-                  color:  Colors.white70,
+                  color: Colors.white70,
                   alignment: Alignment.centerLeft,
                   child: IconButton(
                       icon: Icon(
@@ -198,18 +198,38 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
 
             for (var i = 0; i < listLength; i++) {
               sizes = [];
-              for (var j = 35;
-                  j <
-                      asyncSnapshot.data.documents[0].data['items'][i]['size']
-                              .length +
-                          35;
-                  j++) {
-                var value = asyncSnapshot.data.documents[0].data['items'][i]
-                    ['size'][j.toString()];
-                if (value) {
-                  sizes.add(j.toString());
+
+              if (asyncSnapshot
+                      .data.documents[0].data['items'][i]['size'].length !=
+                  0) {
+                sizes = [];
+                if (asyncSnapshot
+                        .data.documents[0].data['items'][i]['size'].length ==
+                    8) {
+                  for (var j = 35;
+                      j <
+                          asyncSnapshot.data.documents[0]
+                                  .data['items'][i]['size'].length +
+                              35;
+                      j++) {
+                    var value = asyncSnapshot.data.documents[0].data['items'][i]
+                        ['size'][j.toString()];
+                    if (value) {
+                      sizes.add(j.toString());
+                    }
+                  }
+                } else {
+                  List<String> sizeWord = ['XS', 'S', 'M', 'L', 'XL'];
+                  for (var j = 0; j < 5; j++) {
+                    var value = asyncSnapshot.data.documents[0].data['items'][i]
+                        ['size'][sizeWord[j]];
+                    if (value) {
+                      sizes.add(sizeWord[j]);
+                    }
+                  }
                 }
               }
+
               listImages.add(ListHirezontalImage(
                 name: asyncSnapshot.data.documents[0].data['items'][i]['name'],
                 image: asyncSnapshot.data.documents[0].data['items'][i]
