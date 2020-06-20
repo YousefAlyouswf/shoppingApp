@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/screens/address.dart';
+import 'package:shop_app/models/sizeListModel.dart';
 
 class EditItem extends StatefulWidget {
   final String name;
@@ -14,9 +15,11 @@ class EditItem extends StatefulWidget {
   final String imageID;
   final bool show;
   final String category;
+  final String buyPrice;
+  final List<SizeListModel> size;
 
   const EditItem(this.name, this.image, this.price, this.des, this.imageID,
-      this.show, this.category);
+      this.show, this.category, this.buyPrice, this.size);
   @override
   _EditItemState createState() => _EditItemState();
 }
@@ -25,12 +28,61 @@ class _EditItemState extends State<EditItem> {
   TextEditingController name = TextEditingController();
   TextEditingController price = TextEditingController();
   TextEditingController des = TextEditingController();
+  TextEditingController buyPrice = TextEditingController();
   @override
   void initState() {
     super.initState();
     name.text = widget.name;
     price.text = widget.price;
     des.text = widget.des;
+    buyPrice.text = widget.buyPrice;
+    if (widget.size.length > 0) {
+      checkedSize = true;
+      if (widget.size.length == 5) {
+        sizeWord = true;
+        if (widget.size[0].value == true) {
+          xs = true;
+        }
+        if (widget.size[1].value == true) {
+          s = true;
+        }
+        if (widget.size[2].value == true) {
+          m = true;
+        }
+        if (widget.size[3].value == true) {
+          l = true;
+        }
+        if (widget.size[4].value == true) {
+          xl = true;
+        }
+      } else {
+        sizeNum = true;
+        if (widget.size[0].value == true) {
+          s35 = true;
+        }
+        if (widget.size[1].value == true) {
+          s36 = true;
+        }
+        if (widget.size[2].value == true) {
+          s37 = true;
+        }
+        if (widget.size[3].value == true) {
+          s38 = true;
+        }
+        if (widget.size[4].value == true) {
+          s39 = true;
+        }
+        if (widget.size[5].value == true) {
+          s40 = true;
+        }
+        if (widget.size[6].value == true) {
+          s41 = true;
+        }
+        if (widget.size[7].value == true) {
+          s41 = true;
+        }
+      }
+    }
   }
 
   @override
@@ -71,21 +123,112 @@ class _EditItemState extends State<EditItem> {
                         Container(
                           width: MediaQuery.of(context).size.width / 2,
                           child: MyTextFormField(
+                            hintText: "أسم المنتج",
                             editingController: name,
                           ),
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width / 2,
                           child: MyTextFormField(
+                            hintText: "سعر البيع",
                             editingController: price,
                             isNumber: true,
                           ),
                         ),
                       ],
                     ),
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: MyTextFormField(
+                        hintText: "سعر الشراء",
+                        editingController: buyPrice,
+                        isNumber: true,
+                      ),
+                    ),
                     MyTextFormField(
                       editingController: des,
                       isMultiLine: true,
+                    ),
+                    CheckboxListTile(
+                      title: Text("يوجد مقاسات؟"),
+                      value: checkedSize,
+                      onChanged: checkBoxFuncation,
+                      controlAffinity: ListTileControlAffinity
+                          .leading, //  <-- leading Checkbox
+                    ),
+                    Visibility(
+                      visible: checkedSize,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.amber[100],
+                                    border: Border.all()),
+                                child: InkWell(
+                                    onTap: chooseNumSized,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("مقاس أرقام"),
+                                    )),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.amber[100],
+                                    border: Border.all()),
+                                child: InkWell(
+                                    onTap: chooseWordSized,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("مقاس حجم"),
+                                    )),
+                              ),
+                            ],
+                          ),
+                          Visibility(
+                            visible: sizeWord,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  buttonSize("XS", changeXS, xs),
+                                  buttonSize("S", changeS, s),
+                                  buttonSize("M", changeM, m),
+                                  buttonSize("L", changeL, l),
+                                  buttonSize("XL", changeXL, xl),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Visibility(
+                            visible: sizeNum,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  buttonSize("35", change35, s35),
+                                  buttonSize("36", change36, s36),
+                                  buttonSize("37", change37, s37),
+                                  buttonSize("38", change38, s38),
+                                  buttonSize("39", change39, s39),
+                                  buttonSize("40", change40, s40),
+                                  buttonSize("41", change41, s41),
+                                  buttonSize("42", change42, s42),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 70,
                     ),
                   ],
                 ),
@@ -96,29 +239,83 @@ class _EditItemState extends State<EditItem> {
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
               onTap: () async {
-                Map<String, dynamic> itemMapRemove = {
-                  'description': widget.des,
-                  'image': widget.image,
-                  'imageID': widget.imageID,
-                  'name': widget.name,
-                  'price': widget.price,
-                  'show': widget.show,
-                };
-                Map<String, dynamic> itemMapAdd = {
-                  'description': des.text,
-                  'image': url == null ? widget.image : url,
-                  'imageID': widget.imageID,
-                  'name': name.text,
-                  'price': price.text,
-                  'show': widget.show,
-                };
-                FirestoreFunctions()
-                    .upDateItems(widget.category, itemMapRemove, itemMapAdd)
-                    .then((e) {
-                  if (url != null)
-                    FirestoreFunctions().deleteFirstImagesFormList(
-                        widget.imageID, widget.image, url);
-                }).then((value) => Navigator.pop(context));
+                if (checkedSize) {
+                  Map<String, dynamic> sizeWordMap = {
+                    'XS': xs,
+                    'S': s,
+                    'M': m,
+                    'L': l,
+                    'XL': xl,
+                  };
+                  Map<String, dynamic> sizeNumMap = {
+                    '35': s35,
+                    '36': s36,
+                    '37': s37,
+                    '38': s38,
+                    '39': s39,
+                    '40': s40,
+                    '41': s41,
+                    '42': s42,
+                  };
+                  Map<String, dynamic> sizingMap = Map.fromIterable(widget.size,
+                      key: (e) => e.sizeName, value: (e) => e.value);
+                  Map<String, dynamic> itemMapRemove = {
+                    'buyPrice': widget.buyPrice,
+                    'description': widget.des,
+                    'image': widget.image,
+                    'imageID': widget.imageID,
+                    'name': widget.name,
+                    'price': widget.price,
+                    'show': widget.show,
+                    'size': sizingMap,
+                  };
+                  Map<String, dynamic> itemMapAdd = {
+                    'buyPrice': buyPrice.text,
+                    'description': des.text,
+                    'image': url == null ? widget.image : url,
+                    'imageID': widget.imageID,
+                    'name': name.text,
+                    'price': price.text,
+                    'show': widget.show,
+                    'size':
+                        checkedSize ? sizeNum ? sizeNumMap : sizeWordMap : {},
+                  };
+                  FirestoreFunctions()
+                      .upDateItems(widget.category, itemMapRemove, itemMapAdd)
+                      .then((e) {
+                    if (url != null)
+                      FirestoreFunctions().deleteFirstImagesFormList(
+                          widget.imageID, widget.image, url);
+                  }).then((value) => Navigator.pop(context));
+                } else {
+                  Map<String, dynamic> itemMapRemove = {
+                    'buyPrice': widget.buyPrice,
+                    'description': widget.des,
+                    'image': widget.image,
+                    'imageID': widget.imageID,
+                    'name': widget.name,
+                    'price': widget.price,
+                    'show': widget.show,
+                    'size': {},
+                  };
+                  Map<String, dynamic> itemMapAdd = {
+                    'buyPrice': buyPrice.text,
+                    'description': des.text,
+                    'image': url == null ? widget.image : url,
+                    'imageID': widget.imageID,
+                    'name': name.text,
+                    'price': price.text,
+                    'show': widget.show,
+                    'size': {},
+                  };
+                  FirestoreFunctions()
+                      .upDateItems(widget.category, itemMapRemove, itemMapAdd)
+                      .then((e) {
+                    if (url != null)
+                      FirestoreFunctions().deleteFirstImagesFormList(
+                          widget.imageID, widget.image, url);
+                  }).then((value) => Navigator.pop(context));
+                }
               },
               child: Container(
                 width: double.infinity,
@@ -230,5 +427,137 @@ class _EditItemState extends State<EditItem> {
         ),
       ),
     );
+  }
+
+  Widget buttonSize(String label, Function toggle, bool size) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(),
+        color: size ? Colors.green[200] : Colors.grey[200],
+      ),
+      child: InkWell(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(label),
+        ),
+        onTap: toggle,
+      ),
+    );
+  }
+
+  bool s35 = false,
+      s36 = false,
+      s37 = false,
+      s38 = false,
+      s39 = false,
+      s40 = false,
+      s41 = false,
+      s42 = false;
+
+  bool xs = false;
+  bool s = false;
+  bool m = false;
+  bool l = false;
+  bool xl = false;
+  bool sizeNum = false;
+  bool sizeWord = false;
+  bool checkedSize = false;
+  checkBoxFuncation(newValue) {
+    setState(() {
+      checkedSize = newValue;
+    });
+  }
+
+  chooseWordSized() {
+    setState(() {
+      sizeWord = true;
+      sizeNum = false;
+    });
+  }
+
+  chooseNumSized() {
+    setState(() {
+      sizeNum = true;
+      sizeWord = false;
+    });
+  }
+
+  changeXS() {
+    setState(() {
+      xs = !xs;
+    });
+  }
+
+  changeS() {
+    setState(() {
+      s = !s;
+    });
+  }
+
+  changeM() {
+    setState(() {
+      m = !m;
+    });
+  }
+
+  changeL() {
+    setState(() {
+      l = !l;
+    });
+  }
+
+  changeXL() {
+    setState(() {
+      xl = !xl;
+    });
+  }
+  //Numbers
+
+  change35() {
+    setState(() {
+      s35 = !s35;
+    });
+  }
+
+  change36() {
+    setState(() {
+      s36 = !s36;
+    });
+  }
+
+  change37() {
+    setState(() {
+      s37 = !s37;
+    });
+  }
+
+  change38() {
+    setState(() {
+      s38 = !s38;
+    });
+  }
+
+  change39() {
+    setState(() {
+      s39 = !s39;
+    });
+  }
+
+  change40() {
+    setState(() {
+      s40 = !s40;
+    });
+  }
+
+  change41() {
+    setState(() {
+      s41 = !s41;
+    });
+  }
+
+  change42() {
+    setState(() {
+      s42 = !s42;
+    });
   }
 }

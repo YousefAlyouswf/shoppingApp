@@ -256,26 +256,27 @@ Widget subCatgory(
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                            builder: (context) => EditItem(
-                                                                listImages[
-                                                                        index]
-                                                                    .name,
-                                                                listImages[
-                                                                        index]
-                                                                    .image,
-                                                                listImages[
-                                                                        index]
-                                                                    .price,
-                                                                listImages[
-                                                                        index]
-                                                                    .description,
-                                                                listImages[
-                                                                        index]
-                                                                    .imageID,
-                                                                listImages[
-                                                                        index]
-                                                                    .show,
-                                                                catgoryName),
+                                                            builder:
+                                                                (context) =>
+                                                                    EditItem(
+                                                              listImages[index]
+                                                                  .name,
+                                                              listImages[index]
+                                                                  .image,
+                                                              listImages[index]
+                                                                  .price,
+                                                              listImages[index]
+                                                                  .description,
+                                                              listImages[index]
+                                                                  .imageID,
+                                                              listImages[index]
+                                                                  .show,
+                                                              catgoryName,
+                                                              listImages[index]
+                                                                  .buyPrice,
+                                                              listImages[index]
+                                                                  .sizeModel,
+                                                            ),
                                                           ),
                                                         ).then((value) =>
                                                             Navigator.pop(
