@@ -243,6 +243,8 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
                 buyPrice: asyncSnapshot.data.documents[0].data['items'][i]
                     ['buyPrice'],
                 size: sizes,
+                totalQuantity: asyncSnapshot.data.documents[0].data['items'][i]
+                    ['totalQuantity'],
               ));
             }
           } catch (e) {
@@ -338,6 +340,8 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
                                         imageID: listImages[index].imageID,
                                         buyPrice: listImages[index].buyPrice,
                                         size: listImages[index].size,
+                                        totalQuantity:
+                                            listImages[index].totalQuantity,
                                       )),
                             );
                           },

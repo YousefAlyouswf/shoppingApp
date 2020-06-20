@@ -11,6 +11,7 @@ class ListHirezontalImage {
   String imageID;
   List<String> size;
   List<SizeListModel> sizeModel;
+  String totalQuantity;
 
   ListHirezontalImage({
     this.name,
@@ -23,5 +24,6 @@ class ListHirezontalImage {
     this.buyPrice,
     this.size,
     this.sizeModel,
+    this.totalQuantity,
   });
 }

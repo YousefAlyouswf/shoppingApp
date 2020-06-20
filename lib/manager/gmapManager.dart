@@ -17,7 +17,7 @@ class _GmapManagerState extends State<GmapManager> {
   Location location;
   LocationData _locationData;
   bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
+  //PermissionStatus _permissionGranted;
 
   final Set<Marker> _markers = {};
   void _onAddMarkerButtonPressed() {

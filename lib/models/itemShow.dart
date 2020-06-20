@@ -1,3 +1,4 @@
+
 class ItemShow {
   final int id;
   final String quantity;
@@ -10,6 +11,7 @@ class ItemShow {
   final List<String> size;
   final String sizeChose;
   final String productID;
+  final String totalQuantity;
 
   ItemShow({
     this.id,
@@ -23,5 +25,6 @@ class ItemShow {
     this.size,
     this.sizeChose,
     this.productID,
+    this.totalQuantity
   });
 }

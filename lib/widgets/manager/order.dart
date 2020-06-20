@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:shop_app/manager/gmapManager.dart';
-import 'package:shop_app/widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 String orderNumber;

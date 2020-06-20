@@ -95,6 +95,8 @@ Widget subCatgory(
                 buyPrice: asyncSnapshot.data.documents[0].data['items'][i]
                     ['buyPrice'],
                 sizeModel: sizes,
+                totalQuantity: asyncSnapshot.data.documents[0].data['items'][i]
+                    ['totalQuantity'],
               ));
             }
           } catch (e) {
@@ -276,6 +278,8 @@ Widget subCatgory(
                                                                   .buyPrice,
                                                               listImages[index]
                                                                   .sizeModel,
+                                                              listImages[index]
+                                                                  .totalQuantity,
                                                             ),
                                                           ),
                                                         ).then((value) =>
@@ -368,7 +372,10 @@ Widget subCatgory(
                                                         "imageID":
                                                             listImages[index]
                                                                 .imageID,
-                                                        'size': sizingMap
+                                                        'size': sizingMap,
+                                                        'totalQuantity':
+                                                            listImages[index]
+                                                                .totalQuantity
                                                       };
                                                       Map<String, dynamic>
                                                           itemMapAdd = {
@@ -391,7 +398,10 @@ Widget subCatgory(
                                                         "imageID":
                                                             listImages[index]
                                                                 .imageID,
-                                                        'size': sizingMap
+                                                        'size': sizingMap,
+                                                        'totalQuantity':
+                                                            listImages[index]
+                                                                .totalQuantity
                                                       };
                                                       if (listImages[index]
                                                           .show) {
@@ -478,6 +488,7 @@ Widget subCatgory(
                               'show': listImages[index].show,
                               'imageID': listImages[index].imageID,
                               'size': sizingMap,
+                              'totalQuantity': listImages[index].totalQuantity
                             };
                             deleteItemDialog(
                               context,

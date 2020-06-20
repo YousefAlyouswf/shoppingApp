@@ -16,6 +16,8 @@ TextEditingController itemPrice = TextEditingController();
 TextEditingController itemDis = TextEditingController();
 TextEditingController categoryName = TextEditingController();
 TextEditingController itemBuyPrice = TextEditingController();
+TextEditingController totalQuantity = TextEditingController();
+
 bool checkedSize = false;
 bool sizeWord = false;
 bool sizeNum = false;
@@ -150,9 +152,9 @@ Widget addItem(
                       alignment: Alignment.topCenter,
                       width: halfMediaWidth,
                       child: MyTextFormField(
-                        editingController: itemDis,
-                        isMultiLine: true,
-                        hintText: 'الوصف',
+                        editingController: totalQuantity,
+                        hintText: 'الكمية',
+                        isNumber: true,
                       ),
                     ),
                     Container(
@@ -165,6 +167,14 @@ Widget addItem(
                       ),
                     ),
                   ],
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  child: MyTextFormField(
+                    editingController: itemDis,
+                    isMultiLine: true,
+                    hintText: 'الوصف',
+                  ),
                 ),
                 imageStoredItems != null
                     ? InkWell(
@@ -303,13 +313,16 @@ Widget addItem(
                                 !s40 &&
                                 !s41 &&
                                 !s42) ||
-                        urlImageItems == null) {
+                        urlImageItems == null ||
+                        totalQuantity.text.isEmpty) {
                       if (itemName.text.isEmpty) {
                         errorToast("أسم المنتج");
                       } else if (itemPrice.text.isEmpty) {
                         errorToast("سعر البيع");
                       } else if (itemBuyPrice.text.isEmpty) {
                         errorToast('سعر الشراء');
+                      } else if (totalQuantity.text.isEmpty) {
+                        errorToast('كمية البضاعه');
                       } else if (itemDis.text.isEmpty) {
                         errorToast("الوصف");
                       } else if (checkedSize && !xs && !s && !m && !l && !xl ||
@@ -347,6 +360,7 @@ Widget addItem(
                         '42': s42,
                       };
                       Map<String, dynamic> itemMap = {
+                        'totalQuantity': totalQuantity.text,
                         "name": itemName.text,
                         "description": itemDis.text,
                         "price": itemPrice.text,

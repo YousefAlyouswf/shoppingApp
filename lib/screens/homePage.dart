@@ -5,6 +5,7 @@ import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:shop_app/widgets/widgets2.dart';
 import 'cart.dart';
+import 'package:shop_app/screens/showItem.dart';
 
 class HomePage extends StatefulWidget {
   final Function onThemeChanged;
@@ -96,8 +97,8 @@ class _HomePageState extends State<HomePage> {
             iconTheme: new IconThemeData(color: Colors.white),
             title: Text(
               "تنوتو",
-              style: TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.w900),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
             ),
             backgroundColor: Colors.black38,
             floating: false,
@@ -120,9 +121,7 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 listViewHorznintal(selectCategory, controller),
-                Expanded(
-                    child: subCatgoryCustomer(
-                        null, fetchMyCart)),
+                Expanded(child: subCatgoryCustomer(null, fetchMyCart)),
               ],
             ),
           ),
@@ -137,24 +136,24 @@ class _HomePageState extends State<HomePage> {
   }
 
   imageOnTap(int i) {
-    print(itemShow[i].itemName);
-    showtheBottomSheet(
-        context,
-        itemShow[i].image,
-        itemShow[i].itemName,
-        itemShow[i].itemDes,
-        itemShow[i].itemPrice,
-        null,
-        fetchMyCart,
-        itemShow[i].imageID,
-        itemShow[i].buyPrice,
-        itemShow[i].size,
-        );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShowItem(
+          image: itemShow[i].image,
+          name: itemShow[i].itemName,
+          des: itemShow[i].itemDes,
+          price: itemShow[i].itemPrice,
+          fetchMyCart: fetchMyCart,
+          imageID: itemShow[i].imageID,
+          buyPrice: itemShow[i].buyPrice,
+          size: itemShow[i].size,
+          totalQuantity: itemShow[i].totalQuantity,
+        ),
+      ),
+    );
     setState(() {});
   }
-
- 
-
 
   List<ItemShow> itemShow = new List();
   getAllimagesFromFireStore() async {
@@ -199,6 +198,4 @@ class _HomePageState extends State<HomePage> {
           .toList();
     });
   }
-
-
 }

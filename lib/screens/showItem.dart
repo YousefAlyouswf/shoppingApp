@@ -5,6 +5,7 @@ import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:shop_app/widgets/widgets2.dart';
+import 'package:shop_app/models/sizeListModel.dart';
 
 class ShowItem extends StatefulWidget {
   final Function onThemeChanged;
@@ -17,25 +18,38 @@ class ShowItem extends StatefulWidget {
   final String imageID;
   final String buyPrice;
   final List size;
-  const ShowItem(
-      {Key key,
-      this.onThemeChanged,
-      this.changeLangauge,
-      this.image,
-      this.name,
-      this.des,
-      this.price,
-      this.fetchMyCart,
-      this.imageID,
-      this.buyPrice,
-      this.size})
-      : super(key: key);
+  final String totalQuantity;
+  final List<SizeListModel> sizeChose;
+  const ShowItem({
+    Key key,
+    this.onThemeChanged,
+    this.changeLangauge,
+    this.image,
+    this.name,
+    this.des,
+    this.price,
+    this.fetchMyCart,
+    this.imageID,
+    this.buyPrice,
+    this.size,
+    this.totalQuantity,
+    this.sizeChose,
+  }) : super(key: key);
   @override
   _ShowItemState createState() => _ShowItemState();
 }
 
 class _ShowItemState extends State<ShowItem> {
   String sizeChose = '';
+  int quantity = 100;
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      quantity = int.parse(widget.totalQuantity);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     print(widget.imageID);
@@ -128,43 +142,82 @@ class _ShowItemState extends State<ShowItem> {
                       //         fontSize: 22),
                       //   ),
                       // ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.add_shopping_cart,
-                          size: 40,
-                          color: Colors.green,
-                        ),
-                        onPressed: () async {
-                          if (widget.size.length == 0) {
-                            await widget.fetchMyCart();
-                            int q = 0;
-                            int id;
-                            for (var i = 0; i < cartToCheck.length; i++) {
-                              if (cartToCheck[i].itemName == widget.name &&
-                                  cartToCheck[i].itemPrice == widget.price &&
-                                  cartToCheck[i].itemDes == widget.des) {
-                                id = cartToCheck[i].id;
-                                q = int.parse(cartToCheck[i].quantity);
-                              }
-                            }
-                            q++;
-                            if (q == 1) {
-                              await DBHelper.insert(
-                                'cart',
-                                {
-                                  'name': widget.name,
-                                  'price': widget.price,
-                                  'image': widget.image,
-                                  'des': widget.des,
-                                  'q': q.toString(),
-                                  'buyPrice': widget.buyPrice,
-                                  'size': '',
-                                  'productID': widget.imageID,
-                                },
-                              ).whenComplete(
-                                  () => addCartToast("تم وضعها في سلتك"));
-                            } else {
-                              await DBHelper.updateData(
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.add_shopping_cart,
+                              size: 40,
+                              color: Colors.green,
+                            ),
+                            onPressed: () async {
+                              if (widget.size.length == 0) {
+                                await widget.fetchMyCart();
+                                int q = 0;
+                                int id;
+                                for (var i = 0; i < cartToCheck.length; i++) {
+                                  if (cartToCheck[i].itemName == widget.name &&
+                                      cartToCheck[i].itemPrice ==
+                                          widget.price &&
+                                      cartToCheck[i].itemDes == widget.des) {
+                                    id = cartToCheck[i].id;
+                                    q = int.parse(cartToCheck[i].quantity);
+                                  }
+                                }
+                                q++;
+                                if (q == 1) {
+                                  await DBHelper.insert(
+                                    'cart',
+                                    {
+                                      'name': widget.name,
+                                      'price': widget.price,
+                                      'image': widget.image,
+                                      'des': widget.des,
+                                      'q': q.toString(),
+                                      'buyPrice': widget.buyPrice,
+                                      'size': '',
+                                      'productID': widget.imageID,
+                                    },
+                                  ).whenComplete(
+                                      () => addCartToast("تم وضعها في سلتك"));
+                                } else {
+                                  await DBHelper.updateData(
+                                          'cart',
+                                          {
+                                            'name': widget.name,
+                                            'price': widget.price,
+                                            'image': widget.image,
+                                            'des': widget.des,
+                                            'q': q.toString(),
+                                            'buyPrice': widget.buyPrice,
+                                            'size': '',
+                                            'productID': widget.imageID,
+                                          },
+                                          id)
+                                      .whenComplete(() =>
+                                          addCartToast("تم وضعها في سلتك"));
+                                }
+                                Navigator.pop(context);
+                              } else {
+                                if (sizeChose == '') {
+                                  errorToast("أختر المقاس");
+                                } else {
+                                  await widget.fetchMyCart();
+                                  int q = 0;
+                                  int id;
+                                  for (var i = 0; i < cartToCheck.length; i++) {
+                                    if (cartToCheck[i].itemName ==
+                                            widget.name &&
+                                        cartToCheck[i].itemPrice ==
+                                            widget.price &&
+                                        cartToCheck[i].itemDes == widget.des) {
+                                      id = cartToCheck[i].id;
+                                      q = int.parse(cartToCheck[i].quantity);
+                                    }
+                                  }
+                                  q++;
+                                  if (q == 1) {
+                                    await DBHelper.insert(
                                       'cart',
                                       {
                                         'name': widget.name,
@@ -173,67 +226,45 @@ class _ShowItemState extends State<ShowItem> {
                                         'des': widget.des,
                                         'q': q.toString(),
                                         'buyPrice': widget.buyPrice,
-                                        'size': '',
+                                        'size': sizeChose,
                                         'productID': widget.imageID,
                                       },
-                                      id)
-                                  .whenComplete(
-                                      () => addCartToast("تم وضعها في سلتك"));
-                              ;
-                            }
-                            Navigator.pop(context);
-                          } else {
-                            if (sizeChose == '') {
-                              errorToast("أختر المقاس");
-                            } else {
-                              await widget.fetchMyCart();
-                              int q = 0;
-                              int id;
-                              for (var i = 0; i < cartToCheck.length; i++) {
-                                if (cartToCheck[i].itemName == widget.name &&
-                                    cartToCheck[i].itemPrice == widget.price &&
-                                    cartToCheck[i].itemDes == widget.des) {
-                                  id = cartToCheck[i].id;
-                                  q = int.parse(cartToCheck[i].quantity);
+                                    ).whenComplete(
+                                        () => addCartToast("تم وضعها في سلتك"));
+                                  } else {
+                                    await DBHelper.updateData(
+                                            'cart',
+                                            {
+                                              'name': widget.name,
+                                              'price': widget.price,
+                                              'image': widget.image,
+                                              'des': widget.des,
+                                              'q': q.toString(),
+                                              'buyPrice': widget.buyPrice,
+                                              'size': sizeChose,
+                                              'productID': widget.imageID,
+                                            },
+                                            id)
+                                        .whenComplete(() =>
+                                            addCartToast("تم وضعها في سلتك"));
+                                  }
+                                  Navigator.pop(context);
                                 }
                               }
-                              q++;
-                              if (q == 1) {
-                                await DBHelper.insert(
-                                  'cart',
-                                  {
-                                    'name': widget.name,
-                                    'price': widget.price,
-                                    'image': widget.image,
-                                    'des': widget.des,
-                                    'q': q.toString(),
-                                    'buyPrice': widget.buyPrice,
-                                    'size': sizeChose,
-                                    'productID': widget.imageID,
-                                  },
-                                ).whenComplete(
-                                    () => addCartToast("تم وضعها في سلتك"));
-                              } else {
-                                await DBHelper.updateData(
-                                        'cart',
-                                        {
-                                          'name': widget.name,
-                                          'price': widget.price,
-                                          'image': widget.image,
-                                          'des': widget.des,
-                                          'q': q.toString(),
-                                          'buyPrice': widget.buyPrice,
-                                          'size': sizeChose,
-                                          'productID': widget.imageID,
-                                        },
-                                        id)
-                                    .whenComplete(
-                                        () => addCartToast("تم وضعها في سلتك"));
-                              }
-                              Navigator.pop(context);
-                            }
-                          }
-                        },
+                            },
+                          ),
+                          quantity < 5
+                              ? Text(
+                                  quantity == 1
+                                      ? "أخر قطعه لدينا"
+                                      : quantity == 2
+                                          ? "أخر قطعتين لدينا"
+                                          : "أخر $quantity قطع متوفرة",
+                                  textDirection: TextDirection.rtl,
+                                  style: TextStyle(color: Colors.red),
+                                )
+                              : Container()
+                        ],
                       )
                     ],
                   ),
@@ -334,6 +365,7 @@ class _ShowItemState extends State<ShowItem> {
     } else {
       Navigator.pop(context);
     }
+    return null;
   }
 
   List<ItemShow> itemShow = new List();

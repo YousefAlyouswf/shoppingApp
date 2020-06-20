@@ -62,7 +62,6 @@ class FirestoreFunctions {
 
   deleteFirstImagesFormList(
       String imageID, String urlRemove, String urlAdd) async {
-  
     await Firestore.instance
         .collection('images')
         .where('imageID', isEqualTo: imageID)
@@ -150,12 +149,39 @@ class FirestoreFunctions {
         try {
           for (var i = 0; i < element.data['items'].length; i++) {
             if (element.data['items'][i]['show'] == true) {
+              int len = element.data['items'][i]['size'].length;
+             List<String> sizes = [];
+              if (len == 8) {
+                for (var j = 35; j < len + 35; j++) {
+                  var value = element.data['items'][i]['size'][j.toString()];
+
+                   if (value) {
+                      sizes.add(j.toString());
+                    }
+                }
+              } else if (len == 5) {
+                List<String> sizeWord = ['XS', 'S', 'M', 'L', 'XL'];
+                  for (var j = 0; j < 5; j++) {
+                    var value = element.data['items'][i]['size'][sizeWord[j]];
+                      
+                    if (value) {
+                      sizes.add(sizeWord[j]);
+                    }
+                  }
+              }
+
               image.add(
                 ItemShow(
-                    itemName: element.data['items'][i]['name'],
-                    itemPrice: element.data['items'][i]['price'],
-                    itemDes: element.data['items'][i]['description'],
-                    image: element.data['items'][i]['image']),
+                  itemName: element.data['items'][i]['name'],
+                  itemPrice: element.data['items'][i]['price'],
+                  itemDes: element.data['items'][i]['description'],
+                  image: element.data['items'][i]['image'],
+                  imageID: element.data['items'][i]['imageID'],
+                  productID: element.data['items'][i]['imageID'],
+                  buyPrice: element.data['items'][i]['buyPrice'],
+                  totalQuantity: element.data['items'][i]['totalQuantity'],
+                  size: sizes,
+                ),
               );
             }
           }

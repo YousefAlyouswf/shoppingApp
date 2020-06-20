@@ -16,10 +16,11 @@ class EditItem extends StatefulWidget {
   final bool show;
   final String category;
   final String buyPrice;
+  final String totalQuantity;
   final List<SizeListModel> size;
 
   const EditItem(this.name, this.image, this.price, this.des, this.imageID,
-      this.show, this.category, this.buyPrice, this.size);
+      this.show, this.category, this.buyPrice, this.size, this.totalQuantity);
   @override
   _EditItemState createState() => _EditItemState();
 }
@@ -29,6 +30,7 @@ class _EditItemState extends State<EditItem> {
   TextEditingController price = TextEditingController();
   TextEditingController des = TextEditingController();
   TextEditingController buyPrice = TextEditingController();
+  TextEditingController totalQuantity = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -36,6 +38,7 @@ class _EditItemState extends State<EditItem> {
     price.text = widget.price;
     des.text = widget.des;
     buyPrice.text = widget.buyPrice;
+    totalQuantity.text = widget.totalQuantity;
     if (widget.size.length > 0) {
       checkedSize = true;
       if (widget.size.length == 5) {
@@ -136,6 +139,14 @@ class _EditItemState extends State<EditItem> {
                           ),
                         ),
                       ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: MyTextFormField(
+                        hintText: "الكمية",
+                        editingController: totalQuantity,
+                        isNumber: true,
+                      ),
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width / 2,
