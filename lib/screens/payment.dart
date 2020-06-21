@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/widgets/widgets.dart';
-
+import 'dart:math' show cos, sqrt, asin;
 import 'package:translator/translator.dart';
 import 'package:device_info/device_info.dart';
 import 'package:uuid/uuid.dart';
@@ -89,6 +89,7 @@ class _PaymentState extends State<Payment> {
     super.initState();
     deviceID();
     uid = uuid.v1();
+    getTheDeriver();
   }
 
   void deviceID() async {
@@ -116,6 +117,8 @@ class _PaymentState extends State<Payment> {
           child: InkWell(
             onTap: () {
               Firestore.instance.collection('order').add({
+                'driverID': id,
+                'driverName': name,
                 'orderID': uid.substring(0, 13),
                 'date': DateTime.now().toString(),
                 'status': '0',
@@ -149,6 +152,67 @@ class _PaymentState extends State<Payment> {
       ),
     );
   }
+
+  double min = 0.0;
+  String name = '';
+  String id = '';
+  double calculateDistance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
+  }
+
+  getTheDeriver() async {
+    double customerLat = double.parse(widget.lat);
+    double customerLong = double.parse(widget.long);
+    List<DriverModel> driverList = new List();
+    await Firestore.instance
+        .collection('employee')
+        .getDocuments()
+        .then((value) {
+      value.documents.forEach((e) {
+        if (e['accept'] == '1') {
+          double deriverLat = e['lat'];
+          double deriverLong = e['long'];
+          List<dynamic> data = [
+            {
+              "lat": customerLat,
+              "lng": customerLong,
+            },
+            {
+              "lat": deriverLat,
+              "lng": deriverLong,
+            }
+          ];
+          double totalDistance = 0;
+          for (var i = 0; i < data.length - 1; i++) {
+            totalDistance += calculateDistance(data[i]["lat"], data[i]["lng"],
+                data[i + 1]["lat"], data[i + 1]["lng"]);
+          }
+          driverList.add(DriverModel(
+              name: e['name'], id: e['id'], distance: totalDistance));
+        }
+      });
+
+      for (var i = 0; i < driverList.length; i++) {
+        if (min == 0.0) {
+          min = driverList[i].distance;
+          name = driverList[i].name;
+          id = driverList[i].id;
+        } else {
+          if (min > driverList[i].distance) {
+            min = driverList[i].distance;
+            name = driverList[i].name;
+            id = driverList[i].id;
+          }
+        }
+      }
+      setState(() {});
+    });
+  }
 }
 
 paymentToast(String text) {
@@ -160,4 +224,12 @@ paymentToast(String text) {
       backgroundColor: Colors.green,
       textColor: Colors.white,
       fontSize: 16.0);
+}
+
+class DriverModel {
+  final String name;
+  final String id;
+  final double distance;
+
+  DriverModel({this.name, this.id, this.distance});
 }

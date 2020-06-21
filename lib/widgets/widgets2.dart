@@ -400,7 +400,11 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
         } else if (asyncSnapshot.hasError) {
           return Text('There was an error...');
         } else if (!asyncSnapshot.hasData) {
-          return Text("data");
+          return Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         } else {
           return Center(
             child: Container(
@@ -503,16 +507,7 @@ showtheBottomSheet(
                               fontWeight: FontWeight.bold, fontSize: 22),
                         ),
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.all(16.0),
-                      //   child: Text(
-                      //     name,
-                      //     style: TextStyle(
-                      //         fontWeight: FontWeight.bold,
-
-                      //         fontSize: 22),
-                      //   ),
-                      // ),
+             
                       IconButton(
                         icon: Icon(
                           Icons.add_shopping_cart,

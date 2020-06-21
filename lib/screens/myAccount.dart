@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shop_app/screens/add_new_empolyee.dart';
+import 'package:shop_app/screens/employeeScreen.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
 import 'address.dart';
@@ -59,6 +61,36 @@ class _MyAccountState extends State<MyAccount> {
                   } else {
                     login().then((value) {
                       if (value) {
+                        Firestore.instance
+                            .collection('employee')
+                            .where('id', isEqualTo: id.text)
+                            .where('pass', isEqualTo: pass.text)
+                            .getDocuments()
+                            .then((value) {
+                          value.documents.forEach((e) {
+                            if (e['accept'] == '0') {
+                              infoToast("طلبك قيد الدراسة");
+                            } else if (e['accept'] == '2') {
+                              infoToast("تم رفض طلبك");
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EmployeeScreen(
+                                          name: e['name'],
+                                          phone: e['phone'],
+                                          latLng: LatLng(
+                                            e['lat'],
+                                            e['long'],
+                                          ),
+                                          city: e['city'],
+                                          accept: e['accept'],
+                                          id: e['id'],
+                                        )),
+                              );
+                            }
+                          });
+                        });
                       } else {
                         errorToast(
                             "البيانات خاطئة يرجى التواصل مع الدعم الفني");

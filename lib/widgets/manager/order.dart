@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_app/models/myOrderModel.dart';
 import 'package:flutter/services.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:shop_app/manager/gmapManager.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 
 String orderNumber;
 TextEditingController search = TextEditingController();
@@ -648,21 +647,11 @@ Widget orders(BuildContext context, Function searchOrder) {
                                                             : FlatButton.icon(
                                                                 onPressed: () {
                                                                   if (mapNavgation) {
-                                                                    Navigator
-                                                                        .push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                GmapManager(
-                                                                          latLng:
-                                                                              LatLng(
-                                                                            double.parse(ds['lat']),
-                                                                            double.parse(ds['long']),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    );
+                                                                    MapsLauncher.launchCoordinates(
+                                                                        double.parse(ds[
+                                                                            'lat']),
+                                                                        double.parse(
+                                                                            ds['long']));
                                                                   } else {
                                                                     showModalBottomSheet(
                                                                       context:

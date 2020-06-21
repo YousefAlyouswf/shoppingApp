@@ -19,7 +19,6 @@ class ShowItem extends StatefulWidget {
   final String buyPrice;
   final List size;
   final String totalQuantity;
-  final List<SizeListModel> sizeChose;
   const ShowItem({
     Key key,
     this.onThemeChanged,
@@ -33,7 +32,6 @@ class ShowItem extends StatefulWidget {
     this.buyPrice,
     this.size,
     this.totalQuantity,
-    this.sizeChose,
   }) : super(key: key);
   @override
   _ShowItemState createState() => _ShowItemState();
@@ -210,7 +208,8 @@ class _ShowItemState extends State<ShowItem> {
                                             widget.name &&
                                         cartToCheck[i].itemPrice ==
                                             widget.price &&
-                                        cartToCheck[i].itemDes == widget.des) {
+                                        cartToCheck[i].itemDes == widget.des&&
+                                        cartToCheck[i].sizeChose == sizeChose) {
                                       id = cartToCheck[i].id;
                                       q = int.parse(cartToCheck[i].quantity);
                                     }
@@ -406,6 +405,7 @@ class _ShowItemState extends State<ShowItem> {
               itemPrice: item['price'],
               itemDes: item['des'],
               quantity: item['q'],
+              size: item['size'],
             ),
           )
           .toList();

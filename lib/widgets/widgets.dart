@@ -282,7 +282,7 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
             showAboutDialog(
               context: context,
               applicationName: "تنوتو",
-              applicationVersion: "0.0.4",
+              applicationVersion: "0.0.5",
               applicationLegalese: "Developed by Yousef Al Yousef",
               useRootNavigator: false,
               children: [Icon(Icons.developer_board)],
