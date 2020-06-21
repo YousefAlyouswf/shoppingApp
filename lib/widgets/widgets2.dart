@@ -42,7 +42,7 @@ Widget listViewHorznintal(Function selectCategory, var controller) {
                       onTap: () {
                         selectCategory(listImages[index].name);
                         double offest =
-                            MediaQuery.of(context).size.height / 3.7;
+                            MediaQuery.of(context).size.height /3.7;
                         controller.animateTo(offest,
                             duration: Duration(seconds: 1), curve: Curves.ease);
                       },
@@ -507,7 +507,6 @@ showtheBottomSheet(
                               fontWeight: FontWeight.bold, fontSize: 22),
                         ),
                       ),
-             
                       IconButton(
                         icon: Icon(
                           Icons.add_shopping_cart,

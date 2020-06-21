@@ -5,7 +5,6 @@ import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:shop_app/widgets/widgets2.dart';
-import 'package:shop_app/models/sizeListModel.dart';
 
 class ShowItem extends StatefulWidget {
   final Function onThemeChanged;
@@ -267,9 +266,16 @@ class _ShowItemState extends State<ShowItem> {
                       )
                     ],
                   ),
-                  widget.size.length == 0 ? Container() : Text("المقاس"),
+                  widget.size.length == 0 ? Container() : Text("المقاس", style: TextStyle(fontSize: 22),),
                   Container(
-                    height: 50,
+                    height: 75,
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.all(8.0) ,
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                    ),
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: widget.size.length,
