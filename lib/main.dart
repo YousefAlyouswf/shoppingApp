@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:shop_app/screens/homePage.dart';
+import 'package:shop_app/screens/mainScreen/homePage.dart';
+import 'package:shop_app/widgets/user/cartWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
 void main() {
@@ -19,6 +21,19 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  getTaxFromFirestore() async {
+    await Firestore.instance
+        .collection('app')
+        .getDocuments()
+        .then((querySnapshot) {
+      querySnapshot.documents.forEach((r) {
+        setState(() {
+          tax = r['tax'];
+        });
+      });
+    });
+  }
+
   Brightness brightness = Brightness.light;
   onThemeChanged() {
     if (brightness == Brightness.light) {
@@ -29,15 +44,10 @@ class _MyAppState extends State<MyApp> {
     setState(() {});
   }
 
- 
- 
   changeLangauge() async {
- 
-
     setState(() {
       isEnglish = !isEnglish;
     });
-  
   }
 
   @override
@@ -51,7 +61,8 @@ class _MyAppState extends State<MyApp> {
         //   scaffoldBackgroundColor: isDark ? Colors.grey[800] : Colors.white,
         brightness: brightness,
       ),
-      home: HomePage(onThemeChanged: onThemeChanged,changeLangauge:changeLangauge ),
+      home: HomePage(
+          onThemeChanged: onThemeChanged, changeLangauge: changeLangauge),
     );
   }
 }

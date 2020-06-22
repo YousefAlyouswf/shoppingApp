@@ -4,8 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shop_app/screens/add_new_empolyee.dart';
 import 'package:shop_app/screens/employeeScreen.dart';
 import 'package:shop_app/widgets/widgets.dart';
-
-import 'address.dart';
+import 'mainScreen/address.dart';
 
 class MyAccount extends StatefulWidget {
   @override

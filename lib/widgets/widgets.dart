@@ -6,9 +6,7 @@ import 'package:shop_app/manager/homePage.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/appInfo.dart';
 import 'package:shop_app/models/drawerbody.dart';
-import 'package:shop_app/screens/cart.dart';
 import 'package:shop_app/screens/myAccount.dart';
-import 'package:shop_app/screens/myOrder.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();
@@ -114,12 +112,7 @@ AppBar appBar(
                 Icons.shopping_cart,
                 color: Colors.white,
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Cart()),
-                );
-              },
+              onPressed: () {},
             )
           : Container()
     ],
@@ -178,10 +171,6 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
         String myAccountWord = isEnglish ? english[1] : arabic[1];
         String myOrderWord = isEnglish ? english[3] : arabic[3];
         if (drawerModel[i].text == basketWord) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Cart()),
-          );
         } else if (drawerModel[i].text == homeWord) {
           Navigator.of(context).popUntil((route) => route.isFirst);
         } else if (drawerModel[i].text == myAccountWord) {
@@ -189,12 +178,7 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
             context,
             MaterialPageRoute(builder: (context) => MyAccount()),
           );
-        }else if(drawerModel[i].text == myOrderWord){
-           Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MyOrder()),
-          );
-        }
+        } else if (drawerModel[i].text == myOrderWord) {}
       },
     ));
   }
@@ -389,14 +373,6 @@ Widget managerBody() {
   );
 }
 
-
-
-
-
-
-
-
-
 errorToast(String text) {
   Fluttertoast.showToast(
       msg: text,
@@ -417,4 +393,37 @@ infoToast(String text) {
       backgroundColor: Colors.yellow[100],
       textColor: Colors.black,
       fontSize: 16.0);
+}
+
+//Bottom Navigation
+class Destination {
+  const Destination(this.title, this.icon, this.color);
+  final String title;
+  final IconData icon;
+  final MaterialColor color;
+}
+
+const List<Destination> allDestinations = <Destination>[
+  Destination('الرئيسية', Icons.home, Colors.teal),
+  Destination('الأقسام', Icons.category, Colors.cyan),
+  Destination('سلتي', Icons.shopping_basket, Colors.orange),
+  Destination('طلباتي', Icons.receipt, Colors.blue)
+];
+int navIndex = 0;
+Widget bottomNavgation(Function bottomNavIndex) {
+  return BottomNavigationBar(
+    currentIndex: navIndex,
+    onTap: bottomNavIndex,
+    type: BottomNavigationBarType.fixed,
+    backgroundColor: Colors.white,
+    fixedColor: Colors.teal,
+    iconSize: 35,
+    items: allDestinations.map((Destination destination) {
+      return BottomNavigationBarItem(
+        icon: Icon(destination.icon),
+        backgroundColor: destination.color,
+        title: Text(destination.title),
+      );
+    }).toList(),
+  );
 }

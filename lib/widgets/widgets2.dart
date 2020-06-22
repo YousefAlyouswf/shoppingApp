@@ -42,7 +42,7 @@ Widget listViewHorznintal(Function selectCategory, var controller) {
                       onTap: () {
                         selectCategory(listImages[index].name);
                         double offest =
-                            MediaQuery.of(context).size.height /3.7;
+                            MediaQuery.of(context).size.height / 3.7;
                         controller.animateTo(offest,
                             duration: Duration(seconds: 1), curve: Curves.ease);
                       },
@@ -96,17 +96,18 @@ Container imageViewBottomSheet(closeImpageOntap, onPageChanged) {
           child: Column(
             children: [
               Container(
-                  width: double.infinity,
-                  height: 100,
-                  color: Colors.white70,
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        size: 40,
-                        color: Colors.black,
-                      ),
-                      onPressed: closeImpageOntap)),
+                width: double.infinity,
+                height: 100,
+                color: Colors.white70,
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      size: 40,
+                      color: Colors.black,
+                    ),
+                    onPressed: closeImpageOntap),
+              ),
               Expanded(
                 child: StreamBuilder(
                     stream: Firestore.instance
@@ -331,18 +332,19 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ShowItem(
-                                        image: listImages[index].image,
-                                        name: listImages[index].name,
-                                        des: listImages[index].description,
-                                        price: listImages[index].price,
-                                        fetchMyCart: fetchMyCart,
-                                        imageID: listImages[index].imageID,
-                                        buyPrice: listImages[index].buyPrice,
-                                        size: listImages[index].size,
-                                        totalQuantity:
-                                            listImages[index].totalQuantity,
-                                      )),
+                                builder: (context) => ShowItem(
+                                  image: listImages[index].image,
+                                  name: listImages[index].name,
+                                  des: listImages[index].description,
+                                  price: listImages[index].price,
+                                  fetchToMyCart: fetchMyCart,
+                                  imageID: listImages[index].imageID,
+                                  buyPrice: listImages[index].buyPrice,
+                                  size: listImages[index].size,
+                                  totalQuantity:
+                                      listImages[index].totalQuantity,
+                                ),
+                              ),
                             );
                           },
                           child: Padding(
@@ -420,202 +422,202 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
 }
 
 List<ItemShow> cartToCheck = new List();
-showtheBottomSheet(
-  BuildContext context,
-  String image,
-  String name,
-  String des,
-  String price,
-  Function imageOnTapCustomer,
-  Function fetchMyCart,
-  String imageID,
-  String buyPrice,
-  List size,
-) {
-  showModalBottomSheet(
-      elevation: 0,
-      //  backgroundColor: Colors.transparent,
-      context: context,
-      builder: (context) => SingleChildScrollView(
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(40),
-                  topLeft: Radius.circular(40),
-                ),
-              ),
-              child: Column(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      imageOnTapCustomer(NetworkImage(image), imageID);
-                    },
-                    child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: MediaQuery.of(context).size.width / 3,
-                          width: MediaQuery.of(context).size.width,
-                          child: StreamBuilder(
-                              stream: Firestore.instance
-                                  .collection("images")
-                                  .where("imageID", isEqualTo: imageID)
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return Text("Loading");
-                                } else {
-                                  return ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: snapshot.data.documents[0]
-                                          .data['images'].length,
-                                      itemBuilder: (context, i) {
-                                        String listImage = snapshot.data
-                                            .documents[0].data['images'][i];
+// showtheBottomSheet(
+//   BuildContext context,
+//   String image,
+//   String name,
+//   String des,
+//   String price,
+//   Function imageOnTapCustomer,
+//   Function fetchMyCart,
+//   String imageID,
+//   String buyPrice,
+//   List size,
+// ) {
+//   showModalBottomSheet(
+//       elevation: 0,
+//       //  backgroundColor: Colors.transparent,
+//       context: context,
+//       builder: (context) => SingleChildScrollView(
+//             child: Container(
+//               width: double.infinity,
+//               decoration: BoxDecoration(
+//                 borderRadius: BorderRadius.only(
+//                   topRight: Radius.circular(40),
+//                   topLeft: Radius.circular(40),
+//                 ),
+//               ),
+//               child: Column(
+//                 children: [
+//                   InkWell(
+//                     onTap: () {
+//                       imageOnTapCustomer(NetworkImage(image), imageID);
+//                     },
+//                     child: Padding(
+//                         padding: const EdgeInsets.all(8.0),
+//                         child: Container(
+//                           height: MediaQuery.of(context).size.width / 3,
+//                           width: MediaQuery.of(context).size.width,
+//                           child: StreamBuilder(
+//                               stream: Firestore.instance
+//                                   .collection("images")
+//                                   .where("imageID", isEqualTo: imageID)
+//                                   .snapshots(),
+//                               builder: (context, snapshot) {
+//                                 if (!snapshot.hasData) {
+//                                   return Text("Loading");
+//                                 } else {
+//                                   return ListView.builder(
+//                                       scrollDirection: Axis.horizontal,
+//                                       itemCount: snapshot.data.documents[0]
+//                                           .data['images'].length,
+//                                       itemBuilder: (context, i) {
+//                                         String listImage = snapshot.data
+//                                             .documents[0].data['images'][i];
 
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            height: 100,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15)),
-                                              image: DecorationImage(
-                                                fit: BoxFit.fill,
-                                                image: NetworkImage(
-                                                  listImage,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      });
-                                }
-                              }),
-                        )),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          "$price ر.س",
-                          textDirection: TextDirection.rtl,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 22),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.add_shopping_cart,
-                          size: 40,
-                          color: Colors.green,
-                        ),
-                        onPressed: () async {
-                          await fetchMyCart();
-                          int q = 0;
-                          int id;
-                          for (var i = 0; i < cartToCheck.length; i++) {
-                            if (cartToCheck[i].itemName == name &&
-                                cartToCheck[i].itemPrice == price &&
-                                cartToCheck[i].itemDes == des) {
-                              id = cartToCheck[i].id;
-                              q = int.parse(cartToCheck[i].quantity);
-                            }
-                          }
-                          q++;
-                          if (q == 1) {
-                            await DBHelper.insert(
-                              'cart',
-                              {
-                                'name': name,
-                                'price': price,
-                                'image': image,
-                                'des': des,
-                                'q': q.toString(),
-                                'buyPrice': buyPrice
-                              },
-                            ).whenComplete(
-                                () => addCartToast("تم وضعها في سلتك"));
-                          } else {
-                            await DBHelper.updateData(
-                                'cart',
-                                {
-                                  'name': name,
-                                  'price': price,
-                                  'image': image,
-                                  'des': des,
-                                  'q': q.toString(),
-                                  'buyPrice': buyPrice
-                                },
-                                id);
-                          }
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  ),
-                  Text("المقاس"),
-                  Container(
-                    height: 33,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: size.length,
-                        itemBuilder: (context, i) {
-                          return Container(
-                            margin: EdgeInsets.symmetric(horizontal: 8.0),
-                            decoration: BoxDecoration(
-                              border: Border.all(),
-                            ),
-                            child: InkWell(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Center(
-                                  child: Text(size[i]),
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Container(
-                      width: double.infinity,
-                      height: 170,
-                      child: SingleChildScrollView(
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Center(
-                                  child: Text(
-                                    "وصف المنتج",
-                                    textDirection: TextDirection.rtl,
-                                  ),
-                                ),
-                                Text(
-                                  des,
-                                  textDirection: TextDirection.rtl,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ));
-}
+//                                         return Padding(
+//                                           padding: const EdgeInsets.all(8.0),
+//                                           child: Container(
+//                                             height: 100,
+//                                             width: 100,
+//                                             decoration: BoxDecoration(
+//                                               borderRadius: BorderRadius.all(
+//                                                   Radius.circular(15)),
+//                                               image: DecorationImage(
+//                                                 fit: BoxFit.fill,
+//                                                 image: NetworkImage(
+//                                                   listImage,
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                           ),
+//                                         );
+//                                       });
+//                                 }
+//                               }),
+//                         )),
+//                   ),
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                     children: [
+//                       Padding(
+//                         padding: const EdgeInsets.all(16.0),
+//                         child: Text(
+//                           "$price ر.س",
+//                           textDirection: TextDirection.rtl,
+//                           style: TextStyle(
+//                               fontWeight: FontWeight.bold, fontSize: 22),
+//                         ),
+//                       ),
+//                       IconButton(
+//                         icon: Icon(
+//                           Icons.add_shopping_cart,
+//                           size: 40,
+//                           color: Colors.green,
+//                         ),
+//                         onPressed: () async {
+//                           await fetchMyCart();
+//                           int q = 0;
+//                           int id;
+//                           for (var i = 0; i < cartToCheck.length; i++) {
+//                             if (cartToCheck[i].itemName == name &&
+//                                 cartToCheck[i].itemPrice == price &&
+//                                 cartToCheck[i].itemDes == des) {
+//                               id = cartToCheck[i].id;
+//                               q = int.parse(cartToCheck[i].quantity);
+//                             }
+//                           }
+//                           q++;
+//                           if (q == 1) {
+//                             await DBHelper.insert(
+//                               'cart',
+//                               {
+//                                 'name': name,
+//                                 'price': price,
+//                                 'image': image,
+//                                 'des': des,
+//                                 'q': q.toString(),
+//                                 'buyPrice': buyPrice
+//                               },
+//                             ).whenComplete(
+//                                 () => addCartToast("تم وضعها في سلتك"));
+//                           } else {
+//                             await DBHelper.updateData(
+//                                 'cart',
+//                                 {
+//                                   'name': name,
+//                                   'price': price,
+//                                   'image': image,
+//                                   'des': des,
+//                                   'q': q.toString(),
+//                                   'buyPrice': buyPrice
+//                                 },
+//                                 id);
+//                           }
+//                           Navigator.pop(context);
+//                         },
+//                       )
+//                     ],
+//                   ),
+//                   Text("المقاس"),
+//                   Container(
+//                     height: 33,
+//                     child: ListView.builder(
+//                         scrollDirection: Axis.horizontal,
+//                         itemCount: size.length,
+//                         itemBuilder: (context, i) {
+//                           return Container(
+//                             margin: EdgeInsets.symmetric(horizontal: 8.0),
+//                             decoration: BoxDecoration(
+//                               border: Border.all(),
+//                             ),
+//                             child: InkWell(
+//                               child: Padding(
+//                                 padding:
+//                                     const EdgeInsets.symmetric(horizontal: 8.0),
+//                                 child: Center(
+//                                   child: Text(size[i]),
+//                                 ),
+//                               ),
+//                             ),
+//                           );
+//                         }),
+//                   ),
+//                   Padding(
+//                     padding: const EdgeInsets.all(16.0),
+//                     child: Container(
+//                       width: double.infinity,
+//                       height: 170,
+//                       child: SingleChildScrollView(
+//                         child: Card(
+//                           child: Padding(
+//                             padding: const EdgeInsets.all(8.0),
+//                             child: Column(
+//                               crossAxisAlignment: CrossAxisAlignment.end,
+//                               children: [
+//                                 Center(
+//                                   child: Text(
+//                                     "وصف المنتج",
+//                                     textDirection: TextDirection.rtl,
+//                                   ),
+//                                 ),
+//                                 Text(
+//                                   des,
+//                                   textDirection: TextDirection.rtl,
+//                                   style: TextStyle(fontWeight: FontWeight.bold),
+//                                 ),
+//                               ],
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ));
+// }
 
 addCartToast(String text) {
   Fluttertoast.showToast(
@@ -627,105 +629,3 @@ addCartToast(String text) {
       textColor: Colors.white,
       fontSize: 16.0);
 }
-//  List<String> cities = [
-//     'الرياض',
-//     'جدة',
-//     'مكة المكرمة',
-//     'المدينة المنورة',
-//     'الاحساء',
-//     'الدمام',
-//     'الطائف',
-//     'بريدة',
-//     'تبوك',
-//     'القطيف',
-//     'خميس مشيط',
-//     'الخبر',
-//     'حفر الباطن',
-//     'الجبيل',
-//     'الخرج',
-//     'أبها',
-//     'حائل',
-//     'نجران',
-//     'ينبع',
-//     'صبيا',
-//     'الدوادمي',
-//     'بيشة',
-//     'أبو عريش',
-//     'القنفذة',
-//     'محايل',
-//     'سكاكا',
-//     'عرعر',
-//     'عنيزة',
-//     'القريات',
-//     'صامطة',
-//     'جازان',
-//     'المجمعة',
-//     'القويعية',
-//     'احد المسارحه',
-//     'الرس',
-//     'وادي الدواسر',
-//     'بحرة',
-//     'الباحة',
-//     'الجموم',
-//     'رابغ',
-//     'أحد رفيدة',
-//     'شرورة',
-//     'الليث',
-//     'رفحاء',
-//     'عفيف',
-//     'العرضيات',
-//     'العارضة',
-//     'الخفجي',
-//     'بالقرن',
-//     'الدرعية',
-//     'ضمد',
-//     'طبرجل',
-//     'بيش',
-//     'الزلفي',
-//     'الدرب',
-//     'الافلاج',
-//     'سراة عبيدة',
-//     'رجال المع',
-//     'بلجرشي',
-//     'الحائط',
-//     'ميسان',
-//     'بدر',
-//     'املج',
-//     'رأس تنوره',
-//     'المهد',
-//     'الدائر',
-//     'البكيريه',
-//     'البدائع',
-//     'خليص',
-//     'الحناكية',
-//     'العلا',
-//     'الطوال',
-//     'النماص',
-//     'المجاردة',
-//     'بقيق',
-//     'تثليث',
-//     'المخواة',
-//     'النعيرية',
-//     'الوجه',
-//     'ضباء',
-//     'بارق',
-//     'طريف',
-//     'خيبر',
-//     'أضم',
-//     'النبهانية',
-//     'رنيه',
-//     'دومة' 'الجندل',
-//     'المذنب',
-//     'تربه',
-//     'ظهران الجنوب',
-//     'حوطة بني تميم',
-//     'الخرمة',
-//     'قلوه',
-//     'شقراء',
-//     'المويه',
-//     'المزاحمية',
-//     'الأسياح',
-//     'بقعاء',
-//     'السليل',
-//     'تيماء',
-//   ];

@@ -4,8 +4,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/database/firestore.dart';
-import 'package:shop_app/screens/address.dart';
 import 'package:shop_app/models/sizeListModel.dart';
+import 'package:shop_app/screens/mainScreen/address.dart';
 
 class EditItem extends StatefulWidget {
   final String name;
