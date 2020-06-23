@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage>
                   child: Column(
                     children: [
                       header(showDeleteIcon),
-                      invoiceTable(fetchToMyCart),
+                      invoiceTable(fetchToMyCart, emptyCartGoToCategory),
                       //  delvierText(chooseDeliver),
                       buttons(context, widget.onThemeChanged,
                           widget.changeLangauge, changeDelvierValue),
@@ -290,6 +290,11 @@ class _HomePageState extends State<HomePage>
       });
     });
     fetchToMyCart();
+  }
+
+  emptyCartGoToCategory() {
+    navIndex = 1;
+    setState(() {});
   }
 
 ///////////----------------->>> CART End

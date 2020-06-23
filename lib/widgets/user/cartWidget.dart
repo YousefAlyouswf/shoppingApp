@@ -36,16 +36,59 @@ Widget header(Function showDeleteIcon) {
   );
 }
 
-Widget invoiceTable(Function fetchMyCart) {
+Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
   return Expanded(
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
         child: items.length == 0
-            ? Container(
-                child: Center(
-                  child: Text("السلة فارغة"),
-                ),
+            ? Center(
+                child: Container(
+                    height: 300,
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image:
+                                  AssetImage('assets/images/logoBigTrans.png'),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          "سلة التسوق فارغة\nيمكنك الذهاب الى صفحة المنتجات لإظافة ماترغب به",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        //  Text("يمكنك الذهاب الى صفحة المنتجات لإظافة ماترغب به", style: TextStyle(fontSize: 18),),
+                        InkWell(
+                          onTap: emptyCartGoToCategory,
+                          child: Container(
+                            height: 50,
+                            width: 100,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFFF834F),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              ),
+                            ),
+                            child: Center(
+                                child: Text(
+                              "المنتجات",
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontFamily: "MainFont"),
+                            )),
+                          ),
+                        )
+                      ],
+                    )),
               )
             : ScrollConfiguration(
                 behavior: MyBehavior(),
@@ -298,77 +341,81 @@ Widget buttons(
 ) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.7,
-                decoration: BoxDecoration(
-                    color: Color(0xFFFF834F),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                child: FlatButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Address(
-                            totalAfterTax: totalAfterTax.toString(),
-                            onThemeChanged: onThemeChanged,
-                            changeLangauge: changeLangauge,
-                            buyPrice: sumBuyPrice.toString(),
-                            price: sumPrice.toString(),
-                            isDeliver: isDeliver,
+    child: items.length == 0
+        ? Container()
+        : Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Center(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      decoration: BoxDecoration(
+                          color: Color(0xFFFF834F),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: FlatButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Address(
+                                  totalAfterTax: totalAfterTax.toString(),
+                                  onThemeChanged: onThemeChanged,
+                                  changeLangauge: changeLangauge,
+                                  buyPrice: sumBuyPrice.toString(),
+                                  price: sumPrice.toString(),
+                                  isDeliver: isDeliver,
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            Icons.payment,
+                            color: Colors.white,
                           ),
-                        ),
-                      );
-                    },
-                    icon: Icon(
-                      Icons.payment,
-                      color: Colors.white,
+                          label: Text(
+                            isEnglish
+                                ? "$totalAfterTax ${english[16]}"
+                                : "$totalAfterTax ${arabic[16]}",
+                            textDirection: TextDirection.rtl,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontFamily: "MainFont"),
+                          )),
                     ),
-                    label: Text(
-                      isEnglish
-                          ? "$totalAfterTax ${english[16]}"
-                          : "$totalAfterTax ${arabic[16]}",
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontFamily: "MainFont"),
-                    )),
-              ),
-            ),
-            InkWell(
-              onTap: changeDelvierValue,
-              child: Container(
-                padding: EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: !isDeliver ? Colors.grey[400] : Colors.teal[600],
+                  ),
+                  InkWell(
+                    onTap: changeDelvierValue,
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: !isDeliver
+                                ? Colors.grey[400]
+                                : Colors.teal[600],
+                          ),
+                          color: !isDeliver ? Colors.grey[300] : Colors.teal,
+                          borderRadius: BorderRadius.all(Radius.circular(50))),
+                      child: Text(
+                        !isDeliver ? "بدون توصيل" : "مع التوصيل",
+                        style: TextStyle(
+                            color: isDeliver ? Colors.white : Colors.black,
+                            fontFamily: "MainFont"),
+                      ),
                     ),
-                    color: !isDeliver ? Colors.grey[300] : Colors.teal,
-                    borderRadius: BorderRadius.all(Radius.circular(50))),
-                child: Text(
-                  !isDeliver ? "بدون توصيل" : "مع التوصيل",
-                  style: TextStyle(
-                      color: isDeliver ? Colors.white : Colors.black,
-                      fontFamily: "MainFont"),
-                ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-        Container(
-            width: double.infinity,
-            alignment: Alignment.bottomRight,
-            child: Text(
-              "السعر شامل الضريبة*",
-            ))
-      ],
-    ),
+              Container(
+                  width: double.infinity,
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    "السعر شامل الضريبة*",
+                  ))
+            ],
+          ),
   );
 }
 
