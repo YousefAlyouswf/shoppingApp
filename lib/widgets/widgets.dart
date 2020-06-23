@@ -193,13 +193,12 @@ Drawer drawer(BuildContext context, Function onThemeChanged, Function goToHome,
           margin: EdgeInsets.all(0),
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage("assets/images/logoBig.png"),
+                image: AssetImage("assets/images/logoBigTrans.png"),
                 fit: BoxFit.fill),
           ),
         ),
         Expanded(
           child: Container(
-            color: Colors.white,
             child: ListView.builder(
               itemCount: drawerBody.length,
               itemBuilder: (context, i) {
@@ -414,7 +413,7 @@ Widget bottomNavgation(Function bottomNavIndex) {
     currentIndex: navIndex,
     onTap: bottomNavIndex,
     type: BottomNavigationBarType.fixed,
-    backgroundColor: Colors.white,
+   
     fixedColor: Color(0xFFFF834F),
     iconSize: 35,
     items: allDestinations.map((Destination destination) {

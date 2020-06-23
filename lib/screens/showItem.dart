@@ -155,8 +155,8 @@ class _ShowItemState extends State<ShowItem>
                                               decoration: BoxDecoration(
                                                 color:
                                                     sizeChose == widget.size[i]
-                                                        ? Colors.green
-                                                        : Colors.white,
+                                                        ? Color(0xFFFF834F)
+                                                        : null,
                                                 border: Border.all(),
                                               ),
                                               child: InkWell(
