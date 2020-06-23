@@ -279,6 +279,7 @@ class _EditItemState extends State<EditItem> {
                     'price': widget.price,
                     'show': widget.show,
                     'size': sizingMap,
+                    'totalQuantity': widget.totalQuantity,
                   };
                   Map<String, dynamic> itemMapAdd = {
                     'buyPrice': buyPrice.text,
@@ -290,6 +291,7 @@ class _EditItemState extends State<EditItem> {
                     'show': widget.show,
                     'size':
                         checkedSize ? sizeNum ? sizeNumMap : sizeWordMap : {},
+                    'totalQuantity': totalQuantity.text,
                   };
                   FirestoreFunctions()
                       .upDateItems(widget.category, itemMapRemove, itemMapAdd)
@@ -308,6 +310,7 @@ class _EditItemState extends State<EditItem> {
                     'price': widget.price,
                     'show': widget.show,
                     'size': {},
+                    'totalQuantity': widget.totalQuantity,
                   };
                   Map<String, dynamic> itemMapAdd = {
                     'buyPrice': buyPrice.text,
@@ -318,6 +321,7 @@ class _EditItemState extends State<EditItem> {
                     'price': price.text,
                     'show': widget.show,
                     'size': {},
+                    'totalQuantity': totalQuantity.text,
                   };
                   FirestoreFunctions()
                       .upDateItems(widget.category, itemMapRemove, itemMapAdd)
