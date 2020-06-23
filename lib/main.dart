@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shop_app/lunchApp.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';
@@ -56,13 +57,15 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.grey,
+        primarySwatch: Colors.teal,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         //   scaffoldBackgroundColor: isDark ? Colors.grey[800] : Colors.white,
         brightness: brightness,
       ),
-      home: HomePage(
-          onThemeChanged: onThemeChanged, changeLangauge: changeLangauge),
+      home:LunchApp( onThemeChanged: onThemeChanged, changeLangauge: changeLangauge)
+      
+      //  HomePage(
+      //     onThemeChanged: onThemeChanged, changeLangauge: changeLangauge),
     );
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 import 'package:shop_app/screens/showItem.dart';
@@ -25,50 +24,12 @@ Widget listViewHorznintal(Function selectCategory, var controller) {
             listImages.add(ListHirezontalImage(
               name: asyncSnapshot.data.documents[0].data['collection'][i]
                   ['name'],
-              image: asyncSnapshot.data.documents[0].data['collection'][i]
-                  ['image'],
+              
             ));
           }
 
           return Container(
-            color: Colors.black12,
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: listImages.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onTap: () {
-                        selectCategory(listImages[index].name);
-                        double offest =
-                            MediaQuery.of(context).size.height / 3.7;
-                        controller.animateTo(offest,
-                            duration: Duration(seconds: 1), curve: Curves.ease);
-                      },
-                      child: Column(
-                        children: <Widget>[
-                          new Container(
-                            width: 100,
-                            height: 100,
-                            decoration: new BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: new DecorationImage(
-                                fit: BoxFit.fill,
-                                image:
-                                    new NetworkImage(listImages[index].image),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Text(listImages[index].name),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
+            
           );
         } else if (asyncSnapshot.hasError) {
           return Text('There was an error...');

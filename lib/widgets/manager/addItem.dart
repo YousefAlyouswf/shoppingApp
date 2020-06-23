@@ -57,57 +57,11 @@ Widget addItem(
             child: Column(
               children: [
                 Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.topCenter,
-                        width: halfMediaWidth,
-                        child: MyTextFormField(
-                          editingController: categoryName,
-                          hintText: 'أسم القسم',
-                        ),
-                      ),
-                      imageStoredCategory != null
-                          ? InkWell(
-                              onTap: () {
-                                getImageForCatgory(_takePictureForCatgory,
-                                    _takeFromGalaryForCatgory, context);
-                              },
-                              child: Container(
-                                width: 70,
-                                height: 70,
-                                decoration: new BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  image: new DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: new FileImage(imageStoredCategory),
-                                  ),
-                                ),
-                              ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: InkWell(
-                                onTap: () {
-                                  getImageForCatgory(_takePictureForCatgory,
-                                      _takeFromGalaryForCatgory, context);
-                                },
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: new BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    image: new DecorationImage(
-                                      fit: BoxFit.fill,
-                                      image: new AssetImage(
-                                          "assets/images/addImage.png"),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                    ],
+                  alignment: Alignment.topCenter,
+                  width: halfMediaWidth,
+                  child: MyTextFormField(
+                    editingController: categoryName,
+                    hintText: 'أسم القسم',
                   ),
                 ),
                 Divider(
@@ -378,21 +332,13 @@ Widget addItem(
                       };
                       Map<String, dynamic> catgoryMap = {
                         "name": categoryName.text,
-                        "image": urlImageCategory,
                       };
                       if (selectedCurrency == "New Category") {
                         if (categoryName.text.isEmpty ||
-                            imageStoredCategory == null ||
                             imageStoredItems == null ||
-                            urlImageCategory == null ||
                             urlImageItems == null) {
                           if (categoryName.text.isEmpty) {
                             errorToast("Enter Category name");
-                          } else if (imageStoredCategory == null ||
-                              urlImageCategory == null) {
-                            errorToast("Add Category Image");
-                          } else {
-                            errorToast("Add Item Image");
                           }
                         } else {
                           FirestoreFunctions().addNewItemToNewCategory(

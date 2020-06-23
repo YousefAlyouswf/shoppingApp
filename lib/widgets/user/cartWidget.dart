@@ -18,7 +18,7 @@ List<String> items = [];
 bool deleteIcon = false;
 int tax = 0;
 int delivery = 0;
-bool isDeliver = false;
+bool isDeliver = true;
 final translator = new GoogleTranslator();
 
 Widget header(Function showDeleteIcon) {
@@ -29,7 +29,8 @@ Widget header(Function showDeleteIcon) {
       child: Text(
         isEnglish ? english[11] : arabic[11],
         textDirection: TextDirection.rtl,
-        style: TextStyle(fontSize: 25, fontWeight: FontWeight.w900),
+        style: TextStyle(
+            fontSize: 25, fontWeight: FontWeight.w900, fontFamily: "MainFont"),
       ),
     ),
   );
@@ -86,13 +87,14 @@ Widget invoiceTable(Function fetchMyCart) {
                                 child: Row(
                                   children: [
                                     Container(
-                                      width: 75,
+                                      width: 100,
                                       height: 100,
                                       decoration: new BoxDecoration(
                                         shape: BoxShape.rectangle,
                                         image: new DecorationImage(
                                           fit: BoxFit.fill,
-                                          image: new NetworkImage(cart[i].image),
+                                          image:
+                                              new NetworkImage(cart[i].image),
                                         ),
                                       ),
                                     ),
@@ -104,9 +106,9 @@ Widget invoiceTable(Function fetchMyCart) {
                                         Text(
                                           items[i],
                                           style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w700,
-                                          ),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w700,
+                                              fontFamily: "MainFont"),
                                         ),
                                         cart[i].sizeChose == ''
                                             ? Container()
@@ -123,9 +125,11 @@ Widget invoiceTable(Function fetchMyCart) {
                                             columnWidths: {
                                               1: FractionColumnWidth(0.5)
                                             },
-                                        border: TableBorder.all(color: Colors.grey[300]),
+                                            border: TableBorder.all(
+                                                color: Colors.grey[300]),
                                             defaultVerticalAlignment:
-                                                TableCellVerticalAlignment.middle,
+                                                TableCellVerticalAlignment
+                                                    .middle,
                                             children: [
                                               TableRow(
                                                 children: [
@@ -141,7 +145,8 @@ Widget invoiceTable(Function fetchMyCart) {
                                                           DBHelper.updateData(
                                                               "cart",
                                                               {
-                                                                'q': q.toString(),
+                                                                'q': q
+                                                                    .toString(),
                                                               },
                                                               cart[i].id);
                                                           fetchMyCart();
@@ -152,7 +157,8 @@ Widget invoiceTable(Function fetchMyCart) {
                                                           "-",
                                                           style: TextStyle(
                                                               fontSize: 30,
-                                                              color: Colors.grey),
+                                                              color:
+                                                                  Colors.grey),
                                                         ),
                                                       ),
                                                     ),
@@ -160,8 +166,8 @@ Widget invoiceTable(Function fetchMyCart) {
                                                   Center(
                                                     child: Text(
                                                       cart[i].quantity,
-                                                      style:
-                                                          TextStyle(fontSize: 20),
+                                                      style: TextStyle(
+                                                          fontSize: 20),
                                                     ),
                                                   ),
                                                   Center(
@@ -184,7 +190,8 @@ Widget invoiceTable(Function fetchMyCart) {
                                                           "+",
                                                           style: TextStyle(
                                                               fontSize: 25,
-                                                              color: Colors.grey),
+                                                              color:
+                                                                  Colors.grey),
                                                         ),
                                                       ),
                                                     ),
@@ -207,7 +214,8 @@ Widget invoiceTable(Function fetchMyCart) {
                                           textDirection: TextDirection.rtl,
                                           style: TextStyle(
                                               color: Colors.teal,
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: "MainFont"),
                                         ),
                                       ),
                                     ),
@@ -221,7 +229,7 @@ Widget invoiceTable(Function fetchMyCart) {
                           alignment: Alignment.topRight,
                           child: IconButton(
                               icon: Icon(
-                                Icons.cancel,
+                                Icons.delete,
                                 color: Colors.grey,
                               ),
                               onPressed: () {
@@ -283,45 +291,75 @@ Widget delvierText(Function chooseDeliver) {
 }
 
 Widget buttons(
-    BuildContext context, Function onThemeChanged, Function changeLangauge) {
+  BuildContext context,
+  Function onThemeChanged,
+  Function changeLangauge,
+  Function changeDelvierValue,
+) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
     child: Column(
       children: [
-        Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            decoration: BoxDecoration(
-                color: Colors.teal,
-                borderRadius: BorderRadius.all(Radius.circular(5))),
-            child: FlatButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Address(
-                        totalAfterTax: totalAfterTax.toString(),
-                        onThemeChanged: onThemeChanged,
-                        changeLangauge: changeLangauge,
-                        buyPrice: sumBuyPrice.toString(),
-                        price: sumPrice.toString(),
-                        isDeliver: isDeliver,
-                      ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                decoration: BoxDecoration(
+                    color: Color(0xFFFF834F),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                child: FlatButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Address(
+                            totalAfterTax: totalAfterTax.toString(),
+                            onThemeChanged: onThemeChanged,
+                            changeLangauge: changeLangauge,
+                            buyPrice: sumBuyPrice.toString(),
+                            price: sumPrice.toString(),
+                            isDeliver: isDeliver,
+                          ),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.payment,
+                      color: Colors.white,
                     ),
-                  );
-                },
-                icon: Icon(
-                  Icons.payment,
-                  color: Colors.white,
+                    label: Text(
+                      isEnglish
+                          ? "$totalAfterTax ${english[16]}"
+                          : "$totalAfterTax ${arabic[16]}",
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontFamily: "MainFont"),
+                    )),
+              ),
+            ),
+            InkWell(
+              onTap: changeDelvierValue,
+              child: Container(
+                padding: EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: !isDeliver ? Colors.grey[400] : Colors.teal[600],
+                    ),
+                    color: !isDeliver ? Colors.grey[300] : Colors.teal,
+                    borderRadius: BorderRadius.all(Radius.circular(50))),
+                child: Text(
+                  !isDeliver ? "بدون توصيل" : "مع التوصيل",
+                  style: TextStyle(
+                      color: isDeliver ? Colors.white : Colors.black,
+                      fontFamily: "MainFont"),
                 ),
-                label: Text(
-                  isEnglish
-                      ? "$totalAfterTax ${english[16]}"
-                      : "$totalAfterTax ${arabic[16]}",
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(color: Colors.white, fontSize: 22),
-                )),
-          ),
+              ),
+            ),
+          ],
         ),
         Container(
             width: double.infinity,

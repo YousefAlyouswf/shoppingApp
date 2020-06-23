@@ -113,7 +113,7 @@ class FirestoreFunctions {
     });
   }
 
-  deleteCategory(String name, String image) async {
+  deleteCategory(String name) async {
     await Firestore.instance
         .collection('categories')
         .document("category")
@@ -121,7 +121,6 @@ class FirestoreFunctions {
       "collection": FieldValue.arrayRemove([
         {
           'name': name,
-          'image': image,
         }
       ])
     });

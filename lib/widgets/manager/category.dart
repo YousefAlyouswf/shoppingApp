@@ -18,7 +18,9 @@ Widget categoryScreen(
 ) {
   return Column(
     children: [
-      Container(height: 160, child: categores(selectCategory)),
+      Container(
+          height: 100,
+          child: categores(selectCategory)),
       Divider(
         thickness: 5,
       ),
@@ -561,8 +563,6 @@ Widget categores(Function selectCategory) {
             listImages.add(ListHirezontalImage(
               name: asyncSnapshot.data.documents[0].data['collection'][i]
                   ['name'],
-              image: asyncSnapshot.data.documents[0].data['collection'][i]
-                  ['image'],
             ));
           }
 
@@ -572,35 +572,21 @@ Widget categores(Function selectCategory) {
                 scrollDirection: Axis.horizontal,
                 itemCount: listImages.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onLongPress: () {
-                        deleteCategoryDialog(context, listImages[index].name,
-                            listImages[index].image);
-                      },
-                      onTap: () {
-                        selectCategory(listImages[index].name);
-                      },
-                      child: Column(
-                        children: <Widget>[
-                          new Container(
-                            width: 100,
-                            height: 100,
-                            decoration: new BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: new DecorationImage(
-                                fit: BoxFit.fill,
-                                image:
-                                    new NetworkImage(listImages[index].image),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(listImages[index].name),
-                        ],
+                  return Container(
+                    width: 100,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onLongPress: () {
+                          deleteCategoryDialog(
+                            context,
+                            listImages[index].name,
+                          );
+                        },
+                        onTap: () {
+                          selectCategory(listImages[index].name);
+                        },
+                        child: Center(child: Text(listImages[index].name)),
                       ),
                     ),
                   );
@@ -718,7 +704,6 @@ deleteItemDialog(
 deleteCategoryDialog(
   BuildContext context,
   String catgoryTextName,
-  String image,
 ) {
   showDialog(
       context: context,
@@ -740,16 +725,6 @@ deleteCategoryDialog(
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Container(
-                      height: 100,
-                      width: 100,
-                      child: Image.network(
-                        image,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -761,8 +736,7 @@ deleteCategoryDialog(
                   FlatButton.icon(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                      FirestoreFunctions()
-                          .deleteCategory(catgoryTextName, image);
+                      FirestoreFunctions().deleteCategory(catgoryTextName);
                       Navigator.pop(context);
                     },
                     label: Text(

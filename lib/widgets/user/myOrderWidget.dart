@@ -3,21 +3,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shop_app/models/myOrderModel.dart';
 
 import '../widgets.dart';
 
-Widget orderScreen(BuildContext context,String userID) {
+Widget orderScreen(BuildContext context, String userID) {
   return Container(
     height: MediaQuery.of(context).size.height,
     width: double.infinity,
-    child: StreamBuilder(
+    child: StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance
             .collection('order')
             .where("userID", isEqualTo: userID)
-            .orderBy('date', descending: true)
+            //.orderBy('date', descending: true)
             .snapshots(),
-        builder: (context, snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
               child: Text("لا يوجد لديك طلبات"),
@@ -49,13 +50,13 @@ Widget orderScreen(BuildContext context,String userID) {
                     String formatDate = formatter.format(orderDate);
                     String formatTime = timeFormat.format(orderDate);
 
-                    String formatted = "تاريخ الطلب $formatDate\n $formatTime";
+                    String formatted = "تاريخ الطلب $formatDate  $formatTime";
                     return Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Container(
                           height: 240,
-                          color: Colors.grey,
+                          color: Colors.teal,
                           child: InkWell(
                             onTap: () {
                               showModalBottomSheet(
@@ -67,6 +68,12 @@ Widget orderScreen(BuildContext context,String userID) {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                       children: [
+                                        //Order Date
+                                        Text(
+                                          formatted,
+                                          textDirection: TextDirection.rtl,
+                                        ),
+
                                         Table(
                                           columnWidths: {
                                             0: FractionColumnWidth(0.5)
@@ -81,6 +88,7 @@ Widget orderScreen(BuildContext context,String userID) {
                                             ])
                                           ],
                                         ),
+
                                         Expanded(
                                           child: ListView.builder(
                                               itemCount: myOrderList.length,
@@ -132,6 +140,113 @@ Widget orderScreen(BuildContext context,String userID) {
                                                 ));
                                               }),
                                         ),
+                                        //Delete order
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              border:
+                                                  Border.all(color: Colors.red),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          child: FlatButton.icon(
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Colors.red[300],
+                                            ),
+                                            onPressed: () {
+                                              if (status == "0") {
+                                                showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext
+                                                                context) =>
+                                                            Dialog(
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12.0),
+                                                              ),
+                                                              child: Container(
+                                                                height: 300.0,
+                                                                width: 300.0,
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceAround,
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Center(
+                                                                      child:
+                                                                          Text(
+                                                                        "إلغاء الطلب",
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                20),
+                                                                      ),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                          horizontal:
+                                                                              16.0),
+                                                                      child:
+                                                                          Container(
+                                                                        child:
+                                                                            Text(
+                                                                          "سوف يتم الغاء طلبك",
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceAround,
+                                                                      children: [
+                                                                        FlatButton(
+                                                                          onPressed:
+                                                                              () {
+                                                                            Firestore.instance.collection('order').where('orderID', isEqualTo: ds['orderID']).where('userID', isEqualTo: ds['userID']).getDocuments().then((value) {
+                                                                              value.documents.forEach((element) {
+                                                                                Firestore.instance.collection('order').document(element.documentID).delete();
+                                                                              });
+                                                                            });
+                                                                            Navigator.pop(context);
+                                                                            Navigator.pop(context);
+                                                                          },
+                                                                          child:
+                                                                              Text(
+                                                                            'تأكيد',
+                                                                            style:
+                                                                                TextStyle(color: Colors.purple, fontSize: 18.0),
+                                                                          ),
+                                                                        ),
+                                                                        FlatButton(
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.pop(context);
+                                                                          },
+                                                                          child:
+                                                                              Text(
+                                                                            'خروج',
+                                                                            style:
+                                                                                TextStyle(color: Colors.purple, fontSize: 18.0),
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ));
+                                              } else {
+                                                errorToast(
+                                                    "لا يكمنك إلغاء الطلب");
+                                              }
+                                            },
+                                            label: Text("الغاء الطلب"),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -178,6 +293,7 @@ Widget orderScreen(BuildContext context,String userID) {
                                             ),
                                           ),
                                         ),
+                                        //Order track
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -337,132 +453,60 @@ Widget orderScreen(BuildContext context,String userID) {
                                     ),
                                   ),
                                   Expanded(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Text(formatted),
-                                                  Text(
-                                                    '${ds['total']} ر.س',
-                                                    textDirection:
-                                                        TextDirection.rtl,
-                                                    style:
-                                                        TextStyle(fontSize: 22),
-                                                  ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    FlatButton.icon(
-                                                      icon: Icon(
-                                                        Icons.delete,
-                                                        color: Colors.red[300],
-                                                      ),
-                                                      onPressed: () {
-                                                        if (status == "0") {
-                                                          showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (BuildContext
-                                                                          context) =>
-                                                                      Dialog(
-                                                                        shape:
-                                                                            RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(12.0),
-                                                                        ),
-                                                                        child:
-                                                                            Container(
-                                                                          height:
-                                                                              300.0,
-                                                                          width:
-                                                                              300.0,
-                                                                          child:
-                                                                              Column(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceAround,
-                                                                            children: <Widget>[
-                                                                              Center(
-                                                                                child: Text(
-                                                                                  "إلغاء الطلب",
-                                                                                  style: TextStyle(fontSize: 20),
-                                                                                ),
-                                                                              ),
-                                                                              Padding(
-                                                                                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                                                child: Container(child: Text("سوف يتم الغاء طلبك")),
-                                                                              ),
-                                                                              Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                                children: [
-                                                                                  FlatButton(
-                                                                                    onPressed: () {
-                                                                                      Firestore.instance.collection('order').where('orderID', isEqualTo: ds['orderID']).where('userID', isEqualTo: ds['userID']).getDocuments().then((value) {
-                                                                                        value.documents.forEach((element) {
-                                                                                          Firestore.instance.collection('order').document(element.documentID).delete();
-                                                                                        });
-                                                                                      });
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: Text(
-                                                                                      'تأكيد',
-                                                                                      style: TextStyle(color: Colors.purple, fontSize: 18.0),
-                                                                                    ),
-                                                                                  ),
-                                                                                  FlatButton(
-                                                                                    onPressed: () {
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: Text(
-                                                                                      'خروج',
-                                                                                      style: TextStyle(color: Colors.purple, fontSize: 18.0),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                      ));
-                                                        } else {
-                                                          errorToast(
-                                                              "لا يكمنك إلغاء الطلب");
-                                                        }
-                                                      },
-                                                      label:
-                                                          Text("الغاء الطلب"),
-                                                    ),
-                                                    Container(
-                                                      alignment:
-                                                          Alignment.centerRight,
-                                                      child: noDelvier
-                                                          ? Text(
-                                                              "السعر شامل الضريبة")
-                                                          : Text(
-                                                              "السعر شامل الضريبة والتوصيل"),
-                                                    ),
-                                                  ],
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          noDelvier
+                                              ? Container(
+                                                padding: EdgeInsets.all(8.0),
+                                                decoration: BoxDecoration(
+                                                  border:Border.all()
                                                 ),
+                                                child: InkWell(
+                                                    onTap: () {
+                                                      MapsLauncher
+                                                          .launchCoordinates(
+                                                        24.751945,
+                                                        46.665222,
+                                                      );
+                                                    },
+                                                    child: Text("موقع الإستلام")),
+                                              )
+                                              : Container(),
+                                          Column(
+                                            children: [
+                                              Container(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Text(
+                                                  '${ds['total']} ر.س',
+                                                  textDirection:
+                                                      TextDirection.rtl,
+                                                  style:
+                                                      TextStyle(fontSize: 22),
+                                                ),
+                                              ),
+                                              Container(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: noDelvier
+                                                    ? Text(
+                                                        "السعر شامل الضريبة",
+                                                        style: TextStyle(
+                                                            fontSize: 9),
+                                                      )
+                                                    : Text(
+                                                        "السعر شامل الضريبة والتوصيل",
+                                                        style: TextStyle(
+                                                            fontSize: 9)),
                                               ),
                                             ],
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -105,7 +105,7 @@ class _PaymentState extends State<Payment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-      drawer: drawer(context, widget.onThemeChanged,
+      drawer: drawer(context, widget.onThemeChanged, goToHome,
           changeLangauge: widget.changeLangauge),
       body: Center(
         child: Container(
@@ -139,6 +139,7 @@ class _PaymentState extends State<Payment> {
                     "تم إستلام طلبك يمكنك متابعه الطلب من قسم الطلبات");
                 DBHelper.deleteAllItem("cart");
                 Navigator.popUntil(context, (route) => route.isFirst);
+                navIndex = 3;
               });
             },
             child: Center(
@@ -166,52 +167,63 @@ class _PaymentState extends State<Payment> {
   }
 
   getTheDeriver() async {
-    double customerLat = double.parse(widget.lat);
-    double customerLong = double.parse(widget.long);
-    List<DriverModel> driverList = new List();
-    await Firestore.instance
-        .collection('employee')
-        .getDocuments()
-        .then((value) {
-      value.documents.forEach((e) {
-        if (e['accept'] == '1') {
-          double deriverLat = e['lat'];
-          double deriverLong = e['long'];
-          List<dynamic> data = [
-            {
-              "lat": customerLat,
-              "lng": customerLong,
-            },
-            {
-              "lat": deriverLat,
-              "lng": deriverLong,
+    try {
+      double customerLat = double.parse(widget.lat);
+      double customerLong = double.parse(widget.long);
+      List<DriverModel> driverList = new List();
+      await Firestore.instance
+          .collection('employee')
+          .getDocuments()
+          .then((value) {
+        value.documents.forEach((e) {
+          if (e['accept'] == '1') {
+            double deriverLat = e['lat'];
+            double deriverLong = e['long'];
+            List<dynamic> data = [
+              {
+                "lat": customerLat,
+                "lng": customerLong,
+              },
+              {
+                "lat": deriverLat,
+                "lng": deriverLong,
+              }
+            ];
+            double totalDistance = 0;
+            for (var i = 0; i < data.length - 1; i++) {
+              totalDistance += calculateDistance(data[i]["lat"], data[i]["lng"],
+                  data[i + 1]["lat"], data[i + 1]["lng"]);
             }
-          ];
-          double totalDistance = 0;
-          for (var i = 0; i < data.length - 1; i++) {
-            totalDistance += calculateDistance(data[i]["lat"], data[i]["lng"],
-                data[i + 1]["lat"], data[i + 1]["lng"]);
+            driverList.add(DriverModel(
+                name: e['name'], id: e['id'], distance: totalDistance));
           }
-          driverList.add(DriverModel(
-              name: e['name'], id: e['id'], distance: totalDistance));
-        }
-      });
+        });
 
-      for (var i = 0; i < driverList.length; i++) {
-        if (min == 0.0) {
-          min = driverList[i].distance;
-          name = driverList[i].name;
-          id = driverList[i].id;
-        } else {
-          if (min > driverList[i].distance) {
+        for (var i = 0; i < driverList.length; i++) {
+          if (min == 0.0) {
             min = driverList[i].distance;
             name = driverList[i].name;
             id = driverList[i].id;
+          } else {
+            if (min > driverList[i].distance) {
+              min = driverList[i].distance;
+              name = driverList[i].name;
+              id = driverList[i].id;
+            }
           }
         }
-      }
-      setState(() {});
-    });
+        setState(() {});
+      });
+    } catch (e) {
+      print("Catched");
+    }
+  }
+  goToHome(){
+       Navigator.popUntil(context, (route) => route.isFirst);
+          navIndex = 0;
+          setState(() {
+            
+          });
   }
 }
 

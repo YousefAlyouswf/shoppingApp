@@ -120,7 +120,7 @@ AppBar appBar(
 }
 
 bool isEnglish = false;
-Drawer drawer(BuildContext context, Function onThemeChanged,
+Drawer drawer(BuildContext context, Function onThemeChanged, Function goToHome,
     {Function changeLangauge, Function fetchMyCart}) {
   List<Widget> drawerBody;
   List<DrawerBodyModel> drawerModel = [
@@ -128,35 +128,35 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
       isEnglish ? english[0] : arabic[0],
       Icon(
         Icons.home,
-        color: Colors.red,
+        color: Color(0xFFFF834F),
       ),
     ),
     DrawerBodyModel(
       isEnglish ? english[2] : arabic[2],
       Icon(
         Icons.shopping_cart,
-        color: Colors.red,
+        color: Color(0xFFFF834F),
       ),
     ),
     DrawerBodyModel(
       isEnglish ? english[3] : arabic[3],
       Icon(
         Icons.shopping_basket,
-        color: Colors.red,
+        color: Color(0xFFFF834F),
       ),
     ),
     DrawerBodyModel(
       isEnglish ? english[4] : arabic[4],
       Icon(
         Icons.dashboard,
-        color: Colors.red,
+        color: Color(0xFFFF834F),
       ),
     ),
     DrawerBodyModel(
       isEnglish ? english[1] : arabic[1],
       Icon(
         Icons.person,
-        color: Colors.red,
+        color: Color(0xFFFF834F),
       ),
     ),
   ];
@@ -172,7 +172,8 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
         String myOrderWord = isEnglish ? english[3] : arabic[3];
         if (drawerModel[i].text == basketWord) {
         } else if (drawerModel[i].text == homeWord) {
-          Navigator.of(context).popUntil((route) => route.isFirst);
+          goToHome();
+          Navigator.pop(context);
         } else if (drawerModel[i].text == myAccountWord) {
           Navigator.push(
             context,
@@ -187,26 +188,24 @@ Drawer drawer(BuildContext context, Function onThemeChanged,
     child: Column(
       children: [
         UserAccountsDrawerHeader(
-          accountName: Text(isEnglish ? english[9] : arabic[9]),
-          accountEmail: Text("yousef.alyouswf1989@gmail.com"),
-          currentAccountPicture: GestureDetector(
-            child: CircleAvatar(
-              backgroundColor: Colors.grey,
-              child: Icon(
-                Icons.person,
-                size: 50,
-                color: Colors.white,
-              ),
-            ),
+          accountName: Text(""),
+          accountEmail: Text(""),
+          margin: EdgeInsets.all(0),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/logoBig.png"),
+                fit: BoxFit.fill),
           ),
-          decoration: BoxDecoration(color: Colors.pink),
         ),
         Expanded(
-          child: ListView.builder(
-            itemCount: drawerBody.length,
-            itemBuilder: (context, i) {
-              return drawerBody[i];
-            },
+          child: Container(
+            color: Colors.white,
+            child: ListView.builder(
+              itemCount: drawerBody.length,
+              itemBuilder: (context, i) {
+                return drawerBody[i];
+              },
+            ),
           ),
         ),
         Divider(
@@ -416,13 +415,16 @@ Widget bottomNavgation(Function bottomNavIndex) {
     onTap: bottomNavIndex,
     type: BottomNavigationBarType.fixed,
     backgroundColor: Colors.white,
-    fixedColor: Colors.teal,
+    fixedColor: Color(0xFFFF834F),
     iconSize: 35,
     items: allDestinations.map((Destination destination) {
       return BottomNavigationBarItem(
         icon: Icon(destination.icon),
         backgroundColor: destination.color,
-        title: Text(destination.title),
+        title: Text(
+          destination.title,
+          style: TextStyle(fontFamily: "MainFont"),
+        ),
       );
     }).toList(),
   );

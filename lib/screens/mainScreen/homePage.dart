@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage>
     double imageShowSize = height / 3;
     // var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Scaffold(
-      drawer: drawer(context, widget.onThemeChanged,
+      drawer: drawer(context, widget.onThemeChanged, goToHome,
           changeLangauge: widget.changeLangauge),
       body: navIndex == 0
           ? CustomScrollView(
@@ -62,9 +62,11 @@ class _HomePageState extends State<HomePage>
                 SliverAppBar(
                   iconTheme: new IconThemeData(color: Colors.white),
                   title: Text(
-                    "تنوتو",
+                    "رفوف",
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w900),
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: "MainFont"),
                   ),
                   backgroundColor: Colors.black38,
                   floating: false,
@@ -86,8 +88,8 @@ class _HomePageState extends State<HomePage>
                 SliverFillRemaining(
                   child: Column(
                     children: [
-                      listViewHorznintal(selectCategory, controller),
-                      Expanded(child: subCatgoryCustomer(null, fetchToMyCart)),
+                      // listViewHorznintal(selectCategory, controller),
+                      // Expanded(child: subCatgoryCustomer(null, fetchToMyCart)),
                     ],
                   ),
                 ),
@@ -101,7 +103,7 @@ class _HomePageState extends State<HomePage>
                       invoiceTable(fetchToMyCart),
                       //  delvierText(chooseDeliver),
                       buttons(context, widget.onThemeChanged,
-                          widget.changeLangauge),
+                          widget.changeLangauge, changeDelvierValue),
                     ],
                   ),
                 )
@@ -114,7 +116,11 @@ class _HomePageState extends State<HomePage>
                               headerCatgory(
                                   selectedSection, categorySelectedColor),
                               seprater(),
-                              subCollection(context, setFirstElemntInSubCollection,fetchToMyCart),
+                              subCollection(
+                                context,
+                                setFirstElemntInSubCollection,
+                                fetchToMyCart,
+                              ),
                             ],
                           ),
                         )
@@ -173,6 +179,13 @@ class _HomePageState extends State<HomePage>
       isDeliver = value;
     });
     fetchMyCart();
+  }
+
+  changeDelvierValue() {
+    setState(() {
+      isDeliver = !isDeliver;
+    });
+    fetchToMyCart();
   }
 
   double sumPrice = 0;
@@ -353,5 +366,11 @@ class _HomePageState extends State<HomePage>
     } else if (i == 3) {
       deviceID();
     }
+  }
+
+  goToHome() {
+    Navigator.popUntil(context, (route) => route.isFirst);
+    navIndex = 0;
+    setState(() {});
   }
 }

@@ -122,7 +122,9 @@ class _ShowItemState extends State<ShowItem>
                               "${widget.price} ر.س",
                               textDirection: TextDirection.rtl,
                               style: TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.bold),
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.teal),
                             ),
                           ),
                           widget.size.length == 0

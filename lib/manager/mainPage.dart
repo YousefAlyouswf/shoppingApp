@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -213,6 +212,8 @@ class _MainPageState extends State<MainPage>
     itemPrice.clear();
     itemDis.clear();
     itemBuyPrice.clear();
+    totalQuantity.clear();
+
     checkedSize = false;
     imageStoredCategory = null;
     urlImageCategory = null;

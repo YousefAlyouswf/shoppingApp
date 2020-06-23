@@ -51,7 +51,7 @@ dependencies:
   flutter_polyline_points: ^0.1.0
   intl: ^0.16.1
   maps_launcher: ^1.2.0
-
+  shimmer: ^1.1.1
 
   
 
@@ -62,7 +62,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/appstore.jpg"
+  image_path: "assets/images/logo.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -77,8 +77,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/images/appstore.jpg
-    
+    - assets/images/logo.png
+    - assets/images/logoBig.png
+    - assets/images/logoBigTrans.png
  
   #   - images/a_dot_ham.jpeg
 
@@ -93,10 +94,14 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: MainFont
+      fonts:
+        - asset: assets/fonts/font.ttf
+
+    - family: EN
+      fonts:
+        - asset: assets/fonts/en.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
