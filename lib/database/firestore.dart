@@ -44,8 +44,7 @@ class FirestoreFunctions {
   }
 
   addImagesForList(String imageID, String url) async {
-    print(imageID);
-    print(url);
+
     await Firestore.instance
         .collection('images')
         .where('imageID', isEqualTo: imageID)
@@ -80,8 +79,7 @@ class FirestoreFunctions {
   }
 
   deleteImagesForList(String imageID, String url) async {
-    print(imageID);
-    print(url);
+
     await Firestore.instance
         .collection('images')
         .where('imageID', isEqualTo: imageID)

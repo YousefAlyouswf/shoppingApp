@@ -26,7 +26,7 @@ class _GmapState extends State<Gmap> {
       infoWindow: InfoWindow(
           title: "الموقع الي بنوصله الطلب", snippet: 'مع تحيات تطبيق تنوتو'),
       onTap: () {
-        print(markerId);
+     
       },
     );
 

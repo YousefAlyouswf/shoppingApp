@@ -26,7 +26,6 @@ class _GmapForDeliverState extends State<GmapForDeliver> {
       infoWindow: InfoWindow(
           title: "المنطقة القريبة منك", snippet: 'مع تحيات تطبيق تنوتو'),
       onTap: () {
-        print(markerId);
       },
     );
 

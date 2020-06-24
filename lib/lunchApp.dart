@@ -14,7 +14,7 @@ class LunchApp extends StatefulWidget {
 
 class _LunchAppState extends State<LunchApp> {
   Future<bool> mock() async {
-    await Future.delayed(Duration(seconds: 3), () {});
+    await Future.delayed(Duration(seconds: 1), () {});
     return true;
   }
 

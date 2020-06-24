@@ -28,7 +28,6 @@ class DBHelper {
       data,
     )
         .catchError((e) {
-      print(e);
     });
   }
 
@@ -79,7 +78,6 @@ class DBHelper {
       data,
     )
         .catchError((e) {
-      print(e);
     });
   }
 

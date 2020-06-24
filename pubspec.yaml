@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+6
+version: 1.0.0+7
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -53,8 +53,6 @@ dependencies:
   maps_launcher: ^1.2.0
   shimmer: ^1.1.1
 
-  
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -80,7 +78,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/logoBig.png
     - assets/images/logoBigTrans.png
- 
+  
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -102,6 +100,12 @@ flutter:
     - family: EN
       fonts:
         - asset: assets/fonts/en.ttf
+    - family: summer
+      fonts:
+        - asset: assets/fonts/summer.ttf
+    - family: typo
+      fonts:
+        - asset: assets/fonts/typo.otf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
@@ -112,3 +116,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  
+    

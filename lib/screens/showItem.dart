@@ -55,7 +55,6 @@ class _ShowItemState extends State<ShowItem>
 
   @override
   Widget build(BuildContext context) {
-    print(widget.imageID);
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
@@ -418,7 +417,6 @@ class _ShowItemState extends State<ShowItem>
             )
           },
         );
-    print(networkItemShow);
   }
 }
 

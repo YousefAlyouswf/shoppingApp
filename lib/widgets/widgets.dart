@@ -7,95 +7,25 @@ import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/appInfo.dart';
 import 'package:shop_app/models/drawerbody.dart';
 import 'package:shop_app/screens/myAccount.dart';
+import 'package:shop_app/widgets/langauge.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();
 
-List<String> english = [
-  'Home',
-  'deliver',
-  'Cart',
-  'My Order',
-  'Categories',
-  "a",
-  'Settings',
-  'Dark Mode',
-  'App Info',
-  'Guest',
-  'اللغة العربية',
-  'Shopping Cart',
-  'Items',
-  'Edit',
-  'To delete drag to left',
-  'R.S.',
-  'Buy R.S',
-  "Continue Shopping",
-  "Shipping Info",
-  "Choose Your Address",
-  "New Address",
-  "Continue",
-  "Personal Info",
-  "Full Name",
-  "Phone",
-  "Address",
-  "Type your national Address",
-  "Select from map",
-  "OR",
-  "City",
-  "District",
-  "Street",
-  "House Number",
-  "Type Full Name",
-  "Phone Number 10 Digits",
-  "Correct your Address",
-];
-List<String> arabic = [
-  'الرئيسية',
-  'المندوب',
-  'السلة',
-  'طلباتي',
-  'الأقسام',
-  "a",
-  'الإعدادات',
-  'وضع الداكن',
-  'معلومات التطبيق',
-  'زائر',
-  'English',
-  'سلة التسوق',
-  'المحتويات',
-  'تعديل',
-  "للحذف إسحب إلى اليسار",
-  'ر.س.',
-  'ر.س  شراء',
-  "الرجوع للتسوق",
-  "معلومات الشحن",
-  "أختر عنوانك",
-  "عنوان جديد",
-  "متابعه",
-  "البيانات الشخصية",
-  "الأسم كامل",
-  "رقم الجوال",
-  "العنوان",
-  "أدخل عنوانك الوطني هنا",
-  "حدد من الخريطة",
-  "أو",
-  "المدينة",
-  "الحي",
-  "الشارع",
-  "رقم المنزل",
-  "أكتب الأسم كامل",
-  "رقم الجوال 10 أرقام",
-  "أكتب العنوان بالشكل الصحيح",
-];
 List<AppInfoModel> appInfo = [];
 AppBar appBar(
-    {String text = "تنوتو",
+    {String text = "رفوف",
     bool search = false,
     bool cart = false,
     BuildContext context}) {
   return AppBar(
     elevation: 0,
-    title: Text(text),
+    title: Text(
+      isEnglish ? "RFOOF" : "رفوف",
+      style: TextStyle(fontFamily: isEnglish ? 'EN' : "MainFont"),
+    ),
+    backgroundColor: Color(0xFFFF834F),
+    centerTitle: true,
     actions: <Widget>[
       search
           ? IconButton(
@@ -192,9 +122,12 @@ Drawer drawer(BuildContext context, Function onThemeChanged, Function goToHome,
           accountEmail: Text(""),
           margin: EdgeInsets.all(0),
           decoration: BoxDecoration(
+            color: Colors.orange,
+            borderRadius: BorderRadius.all(Radius.circular(200)),
             image: DecorationImage(
-                image: AssetImage("assets/images/logoBigTrans.png"),
-                fit: BoxFit.fill),
+              image: AssetImage("assets/images/logoBigTrans.png"),
+             // fit: BoxFit.fill,
+            ),
           ),
         ),
         Expanded(
@@ -236,7 +169,11 @@ Drawer drawer(BuildContext context, Function onThemeChanged, Function goToHome,
                         FlatButton(
                           onPressed: () {
                             changeLangauge();
-                            fetchMyCart();
+                            try {
+                              fetchMyCart();
+                            } catch (e) {
+                              print("Error 1000");
+                            }
                           },
                           child: Text(isEnglish ? english[10] : arabic[10]),
                         ),
@@ -263,8 +200,8 @@ Drawer drawer(BuildContext context, Function onThemeChanged, Function goToHome,
           onTap: () {
             showAboutDialog(
               context: context,
-              applicationName: "تنوتو",
-              applicationVersion: "0.0.6",
+              applicationName: "RFOOF",
+              applicationVersion: "0.0.7",
               applicationLegalese: "Developed by Yousef Al Yousef",
               useRootNavigator: false,
               children: [Icon(Icons.developer_board)],
@@ -401,11 +338,12 @@ class Destination {
   final MaterialColor color;
 }
 
-const List<Destination> allDestinations = <Destination>[
-  Destination('الرئيسية', Icons.home, Colors.teal),
-  Destination('الأقسام', Icons.category, Colors.cyan),
-  Destination('سلتي', Icons.shopping_basket, Colors.orange),
-  Destination('طلباتي', Icons.receipt, Colors.blue)
+List<Destination> allDestinations = <Destination>[
+  Destination(isEnglish ? english[0] : arabic[0], Icons.home, Colors.teal),
+  Destination(isEnglish ? english[4] : arabic[4], Icons.category, Colors.cyan),
+  Destination(
+      isEnglish ? english[2] : arabic[2], Icons.shopping_basket, Colors.orange),
+  Destination(isEnglish ? english[3] : arabic[3], Icons.receipt, Colors.blue)
 ];
 int navIndex = 0;
 Widget bottomNavgation(Function bottomNavIndex) {
@@ -413,7 +351,6 @@ Widget bottomNavgation(Function bottomNavIndex) {
     currentIndex: navIndex,
     onTap: bottomNavIndex,
     type: BottomNavigationBarType.fixed,
-   
     fixedColor: Color(0xFFFF834F),
     iconSize: 35,
     items: allDestinations.map((Destination destination) {

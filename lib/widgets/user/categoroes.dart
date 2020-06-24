@@ -5,11 +5,17 @@ import 'package:shop_app/models/listHirzontalImage.dart';
 import 'package:shop_app/screens/showItem.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
 
+import '../langauge.dart';
 import '../widgets.dart';
 import '../widgets2.dart';
 
+List<String> catgoryArabic = [];
+List<String> catgoryEnglish = [];
+
+
 List<bool> selected = List.generate(20, (i) => false);
-Widget headerCatgory(Function selectedSection, Function categorySelectedColor) {
+Widget headerCatgory(Function selectedSection, Function categorySelectedColor, Function translateCategory) {
+catgoryEnglish = [];
   return Padding(
     padding: const EdgeInsets.only(top: 48.0, left: 8.0, right: 8.0),
     child: Container(
@@ -20,19 +26,27 @@ Widget headerCatgory(Function selectedSection, Function categorySelectedColor) {
         stream: Firestore.instance.collection('categories').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Text("Loading");
+          for (var i = 0; i < snapshot.data.documents[0].data['collection'].length; i++) {
+             String name =
+                    snapshot.data.documents[0].data['collection'][i]['name'];
+          
+          }
+         
           return ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: snapshot.data.documents[0].data['collection'].length,
               itemBuilder: (context, i) {
                 String name =
                     snapshot.data.documents[0].data['collection'][i]['name'];
-
+               
+              
                 return Container(
                   width: 100,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                     border: Border.all(
-                      color: selected[i] ? Color(0xFFFF834F) : Colors.transparent,
+                      color:
+                          selected[i] ? Color(0xFFFF834F) : Colors.transparent,
                     ),
                   ),
                   child: InkWell(
@@ -44,8 +58,8 @@ Widget headerCatgory(Function selectedSection, Function categorySelectedColor) {
                       child: Text(
                         name,
                         style: TextStyle(
-                          color: selected[i] ? Colors.teal : Colors.grey[600],fontFamily: "MainFont"
-                        ),
+                            color: selected[i] ? Colors.teal : Colors.grey[600],
+                            fontFamily: "MainFont"),
                       ),
                     ),
                   ),
@@ -241,7 +255,7 @@ Widget subCollection(
                                     width: double.infinity,
                                     alignment: Alignment.bottomRight,
                                     child: Text(
-                                      "${listImages[index].price} ر.س",
+                                      "${listImages[index].price} ${isEnglish ? english[61] : arabic[61]}",
                                       textDirection: TextDirection.rtl,
                                       style: TextStyle(
                                           color: Colors.teal,

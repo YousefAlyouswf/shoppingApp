@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
+import 'package:shop_app/widgets/langauge.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
 import 'package:shop_app/widgets/user/categoroes.dart';
 import 'package:shop_app/widgets/user/myOrderWidget.dart';
@@ -32,6 +33,7 @@ class _HomePageState extends State<HomePage>
     getAppInfoFireBase();
     getAllimagesFromFireStore();
     controller.addListener(_scrollListener);
+         translateCategory();
   }
 
   double showFloatingBtn = 0.0;
@@ -51,48 +53,31 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double imageShowSize = height / 3;
+
     // var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Scaffold(
+      appBar: navIndex == 0 ? appBar() : null,
       drawer: drawer(context, widget.onThemeChanged, goToHome,
           changeLangauge: widget.changeLangauge),
       body: navIndex == 0
-          ? CustomScrollView(
-              controller: controller,
-              slivers: <Widget>[
-                SliverAppBar(
-                  iconTheme: new IconThemeData(color: Colors.white),
-                  title: Text(
-                    "رفوف",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                        fontFamily: "MainFont"),
-                  ),
-                  backgroundColor: Colors.black38,
-                  floating: false,
-                  pinned: true,
-                  elevation: 8,
-                  expandedHeight: MediaQuery.of(context).size.height / 3,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: networkImage2 == null
-                        ? Center(
-                            child: Container(
-                              height: 100,
-                              width: 100,
-                              child: CircularProgressIndicator(),
-                            ),
-                          )
-                        : imageCarousel(imageShowSize, imageOnTap),
-                  ),
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  isEnglish ? english[36] : arabic[36],
+                  style: TextStyle(
+                      fontSize: 35,
+                      fontFamily: isEnglish ? "summer" : "MainFont"),
                 ),
-                SliverFillRemaining(
-                  child: Column(
-                    children: [
-                      // listViewHorznintal(selectCategory, controller),
-                      // Expanded(child: subCatgoryCustomer(null, fetchToMyCart)),
-                    ],
-                  ),
-                ),
+                networkImage2 == null
+                    ? Center(
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : imageCarousel(imageShowSize, imageOnTap),
               ],
             )
           : navIndex == 2
@@ -113,8 +98,8 @@ class _HomePageState extends State<HomePage>
                       ? Container(
                           child: Column(
                             children: [
-                              headerCatgory(
-                                  selectedSection, categorySelectedColor),
+                              headerCatgory(selectedSection,
+                                  categorySelectedColor, translateCategory),
                               seprater(),
                               subCollection(
                                 context,
@@ -151,6 +136,11 @@ class _HomePageState extends State<HomePage>
         }
       }
     });
+  }
+
+  translateCategory() async {
+ 
+  
   }
 
   setFirstElemntInSubCollection() async {

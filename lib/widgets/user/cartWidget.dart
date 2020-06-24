@@ -3,6 +3,7 @@ import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/address.dart';
 import 'package:translator/translator.dart';
+import '../langauge.dart';
 import '../widgets.dart';
 
 List<ItemShow> cart = [];
@@ -60,16 +61,15 @@ Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
                           ),
                         ),
                         Text(
-                          "سلة التسوق فارغة\nيمكنك الذهاب الى صفحة المنتجات لإظافة ماترغب به",
+                          isEnglish ? english[37] : arabic[37],
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 18),
                         ),
-                        //  Text("يمكنك الذهاب الى صفحة المنتجات لإظافة ماترغب به", style: TextStyle(fontSize: 18),),
                         InkWell(
                           onTap: emptyCartGoToCategory,
                           child: Container(
                             height: 50,
-                            width: 100,
+                            width: 130,
                             decoration: BoxDecoration(
                               color: Color(0xFFFF834F),
                               borderRadius: BorderRadius.all(
@@ -78,11 +78,11 @@ Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
                             ),
                             child: Center(
                                 child: Text(
-                              "المنتجات",
+                              isEnglish ? english[38] : arabic[38],
                               textDirection: TextDirection.rtl,
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 22,
+                                  fontSize: 20,
                                   fontFamily: "MainFont"),
                             )),
                           ),
@@ -156,7 +156,7 @@ Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
                                         cart[i].sizeChose == ''
                                             ? Container()
                                             : Text(
-                                                "(${cart[i].sizeChose}) المقاس",
+                                                "(${cart[i].sizeChose}) ${isEnglish ? english[39] : arabic[39]}",
                                                 style: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.w300,
@@ -295,43 +295,43 @@ Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
   );
 }
 
-Widget delvierText(Function chooseDeliver) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Container(
-          child: Text(
-            "بدون توصيل",
-            textDirection: TextDirection.rtl,
-            style: TextStyle(
-                fontWeight: isDeliver ? FontWeight.normal : FontWeight.w800),
-          ),
-        ),
-        Container(
-          height: 10,
-          child: Switch(
-            value: isDeliver,
-            onChanged: chooseDeliver,
-            activeTrackColor: Colors.green[500],
-            activeColor: Colors.green[100],
-            inactiveTrackColor: Colors.grey[500],
-            inactiveThumbColor: Colors.grey[100],
-          ),
-        ),
-        Container(
-          child: Text(
-            "سعر التوصيل $delivery",
-            textDirection: TextDirection.rtl,
-            style: TextStyle(
-                fontWeight: !isDeliver ? FontWeight.normal : FontWeight.w800),
-          ),
-        ),
-      ],
-    ),
-  );
-}
+// Widget delvierText(Function chooseDeliver) {
+//   return Padding(
+//     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+//     child: Row(
+//       mainAxisAlignment: MainAxisAlignment.end,
+//       children: [
+//         Container(
+//           child: Text(
+//             "بدون توصيل",
+//             textDirection: TextDirection.rtl,
+//             style: TextStyle(
+//                 fontWeight: isDeliver ? FontWeight.normal : FontWeight.w800),
+//           ),
+//         ),
+//         Container(
+//           height: 10,
+//           child: Switch(
+//             value: isDeliver,
+//             onChanged: chooseDeliver,
+//             activeTrackColor: Colors.green[500],
+//             activeColor: Colors.green[100],
+//             inactiveTrackColor: Colors.grey[500],
+//             inactiveThumbColor: Colors.grey[100],
+//           ),
+//         ),
+//         Container(
+//           child: Text(
+//             "سعر التوصيل $delivery",
+//             textDirection: TextDirection.rtl,
+//             style: TextStyle(
+//                 fontWeight: !isDeliver ? FontWeight.normal : FontWeight.w800),
+//           ),
+//         ),
+//       ],
+//     ),
+//   );
+// }
 
 Widget buttons(
   BuildContext context,
@@ -386,34 +386,33 @@ Widget buttons(
                           )),
                     ),
                   ),
-                  InkWell(
-                    onTap: changeDelvierValue,
-                    child: Container(
-                      padding: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: !isDeliver
-                                ? Colors.grey[400]
-                                : Colors.teal[600],
-                          ),
-                          color: !isDeliver ? Colors.grey[300] : Colors.teal,
-                          borderRadius: BorderRadius.all(Radius.circular(50))),
-                      child: Text(
-                        !isDeliver ? "بدون توصيل" : "مع التوصيل",
-                        style: TextStyle(
-                            color: isDeliver ? Colors.white : Colors.black,
-                            fontFamily: "MainFont"),
-                      ),
-                    ),
-                  ),
+                  // InkWell(
+                  //   onTap: changeDelvierValue,
+                  //   child: Container(
+                  //     padding: EdgeInsets.all(8.0),
+                  //     decoration: BoxDecoration(
+                  //         border: Border.all(
+                  //           color: !isDeliver
+                  //               ? Colors.grey[400]
+                  //               : Colors.teal[600],
+                  //         ),
+                  //         color: !isDeliver ? Colors.grey[300] : Colors.teal,
+                  //         borderRadius: BorderRadius.all(Radius.circular(50))),
+                  //     child: Text(
+                  //       !isDeliver ? "بدون توصيل" : "مع التوصيل",
+                  //       style: TextStyle(
+                  //           color: isDeliver ? Colors.white : Colors.black,
+                  //           fontFamily: "MainFont"),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               Container(
                   width: double.infinity,
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    "السعر شامل الضريبة*",
-                  ))
+                  alignment:
+                      isEnglish ? Alignment.bottomLeft : Alignment.bottomRight,
+                  child: Text(isEnglish ? english[40] : arabic[40]))
             ],
           ),
   );

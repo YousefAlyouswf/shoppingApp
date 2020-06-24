@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shop_app/models/myOrderModel.dart';
+import 'package:shop_app/widgets/langauge.dart';
 
 import '../widgets.dart';
 
@@ -21,7 +22,7 @@ Widget orderScreen(BuildContext context, String userID) {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
-              child: Text("لا يوجد لديك طلبات"),
+              child: Text(isEnglish ? english[41] : arabic[41]),
             );
           } else {
             return Container(
@@ -50,13 +51,13 @@ Widget orderScreen(BuildContext context, String userID) {
                     String formatDate = formatter.format(orderDate);
                     String formatTime = timeFormat.format(orderDate);
 
-                    String formatted = "تاريخ الطلب $formatDate  $formatTime";
+                    String formatted =
+                        "${isEnglish ? english[42] : arabic[42]} $formatDate  $formatTime";
                     return Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Container(
                           height: 240,
-                        
                           child: InkWell(
                             onTap: () {
                               showModalBottomSheet(
@@ -82,9 +83,18 @@ Widget orderScreen(BuildContext context, String userID) {
                                           textDirection: TextDirection.rtl,
                                           children: [
                                             TableRow(children: [
-                                              Center(child: Text("المنتج")),
-                                              Center(child: Text("العدد")),
-                                              Center(child: Text("السعر")),
+                                              Center(
+                                                  child: Text(isEnglish
+                                                      ? english[43]
+                                                      : arabic[43])),
+                                              Center(
+                                                  child: Text(isEnglish
+                                                      ? english[44]
+                                                      : arabic[44])),
+                                              Center(
+                                                  child: Text(isEnglish
+                                                      ? english[45]
+                                                      : arabic[45])),
                                             ])
                                           ],
                                         ),
@@ -179,7 +189,9 @@ Widget orderScreen(BuildContext context, String userID) {
                                                                     Center(
                                                                       child:
                                                                           Text(
-                                                                        "إلغاء الطلب",
+                                                                        isEnglish
+                                                                            ? english[46]
+                                                                            : arabic[46],
                                                                         style: TextStyle(
                                                                             fontSize:
                                                                                 20),
@@ -194,7 +206,9 @@ Widget orderScreen(BuildContext context, String userID) {
                                                                           Container(
                                                                         child:
                                                                             Text(
-                                                                          "سوف يتم الغاء طلبك",
+                                                                          isEnglish
+                                                                              ? english[47]
+                                                                              : arabic[47],
                                                                         ),
                                                                       ),
                                                                     ),
@@ -216,7 +230,9 @@ Widget orderScreen(BuildContext context, String userID) {
                                                                           },
                                                                           child:
                                                                               Text(
-                                                                            'تأكيد',
+                                                                            isEnglish
+                                                                                ? english[48]
+                                                                                : arabic[48],
                                                                             style:
                                                                                 TextStyle(color: Colors.purple, fontSize: 18.0),
                                                                           ),
@@ -228,7 +244,9 @@ Widget orderScreen(BuildContext context, String userID) {
                                                                           },
                                                                           child:
                                                                               Text(
-                                                                            'خروج',
+                                                                            isEnglish
+                                                                                ? english[49]
+                                                                                : arabic[49],
                                                                             style:
                                                                                 TextStyle(color: Colors.purple, fontSize: 18.0),
                                                                           ),
@@ -241,10 +259,17 @@ Widget orderScreen(BuildContext context, String userID) {
                                                             ));
                                               } else {
                                                 errorToast(
-                                                    "لا يكمنك إلغاء الطلب");
+                                                  isEnglish
+                                                      ? english[50]
+                                                      : arabic[50],
+                                                );
                                               }
                                             },
-                                            label: Text("الغاء الطلب"),
+                                            label: Text(
+                                              isEnglish
+                                                  ? english[46]
+                                                  : arabic[46],
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -264,12 +289,16 @@ Widget orderScreen(BuildContext context, String userID) {
                                         ..showSnackBar(
                                           new SnackBar(
                                             duration: Duration(seconds: 1),
-                                            content: new Text("تم النسخ"),
+                                            content: new Text(
+                                              isEnglish
+                                                  ? english[51]
+                                                  : arabic[51],
+                                            ),
                                           ),
                                         );
                                     },
                                     child: Text(
-                                      "رقم الطلب: ${ds['orderID']}",
+                                      "${isEnglish ? english[52] : arabic[52]} ${ds['orderID']}",
                                       textDirection: TextDirection.rtl,
                                       style: TextStyle(fontSize: 19),
                                     ),
@@ -323,7 +352,9 @@ Widget orderScreen(BuildContext context, String userID) {
                                                   child: Icon(Icons.store),
                                                 ),
                                                 Text(
-                                                  "أستلمنا طلبك",
+                                                  isEnglish
+                                                      ? english[54]
+                                                      : arabic[54],
                                                   style: TextStyle(
                                                     color: status == "0"
                                                         ? Colors.black
@@ -359,8 +390,12 @@ Widget orderScreen(BuildContext context, String userID) {
                                                 ),
                                                 Text(
                                                   noDelvier
-                                                      ? "جاهز للإستلام"
-                                                      : "جاهز للتوصيل",
+                                                      ? isEnglish
+                                                          ? english[55]
+                                                          : arabic[55]
+                                                      : isEnglish
+                                                          ? english[56]
+                                                          : arabic[56],
                                                   style: TextStyle(
                                                     color: status == "1"
                                                         ? Colors.black
@@ -402,7 +437,9 @@ Widget orderScreen(BuildContext context, String userID) {
                                                             .directions_car),
                                                       ),
                                                       Text(
-                                                        "طلبك فالطريق",
+                                                        isEnglish
+                                                            ? english[57]
+                                                            : arabic[57],
                                                         style: TextStyle(
                                                           color: status == "2"
                                                               ? Colors.black
@@ -437,8 +474,12 @@ Widget orderScreen(BuildContext context, String userID) {
                                                 ),
                                                 Text(
                                                   noDelvier
-                                                      ? "تم التسليم"
-                                                      : "تم التوصيل",
+                                                      ? isEnglish
+                                                          ? english[58]
+                                                          : arabic[58]
+                                                      : isEnglish
+                                                          ? english[59]
+                                                          : arabic[59],
                                                   style: TextStyle(
                                                     color: status == "3"
                                                         ? Colors.black
@@ -461,11 +502,10 @@ Widget orderScreen(BuildContext context, String userID) {
                                         children: [
                                           noDelvier
                                               ? Container(
-                                                padding: EdgeInsets.all(8.0),
-                                                decoration: BoxDecoration(
-                                                  border:Border.all()
-                                                ),
-                                                child: InkWell(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all()),
+                                                  child: InkWell(
                                                     onTap: () {
                                                       MapsLauncher
                                                           .launchCoordinates(
@@ -473,8 +513,13 @@ Widget orderScreen(BuildContext context, String userID) {
                                                         46.665222,
                                                       );
                                                     },
-                                                    child: Text("موقع الإستلام")),
-                                              )
+                                                    child: Text(
+                                                      isEnglish
+                                                          ? english[53]
+                                                          : arabic[53],
+                                                    ),
+                                                  ),
+                                                )
                                               : Container(),
                                           Column(
                                             children: [
@@ -482,7 +527,7 @@ Widget orderScreen(BuildContext context, String userID) {
                                                 alignment:
                                                     Alignment.centerRight,
                                                 child: Text(
-                                                  '${ds['total']} ر.س',
+                                                  '${ds['total']} ${isEnglish ? english[61] : arabic[61]}',
                                                   textDirection:
                                                       TextDirection.rtl,
                                                   style:
@@ -494,12 +539,16 @@ Widget orderScreen(BuildContext context, String userID) {
                                                     Alignment.centerRight,
                                                 child: noDelvier
                                                     ? Text(
-                                                        "السعر شامل الضريبة",
+                                                        isEnglish
+                                                            ? english[40]
+                                                            : arabic[40],
                                                         style: TextStyle(
                                                             fontSize: 9),
                                                       )
                                                     : Text(
-                                                        "السعر شامل الضريبة والتوصيل",
+                                                        isEnglish
+                                                            ? english[60]
+                                                            : arabic[60],
                                                         style: TextStyle(
                                                             fontSize: 9)),
                                               ),
