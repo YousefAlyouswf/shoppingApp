@@ -24,10 +24,8 @@ class _GmapState extends State<Gmap> {
       markerId: markerId,
       position: latLng,
       infoWindow: InfoWindow(
-          title: "الموقع الي بنوصله الطلب", snippet: 'مع تحيات تطبيق تنوتو'),
-      onTap: () {
-     
-      },
+          title: "الموقع الي بنوصله الطلب", snippet: 'رفوف'),
+      onTap: () {},
     );
 
     setState(() {
@@ -43,20 +41,29 @@ class _GmapState extends State<Gmap> {
   }
 
   serveiceRequest() async {
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
+    // _serviceEnabled = await location.serviceEnabled();
+    // if (!_serviceEnabled) {
+    //   _serviceEnabled = await location.requestService();
+    //   if (!_serviceEnabled) {
+    //     // setState(() {
+    //     //   long = 46.674976;
+    //     //   lat = 24.711906;
+    //     // });
+
+    //   }
+    // }
 
     _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-     
+    if (_permissionGranted == PermissionStatus.denied ||
+        _permissionGranted == PermissionStatus.deniedForever) {
       setState(() {
         long = 46.674976;
-        lat =  24.711906;
+        lat = 24.711906;
+      });
+    } else {
+      setState(() {
+        long = 46.674976;
+        lat = 24.711906;
       });
     }
   }
@@ -115,7 +122,10 @@ class _GmapState extends State<Gmap> {
                   onMapCreated: onapCareated,
                   markers: Set<Marker>.of(markers.values),
                   onTap: (latLng) {
-                    infoToast("أضغط على مكان المنزل بشكل مطول");
+                    setState(() {
+                      customerLocation = latLng;
+                    });
+                    _add(latLng);
                   },
                   onLongPress: (latLng) {
                     setState(() {
@@ -161,14 +171,7 @@ class _GmapState extends State<Gmap> {
                   if (customerLocation == null) {
                     errorToast("أختر موقع المنزل من الخريطة");
                   } else {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => Address(
-                    //       customerLocation: customerLocation,
-                    //     ),
-                    //   ),
-                    // );
+                   
                     Navigator.pop(context, customerLocation);
                   }
                 },

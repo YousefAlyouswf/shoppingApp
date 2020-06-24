@@ -150,104 +150,41 @@ Widget addAddress(BuildContext context, Function moveToMapScreen) {
               fontSize: 22,
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                width: 100,
-                height: 100,
-                child: customerLocation == null
-                    ? Container()
-                    : Center(
-                        child: Text("تم تحديد موقع التوصيل بنجاح"),
-                      ),
-              ),
-              InkWell(
-                onTap: moveToMapScreen,
-                child: Container(
-                  padding: EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                      color: Colors.blueGrey,
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  child: Text(
-                    isEnglish ? english[27] : arabic[27],
-                    textDirection: TextDirection.rtl,
-                    style: TextStyle(fontSize: 22, color: Colors.white),
+          Container(
+            height: 200,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                InkWell(
+                  onTap: moveToMapScreen,
+                  child: Container(
+                    padding: EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                        color: Colors.blueGrey,
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: Text(
+                      isEnglish ? english[27] : arabic[27],
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(fontSize: 22, color: Colors.white),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          customerLocation != null
-              ? Container()
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      height: 1,
-                      color: Colors.grey,
-                      width: MediaQuery.of(context).size.width / 3,
-                    ),
-                    Text(
-                      isEnglish ? english[28] : arabic[28],
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(
-                        fontSize: 22,
-                      ),
-                    ),
-                    Container(
-                      height: 1,
-                      color: Colors.grey,
-                      width: MediaQuery.of(context).size.width / 3,
-                    )
-                  ],
+                Container(
+                  child: customerLocation == null
+                      ? Container()
+                      : Center(
+                          child: Text(
+                            "تم تحديد موقع التوصيل بنجاح",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                 ),
-          SizedBox(
-            height: 30,
+              ],
+            ),
           ),
-          customerLocation != null
-              ? Container()
-              : Row(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: MyTextFormField(
-                        editingController: city,
-                        hintText: isEnglish ? english[29] : arabic[29],
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: MyTextFormField(
-                        editingController: ditrict,
-                        hintText: isEnglish ? english[30] : arabic[30],
-                      ),
-                    ),
-                  ],
-                ),
-          customerLocation != null
-              ? Container()
-              : Row(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: MyTextFormField(
-                        editingController: street,
-                        hintText: isEnglish ? english[31] : arabic[31],
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: MyTextFormField(
-                        editingController: house,
-                        hintText: isEnglish ? english[32] : arabic[32],
-                      ),
-                    ),
-                  ],
-                ),
         ],
       ),
     ),

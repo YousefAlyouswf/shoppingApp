@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
+import 'package:shop_app/screens/mainScreen/paymentsScreens/storedCard.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:translator/translator.dart';
@@ -107,49 +108,100 @@ class _PaymentState extends State<Payment> {
       appBar: appBar(),
       drawer: drawer(context, widget.onThemeChanged, goToHome,
           changeLangauge: widget.changeLangauge),
-      body: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width / 3,
-          height: 50,
-          decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.all(Radius.circular(20))),
-          child: InkWell(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          InkWell(
             onTap: () {
-              Firestore.instance.collection('order').add({
-                'driverID': id,
-                'driverName': name,
-                'orderID': uid.substring(0, 13),
-                'date': DateTime.now().toString(),
-                'status': '0',
-                'address': widget.address,
-                'total': widget.totalAfterTax,
-                'lat': widget.lat,
-                'long': widget.long,
-                'name': widget.name,
-                'phone': widget.phone,
-                'priceForSell': widget.price,
-                'priceForBuy': widget.buyPrice,
-                'items': FieldValue.arrayUnion(mapItems),
-                'userID': androidInfo.androidId == null
-                    ? iosDeviceInfo.identifierForVendor
-                    : androidInfo.androidId,
-              }).then((value) {
-                paymentToast(
-                    "تم إستلام طلبك يمكنك متابعه الطلب من قسم الطلبات");
-                DBHelper.deleteAllItem("cart");
-                Navigator.popUntil(context, (route) => route.isFirst);
-                navIndex = 3;
-              });
+              Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => new StoredCard()));
             },
-            child: Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width / 2,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: Center(
                 child: Text(
-              "الدفع كاش",
-              textDirection: TextDirection.rtl,
-              style: TextStyle(fontSize: 22, color: Colors.white),
-            )),
+                  "بطاقه مخزنة",
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(
+                    fontSize: 22,
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
+          Container(
+            width: MediaQuery.of(context).size.width / 2,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: Center(
+              child: Text(
+                "بطاقه جديدة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontSize: 22,
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width / 2,
+              height: 50,
+              decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              child: InkWell(
+                onTap: () {
+                  Firestore.instance.collection('order').add({
+                    'driverID': id,
+                    'driverName': name,
+                    'orderID': uid.substring(0, 13),
+                    'date': DateTime.now().toString(),
+                    'status': '0',
+                    'address': widget.address,
+                    'total': widget.totalAfterTax,
+                    'lat': widget.lat,
+                    'long': widget.long,
+                    'name': widget.name,
+                    'phone': widget.phone,
+                    'priceForSell': widget.price,
+                    'priceForBuy': widget.buyPrice,
+                    'items': FieldValue.arrayUnion(mapItems),
+                    'userID': androidInfo.androidId == null
+                        ? iosDeviceInfo.identifierForVendor
+                        : androidInfo.androidId,
+                  }).then((value) {
+                    paymentToast(
+                        "تم إستلام طلبك يمكنك متابعه الطلب من قسم الطلبات");
+                    DBHelper.deleteAllItem("cart");
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                    navIndex = 3;
+                  });
+                },
+                child: Center(
+                    child: Text(
+                  "الدفع كاش",
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(fontSize: 22, color: Colors.white),
+                )),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -218,12 +270,11 @@ class _PaymentState extends State<Payment> {
       print("Catched");
     }
   }
-  goToHome(){
-       Navigator.popUntil(context, (route) => route.isFirst);
-          navIndex = 0;
-          setState(() {
-            
-          });
+
+  goToHome() {
+    Navigator.popUntil(context, (route) => route.isFirst);
+    navIndex = 0;
+    setState(() {});
   }
 }
 
