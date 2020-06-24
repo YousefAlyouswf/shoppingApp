@@ -47,34 +47,41 @@ class _LunchAppState extends State<LunchApp> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: 300,
-            child: Image.asset(
-              "assets/images/logoBigTrans.png",
-              fit: BoxFit.fill,
-              filterQuality: FilterQuality.high,
+          Shimmer.fromColors(
+            baseColor: Color(0xFFFF834F),
+            highlightColor: Colors.teal,
+            child: Container(
+              width: 300,
+              decoration: BoxDecoration(
+                border: Border.all(width: 10),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(15),
+                ),
+              ),
+              child: Image.asset(
+                "assets/images/logoBigTrans.png",
+                fit: BoxFit.fill,
+                filterQuality: FilterQuality.high,
+              ),
             ),
           ),
-          Shimmer.fromColors(
-            child: Padding(
+         Padding(
               padding: const EdgeInsets.all(32.0),
               child: Text(
                 "RFOOF",
                 style: TextStyle(
                   fontSize: 40,
                   fontFamily: "EN",
+                  color: Color(0xFFFF834F),
                   shadows: <Shadow>[
                     Shadow(
                         blurRadius: 18.0,
-                        color: Colors.black,
+                        color: Colors.teal,
                         offset: Offset.fromDirection(120, 12)),
                   ],
                 ),
               ),
             ),
-            baseColor: Color(0xFFFF834F),
-            highlightColor: Colors.black45,
-          ),
         ],
       ),
     ));

@@ -122,8 +122,8 @@ Drawer drawer(BuildContext context, Function onThemeChanged, Function goToHome,
           accountEmail: Text(""),
           margin: EdgeInsets.all(0),
           decoration: BoxDecoration(
-            color: Colors.orange,
-            borderRadius: BorderRadius.all(Radius.circular(200)),
+          border: Border.all(width: 5),
+            borderRadius: BorderRadius.all(Radius.circular(15)),
             image: DecorationImage(
               image: AssetImage("assets/images/logoBigTrans.png"),
              // fit: BoxFit.fill,

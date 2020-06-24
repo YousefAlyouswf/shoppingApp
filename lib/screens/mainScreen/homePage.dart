@@ -238,27 +238,7 @@ class _HomePageState extends State<HomePage>
     for (var i = 0; i < cart.length; i++) {
       quantity += int.parse(cart[i].quantity);
     }
-    if (!isEnglish) {
-      arabicItem = [];
-      items = [];
-      for (var i = 0; i < cart.length; i++) {
-        arabicItem.add(cart[i].itemName);
-      }
-      setState(() {});
-      items = arabicItem;
-    } else {
-      englishItem = [];
-      items = [];
-      for (var i = 0; i < cart.length; i++) {
-        await translator
-            .translate(cart[i].itemName, from: 'ar', to: 'en')
-            .then((s) {
-          englishItem.add(s);
-        });
-      }
-      setState(() {});
-      items = englishItem;
-    }
+   
 
     if (isDeliver) {
       totalAfterTax = sumPrice * tax / 100 + sumPrice + delivery;

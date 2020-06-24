@@ -9,6 +9,7 @@ import 'package:shop_app/screens/gmap.dart';
 import 'package:shop_app/widgets/langauge.dart';
 import 'package:shop_app/widgets/user/shipping.dart';
 import 'package:shop_app/widgets/widgets.dart';
+import 'package:twilio_flutter/twilio_flutter.dart' as tw;
 
 class Address extends StatefulWidget {
   final String totalAfterTax;
@@ -57,10 +58,15 @@ class _AddressState extends State<Address> {
     }
   }
 
+  tw.TwilioFlutter twilioFlutter;
   @override
   void initState() {
     super.initState();
     fetchAddress();
+    twilioFlutter = tw.TwilioFlutter(
+        accountSid: '',
+        authToken: '',
+        twilioNumber: '+12054966662');
   }
 
   void updateLocation(LatLng location) {
@@ -114,7 +120,8 @@ class _AddressState extends State<Address> {
                       widget.onThemeChanged,
                       widget.changeLangauge,
                       fetchAddress,
-                      toggelToAddAddress),
+                      toggelToAddAddress,
+                      twilioFlutter),
                   SizedBox(
                     height: 20,
                   )

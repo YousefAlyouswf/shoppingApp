@@ -34,7 +34,7 @@ List<String> english = [
   "House Number",
   "Type Full Name",
   "Phone Number 10 Digits",
-  "Correct your Address",
+  "Choose your Address",
   'NEW ARRIVAL',
   "Cart is empty\nGo to products page to add your items",
   "Products",

@@ -8,7 +8,6 @@ import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/paymentsScreens/storedCard.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'dart:math' show cos, sqrt, asin;
-import 'package:translator/translator.dart';
 import 'package:device_info/device_info.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -48,7 +47,6 @@ class _PaymentState extends State<Payment> {
   List<String> arabicItem = [];
   List<String> items = [];
   List<Map<String, dynamic>> mapItems = [];
-  final translator = new GoogleTranslator();
   Future<void> fetchMyCart() async {
     final dataList = await DBHelper.getData('cart');
     setState(() {
@@ -85,6 +83,7 @@ class _PaymentState extends State<Payment> {
   IosDeviceInfo iosDeviceInfo;
   var uuid = Uuid();
   String uid;
+  String phone;
   @override
   void initState() {
     fetchMyCart();
@@ -100,6 +99,14 @@ class _PaymentState extends State<Payment> {
             '', // replace xxx with Auth Token
         twilioNumber: '+12054966662' // replace .... with Twilio Number
         );
+    phone = widget.phone;
+    if (phone.substring(0, 2) == "05") {
+      phone = phone.substring(1);
+
+      phone = "+966$phone";
+    } else {
+      phone = "+1$phone";
+    }
   }
 
   void deviceID() async {
@@ -129,19 +136,10 @@ class _PaymentState extends State<Payment> {
               //     new MaterialPageRoute(
               //         builder: (context) => new StoredCard()));
 
-              String phone = widget.phone;
-              if (phone.substring(0, 2) == "05") {
-                phone = phone.substring(1);
-
-                phone = "+966$phone";
-              
-              } else {
-                phone = "+1$phone";
-              }
               twilioFlutter.sendSMS(
                   toNumber: phone,
                   messageBody:
-                      'رفوف\nلقد تم أستلام طلبك\nرقم طلبك هو ${uid.substring(0, 13)}');
+                      'رفوف\nمرحبا ${widget.name} لقد تم أستلام طلبك\nرقم طلبك هو ${uid.substring(0, 13)}');
             },
             child: Container(
               width: MediaQuery.of(context).size.width / 2,
@@ -215,6 +213,10 @@ class _PaymentState extends State<Payment> {
                     DBHelper.deleteAllItem("cart");
                     Navigator.popUntil(context, (route) => route.isFirst);
                     navIndex = 3;
+                    twilioFlutter.sendSMS(
+                        toNumber: phone,
+                        messageBody:
+                            'رفوف\nمرحبا ${widget.name} لقد تم أستلام طلبك\nرقم طلبك هو ${uid.substring(0, 13)}');
                   });
                 },
                 child: Center(

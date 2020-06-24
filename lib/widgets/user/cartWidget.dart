@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/address.dart';
-import 'package:translator/translator.dart';
 import '../langauge.dart';
 import '../widgets.dart';
 
@@ -13,14 +12,11 @@ double eachPrice = 0;
 double eachBuyPrice = 0;
 int quantity = 0;
 double totalAfterTax = 0;
-List<String> englishItem = [];
-List<String> arabicItem = [];
-List<String> items = [];
+
 bool deleteIcon = false;
 int tax = 0;
 int delivery = 0;
 bool isDeliver = true;
-final translator = new GoogleTranslator();
 
 Widget header(Function showDeleteIcon) {
   return Align(
@@ -42,7 +38,7 @@ Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
-        child: items.length == 0
+        child: cart.length == 0
             ? Center(
                 child: Container(
                     height: 300,
@@ -147,7 +143,7 @@ Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
                                     Column(
                                       children: [
                                         Text(
-                                          items[i],
+                                          cart[i].itemName,
                                           style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w700,
@@ -278,7 +274,7 @@ Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
                               onPressed: () {
                                 deleteCategoryDialog(
                                   context,
-                                  items[i],
+                                  cart[i].itemName,
                                   cart[i].image,
                                   cart[i].id,
                                   fetchMyCart,
@@ -341,7 +337,7 @@ Widget buttons(
 ) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: items.length == 0
+    child: cart.length == 0
         ? Container()
         : Column(
             children: [
