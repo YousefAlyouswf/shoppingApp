@@ -52,6 +52,7 @@ dependencies:
   intl: ^0.16.1
   maps_launcher: ^1.2.0
   shimmer: ^1.1.1
+  twilio_flutter: ^0.0.5
 
 dev_dependencies:
   flutter_test:

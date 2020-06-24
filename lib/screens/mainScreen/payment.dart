@@ -10,6 +10,7 @@ import 'package:shop_app/widgets/widgets.dart';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:translator/translator.dart';
 import 'package:device_info/device_info.dart';
+import 'package:twilio_flutter/twilio_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class Payment extends StatefulWidget {
@@ -91,6 +92,14 @@ class _PaymentState extends State<Payment> {
     deviceID();
     uid = uuid.v1();
     getTheDeriver();
+
+    twilioFlutter = TwilioFlutter(
+        accountSid:
+            'AC4f6c997eeefaf5c2f2c5bd7d8a914837', // replace *** with Account SID
+        authToken:
+            '68c8000055079319b7e33dd1b7b38e1b', // replace xxx with Auth Token
+        twilioNumber: '+12054966662' // replace .... with Twilio Number
+        );
   }
 
   void deviceID() async {
@@ -101,6 +110,8 @@ class _PaymentState extends State<Payment> {
       iosDeviceInfo = await deviceInfo.iosInfo;
     }
   }
+
+  TwilioFlutter twilioFlutter;
 
   @override
   Widget build(BuildContext context) {
@@ -113,10 +124,24 @@ class _PaymentState extends State<Payment> {
         children: [
           InkWell(
             onTap: () {
-              Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => new StoredCard()));
+              // Navigator.push(
+              //     context,
+              //     new MaterialPageRoute(
+              //         builder: (context) => new StoredCard()));
+
+              String phone = widget.phone;
+              if (phone.substring(0, 2) == "05") {
+                phone = phone.substring(1);
+
+                phone = "+966$phone";
+              
+              } else {
+                phone = "+1$phone";
+              }
+              twilioFlutter.sendSMS(
+                  toNumber: phone,
+                  messageBody:
+                      'رفوف\nلقد تم أستلام طلبك\nرقم طلبك هو ${uid.substring(0, 13)}');
             },
             child: Container(
               width: MediaQuery.of(context).size.width / 2,
