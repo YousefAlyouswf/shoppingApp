@@ -95,9 +95,9 @@ class _PaymentState extends State<Payment> {
 
     twilioFlutter = TwilioFlutter(
         accountSid:
-            'AC4f6c997eeefaf5c2f2c5bd7d8a914837', // replace *** with Account SID
+            '', // replace *** with Account SID
         authToken:
-            '68c8000055079319b7e33dd1b7b38e1b', // replace xxx with Auth Token
+            '', // replace xxx with Auth Token
         twilioNumber: '+12054966662' // replace .... with Twilio Number
         );
   }
