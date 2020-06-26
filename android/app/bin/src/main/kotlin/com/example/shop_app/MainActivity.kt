@@ -56,8 +56,8 @@ class MainActivity: FlutterActivity() {
            //Billing Address
         intent.putExtra(PaymentParams.ADDRESS_BILLING,  hashMap["address"])
         intent.putExtra(PaymentParams.CITY_BILLING, hashMap["city"])
-        intent.putExtra(PaymentParams.STATE_BILLING, hashMap["state"])
-        intent.putExtra(PaymentParams.COUNTRY_BILLING, "SAU")
+        intent.putExtra(PaymentParams.STATE_BILLING, hashMap["city"])
+        intent.putExtra(PaymentParams.COUNTRY_BILLING, "SAR")
         intent.putExtra(
                 PaymentParams.POSTAL_CODE_BILLING,
                 hashMap["zipCode"]
@@ -66,7 +66,7 @@ class MainActivity: FlutterActivity() {
           //Shipping Address
         intent.putExtra(PaymentParams.ADDRESS_SHIPPING,  hashMap["address"])
         intent.putExtra(PaymentParams.CITY_SHIPPING, hashMap["city"])
-        intent.putExtra(PaymentParams.STATE_SHIPPING, hashMap["state"])
+        intent.putExtra(PaymentParams.STATE_SHIPPING, hashMap["city"])
         intent.putExtra(PaymentParams.COUNTRY_SHIPPING, "SAR")
         intent.putExtra(
             PaymentParams.POSTAL_CODE_SHIPPING,

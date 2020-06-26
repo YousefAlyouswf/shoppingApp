@@ -120,12 +120,15 @@ Drawer drawer(BuildContext context, Function onThemeChanged, Function goToHome,
         UserAccountsDrawerHeader(
           accountName: Text(""),
           accountEmail: Text(""),
-          margin: EdgeInsets.all(0),
+          margin: EdgeInsets.all(0.0),
+          
           decoration: BoxDecoration(
-          border: Border.all(width: 5),
-            borderRadius: BorderRadius.all(Radius.circular(15)),
+          border: Border.all(width: 2),
+            borderRadius: BorderRadius.all(Radius.circular(0)),
+            
             image: DecorationImage(
-              image: AssetImage("assets/images/logoBigTrans.png"),
+              image: AssetImage("assets/images/logoBigTrans.png",),
+              
              // fit: BoxFit.fill,
             ),
           ),

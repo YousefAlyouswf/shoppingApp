@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "77877136843",
+    "firebase_url": "https://shop-app-cd923.firebaseio.com",
+    "project_id": "shop-app-cd923",
+    "storage_bucket": "shop-app-cd923.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77877136843:android:afa959567a270ecefe7a4e",
+        "android_client_info": {
+          "package_name": "yousef.alyouswf.shop_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "77877136843-0lq7gvdeqcdkctl4nugae8polqcr7rdl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "yousef.alyouswf.shop_app",
+            "certificate_hash": "3ebba0be7d2911ae4be982e8fc8d830c56a2afb6"
+          }
+        },
+        {
+          "client_id": "77877136843-eeohpqpb3nu374htlsuutgn7cb2uk5m4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6XPe3KD6P-TvlcLpHSLbhuxLw5vveZ_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "77877136843-eeohpqpb3nu374htlsuutgn7cb2uk5m4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

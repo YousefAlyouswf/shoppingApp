@@ -1,10 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
+import 'package:shop_app/screens/mainScreen/paymentsScreens/payment-service.dart';
 import 'package:shop_app/screens/mainScreen/paymentsScreens/storedCard.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'dart:math' show cos, sqrt, asin;
@@ -42,10 +46,90 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
+  int _batteryLevel;
+  Future<void> _getBatteryLevel() async {
+    const platform = MethodChannel('samples.flutter.dev/battery');
+
+    try {
+      final batteryLevel = await platform.invokeMethod('getBatteryLevel');
+      setState(() {
+        _batteryLevel = batteryLevel;
+      });
+    } on PlatformException catch (e) {
+      _batteryLevel = null;
+      print(e);
+    }
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  Future<void> _getPayTabs() async {
+    const platform = MethodChannel('samples.flutter.dev/battery');
+    if (zipCode == null) {
+      zipCode = '00966';
+    }
+    try {
+      Map<String, String> map = {
+        'amount': widget.totalAfterTax,
+        'phone': widget.phone,
+        'orderID': orderID,
+        'items': items,
+        'city': city,
+        'state': state,
+        'zipCode': zipCode,
+        'address': addressLine,
+      };
+      final Map result = await platform.invokeMethod('getPayTabs', map);
+      print("----------->>>${result['pt_result']}");
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+            elevation: 0,
+            content: Text(
+              result['pt_result'] == "Your transaction is succesfully completed"
+                  ? "تمت عملية الدفع بنجاح"
+                  : "فشلت عملية الدفع",
+              style: TextStyle(color: Colors.white),
+            ),
+            duration: Duration(seconds: 3),
+            backgroundColor: Colors.green),
+      );
+    } on PlatformException catch (e) {
+      debugPrint("trasiction data Failed ---> $e");
+    }
+  }
+
+  String orderID;
+  String items;
+  String city;
+  String zipCode;
+  String addressLine;
+  String state;
+  @override
+  void initState() {
+    super.initState();
+
+    findAddress();
+    Uuid id = Uuid();
+    String uid = id.v1();
+    orderID = uid.substring(0, 13);
+    fetchMyCart();
+    items = '';
+  }
+
+  findAddress() async {
+    final coordinates =
+        new Coordinates(double.parse(widget.lat), double.parse(widget.long));
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    city = first.locality;
+    zipCode = first.postalCode;
+    addressLine = first.addressLine;
+    state = first.adminArea;
+    print(city);
+    print(state);
+  }
+
   List<ItemShow> cart = [];
-  List<String> englishItem = [];
-  List<String> arabicItem = [];
-  List<String> items = [];
   List<Map<String, dynamic>> mapItems = [];
   Future<void> fetchMyCart() async {
     final dataList = await DBHelper.getData('cart');
@@ -77,158 +161,25 @@ class _PaymentState extends State<Payment> {
         'productID': cart[i].productID,
       });
     }
-  }
-
-  AndroidDeviceInfo androidInfo;
-  IosDeviceInfo iosDeviceInfo;
-  var uuid = Uuid();
-  String uid;
-  String phone;
-  @override
-  void initState() {
-    fetchMyCart();
-    super.initState();
-    deviceID();
-    uid = uuid.v1();
-    getTheDeriver();
-
-    twilioFlutter = TwilioFlutter(
-        accountSid:
-            '', // replace *** with Account SID
-        authToken:
-            '', // replace xxx with Auth Token
-        twilioNumber: '+12054966662' // replace .... with Twilio Number
-        );
-    phone = widget.phone;
-    if (phone.substring(0, 2) == "05") {
-      phone = phone.substring(1);
-
-      phone = "+966$phone";
-    } else {
-      phone = "+1$phone";
+    for (var i = 0; i < mapItems.length; i++) {
+      setState(() {
+        items += "${mapItems[i]['name']}, ";
+      });
     }
+    _getPayTabs();
   }
-
-  void deviceID() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (Platform.isAndroid) {
-      androidInfo = await deviceInfo.androidInfo;
-    } else if (Platform.isIOS) {
-      iosDeviceInfo = await deviceInfo.iosInfo;
-    }
-  }
-
-  TwilioFlutter twilioFlutter;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: appBar(),
       drawer: drawer(context, widget.onThemeChanged, goToHome,
           changeLangauge: widget.changeLangauge),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          InkWell(
-            onTap: () {
-              // Navigator.push(
-              //     context,
-              //     new MaterialPageRoute(
-              //         builder: (context) => new StoredCard()));
-
-              twilioFlutter.sendSMS(
-                  toNumber: phone,
-                  messageBody:
-                      'رفوف\nمرحبا ${widget.name} لقد تم أستلام طلبك\nرقم طلبك هو ${uid.substring(0, 13)}');
-            },
-            child: Container(
-              width: MediaQuery.of(context).size.width / 2,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  "بطاقه مخزنة",
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(
-                    fontSize: 22,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width / 2,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                "بطاقه جديدة",
-                textDirection: TextDirection.rtl,
-                style: TextStyle(
-                  fontSize: 22,
-                ),
-              ),
-            ),
-          ),
-          Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width / 2,
-              height: 50,
-              decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              child: InkWell(
-                onTap: () {
-                  Firestore.instance.collection('order').add({
-                    'driverID': id,
-                    'driverName': name,
-                    'orderID': uid.substring(0, 13),
-                    'date': DateTime.now().toString(),
-                    'status': '0',
-                    'address': widget.address,
-                    'total': widget.totalAfterTax,
-                    'lat': widget.lat,
-                    'long': widget.long,
-                    'name': widget.name,
-                    'phone': widget.phone,
-                    'priceForSell': widget.price,
-                    'priceForBuy': widget.buyPrice,
-                    'items': FieldValue.arrayUnion(mapItems),
-                    'userID': androidInfo.androidId == null
-                        ? iosDeviceInfo.identifierForVendor
-                        : androidInfo.androidId,
-                  }).then((value) {
-                    paymentToast(
-                        "تم إستلام طلبك يمكنك متابعه الطلب من قسم الطلبات");
-                    DBHelper.deleteAllItem("cart");
-                    Navigator.popUntil(context, (route) => route.isFirst);
-                    navIndex = 3;
-                    twilioFlutter.sendSMS(
-                        toNumber: phone,
-                        messageBody:
-                            'رفوف\nمرحبا ${widget.name} لقد تم أستلام طلبك\nرقم طلبك هو ${uid.substring(0, 13)}');
-                  });
-                },
-                child: Center(
-                    child: Text(
-                  "الدفع كاش",
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(fontSize: 22, color: Colors.white),
-                )),
-              ),
-            ),
-          ),
-        ],
+      body: Container(
+        child: Center(
+          child: Text("Baterry Levels: $_batteryLevel"),
+        ),
       ),
     );
   }
@@ -323,3 +274,279 @@ class DriverModel {
 
   DriverModel({this.name, this.id, this.distance});
 }
+
+/*
+Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => new StoredCard()));
+
+            
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width / 2,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  "بطاقه مخزنة",
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(
+                    fontSize: 22,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width / 2,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ),
+            child: Center(
+              child: Text(
+                "بطاقه جديدة",
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontSize: 22,
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width / 2,
+              height: 50,
+              decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              child: InkWell(
+                onTap: () {
+                  Firestore.instance.collection('order').add({
+                    'driverID': id,
+                    'driverName': name,
+                    'orderID': orderID,
+                    'date': DateTime.now().toString(),
+                    'status': '0',
+                    'address': widget.address,
+                    'total': widget.totalAfterTax,
+                    'lat': widget.lat,
+                    'long': widget.long,
+                    'name': widget.name,
+                    'phone': widget.phone,
+                    'priceForSell': widget.price,
+                    'priceForBuy': widget.buyPrice,
+                    'items': FieldValue.arrayUnion(mapItems),
+                    'userID': androidInfo.androidId == null
+                        ? iosDeviceInfo.identifierForVendor
+                        : androidInfo.androidId,
+                  }).then((value) {
+                    paymentToast(
+                        "تم إستلام طلبك يمكنك متابعه الطلب من قسم الطلبات");
+                    DBHelper.deleteAllItem("cart");
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                    navIndex = 3;
+                    twilioFlutter.sendSMS(
+                        toNumber: phone,
+                        messageBody:
+                            'رفوف\nمرحبا ${widget.name} لقد تم أستلام طلبك\nرقم طلبك هو ${uid.substring(0, 13)}');
+                  });
+                },
+                child: Center(
+                    child: Text(
+                  "الدفع كاش",
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(fontSize: 22, color: Colors.white),
+                )),
+              ),
+            ),
+          ),
+        ],
+      ),*/
+
+// All Funcation
+/* 
+  List<ItemShow> cart = [];
+  List<String> englishItem = [];
+  List<String> arabicItem = [];
+  List<String> items = [];
+  List<Map<String, dynamic>> mapItems = [];
+  Future<void> fetchMyCart() async {
+    final dataList = await DBHelper.getData('cart');
+    setState(() {
+      cart = dataList
+          .map(
+            (item) => ItemShow(
+              id: item['id'],
+              itemName: item['name'],
+              itemPrice: item['price'],
+              image: item['image'],
+              itemDes: item['des'],
+              quantity: item['q'],
+              buyPrice: item['buyPrice'],
+              sizeChose: item['size'],
+              productID: item['productID'],
+            ),
+          )
+          .toList();
+    });
+
+    for (var i = 0; i < cart.length; i++) {
+      mapItems.add({
+        'name': cart[i].itemName,
+        'quantity': cart[i].quantity,
+        'buyPrice': cart[i].buyPrice,
+        'sellPrice': cart[i].itemPrice,
+        'size': cart[i].sizeChose,
+        'productID': cart[i].productID,
+      });
+    }
+  }
+
+  AndroidDeviceInfo androidInfo;
+  IosDeviceInfo iosDeviceInfo;
+  var uuid = Uuid();
+  String uid;
+  String phone;
+  @override
+  void initState() {
+    fetchMyCart();
+    super.initState();
+    deviceID();
+    uid = uuid.v1();
+    getTheDeriver();
+
+    twilioFlutter = TwilioFlutter(
+        accountSid: '', // replace *** with Account SID
+        authToken: '', // replace xxx with Auth Token
+        twilioNumber: '+12054966662' // replace .... with Twilio Number
+        );
+    phone = widget.phone;
+    if (phone.substring(0, 2) == "05") {
+      phone = phone.substring(1);
+
+      phone = "+966$phone";
+    } else {
+      phone = "+1$phone";
+    }
+
+    amount = double.parse(widget.totalAfterTax);
+    amount = amount * 100;
+    amountInt = amount.floor();
+    StripeService.init();
+  }
+
+  double amount;
+  int amountInt;
+  void deviceID() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      androidInfo = await deviceInfo.androidInfo;
+    } else if (Platform.isIOS) {
+      iosDeviceInfo = await deviceInfo.iosInfo;
+    }
+  }
+
+  TwilioFlutter twilioFlutter;
+  onItemPress(BuildContext context, int i) async {
+    switch (i) {
+      case 0:
+        var respose = await StripeService.payWithNewCard(
+          amount: amountInt.toString(),
+          currency: 'SAR',
+        );
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            elevation: 0,
+            content: Text(
+              respose.message,
+              style: TextStyle(color: Colors.white),
+            ),
+            duration: Duration(seconds: 3),
+            backgroundColor: respose.success == true
+                ? Colors.green
+                : respose.message == 'e' ? Colors.transparent : Colors.red,
+          ),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          new MaterialPageRoute(
+            builder: (context) => new StoredCard(
+              amount: amountInt.toString(),
+            ),
+          ),
+        );
+        break;
+      case 2:
+        break;
+    }
+  }
+*/
+
+//all Widgets
+
+/*
+ Container(
+          padding: EdgeInsets.all(20.0),
+          child: ListView.separated(
+              itemBuilder: (context, i) {
+                Icon icon;
+                Text text;
+
+                switch (i) {
+                  case 0:
+                    icon = Icon(
+                      Icons.add_circle,
+                      color: Theme.of(context).primaryColor,
+                    );
+                    text = Text("بطاقة جديدة");
+                    break;
+                  case 1:
+                    icon = Icon(
+                      Icons.credit_card,
+                      color: Theme.of(context).primaryColor,
+                    );
+                    text = Text("أستخدام بطاقتك السابقه");
+                    break;
+                  case 2:
+                    icon = Icon(
+                      Icons.attach_money,
+                      color: Theme.of(context).primaryColor,
+                    );
+                    text = Text("دفع كاش");
+                    break;
+                }
+                return Container(
+                  child: ListTile(
+                    onTap: () {
+                      onItemPress(context, i);
+                    },
+                    leading: icon,
+                    title: text,
+                  ),
+                );
+              },
+              separatorBuilder: (context, i) {
+                return Divider(
+                  color: Theme.of(context).primaryColor,
+                );
+              },
+              itemCount: 3),
+        )
+*/
