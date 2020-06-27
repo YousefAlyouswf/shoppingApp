@@ -14,7 +14,9 @@ import 'package:shop_app/widgets/widgets.dart';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:device_info/device_info.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
 
 class Payment extends StatefulWidget {
   final Function onThemeChanged;
@@ -46,21 +48,6 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
-  int _batteryLevel;
-  Future<void> _getBatteryLevel() async {
-    const platform = MethodChannel('samples.flutter.dev/battery');
-
-    try {
-      final batteryLevel = await platform.invokeMethod('getBatteryLevel');
-      setState(() {
-        _batteryLevel = batteryLevel;
-      });
-    } on PlatformException catch (e) {
-      _batteryLevel = null;
-      print(e);
-    }
-  }
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Future<void> _getPayTabs() async {
     const platform = MethodChannel('samples.flutter.dev/battery');
@@ -99,6 +86,8 @@ class _PaymentState extends State<Payment> {
 
   String orderID;
   String items;
+  String quantity;
+  String unitPrice;
   String city;
   String zipCode;
   String addressLine;
@@ -113,6 +102,44 @@ class _PaymentState extends State<Payment> {
     orderID = uid.substring(0, 13);
     fetchMyCart();
     items = '';
+    quantity = '';
+    unitPrice = '';
+  }
+
+  static const ROOT = "http://geniusloop.co/payment/index.php";
+  Future<String> paymantPage() async {
+    try {
+      Map<String, dynamic> map = {
+        'amount': widget.totalAfterTax,
+        'items': items,
+        'quantity': quantity,
+        'unitPrice': unitPrice,
+        'city': city,
+        'state': state,
+        'zipCode': zipCode,
+        'address': addressLine,
+        'phone': widget.phone,
+        'orderID': orderID,
+        'firstName': widget.name,
+      };
+      print(map);
+      final response = await http.post(ROOT, body: map);
+      if (200 == response.statusCode) {
+        if (await canLaunch(response.body)) {
+          await launch(response.body, forceWebView: false);
+        } else {
+          throw 'Could not launch ${response.body}';
+        }
+        print("-------------->>>>> ${response.body}");
+
+        return response.body;
+      } else {
+        print("--------------------->>>> ${response.statusCode}");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
   }
 
   findAddress() async {
@@ -125,8 +152,6 @@ class _PaymentState extends State<Payment> {
     zipCode = first.postalCode;
     addressLine = first.addressLine;
     state = first.adminArea;
-    print(city);
-    print(state);
   }
 
   List<ItemShow> cart = [];
@@ -163,10 +188,21 @@ class _PaymentState extends State<Payment> {
     }
     for (var i = 0; i < mapItems.length; i++) {
       setState(() {
-        items += "${mapItems[i]['name']}, ";
+        items += "${mapItems[i]['name']}";
+        quantity += "${mapItems[i]['quantity']}";
+        unitPrice += "${mapItems[i]['sellPrice']}";
+        if (mapItems.last['name'] != mapItems[i]['name']) {
+          items += ' || ';
+          quantity += ' || ';
+          unitPrice += ' || ';
+        }
       });
     }
-    _getPayTabs();
+    if (Platform.isAndroid) {
+      _getPayTabs();
+    } else {
+      paymantPage();
+    }
   }
 
   @override
@@ -178,7 +214,7 @@ class _PaymentState extends State<Payment> {
           changeLangauge: widget.changeLangauge),
       body: Container(
         child: Center(
-          child: Text("Baterry Levels: $_batteryLevel"),
+          child: Text("Baterry Levels: "),
         ),
       ),
     );

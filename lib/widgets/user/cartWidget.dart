@@ -451,10 +451,13 @@ deleteCategoryDialog(
                     height: 100,
                     width: 100,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
-                        ),
-                        image: DecorationImage(image: NetworkImage(image))),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15),
+                      ),
+                      image: DecorationImage(
+                        image: NetworkImage(image),
+                      ),
+                    ),
                   ),
                   FlatButton.icon(
                     icon: Icon(

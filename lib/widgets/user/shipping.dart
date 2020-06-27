@@ -364,7 +364,6 @@ Widget buttonsBoth(
         );
 }
 
-TwilioFlutter({String accountSid, String authToken, String twilioNumber}) {}
 
 Widget noDeliver(
   BuildContext context,
