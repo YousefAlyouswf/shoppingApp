@@ -95,17 +95,18 @@ class _PaymentState extends State<Payment> {
   @override
   void initState() {
     super.initState();
+    fetchMyCart();
 
-    findAddress();
     Uuid id = Uuid();
     String uid = id.v1();
     orderID = uid.substring(0, 13);
-    fetchMyCart();
+
     items = '';
     quantity = '';
     unitPrice = '';
   }
 
+  String a = '';
   static const ROOT = "http://geniusloop.co/payment/index.php";
   Future<String> paymantPage() async {
     try {
@@ -122,6 +123,9 @@ class _PaymentState extends State<Payment> {
         'orderID': orderID,
         'firstName': widget.name,
       };
+      setState(() {
+        a = map.toString();
+      });
       print(map);
       final response = await http.post(ROOT, body: map);
       if (200 == response.statusCode) {
@@ -152,6 +156,13 @@ class _PaymentState extends State<Payment> {
     zipCode = first.postalCode;
     addressLine = first.addressLine;
     state = first.adminArea;
+    setState(() {});
+
+    if (Platform.isAndroid) {
+      _getPayTabs();
+    } else {
+      paymantPage();
+    }
   }
 
   List<ItemShow> cart = [];
@@ -198,11 +209,7 @@ class _PaymentState extends State<Payment> {
         }
       });
     }
-    if (Platform.isAndroid) {
-      _getPayTabs();
-    } else {
-      paymantPage();
-    }
+    findAddress();
   }
 
   @override
@@ -210,11 +217,9 @@ class _PaymentState extends State<Payment> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: appBar(),
-      drawer: drawer(context, widget.onThemeChanged, goToHome,
-          changeLangauge: widget.changeLangauge),
       body: Container(
         child: Center(
-          child: Text("Baterry Levels: "),
+          child: Text(" $a"),
         ),
       ),
     );

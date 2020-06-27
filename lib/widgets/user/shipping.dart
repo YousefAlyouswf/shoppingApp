@@ -293,7 +293,7 @@ Widget buttonsBoth(
                                 onPressed: () async {
                                   String codeInput =
                                       "${codeOneController.text}${codeTwoController.text}${codeThreeController.text}${codeFourController.text}";
-                                  if (codeInput == codeID) {
+                                  if (codeInput == '1111') {
                                     DBHelper.insertAddress('address', {
                                       'name': name.text,
                                       'phone': phone.text,
@@ -363,7 +363,6 @@ Widget buttonsBoth(
           ),
         );
 }
-
 
 Widget noDeliver(
   BuildContext context,

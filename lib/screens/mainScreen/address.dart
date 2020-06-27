@@ -64,9 +64,7 @@ class _AddressState extends State<Address> {
     super.initState();
     fetchAddress();
     twilioFlutter = tw.TwilioFlutter(
-        accountSid: '',
-        authToken: '',
-        twilioNumber: '+12054966662');
+        accountSid: '', authToken: '', twilioNumber: '+12054966662');
   }
 
   void updateLocation(LatLng location) {
@@ -87,8 +85,6 @@ class _AddressState extends State<Address> {
         appBar: new AppBar(
           title: new Text(isEnglish ? english[18] : arabic[18]),
         ),
-        drawer: drawer(context, widget.onThemeChanged, goToHome,
-            changeLangauge: widget.changeLangauge),
         body: widget.isDeliver
             ? Column(
                 children: [
