@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/lunchApp.dart';
-import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';
 

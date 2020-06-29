@@ -11,7 +11,6 @@ class Gmap extends StatefulWidget {
 class _GmapState extends State<Gmap> {
   Location location;
   LocationData _locationData;
-  bool _serviceEnabled;
   PermissionStatus _permissionGranted;
   Map<MarkerId, Marker> markers =
       <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS
@@ -23,8 +22,7 @@ class _GmapState extends State<Gmap> {
     final Marker marker = Marker(
       markerId: markerId,
       position: latLng,
-      infoWindow: InfoWindow(
-          title: "الموقع الي بنوصله الطلب", snippet: 'رفوف'),
+      infoWindow: InfoWindow(title: "الموقع الي بنوصله الطلب", snippet: 'رفوف'),
       onTap: () {},
     );
 
@@ -171,7 +169,6 @@ class _GmapState extends State<Gmap> {
                   if (customerLocation == null) {
                     errorToast("أختر موقع المنزل من الخريطة");
                   } else {
-                   
                     Navigator.pop(context, customerLocation);
                   }
                 },

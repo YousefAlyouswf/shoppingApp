@@ -13,71 +13,55 @@ List<String> catgoryArabic = [];
 List<String> catgoryEnglish = [];
 
 List<bool> selected = List.generate(20, (i) => false);
-selectedSection(String name) {}
-Widget headerCatgory() {
+
+Widget headerCatgory(Function switchBetweenCategory) {
   catgoryEnglish = [];
-  return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 48.0, left: 8.0, right: 8.0),
-      child: Container(
-        decoration: BoxDecoration(),
-        height: 50,
-        width: double.infinity,
-        child: StreamBuilder(
-          stream: Firestore.instance.collection('categories').snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return Text("Loading");
-            for (var i = 0;
-                i < snapshot.data.documents[0].data['collection'].length;
-                i++) {}
+  return Padding(
+    padding: const EdgeInsets.only(top: 48.0, left: 8.0, right: 8.0),
+    child: Container(
+      decoration: BoxDecoration(),
+      height: 50,
+      width: double.infinity,
+      child: StreamBuilder(
+        stream: Firestore.instance.collection('categories').snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Text("Loading");
 
-            return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: snapshot.data.documents[0].data['collection'].length,
-                itemBuilder: (context, i) {
-                  String name =
-                      snapshot.data.documents[0].data['collection'][i]['name'];
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data.documents[0].data['collection'].length,
+            itemBuilder: (context, i) {
+              String name =
+                  snapshot.data.documents[0].data['collection'][i]['name'];
 
-                  return Container(
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                      border: Border.all(
-                        color: selected[i]
-                            ? Color(0xFFFF834F)
-                            : Colors.transparent,
-                      ),
+              return Container(
+                width: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  border: Border.all(
+                    color: selected[i] ? Color(0xFFFF834F) : Colors.transparent,
+                  ),
+                ),
+                child: InkWell(
+                  onTap: () {
+                    switchBetweenCategory(name, i);
+                  },
+                  child: Center(
+                    child: Text(
+                      name,
+                      style: TextStyle(
+                          color: selected[i] ? Colors.teal : Colors.grey[600],
+                          fontFamily: "MainFont"),
                     ),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {});
-                        categoryNameSelected = name;
-
-                        for (var j = 0; j < 20; j++) {
-                          if (j == i) {
-                            selected[j] = true;
-                          } else {
-                            selected[j] = false;
-                          }
-                        }
-                      },
-                      child: Center(
-                        child: Text(
-                          name,
-                          style: TextStyle(
-                              color:
-                                  selected[i] ? Colors.teal : Colors.grey[600],
-                              fontFamily: "MainFont"),
-                        ),
-                      ),
-                    ),
-                  );
-                });
-          },
-        ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
-    );
-  });
+    ),
+  );
 }
 
 Widget seprater() {
@@ -209,7 +193,7 @@ Widget subCollection(
                               child: Column(
                                 children: <Widget>[
                                   new Container(
-                                    height: 190,
+                                    height: 170,
                                     decoration: new BoxDecoration(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(8)),
@@ -388,8 +372,10 @@ addToMyCartFromCategory(
                       margin: EdgeInsets.all(8.0),
                       padding: EdgeInsets.symmetric(vertical: 8.0),
                       decoration: BoxDecoration(
-                          border: Border.all(),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
                       child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
@@ -401,11 +387,12 @@ addToMyCartFromCategory(
                           return Container(
                             margin: EdgeInsets.symmetric(horizontal: 8.0),
                             decoration: BoxDecoration(
-                              color: sizeChoseCatgetory == size[i]
-                                  ? Colors.teal
-                                  : Colors.white,
-                              border: Border.all(),
-                            ),
+                                color: sizeChoseCatgetory == size[i]
+                                    ? Colors.grey
+                                    : Colors.white,
+                                border: Border.all(),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
                             child: InkWell(
                               onTap: () {
                                 setState(() {
@@ -416,7 +403,14 @@ addToMyCartFromCategory(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16.0),
                                 child: Center(
-                                  child: Text(size[i]),
+                                  child: Text(
+                                    size[i],
+                                    style: TextStyle(
+                                      color: sizeChoseCatgetory != size[i]
+                                          ? Colors.grey
+                                          : Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -434,8 +428,7 @@ addToMyCartFromCategory(
                         },
                         child: Text(
                           'إلغاء',
-                          style:
-                              TextStyle(color: Colors.purple, fontSize: 18.0),
+                          style: TextStyle(fontSize: 18.0),
                         ),
                       ),
                       FlatButton(
@@ -494,8 +487,7 @@ addToMyCartFromCategory(
                         },
                         child: Text(
                           'أضف',
-                          style:
-                              TextStyle(color: Colors.purple, fontSize: 18.0),
+                          style: TextStyle(fontSize: 18.0),
                         ),
                       ),
                     ],

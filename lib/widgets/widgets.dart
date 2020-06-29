@@ -1,146 +1,127 @@
-import 'package:carousel_pro/carousel_pro.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/homePage.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/appInfo.dart';
-import 'package:shop_app/models/drawerbody.dart';
-import 'package:shop_app/screens/myAccount.dart';
+
 import 'package:shop_app/widgets/langauge.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();
-
+int cartCount = 0;
 List<AppInfoModel> appInfo = [];
 AppBar appBar(
-    {String text = "رفوف",
+    {Function goToCartScreen,
+    String text = "رفوف",
     bool search = false,
     bool cart = false,
     BuildContext context}) {
   return AppBar(
     elevation: 0,
-    title: Text(
-      isEnglish ? "RFOOF" : "رفوف",
-      style: TextStyle(fontFamily: isEnglish ? 'EN' : "MainFont"),
+    iconTheme: new IconThemeData(
+      color: Colors.black54,
     ),
-    backgroundColor: Color(0xFFFF834F),
+    title: Text(
+      isEnglish ? "RFOOF" : "رفــــوف",
+      style: TextStyle(
+          fontFamily: isEnglish ? 'EN' : "MainFont", color: Colors.black),
+    ),
+    backgroundColor: Colors.grey[200],
     centerTitle: true,
     actions: <Widget>[
-      search
-          ? IconButton(
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Stack(
+          children: [
+            IconButton(
               icon: Icon(
-                Icons.search,
-                color: Colors.white,
+                Icons.shopping_basket,
+                color: Colors.black54,
+                size: 35,
               ),
-              onPressed: () {},
-            )
-          : Container(),
-      cart
-          ? IconButton(
-              icon: Icon(
-                Icons.shopping_cart,
-                color: Colors.white,
-              ),
-              onPressed: () {},
-            )
-          : Container()
+              onPressed: goToCartScreen,
+            ),
+            cartCount == 0
+                ? Container()
+                : Align(
+                    alignment: Alignment(0, 0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          height: 25,
+                          width: 25,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFFF834F),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(50),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          "$cartCount",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  )
+          ],
+        ),
+      )
     ],
   );
 }
 
 bool isEnglish = false;
-Drawer drawer(BuildContext context, Function onThemeChanged, Function goToHome,
-    {Function changeLangauge, Function fetchMyCart}) {
-  List<Widget> drawerBody;
-  List<DrawerBodyModel> drawerModel = [
-    DrawerBodyModel(
-      isEnglish ? english[0] : arabic[0],
-      Icon(
-        Icons.home,
-        color: Color(0xFFFF834F),
-      ),
-    ),
-    DrawerBodyModel(
-      isEnglish ? english[2] : arabic[2],
-      Icon(
-        Icons.shopping_cart,
-        color: Color(0xFFFF834F),
-      ),
-    ),
-    DrawerBodyModel(
-      isEnglish ? english[3] : arabic[3],
-      Icon(
-        Icons.shopping_basket,
-        color: Color(0xFFFF834F),
-      ),
-    ),
-    DrawerBodyModel(
-      isEnglish ? english[4] : arabic[4],
-      Icon(
-        Icons.dashboard,
-        color: Color(0xFFFF834F),
-      ),
-    ),
-    DrawerBodyModel(
-      isEnglish ? english[1] : arabic[1],
-      Icon(
-        Icons.person,
-        color: Color(0xFFFF834F),
-      ),
-    ),
-  ];
-  drawerBody = new List();
-  for (var i = 0; i < drawerModel.length; i++) {
-    drawerBody.add(ListTile(
-      title: Text(drawerModel[i].text),
-      leading: drawerModel[i].icon,
-      onTap: () {
-        String basketWord = isEnglish ? english[2] : arabic[2];
-        String homeWord = isEnglish ? english[0] : arabic[0];
-        String myAccountWord = isEnglish ? english[1] : arabic[1];
-        String myOrderWord = isEnglish ? english[3] : arabic[3];
-        if (drawerModel[i].text == basketWord) {
-        } else if (drawerModel[i].text == homeWord) {
-          goToHome();
-          Navigator.pop(context);
-        } else if (drawerModel[i].text == myAccountWord) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MyAccount()),
-          );
-        } else if (drawerModel[i].text == myOrderWord) {}
-      },
-    ));
-  }
-
+Drawer drawer(
+  BuildContext context,
+  Function onThemeChanged,
+  Function goToHome,
+  Function goToCategoryPage, {
+  Function changeLangauge,
+  Function fetchMyCart,
+}) {
   return Drawer(
     child: Column(
       children: [
-        UserAccountsDrawerHeader(
-          accountName: Text(""),
-          accountEmail: Text(""),
-          margin: EdgeInsets.all(0.0),
-          decoration: BoxDecoration(
-            border: Border.all(width: 2),
-            borderRadius: BorderRadius.all(Radius.circular(0)),
-            image: DecorationImage(
-              image: AssetImage(
-                "assets/images/logoBigTrans.png",
-              ),
-
-              // fit: BoxFit.fill,
-            ),
-          ),
-        ),
         Expanded(
           child: Container(
-            child: ListView.builder(
-              itemCount: drawerBody.length,
-              itemBuilder: (context, i) {
-                return drawerBody[i];
-              },
-            ),
+            child: StreamBuilder(
+                stream: Firestore.instance.collection('categories').snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Text('');
+                  } else {
+                    return ListView.builder(
+                      itemCount:
+                          snapshot.data.documents[0].data['collection'].length,
+                      itemBuilder: (context, i) {
+                        String categoryName = snapshot
+                            .data.documents[0].data['collection'][i]['name'];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            color: Colors.grey[200],
+                            child: ListTile(
+                              onTap: () {
+                                goToCategoryPage(categoryName, i);
+                                Navigator.pop(context);
+                              },
+                              title: Text(
+                                categoryName,
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }),
           ),
         ),
         Divider(
@@ -241,41 +222,6 @@ Drawer drawer(BuildContext context, Function onThemeChanged, Function goToHome,
   );
 }
 
-//Image in the Header
-
-List<NetworkImage> networkImage;
-List<NetworkImage> networkImage2;
-NetworkImage imageNetwork;
-Widget imageCarousel(double height, Function imageOnTap) {
-  return networkImage2.length == 0
-      ? Container(
-          height: 100,
-          width: 100,
-          child: Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.blue,
-            ),
-          ),
-        )
-      : StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-          return Container(
-            height: height,
-            child: Carousel(
-              boxFit: BoxFit.cover,
-              images: networkImage2,
-              animationCurve: Curves.easeInExpo,
-              animationDuration: Duration(seconds: 1),
-              autoplay: true,
-              autoplayDuration: Duration(seconds: 5),
-              onImageTap: imageOnTap,
-              indicatorBgPadding: 10,
-            ),
-          );
-        });
-}
-
-//End Image in the Header
-
 Widget continaer(String text, Color color) {
   return Padding(
     padding:
@@ -353,6 +299,7 @@ List<Destination> allDestinations = <Destination>[
 int navIndex = 0;
 Widget bottomNavgation(Function bottomNavIndex) {
   return BottomNavigationBar(
+    backgroundColor: Colors.grey[200],
     currentIndex: navIndex,
     onTap: bottomNavIndex,
     type: BottomNavigationBarType.fixed,

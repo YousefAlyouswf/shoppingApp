@@ -9,9 +9,9 @@ import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/widgets/langauge.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
 import 'package:shop_app/widgets/user/categoroes.dart';
+import 'package:shop_app/widgets/user/homeWidget.dart';
 import 'package:shop_app/widgets/user/myOrderWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';
-import 'package:shop_app/widgets/widgets2.dart';
 import 'package:shop_app/screens/showItem.dart';
 
 class HomePage extends StatefulWidget {
@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage>
     getAppInfoFireBase();
     getAllimagesFromFireStore();
     controller.addListener(_scrollListener);
+    fetchToMyCart();
   }
 
   double showFloatingBtn = 0.0;
@@ -52,38 +53,44 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double imageShowSize = height / 3;
-
-    // var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    fetchToMyCart();
     return Scaffold(
-      appBar: navIndex == 0 ? appBar() : null,
-      drawer: drawer(context, widget.onThemeChanged, goToHome,
-          changeLangauge: widget.changeLangauge),
+      appBar: navIndex == 0 ? appBar(goToCartScreen: goToCartScreen) : null,
+      drawer: drawer(
+        context,
+        widget.onThemeChanged,
+        goToHome,
+        goToCategoryPage,
+        changeLangauge: widget.changeLangauge,
+      ),
       body: navIndex == 0
-          ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  isEnglish ? english[36] : arabic[36],
-                  style: TextStyle(
-                      fontSize: 35,
-                      fontFamily: isEnglish ? "summer" : "MainFont"),
-                ),
-                networkImage2 == null
-                    ? Center(
-                        child: Container(
-                          height: 100,
-                          width: 100,
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : imageCarousel(imageShowSize, imageOnTap),
-              ],
+          ? SingleChildScrollView(
+              child: Column(
+                children: [
+                  discountShow(context),
+                  Text(
+                    isEnglish ? english[36] : arabic[36],
+                    style: TextStyle(
+                        fontSize: 35,
+                        fontFamily: isEnglish ? "summer" : "MainFont"),
+                  ),
+                  networkImage2 == null
+                      ? Center(
+                          child: Container(
+                            height: 100,
+                            width: 100,
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      : imageCarousel(imageShowSize, imageOnTap),
+                ],
+              ),
             )
           : navIndex == 1
               ? Container(
                   child: Column(
                     children: [
-                      headerCatgory(),
+                      headerCatgory(switchBetweenCategory),
                       seprater(),
                       subCollection(
                         context,
@@ -132,6 +139,27 @@ class _HomePageState extends State<HomePage>
     });
   }
 
+  ////------------- Main Sccreen
+  goToCategoryPage(String categoryName, int i) {
+    setState(() {
+      navIndex = 1;
+      categoryNameSelected = categoryName;
+      for (var j = 0; j < 20; j++) {
+        if (j == i) {
+          selected[j] = true;
+        } else {
+          selected[j] = false;
+        }
+      }
+    });
+  }
+
+  goToCartScreen() {
+    setState(() {
+      navIndex = 2;
+    });
+  }
+
   ///----------->>> CART Start
 
   double sumPrice = 0;
@@ -156,6 +184,7 @@ class _HomePageState extends State<HomePage>
             ),
           )
           .toList();
+      cartCount = cart.length;
     });
 
     for (var i = 0; i < cart.length; i++) {
@@ -224,6 +253,7 @@ class _HomePageState extends State<HomePage>
       ),
     );
     setState(() {});
+    cartCount = cart.length;
   }
 
   List<ItemShow> itemShow = new List();
@@ -285,5 +315,21 @@ class _HomePageState extends State<HomePage>
     Navigator.popUntil(context, (route) => route.isFirst);
     navIndex = 0;
     setState(() {});
+  }
+
+  ///----------------> Category
+  ///
+
+  switchBetweenCategory(String name, int i) {
+    setState(() {
+      categoryNameSelected = name;
+      for (var j = 0; j < 20; j++) {
+        if (j == i) {
+          selected[j] = true;
+        } else {
+          selected[j] = false;
+        }
+      }
+    });
   }
 }

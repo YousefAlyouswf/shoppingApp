@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,8 +10,6 @@ import 'package:shop_app/models/itemShow.dart';
 
 import 'package:shop_app/widgets/widgets.dart';
 import 'dart:math' show cos, sqrt, asin;
-import 'package:device_info/device_info.dart';
-import 'package:twilio_flutter/twilio_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
@@ -77,7 +74,9 @@ class _PaymentState extends State<Payment> {
             duration: Duration(seconds: 3),
             backgroundColor: Colors.green),
       );
-    } on PlatformException catch (e) {}
+    } on PlatformException catch (e) {
+      print(e);
+    }
   }
 
   String orderID;
