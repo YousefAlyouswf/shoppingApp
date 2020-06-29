@@ -33,7 +33,6 @@ class _HomePageState extends State<HomePage>
     getAppInfoFireBase();
     getAllimagesFromFireStore();
     controller.addListener(_scrollListener);
-         translateCategory();
   }
 
   double showFloatingBtn = 0.0;
@@ -80,68 +79,40 @@ class _HomePageState extends State<HomePage>
                     : imageCarousel(imageShowSize, imageOnTap),
               ],
             )
-          : navIndex == 2
+          : navIndex == 1
               ? Container(
                   child: Column(
                     children: [
-                      header(showDeleteIcon),
-                      invoiceTable(fetchToMyCart, emptyCartGoToCategory),
-                      //  delvierText(chooseDeliver),
-                      buttons(context, widget.onThemeChanged,
-                          widget.changeLangauge, changeDelvierValue),
+                      headerCatgory(),
+                      seprater(),
+                      subCollection(
+                        context,
+                        setFirstElemntInSubCollection,
+                        fetchToMyCart,
+                      ),
                     ],
                   ),
                 )
-              : navIndex == 3
-                  ? orderScreen(context, userID)
-                  : navIndex == 1
-                      ? Container(
-                          child: Column(
-                            children: [
-                              headerCatgory(selectedSection,
-                                  categorySelectedColor, translateCategory),
-                              seprater(),
-                              subCollection(
-                                context,
-                                setFirstElemntInSubCollection,
-                                fetchToMyCart,
-                              ),
-                            ],
-                          ),
-                        )
-                      : Container(),
+              : navIndex == 2
+                  ? Container(
+                      child: Column(
+                        children: [
+                          header(),
+                          invoiceTable(fetchToMyCart, emptyCartGoToCategory),
+                          //  delvierText(chooseDeliver),
+                          buttons(context, widget.onThemeChanged,
+                              widget.changeLangauge),
+                        ],
+                      ),
+                    )
+                  : navIndex == 3 ? orderScreen(context, userID) : Container(),
       bottomNavigationBar: bottomNavgation(bottomNavIndex),
     );
   }
 
 /////////////////////////----------------------END
-  selectCategory(String name) {
-    setState(() {});
-    catgoryNameCustomer = name;
-  }
 
-  //--------------> Sections Category New Screen
-  selectedSection(String name) {
-    setState(() {});
-    categoryNameSelected = name;
-  }
-
-  categorySelectedColor(int j) {
-    setState(() {
-      for (var i = 0; i < 20; i++) {
-        if (j == i) {
-          selected[i] = true;
-        } else {
-          selected[i] = false;
-        }
-      }
-    });
-  }
-
-  translateCategory() async {
- 
-  
-  }
+  //--------------> Sections Category
 
   setFirstElemntInSubCollection() async {
     await Firestore.instance
@@ -154,48 +125,11 @@ class _HomePageState extends State<HomePage>
         });
       });
     });
-    categorySelectedColor(0);
   }
 
   ///----------->>> CART Start
-  showDeleteIcon() {
-    setState(() {
-      deleteIcon = !deleteIcon;
-    });
-  }
-
-  chooseDeliver(value) {
-    setState(() {
-      isDeliver = value;
-    });
-    fetchMyCart();
-  }
-
-  changeDelvierValue() {
-    setState(() {
-      isDeliver = !isDeliver;
-    });
-    fetchToMyCart();
-  }
 
   double sumPrice = 0;
-  Future<void> fetchMyCart() async {
-    cartToCheck = new List();
-    final dataList = await DBHelper.getData('cart');
-    setState(() {
-      cartToCheck = dataList
-          .map(
-            (item) => ItemShow(
-              id: item['id'],
-              itemName: item['name'],
-              itemPrice: item['price'],
-              itemDes: item['des'],
-              quantity: item['q'],
-            ),
-          )
-          .toList();
-    });
-  }
 
   Future<void> fetchToMyCart() async {
     sumPrice = 0;
@@ -238,7 +172,6 @@ class _HomePageState extends State<HomePage>
     for (var i = 0; i < cart.length; i++) {
       quantity += int.parse(cart[i].quantity);
     }
-   
 
     if (isDeliver) {
       totalAfterTax = sumPrice * tax / 100 + sumPrice + delivery;

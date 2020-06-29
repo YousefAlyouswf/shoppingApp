@@ -18,7 +18,7 @@ int tax = 0;
 int delivery = 0;
 bool isDeliver = true;
 
-Widget header(Function showDeleteIcon) {
+Widget header() {
   return Align(
     alignment: Alignment.centerRight,
     child: Padding(
@@ -333,7 +333,6 @@ Widget buttons(
   BuildContext context,
   Function onThemeChanged,
   Function changeLangauge,
-  Function changeDelvierValue,
 ) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),

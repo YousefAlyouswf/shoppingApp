@@ -121,15 +121,15 @@ Drawer drawer(BuildContext context, Function onThemeChanged, Function goToHome,
           accountName: Text(""),
           accountEmail: Text(""),
           margin: EdgeInsets.all(0.0),
-          
           decoration: BoxDecoration(
-          border: Border.all(width: 2),
+            border: Border.all(width: 2),
             borderRadius: BorderRadius.all(Radius.circular(0)),
-            
             image: DecorationImage(
-              image: AssetImage("assets/images/logoBigTrans.png",),
-              
-             // fit: BoxFit.fill,
+              image: AssetImage(
+                "assets/images/logoBigTrans.png",
+              ),
+
+              // fit: BoxFit.fill,
             ),
           ),
         ),
@@ -257,19 +257,21 @@ Widget imageCarousel(double height, Function imageOnTap) {
             ),
           ),
         )
-      : Container(
-          height: height,
-          child: Carousel(
-            boxFit: BoxFit.cover,
-            images: networkImage2,
-            animationCurve: Curves.easeInExpo,
-            animationDuration: Duration(seconds: 1),
-            autoplay: true,
-            autoplayDuration: Duration(seconds: 5),
-            onImageTap: imageOnTap,
-            indicatorBgPadding: 10,
-          ),
-        );
+      : StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+          return Container(
+            height: height,
+            child: Carousel(
+              boxFit: BoxFit.cover,
+              images: networkImage2,
+              animationCurve: Curves.easeInExpo,
+              animationDuration: Duration(seconds: 1),
+              autoplay: true,
+              autoplayDuration: Duration(seconds: 5),
+              onImageTap: imageOnTap,
+              indicatorBgPadding: 10,
+            ),
+          );
+        });
 }
 
 //End Image in the Header

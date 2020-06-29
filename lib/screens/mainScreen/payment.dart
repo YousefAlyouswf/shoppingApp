@@ -8,8 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
-import 'package:shop_app/screens/mainScreen/paymentsScreens/payment-service.dart';
-import 'package:shop_app/screens/mainScreen/paymentsScreens/storedCard.dart';
+
 import 'package:shop_app/widgets/widgets.dart';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:device_info/device_info.dart';
@@ -66,7 +65,6 @@ class _PaymentState extends State<Payment> {
         'address': addressLine,
       };
       final Map result = await platform.invokeMethod('getPayTabs', map);
-      print("----------->>>${result['pt_result']}");
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
             elevation: 0,
@@ -79,9 +77,7 @@ class _PaymentState extends State<Payment> {
             duration: Duration(seconds: 3),
             backgroundColor: Colors.green),
       );
-    } on PlatformException catch (e) {
-      debugPrint("trasiction data Failed ---> $e");
-    }
+    } on PlatformException catch (e) {}
   }
 
   String orderID;
@@ -126,7 +122,6 @@ class _PaymentState extends State<Payment> {
       setState(() {
         a = map.toString();
       });
-      print(map);
       final response = await http.post(ROOT, body: map);
       if (200 == response.statusCode) {
         if (await canLaunch(response.body)) {
@@ -134,15 +129,10 @@ class _PaymentState extends State<Payment> {
         } else {
           throw 'Could not launch ${response.body}';
         }
-        print("-------------->>>>> ${response.body}");
 
         return response.body;
-      } else {
-        print("--------------------->>>> ${response.statusCode}");
-      }
-    } catch (e) {
-      print(e);
-    }
+      } else {}
+    } catch (e) {}
     return null;
   }
 
@@ -285,9 +275,7 @@ class _PaymentState extends State<Payment> {
         }
         setState(() {});
       });
-    } catch (e) {
-      print("Catched");
-    }
+    } catch (e) {}
   }
 
   goToHome() {

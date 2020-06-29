@@ -24,13 +24,10 @@ Widget listViewHorznintal(Function selectCategory, var controller) {
             listImages.add(ListHirezontalImage(
               name: asyncSnapshot.data.documents[0].data['collection'][i]
                   ['name'],
-              
             ));
           }
 
-          return Container(
-            
-          );
+          return Container();
         } else if (asyncSnapshot.hasError) {
           return Text('There was an error...');
         } else {
@@ -298,7 +295,6 @@ Widget subCatgoryCustomer(Function imageOnTapCustomer, Function fetchMyCart) {
                                   name: listImages[index].name,
                                   des: listImages[index].description,
                                   price: listImages[index].price,
-                                  fetchToMyCart: fetchMyCart,
                                   imageID: listImages[index].imageID,
                                   buyPrice: listImages[index].buyPrice,
                                   size: listImages[index].size,
