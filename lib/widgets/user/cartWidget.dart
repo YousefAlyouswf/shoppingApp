@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
@@ -291,44 +292,7 @@ Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
   );
 }
 
-// Widget delvierText(Function chooseDeliver) {
-//   return Padding(
-//     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-//     child: Row(
-//       mainAxisAlignment: MainAxisAlignment.end,
-//       children: [
-//         Container(
-//           child: Text(
-//             "بدون توصيل",
-//             textDirection: TextDirection.rtl,
-//             style: TextStyle(
-//                 fontWeight: isDeliver ? FontWeight.normal : FontWeight.w800),
-//           ),
-//         ),
-//         Container(
-//           height: 10,
-//           child: Switch(
-//             value: isDeliver,
-//             onChanged: chooseDeliver,
-//             activeTrackColor: Colors.green[500],
-//             activeColor: Colors.green[100],
-//             inactiveTrackColor: Colors.grey[500],
-//             inactiveThumbColor: Colors.grey[100],
-//           ),
-//         ),
-//         Container(
-//           child: Text(
-//             "سعر التوصيل $delivery",
-//             textDirection: TextDirection.rtl,
-//             style: TextStyle(
-//                 fontWeight: !isDeliver ? FontWeight.normal : FontWeight.w800),
-//           ),
-//         ),
-//       ],
-//     ),
-//   );
-// }
-
+TextEditingController discountController = TextEditingController();
 Widget buttons(
   BuildContext context,
   Function onThemeChanged,
@@ -340,74 +304,137 @@ Widget buttons(
         ? Container()
         : Column(
             children: [
+              Center(
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  decoration: BoxDecoration(
+                      color: Color(0xFFFF834F),
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  child: FlatButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Address(
+                              totalAfterTax: totalAfterTax.toString(),
+                              onThemeChanged: onThemeChanged,
+                              changeLangauge: changeLangauge,
+                              buyPrice: sumBuyPrice.toString(),
+                              price: sumPrice.toString(),
+                              isDeliver: isDeliver,
+                            ),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.payment,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        isEnglish
+                            ? "$totalAfterTax ${english[16]}"
+                            : "$totalAfterTax ${arabic[16]}",
+                        textDirection: TextDirection.rtl,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontFamily: "MainFont"),
+                      )),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Center(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      decoration: BoxDecoration(
-                          color: Color(0xFFFF834F),
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      child: FlatButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Address(
-                                  totalAfterTax: totalAfterTax.toString(),
-                                  onThemeChanged: onThemeChanged,
-                                  changeLangauge: changeLangauge,
-                                  buyPrice: sumBuyPrice.toString(),
-                                  price: sumPrice.toString(),
-                                  isDeliver: isDeliver,
-                                ),
-                              ),
-                            );
-                          },
-                          icon: Icon(
-                            Icons.payment,
-                            color: Colors.white,
-                          ),
-                          label: Text(
-                            isEnglish
-                                ? "$totalAfterTax ${english[16]}"
-                                : "$totalAfterTax ${arabic[16]}",
-                            textDirection: TextDirection.rtl,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontFamily: "MainFont"),
-                          )),
+                  Container(
+                    alignment: isEnglish
+                        ? Alignment.bottomLeft
+                        : Alignment.bottomRight,
+                    child: Text(
+                      isEnglish
+                          ? "${english[40]} $tax%"
+                          : "${arabic[40]} $tax%",
+                      textDirection: TextDirection.rtl,
                     ),
                   ),
-                  // InkWell(
-                  //   onTap: changeDelvierValue,
-                  //   child: Container(
-                  //     padding: EdgeInsets.all(8.0),
-                  //     decoration: BoxDecoration(
-                  //         border: Border.all(
-                  //           color: !isDeliver
-                  //               ? Colors.grey[400]
-                  //               : Colors.teal[600],
-                  //         ),
-                  //         color: !isDeliver ? Colors.grey[300] : Colors.teal,
-                  //         borderRadius: BorderRadius.all(Radius.circular(50))),
-                  //     child: Text(
-                  //       !isDeliver ? "بدون توصيل" : "مع التوصيل",
-                  //       style: TextStyle(
-                  //           color: isDeliver ? Colors.white : Colors.black,
-                  //           fontFamily: "MainFont"),
-                  //     ),
-                  //   ),
-                  // ),
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => Dialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          child: Container(
+                            height: 150.0,
+                            width: 300.0,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: TextField(
+                                    controller: discountController,
+                                    textDirection: TextDirection.rtl,
+                                    decoration: InputDecoration(
+                                      hintText: "أدخل كود الخصم",
+                                    ),
+                                  ),
+                                ),
+                                StatefulBuilder(builder: (BuildContext context,
+                                    StateSetter setState) {
+                                  return FlatButton(
+                                    onPressed: () async {
+                                      bool isCorrect = false;
+                                      print(discountController.text);
+                                      await Firestore.instance
+                                          .collection('discount')
+                                          .getDocuments()
+                                          .then((v) {
+                                        v.documents.forEach((e) {
+                                          if (e['code'] ==
+                                              discountController.text) {
+                                            isCorrect = true;
+                                            double x =
+                                                double.parse(e['discount']);
+                                            totalAfterTax =
+                                                (x * totalAfterTax / 100 -
+                                                        totalAfterTax) *
+                                                    -1;
+                                          }
+                                        });
+                                      });
+                                      if (isCorrect) {
+                                        infoToast("تم تفعيل الخصم");
+                                      } else {
+                                        errorToast("الكود غير صحيح");
+                                      }
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      'تفعيل',
+                                      style: TextStyle(
+                                          color: Color(0xFFFF834F),
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      color: Colors.grey[300],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("كوبون خصم"),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              Container(
-                  width: double.infinity,
-                  alignment:
-                      isEnglish ? Alignment.bottomLeft : Alignment.bottomRight,
-                  child: Text(isEnglish ? english[40] : arabic[40]))
             ],
           ),
   );

@@ -98,10 +98,15 @@ class _HomePageState extends State<HomePage>
                       child: Column(
                         children: [
                           header(),
-                          invoiceTable(fetchToMyCart, emptyCartGoToCategory),
-                          //  delvierText(chooseDeliver),
-                          buttons(context, widget.onThemeChanged,
-                              widget.changeLangauge),
+                          invoiceTable(
+                            fetchToMyCart,
+                            emptyCartGoToCategory,
+                          ),
+                          buttons(
+                            context,
+                            widget.onThemeChanged,
+                            widget.changeLangauge,
+                          ),
                         ],
                       ),
                     )
