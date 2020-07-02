@@ -297,6 +297,7 @@ Widget buttons(
   BuildContext context,
   Function onThemeChanged,
   Function changeLangauge,
+  Function applyDiscount,
 ) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -380,45 +381,16 @@ Widget buttons(
                                     ),
                                   ),
                                 ),
-                                StatefulBuilder(builder: (BuildContext context,
-                                    StateSetter setState) {
-                                  return FlatButton(
-                                    onPressed: () async {
-                                      bool isCorrect = false;
-                                      print(discountController.text);
-                                      await Firestore.instance
-                                          .collection('discount')
-                                          .getDocuments()
-                                          .then((v) {
-                                        v.documents.forEach((e) {
-                                          if (e['code'] ==
-                                              discountController.text) {
-                                            isCorrect = true;
-                                            double x =
-                                                double.parse(e['discount']);
-                                            totalAfterTax =
-                                                (x * totalAfterTax / 100 -
-                                                        totalAfterTax) *
-                                                    -1;
-                                          }
-                                        });
-                                      });
-                                      if (isCorrect) {
-                                        infoToast("تم تفعيل الخصم");
-                                      } else {
-                                        errorToast("الكود غير صحيح");
-                                      }
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      'تفعيل',
-                                      style: TextStyle(
-                                          color: Color(0xFFFF834F),
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  );
-                                }),
+                                FlatButton(
+                                  onPressed: applyDiscount,
+                                  child: Text(
+                                    'تفعيل',
+                                    style: TextStyle(
+                                        color: Color(0xFFFF834F),
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ],
                             ),
                           ),

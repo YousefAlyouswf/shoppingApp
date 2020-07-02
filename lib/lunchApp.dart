@@ -65,23 +65,23 @@ class _LunchAppState extends State<LunchApp> {
               ),
             ),
           ),
-         Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Text(
-                "RFOOF",
-                style: TextStyle(
-                  fontSize: 40,
-                  fontFamily: "EN",
-                  color: Color(0xFFFF834F),
-                  shadows: <Shadow>[
-                    Shadow(
-                        blurRadius: 18.0,
-                        color: Colors.teal,
-                        offset: Offset.fromDirection(120, 12)),
-                  ],
-                ),
+          Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Text(
+              "RFOOF",
+              style: TextStyle(
+                fontSize: 40,
+                fontFamily: "EN",
+                color: Color(0xFFFF834F),
+                shadows: <Shadow>[
+                  Shadow(
+                      blurRadius: 18.0,
+                      color: Colors.teal,
+                      offset: Offset.fromDirection(120, 12)),
+                ],
               ),
             ),
+          ),
         ],
       ),
     ));

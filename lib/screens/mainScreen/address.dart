@@ -64,7 +64,10 @@ class _AddressState extends State<Address> {
     super.initState();
     fetchAddress();
     twilioFlutter = tw.TwilioFlutter(
-        accountSid: '', authToken: '', twilioNumber: '+12054966662');
+      accountSid: 'AC4f6c997eeefaf5c2f2c5bd7d8a914837',
+      authToken: 'd2dc920a8ef46ccca1be173b3fee92e5',
+      twilioNumber: '+12054966662',
+    );
   }
 
   void updateLocation(LatLng location) {
@@ -109,15 +112,16 @@ class _AddressState extends State<Address> {
                     ),
                   ),
                   buttonsBoth(
-                      context,
-                      widget.totalAfterTax,
-                      widget.price,
-                      widget.buyPrice,
-                      widget.onThemeChanged,
-                      widget.changeLangauge,
-                      fetchAddress,
-                      toggelToAddAddress,
-                      twilioFlutter),
+                    context,
+                    widget.totalAfterTax,
+                    widget.price,
+                    widget.buyPrice,
+                    widget.onThemeChanged,
+                    widget.changeLangauge,
+                    fetchAddress,
+                    toggelToAddAddress,
+                    formatPhoneNumber,
+                  ),
                   SizedBox(
                     height: 20,
                   )
@@ -145,6 +149,24 @@ class _AddressState extends State<Address> {
     Navigator.popUntil(context, (route) => route.isFirst);
     navIndex = 0;
     setState(() {});
+  }
+
+  formatPhoneNumber() {
+    String phoneSMS = '';
+    setState(() {
+      if (phone.text.substring(0, 2) == "05") {
+        phoneSMS = phone.text.substring(1);
+
+        phoneSMS = "+966$phoneSMS";
+      } else {
+        phoneSMS = "+1${phone.text}";
+      }
+    });
+
+    print("Controller ----> ${phone.text}");
+    print('PhoneSms ------>> $phoneSMS');
+    twilioFlutter.sendSMS(
+        toNumber: phoneSMS, messageBody: 'رفوف\nالكود هو: $codeID');
   }
 }
 

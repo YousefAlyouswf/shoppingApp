@@ -196,16 +196,19 @@ TextEditingController codeOneController = TextEditingController();
 TextEditingController codeTwoController = TextEditingController();
 TextEditingController codeThreeController = TextEditingController();
 TextEditingController codeFourController = TextEditingController();
+
+String codeID;
 Widget buttonsBoth(
-    BuildContext context,
-    String totalAfterTax,
-    String price,
-    String buyPrice,
-    Function onThemeChanged,
-    Function changeLangauge,
-    Function fetchAddress,
-    Function toggelToAddAddress,
-    twilioFlutter) {
+  BuildContext context,
+  String totalAfterTax,
+  String price,
+  String buyPrice,
+  Function onThemeChanged,
+  Function changeLangauge,
+  Function fetchAddress,
+  Function toggelToAddAddress,
+  Function formatPhoneNumber,
+) {
   return preAddress
       ? InkWell(
           onTap: toggelToAddAddress,
@@ -238,7 +241,7 @@ Widget buttonsBoth(
                 codeThreeController.clear();
                 codeFourController.clear();
                 Uuid uid = Uuid();
-                String codeID = uid.v1();
+                codeID = uid.v1();
                 List<String> list = codeID.split('');
 
                 int four = 0;
@@ -251,18 +254,9 @@ Widget buttonsBoth(
                     }
                   }
                 }
-                String phoneSMS;
-                if (phone.text.substring(0, 2) == "05") {
-                  phoneSMS = phone.text.substring(1);
-
-                  phoneSMS = "+966$phoneSMS";
-                } else {
-                  phoneSMS = "+1$phoneSMS";
-                }
+                formatPhoneNumber();
                 print("--------------->>>$codeID");
-                // twilioFlutter.sendSMS(
-                //     toNumber: "phoneSMS",
-                //     messageBody: 'رفوف\nالكود هو: $codeID');
+
                 showDialog(
                   context: context,
                   builder: (BuildContext context) => StatefulBuilder(
@@ -293,7 +287,7 @@ Widget buttonsBoth(
                                 onPressed: () async {
                                   String codeInput =
                                       "${codeOneController.text}${codeTwoController.text}${codeThreeController.text}${codeFourController.text}";
-                                  if (codeInput == '1111') {
+                                  if (codeInput == codeID) {
                                     DBHelper.insertAddress('address', {
                                       'name': name.text,
                                       'phone': phone.text,

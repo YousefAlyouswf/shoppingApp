@@ -4,6 +4,7 @@ import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/lunchApp.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(MyApp());
@@ -63,22 +64,41 @@ class _MyAppState extends State<MyApp> {
     setState(() {});
   }
 
+  Locale locale = Locale('ar', '');
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.teal,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          //   scaffoldBackgroundColor: isDark ? Colors.grey[800] : Colors.white,
-          brightness: brightness,
-        ),
-        home: LunchApp(
-            onThemeChanged: onThemeChanged, changeLangauge: changeLangauge)
-
-        //  HomePage(
-        //     onThemeChanged: onThemeChanged, changeLangauge: changeLangauge),
-        );
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.teal,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        //   scaffoldBackgroundColor: isDark ? Colors.grey[800] : Colors.white,
+        brightness: brightness,
+      ),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en', ''),
+        Locale('ar', ''),
+      ],
+      localeResolutionCallback: (currentLocale, supportedLocale) {
+        if (currentLocale != null) {
+          for (Locale locale in supportedLocale) {
+            if (currentLocale.languageCode == locale.languageCode) {
+              return currentLocale;
+            }
+          }
+        }
+        return supportedLocale.first;
+      },
+      home: LunchApp(
+        onThemeChanged: onThemeChanged,
+        changeLangauge: changeLangauge,
+      ),
+    );
   }
 }

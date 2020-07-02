@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double imageShowSize = height / 3;
-    fetchToMyCart();
+
     return Scaffold(
       appBar: navIndex == 0 ? appBar(goToCartScreen: goToCartScreen) : null,
       drawer: drawer(
@@ -113,6 +113,7 @@ class _HomePageState extends State<HomePage>
                             context,
                             widget.onThemeChanged,
                             widget.changeLangauge,
+                            applyDiscount,
                           ),
                         ],
                       ),
@@ -232,6 +233,29 @@ class _HomePageState extends State<HomePage>
   emptyCartGoToCategory() {
     navIndex = 1;
     setState(() {});
+  }
+
+  applyDiscount() async {
+    bool isCorrect = false;
+    print("Before--->>>>$totalAfterTax");
+    await Firestore.instance.collection('discount').getDocuments().then((v) {
+      v.documents.forEach((e) {
+        if (e['code'] == discountController.text) {
+          isCorrect = true;
+          double x = double.parse(e['discount']);
+          setState(() {
+            totalAfterTax = (x * totalAfterTax / 100 - totalAfterTax) * -1;
+          });
+        }
+      });
+    });
+    if (isCorrect) {
+      infoToast("تم تفعيل الخصم");
+    } else {
+      errorToast("الكود غير صحيح");
+    }
+    print("After--->>>>$totalAfterTax");
+    Navigator.pop(context);
   }
 
 ///////////----------------->>> CART End
