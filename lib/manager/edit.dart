@@ -9,6 +9,7 @@ import 'package:shop_app/screens/mainScreen/address.dart';
 
 class EditItem extends StatefulWidget {
   final String name;
+  final String nameEn;
   final String image;
   final String price;
   final String des;
@@ -19,14 +20,26 @@ class EditItem extends StatefulWidget {
   final String totalQuantity;
   final List<SizeListModel> size;
 
-  const EditItem(this.name, this.image, this.price, this.des, this.imageID,
-      this.show, this.category, this.buyPrice, this.size, this.totalQuantity);
+  const EditItem(
+    this.name,
+    this.nameEn,
+    this.image,
+    this.price,
+    this.des,
+    this.imageID,
+    this.show,
+    this.category,
+    this.buyPrice,
+    this.size,
+    this.totalQuantity,
+  );
   @override
   _EditItemState createState() => _EditItemState();
 }
 
 class _EditItemState extends State<EditItem> {
   TextEditingController name = TextEditingController();
+  TextEditingController nameEn = TextEditingController();
   TextEditingController price = TextEditingController();
   TextEditingController des = TextEditingController();
   TextEditingController buyPrice = TextEditingController();
@@ -35,6 +48,7 @@ class _EditItemState extends State<EditItem> {
   void initState() {
     super.initState();
     name.text = widget.name;
+    nameEn.text = widget.nameEn;
     price.text = widget.price;
     des.text = widget.des;
     buyPrice.text = widget.buyPrice;
@@ -111,7 +125,6 @@ class _EditItemState extends State<EditItem> {
                           height: 150,
                           width: 150,
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
                             image: DecorationImage(
                                 image: imageStoredItems == null
                                     ? NetworkImage(widget.image)
@@ -133,8 +146,27 @@ class _EditItemState extends State<EditItem> {
                         Container(
                           width: MediaQuery.of(context).size.width / 2,
                           child: MyTextFormField(
+                            hintText: "أسم المنتج انقلش",
+                            editingController: nameEn,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: MyTextFormField(
                             hintText: "سعر البيع",
                             editingController: price,
+                            isNumber: true,
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: MyTextFormField(
+                            hintText: "سعر الشراء",
+                            editingController: buyPrice,
                             isNumber: true,
                           ),
                         ),
@@ -145,14 +177,6 @@ class _EditItemState extends State<EditItem> {
                       child: MyTextFormField(
                         hintText: "الكمية",
                         editingController: totalQuantity,
-                        isNumber: true,
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: MyTextFormField(
-                        hintText: "سعر الشراء",
-                        editingController: buyPrice,
                         isNumber: true,
                       ),
                     ),
@@ -276,6 +300,7 @@ class _EditItemState extends State<EditItem> {
                     'image': widget.image,
                     'imageID': widget.imageID,
                     'name': widget.name,
+                    'name_en': widget.nameEn,
                     'price': widget.price,
                     'show': widget.show,
                     'size': sizingMap,
@@ -287,6 +312,7 @@ class _EditItemState extends State<EditItem> {
                     'image': url == null ? widget.image : url,
                     'imageID': widget.imageID,
                     'name': name.text,
+                    'name_en': nameEn.text,
                     'price': price.text,
                     'show': widget.show,
                     'size':
@@ -307,6 +333,7 @@ class _EditItemState extends State<EditItem> {
                     'image': widget.image,
                     'imageID': widget.imageID,
                     'name': widget.name,
+                    'name_en': widget.nameEn,
                     'price': widget.price,
                     'show': widget.show,
                     'size': {},
@@ -318,6 +345,7 @@ class _EditItemState extends State<EditItem> {
                     'image': url == null ? widget.image : url,
                     'imageID': widget.imageID,
                     'name': name.text,
+                    'name_en': nameEn.text,
                     'price': price.text,
                     'show': widget.show,
                     'size': {},

@@ -213,6 +213,8 @@ class _MainPageState extends State<MainPage>
     itemDis.clear();
     itemBuyPrice.clear();
     totalQuantity.clear();
+    nameEn.clear();
+    categoryNameEn.clear();
 
     checkedSize = false;
     imageStoredCategory = null;
@@ -411,74 +413,73 @@ class _MainPageState extends State<MainPage>
     BuildContext context,
   ) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) => Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: Container(
-                height: 300.0,
-                width: 300.0,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Center(
-                      child: Text(
-                        "تحديث البيانات",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: MyTextFormField(
-                                  hintText: "الضريبة",
-                                  isNumber: true,
-                                  editingController: taxController,
-                                )),
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: MyTextFormField(
-                                  hintText: "التوصيل",
-                                  isNumber: true,
-                                  editingController: driverController,
-                                )),
-                          ),
-                        ),
-                      ],
-                    ),
-                    FlatButton(
-                      onPressed: () {
-                        Firestore.instance
-                            .collection('app')
-                            .document('1YGqmBXRZGQrsAdIvKin')
-                            .updateData({
-                          'delivery': int.parse(driverController.text),
-                          'tax': int.parse(taxController.text),
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        'تحديث',
-                        style: TextStyle(color: Colors.purple, fontSize: 18.0),
-                      ),
-                    ),
-                  ],
+      context: context,
+      builder: (BuildContext context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Container(
+          height: 300.0,
+          width: 300.0,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Center(
+                child: Text(
+                  "تحديث البيانات",
+                  style: TextStyle(fontSize: 20),
                 ),
               ),
-            ));
+              Column(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: MyTextFormField(
+                            hintText: "الضريبة",
+                            isNumber: true,
+                            editingController: taxController,
+                          )),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: MyTextFormField(
+                            hintText: "التوصيل",
+                            isNumber: true,
+                            editingController: driverController,
+                          )),
+                    ),
+                  ),
+                ],
+              ),
+              FlatButton(
+                onPressed: () {
+                  Firestore.instance
+                      .collection('app')
+                      .document('1YGqmBXRZGQrsAdIvKin')
+                      .updateData({
+                    'delivery': int.parse(driverController.text),
+                    'tax': int.parse(taxController.text),
+                  });
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'تحديث',
+                  style: TextStyle(color: Colors.purple, fontSize: 18.0),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

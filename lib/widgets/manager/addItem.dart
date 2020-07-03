@@ -15,8 +15,10 @@ TextEditingController itemName = TextEditingController();
 TextEditingController itemPrice = TextEditingController();
 TextEditingController itemDis = TextEditingController();
 TextEditingController categoryName = TextEditingController();
+TextEditingController categoryNameEn = TextEditingController();
 TextEditingController itemBuyPrice = TextEditingController();
 TextEditingController totalQuantity = TextEditingController();
+TextEditingController nameEn = TextEditingController();
 
 bool checkedSize = false;
 bool sizeWord = false;
@@ -56,13 +58,25 @@ Widget addItem(
             visible: newCategory,
             child: Column(
               children: [
-                Container(
-                  alignment: Alignment.topCenter,
-                  width: halfMediaWidth,
-                  child: MyTextFormField(
-                    editingController: categoryName,
-                    hintText: 'أسم القسم',
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      alignment: Alignment.topCenter,
+                      width: halfMediaWidth,
+                      child: MyTextFormField(
+                        editingController: categoryName,
+                        hintText: 'أسم القسم',
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topCenter,
+                      width: halfMediaWidth,
+                      child: MyTextFormField(
+                        editingController: categoryNameEn,
+                        hintText: 'أسم القسم بالأنقلش',
+                      ),
+                    ),
+                  ],
                 ),
                 Divider(
                   thickness: 5,
@@ -106,9 +120,8 @@ Widget addItem(
                       alignment: Alignment.topCenter,
                       width: halfMediaWidth,
                       child: MyTextFormField(
-                        editingController: totalQuantity,
-                        hintText: 'الكمية',
-                        isNumber: true,
+                        editingController: nameEn,
+                        hintText: 'الأسم بالانقلش',
                       ),
                     ),
                     Container(
@@ -122,13 +135,27 @@ Widget addItem(
                     ),
                   ],
                 ),
-                Container(
-                  alignment: Alignment.topCenter,
-                  child: MyTextFormField(
-                    editingController: itemDis,
-                    isMultiLine: true,
-                    hintText: 'الوصف',
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      alignment: Alignment.topCenter,
+                      width: halfMediaWidth,
+                      child: MyTextFormField(
+                        editingController: totalQuantity,
+                        hintText: 'الكمية',
+                        isNumber: true,
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.topCenter,
+                      width: halfMediaWidth,
+                      child: MyTextFormField(
+                        editingController: itemDis,
+                        isMultiLine: true,
+                        hintText: 'الوصف',
+                      ),
+                    ),
+                  ],
                 ),
                 imageStoredItems != null
                     ? InkWell(
@@ -256,6 +283,7 @@ Widget addItem(
                         itemPrice.text.isEmpty ||
                         itemDis.text.isEmpty ||
                         itemBuyPrice.text.isEmpty ||
+                        nameEn.text.isEmpty ||
                         imageStoredItems == null ||
                         (checkedSize && !xs && !s && !m && !l && !xl) &&
                             (checkedSize &&
@@ -271,6 +299,8 @@ Widget addItem(
                         totalQuantity.text.isEmpty) {
                       if (itemName.text.isEmpty) {
                         errorToast("أسم المنتج");
+                      } else if (nameEn.text.isEmpty) {
+                        errorToast("الأسم بالإنقلش");
                       } else if (itemPrice.text.isEmpty) {
                         errorToast("سعر البيع");
                       } else if (itemBuyPrice.text.isEmpty) {
@@ -316,6 +346,7 @@ Widget addItem(
                       Map<String, dynamic> itemMap = {
                         'totalQuantity': totalQuantity.text,
                         "name": itemName.text,
+                        "name_en": nameEn.text,
                         "description": itemDis.text,
                         "price": itemPrice.text,
                         "image": urlImageItems,
@@ -332,9 +363,11 @@ Widget addItem(
                       };
                       Map<String, dynamic> catgoryMap = {
                         "name": categoryName.text,
+                        "en_name": categoryNameEn.text,
                       };
                       if (selectedCurrency == "New Category") {
                         if (categoryName.text.isEmpty ||
+                            categoryNameEn.text.isEmpty ||
                             imageStoredItems == null ||
                             urlImageItems == null) {
                           if (categoryName.text.isEmpty) {
