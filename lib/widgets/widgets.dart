@@ -5,8 +5,8 @@ import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/homePage.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/appInfo.dart';
+import 'package:shop_app/screens/mainScreen/homePage.dart';
 
-import 'package:shop_app/widgets/langauge.dart';
 import 'package:uuid/uuid.dart';
 
 import 'lang/appLocale.dart';

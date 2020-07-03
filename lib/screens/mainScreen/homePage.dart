@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
-import 'package:shop_app/widgets/langauge.dart';
+import 'package:shop_app/widgets/lang/appLocale.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
 import 'package:shop_app/widgets/user/categoroesWidget.dart';
 import 'package:shop_app/widgets/user/homeWidget.dart';
@@ -176,3 +176,6 @@ class _HomePageState extends State<HomePage>
 }
 
 int navIndex = 0;
+String word(String key, BuildContext context) {
+  return AppLocale.of(context).getTranslated(key);
+}

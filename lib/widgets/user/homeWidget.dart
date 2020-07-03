@@ -4,8 +4,8 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/models/itemShow.dart';
+import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/screens/showItem.dart';
-import 'package:shop_app/widgets/langauge.dart';
 
 import '../widgets.dart';
 

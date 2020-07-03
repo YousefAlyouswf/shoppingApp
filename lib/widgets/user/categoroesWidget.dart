@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
+import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/screens/showItem.dart';
 
-import '../langauge.dart';
 import '../widgets.dart';
 import '../widgets2.dart';
 
@@ -150,25 +150,27 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                     }
                   }
 
-                  listImages.add(ListHirezontalImage(
-                    name: asyncSnapshot.data.documents[0].data['items'][i]
-                        ['name'],
-                    nameEn: asyncSnapshot.data.documents[0].data['items'][i]
-                        ['name_en'],
-                    image: asyncSnapshot.data.documents[0].data['items'][i]
-                        ['image'],
-                    description: asyncSnapshot.data.documents[0].data['items']
-                        [i]['description'],
-                    price: asyncSnapshot.data.documents[0].data['items'][i]
-                        ['price'],
-                    imageID: asyncSnapshot.data.documents[0].data['items'][i]
-                        ['imageID'],
-                    buyPrice: asyncSnapshot.data.documents[0].data['items'][i]
-                        ['buyPrice'],
-                    size: sizes,
-                    totalQuantity: asyncSnapshot.data.documents[0].data['items']
-                        [i]['totalQuantity'],
-                  ));
+                  listImages.add(
+                    ListHirezontalImage(
+                      name: asyncSnapshot.data.documents[0].data['items'][i]
+                          ['name'],
+                      nameEn: asyncSnapshot.data.documents[0].data['items'][i]
+                          ['name_en'],
+                      image: asyncSnapshot.data.documents[0].data['items'][i]
+                          ['image'],
+                      description: asyncSnapshot.data.documents[0].data['items']
+                          [i]['description'],
+                      price: asyncSnapshot.data.documents[0].data['items'][i]
+                          ['price'],
+                      imageID: asyncSnapshot.data.documents[0].data['items'][i]
+                          ['imageID'],
+                      buyPrice: asyncSnapshot.data.documents[0].data['items'][i]
+                          ['buyPrice'],
+                      size: sizes,
+                      totalQuantity: asyncSnapshot
+                          .data.documents[0].data['items'][i]['totalQuantity'],
+                    ),
+                  );
                 }
               } catch (e) {
                 setFirstElemntInSubCollection();
@@ -210,6 +212,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                           imageID: listImages[index].imageID,
                                           buyPrice: listImages[index].buyPrice,
                                           size: listImages[index].size,
+                                          totalQuantity:
+                                              listImages[index].totalQuantity,
                                         ),
                                       ),
                                     );

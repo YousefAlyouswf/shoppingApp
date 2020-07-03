@@ -44,7 +44,6 @@ class FirestoreFunctions {
   }
 
   addImagesForList(String imageID, String url) async {
-
     await Firestore.instance
         .collection('images')
         .where('imageID', isEqualTo: imageID)
@@ -79,7 +78,6 @@ class FirestoreFunctions {
   }
 
   deleteImagesForList(String imageID, String url) async {
-
     await Firestore.instance
         .collection('images')
         .where('imageID', isEqualTo: imageID)
@@ -147,29 +145,30 @@ class FirestoreFunctions {
           for (var i = 0; i < element.data['items'].length; i++) {
             if (element.data['items'][i]['show'] == true) {
               int len = element.data['items'][i]['size'].length;
-             List<String> sizes = [];
+              List<String> sizes = [];
               if (len == 8) {
                 for (var j = 35; j < len + 35; j++) {
                   var value = element.data['items'][i]['size'][j.toString()];
 
-                   if (value) {
-                      sizes.add(j.toString());
-                    }
+                  if (value) {
+                    sizes.add(j.toString());
+                  }
                 }
               } else if (len == 5) {
                 List<String> sizeWord = ['XS', 'S', 'M', 'L', 'XL'];
-                  for (var j = 0; j < 5; j++) {
-                    var value = element.data['items'][i]['size'][sizeWord[j]];
-                      
-                    if (value) {
-                      sizes.add(sizeWord[j]);
-                    }
+                for (var j = 0; j < 5; j++) {
+                  var value = element.data['items'][i]['size'][sizeWord[j]];
+
+                  if (value) {
+                    sizes.add(sizeWord[j]);
                   }
+                }
               }
 
               image.add(
                 ItemShow(
                   itemName: element.data['items'][i]['name'],
+                  nameEn: element.data['items'][i]['name_en'],
                   itemPrice: element.data['items'][i]['price'],
                   itemDes: element.data['items'][i]['description'],
                   image: element.data['items'][i]['image'],

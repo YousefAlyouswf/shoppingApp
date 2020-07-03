@@ -1,8 +1,8 @@
-
 class ItemShow {
   final int id;
   final String quantity;
   final String itemName;
+  final String nameEn;
   final String itemPrice;
   final String itemDes;
   final String image;
@@ -25,6 +25,7 @@ class ItemShow {
     this.size,
     this.sizeChose,
     this.productID,
-    this.totalQuantity
+    this.totalQuantity,
+    this.nameEn,
   });
 }
