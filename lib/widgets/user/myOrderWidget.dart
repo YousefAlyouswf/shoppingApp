@@ -9,7 +9,6 @@ import 'package:intl/intl.dart' as intl;
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shop_app/models/myOrderModel.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
-import 'package:shop_app/widgets/widgets2.dart';
 
 import '../widgets.dart';
 

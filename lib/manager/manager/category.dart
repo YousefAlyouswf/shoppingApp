@@ -3,13 +3,57 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/manager/edit.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 import 'package:shop_app/models/sizeListModel.dart';
+import 'package:shop_app/widgets/widgets.dart';
 
-import '../widgets.dart';
 import 'addItem.dart';
+
+String catgoryName = "";
+
+class CategoryManager extends StatefulWidget {
+  @override
+  _CategoryManagerState createState() => _CategoryManagerState();
+}
+
+class _CategoryManagerState extends State<CategoryManager> {
+  @override
+  Widget build(BuildContext context) {
+    return categoryScreen(
+        selectCategory, takeImageGalaryForList, takeImageCameraForList);
+  }
+
+  selectCategory(String name) {
+    setState(() {});
+    catgoryName = name;
+  }
+
+  final picker = ImagePicker();
+  takeImageGalaryForList(String imageID) async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        getImageForlistFile = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageForList(imageID);
+  }
+
+  takeImageCameraForList(String imageID) async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        getImageForlistFile = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageForList(imageID);
+  }
+}
 
 Widget categoryScreen(
   Function selectCategory,
@@ -31,7 +75,7 @@ Widget categoryScreen(
 List<SizeListModel> sizes = [];
 File getImageForlistFile;
 String getImageForlistURL;
-String catgoryName = "";
+
 Widget subCatgory(
     Function takeImageGalaryForList, Function takeImageCameraForList) {
   List<ListHirezontalImage> listImages;

@@ -7,7 +7,6 @@ import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/screens/showItem.dart';
 
 import '../widgets.dart';
-import '../widgets2.dart';
 
 class CategoryWidget extends StatefulWidget {
   @override
@@ -190,7 +189,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            childAspectRatio: 0.7,
+                            childAspectRatio: 1 / 1.5,
                           ),
                           itemCount: listImages.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -287,12 +286,32 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                               horizontal: 8.0),
                                           width: double.infinity,
                                           alignment: Alignment.bottomRight,
-                                          child: Text(
-                                            "${listImages[index].price} ${word("currancy", context)}",
-                                            style: TextStyle(
-                                                color: Colors.teal,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20),
+                                          child: Column(
+                                            children: [
+                                              Text.rich(
+                                                TextSpan(
+                                                  children: <TextSpan>[
+                                                    new TextSpan(
+                                                      text:
+                                                          '2500 ${word("currancy", context)}',
+                                                      style: new TextStyle(
+                                                        color: Colors.grey,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .lineThrough,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Text(
+                                                "${listImages[index].price} ${word("currancy", context)}",
+                                                style: TextStyle(
+                                                    color: Colors.teal,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
@@ -555,52 +574,49 @@ List<bool> selected = List.generate(20, (i) => false);
 
 Widget headerCatgory(Function switchBetweenCategory) {
   catgoryEnglish = [];
-  return Padding(
-    padding: const EdgeInsets.only(top: 48.0, left: 8.0, right: 8.0),
-    child: Container(
-      decoration: BoxDecoration(),
-      height: 50,
-      width: double.infinity,
-      child: StreamBuilder(
-        stream: Firestore.instance.collection('categories').snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return Text("Loading");
+  return Container(
+    decoration: BoxDecoration(),
+    height: 50,
+    width: double.infinity,
+    child: StreamBuilder(
+      stream: Firestore.instance.collection('categories').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return Text("Loading");
 
-          return ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: snapshot.data.documents[0].data['collection'].length,
-            itemBuilder: (context, i) {
-              String categoryName = isEnglish
-                  ? snapshot.data.documents[0].data['collection'][i]['en_name']
-                  : snapshot.data.documents[0].data['collection'][i]['name'];
-              String choseCategory =
-                  snapshot.data.documents[0].data['collection'][i]['name'];
-              return Container(
-                width: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  border: Border.all(
-                    color: selected[i] ? Color(0xFFFF834F) : Colors.transparent,
+        return ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: snapshot.data.documents[0].data['collection'].length,
+          itemBuilder: (context, i) {
+            String categoryName = isEnglish
+                ? snapshot.data.documents[0].data['collection'][i]['en_name']
+                : snapshot.data.documents[0].data['collection'][i]['name'];
+            String choseCategory =
+                snapshot.data.documents[0].data['collection'][i]['name'];
+            return Container(
+              width: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                border: Border.all(
+                  color: selected[i] ? Color(0xFFFF834F) : Colors.transparent,
+                ),
+              ),
+              child: InkWell(
+                onTap: () {
+                  switchBetweenCategory(choseCategory, i);
+                },
+                child: Center(
+                  child: Text(
+                    categoryName,
+                    style: TextStyle(
+                        color: selected[i] ? Colors.teal : Colors.grey[600],
+                        fontFamily: "MainFont"),
                   ),
                 ),
-                child: InkWell(
-                  onTap: () {
-                    switchBetweenCategory(choseCategory, i);
-                  },
-                  child: Center(
-                    child: Text(
-                      categoryName,
-                      style: TextStyle(
-                          color: selected[i] ? Colors.teal : Colors.grey[600],
-                          fontFamily: "MainFont"),
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
+              ),
+            );
+          },
+        );
+      },
     ),
   );
 }

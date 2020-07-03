@@ -3,9 +3,230 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/database/firestore.dart';
+import 'package:shop_app/widgets/widgets.dart';
 
-import '../widgets.dart';
+import 'category.dart';
+
+class AddItemManager extends StatefulWidget {
+  @override
+  _AddItemManagerState createState() => _AddItemManagerState();
+}
+
+class _AddItemManagerState extends State<AddItemManager> {
+  @override
+  Widget build(BuildContext context) {
+    return addItem(
+      context,
+      showItemTextFileds,
+      _takePictureForCatgory,
+      _takeFromGalaryForCatgory,
+      _takePictureForItems,
+      _takeFromGalaryForItems,
+      switchToCategoryPage,
+      checkBoxFuncation,
+      chooseWordSized,
+      chooseNumSized,
+      changeXS,
+      changeS,
+      changeM,
+      changeL,
+      changeXL,
+      change35,
+      change36,
+      change37,
+      change38,
+      change39,
+      change40,
+      change41,
+      change42,
+    );
+  }
+
+  showItemTextFileds() {
+    setState(() {
+      if (selectedCurrency != null) {
+        showItemFileds = true;
+
+        if (selectedCurrency == "New Category") {
+          newCategory = true;
+        } else {
+          newCategory = false;
+        }
+      }
+    });
+  }
+
+  final picker = ImagePicker();
+  _takeFromGalaryForCatgory() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        imageStoredCategory = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageForCatefory();
+  }
+
+  _takePictureForCatgory() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.camera, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        imageStoredCategory = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageForCatefory();
+  }
+
+  _takeFromGalaryForItems() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        imageStoredItems = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageItems();
+  }
+
+  _takePictureForItems() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.camera, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        imageStoredItems = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageItems();
+  }
+
+  switchToCategoryPage() {
+    setState(() {});
+
+    if (categoryName.text.isNotEmpty) {
+      catgoryName = categoryName.text;
+    } else {
+      catgoryName = selectedCurrency;
+    }
+
+    categoryName.clear();
+    itemName.clear();
+    itemPrice.clear();
+    itemDis.clear();
+    itemBuyPrice.clear();
+    totalQuantity.clear();
+    nameEn.clear();
+    categoryNameEn.clear();
+
+    checkedSize = false;
+    imageStoredCategory = null;
+    urlImageCategory = null;
+    imageStoredItems = null;
+    urlImageItems = null;
+  }
+
+  checkBoxFuncation(newValue) {
+    setState(() {
+      checkedSize = newValue;
+    });
+  }
+
+  chooseWordSized() {
+    setState(() {
+      sizeWord = true;
+      sizeNum = false;
+    });
+  }
+
+  chooseNumSized() {
+    setState(() {
+      sizeNum = true;
+      sizeWord = false;
+    });
+  }
+
+  changeXS() {
+    setState(() {
+      xs = !xs;
+    });
+  }
+
+  changeS() {
+    setState(() {
+      s = !s;
+    });
+  }
+
+  changeM() {
+    setState(() {
+      m = !m;
+    });
+  }
+
+  changeL() {
+    setState(() {
+      l = !l;
+    });
+  }
+
+  changeXL() {
+    setState(() {
+      xl = !xl;
+    });
+  }
+  //Numbers
+
+  change35() {
+    setState(() {
+      s35 = !s35;
+    });
+  }
+
+  change36() {
+    setState(() {
+      s36 = !s36;
+    });
+  }
+
+  change37() {
+    setState(() {
+      s37 = !s37;
+    });
+  }
+
+  change38() {
+    setState(() {
+      s38 = !s38;
+    });
+  }
+
+  change39() {
+    setState(() {
+      s39 = !s39;
+    });
+  }
+
+  change40() {
+    setState(() {
+      s40 = !s40;
+    });
+  }
+
+  change41() {
+    setState(() {
+      s41 = !s41;
+    });
+  }
+
+  change42() {
+    setState(() {
+      s42 = !s42;
+    });
+  }
+}
 
 var selectedCurrency;
 bool showItemFileds = false;

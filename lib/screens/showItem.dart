@@ -6,7 +6,6 @@ import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/widgets/user/homeWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';
-import 'package:shop_app/widgets/widgets2.dart';
 
 class ShowItem extends StatefulWidget {
   final Function onThemeChanged;
@@ -234,12 +233,13 @@ class _ShowItemState extends State<ShowItem>
                   if (widget.size.length == 0) {
                     int q = 0;
                     int id;
-                    for (var i = 0; i < cartToCheck.length; i++) {
-                      if (cartToCheck[i].itemName == widget.name &&
-                          cartToCheck[i].itemPrice == widget.price &&
-                          cartToCheck[i].itemDes == widget.des) {
-                        id = cartToCheck[i].id;
-                        q = int.parse(cartToCheck[i].quantity);
+
+                    for (var i = 0; i < cart.length; i++) {
+                      if (cart[i].itemName == widget.name &&
+                          cart[i].itemPrice == widget.price &&
+                          cart[i].itemDes == widget.des) {
+                        id = cart[i].id;
+                        q = int.parse(cart[i].quantity);
                       }
                     }
                     q++;
@@ -331,11 +331,6 @@ class _ShowItemState extends State<ShowItem>
         ],
       ),
     );
-  }
-
-  selectCategory(String name) {
-    setState(() {});
-    catgoryNameCustomer = name;
   }
 
   List<ItemShow> itemShow = new List();
@@ -447,3 +442,5 @@ Widget imageCarouselItemShow(double height, Function imageOnTap) {
           ),
         );
 }
+
+List<ItemShow> cartToCheck = new List();

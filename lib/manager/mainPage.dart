@@ -1,15 +1,14 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/models/tabModels.dart';
-import 'package:shop_app/widgets/manager/addItem.dart';
-import 'package:shop_app/widgets/manager/category.dart';
-import 'package:shop_app/widgets/manager/employeeWidget.dart';
-import 'package:shop_app/widgets/manager/order.dart';
+
 import 'package:shop_app/widgets/widgets.dart';
-import 'package:shop_app/widgets/widgets2.dart';
+
+import 'manager/addItem.dart';
+import 'manager/category.dart';
+import 'manager/employeeWidget.dart';
+import 'manager/order.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -159,254 +158,13 @@ class _MainPageState extends State<MainPage>
       body: TabBarView(
         controller: _tabController,
         children: [
-          categoryScreen(
-              selectCategory, takeImageGalaryForList, takeImageCameraForList),
-          addItem(
-            context,
-            showItemTextFileds,
-            _takePictureForCatgory,
-            _takeFromGalaryForCatgory,
-            _takePictureForItems,
-            _takeFromGalaryForItems,
-            switchToCategoryPage,
-            checkBoxFuncation,
-            chooseWordSized,
-            chooseNumSized,
-            changeXS,
-            changeS,
-            changeM,
-            changeL,
-            changeXL,
-            change35,
-            change36,
-            change37,
-            change38,
-            change39,
-            change40,
-            change41,
-            change42,
-          ),
-          orders(context, searchOrder),
-          employeeList(),
+          CategoryManager(),
+          AddItemManager(),
+          OrderManager(),
+          EmplyeeManager(),
         ],
       ),
     );
-  }
-
-  selectCategory(String name) {
-    setState(() {});
-    catgoryName = name;
-  }
-
-  switchToCategoryPage() {
-    setState(() {});
-
-    if (categoryName.text.isNotEmpty) {
-      catgoryName = categoryName.text;
-    } else {
-      catgoryName = selectedCurrency;
-    }
-
-    categoryName.clear();
-    itemName.clear();
-    itemPrice.clear();
-    itemDis.clear();
-    itemBuyPrice.clear();
-    totalQuantity.clear();
-    nameEn.clear();
-    categoryNameEn.clear();
-
-    checkedSize = false;
-    imageStoredCategory = null;
-    urlImageCategory = null;
-    imageStoredItems = null;
-    urlImageItems = null;
-  }
-
-  showItemTextFileds() {
-    setState(() {
-      if (selectedCurrency != null) {
-        showItemFileds = true;
-
-        if (selectedCurrency == "New Category") {
-          newCategory = true;
-        } else {
-          newCategory = false;
-        }
-      }
-    });
-  }
-
-  final picker = ImagePicker();
-  takeImageGalaryForList(String imageID) async {
-    final pickedFile = await picker.getImage(
-        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
-    setState(() {
-      try {
-        getImageForlistFile = File(pickedFile.path);
-      } catch (e) {}
-    });
-    uploadImageForList(imageID);
-  }
-
-  takeImageCameraForList(String imageID) async {
-    final pickedFile = await picker.getImage(
-        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
-    setState(() {
-      try {
-        getImageForlistFile = File(pickedFile.path);
-      } catch (e) {}
-    });
-    uploadImageForList(imageID);
-  }
-
-  _takeFromGalaryForCatgory() async {
-    final pickedFile = await picker.getImage(
-        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
-    setState(() {
-      try {
-        imageStoredCategory = File(pickedFile.path);
-      } catch (e) {}
-    });
-    uploadImageForCatefory();
-  }
-
-  _takePictureForCatgory() async {
-    final pickedFile = await picker.getImage(
-        source: ImageSource.camera, imageQuality: 100, maxWidth: 1200);
-    setState(() {
-      try {
-        imageStoredCategory = File(pickedFile.path);
-      } catch (e) {}
-    });
-    uploadImageForCatefory();
-  }
-
-  _takeFromGalaryForItems() async {
-    final pickedFile = await picker.getImage(
-        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
-    setState(() {
-      try {
-        imageStoredItems = File(pickedFile.path);
-      } catch (e) {}
-    });
-    uploadImageItems();
-  }
-
-  _takePictureForItems() async {
-    final pickedFile = await picker.getImage(
-        source: ImageSource.camera, imageQuality: 100, maxWidth: 1200);
-    setState(() {
-      try {
-        imageStoredItems = File(pickedFile.path);
-      } catch (e) {}
-    });
-    uploadImageItems();
-  }
-
-  searchOrder(String search) {
-    setState(() {
-      orderNumber = search;
-    });
-  }
-
-  checkBoxFuncation(newValue) {
-    setState(() {
-      checkedSize = newValue;
-    });
-  }
-
-  chooseWordSized() {
-    setState(() {
-      sizeWord = true;
-      sizeNum = false;
-    });
-  }
-
-  chooseNumSized() {
-    setState(() {
-      sizeNum = true;
-      sizeWord = false;
-    });
-  }
-
-  changeXS() {
-    setState(() {
-      xs = !xs;
-    });
-  }
-
-  changeS() {
-    setState(() {
-      s = !s;
-    });
-  }
-
-  changeM() {
-    setState(() {
-      m = !m;
-    });
-  }
-
-  changeL() {
-    setState(() {
-      l = !l;
-    });
-  }
-
-  changeXL() {
-    setState(() {
-      xl = !xl;
-    });
-  }
-  //Numbers
-
-  change35() {
-    setState(() {
-      s35 = !s35;
-    });
-  }
-
-  change36() {
-    setState(() {
-      s36 = !s36;
-    });
-  }
-
-  change37() {
-    setState(() {
-      s37 = !s37;
-    });
-  }
-
-  change38() {
-    setState(() {
-      s38 = !s38;
-    });
-  }
-
-  change39() {
-    setState(() {
-      s39 = !s39;
-    });
-  }
-
-  change40() {
-    setState(() {
-      s40 = !s40;
-    });
-  }
-
-  change41() {
-    setState(() {
-      s41 = !s41;
-    });
-  }
-
-  change42() {
-    setState(() {
-      s42 = !s42;
-    });
   }
 
   changeTax(

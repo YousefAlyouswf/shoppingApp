@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
-import 'package:shop_app/manager/homePage.dart';
+import 'package:shop_app/manager/signin_screen.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/appInfo.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
@@ -209,8 +209,7 @@ Drawer drawer(
                     } else {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => HomePageManager()),
+                        MaterialPageRoute(builder: (context) => SigninScreen()),
                       );
                     }
                   });
@@ -219,49 +218,20 @@ Drawer drawer(
             );
           },
         ),
-        SizedBox(
-          height: 30,
-        )
       ],
     ),
   );
 }
 
-Widget continaer(String text, Color color) {
-  return Padding(
-    padding:
-        const EdgeInsets.only(top: 100, bottom: 16.0, left: 16.0, right: 16.0),
-    child: Container(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.all(
-          Radius.circular(20),
-        ),
-      ),
-      child: FlatButton(
-        onPressed: () {},
-        child: Text(text),
-      ),
-    ),
-  );
-}
-
-Widget managerBody() {
-  return Expanded(
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        child: Scaffold(),
-      ),
-    ),
-  );
+addCartToast(String text) {
+  Fluttertoast.showToast(
+      msg: text,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      fontSize: 16.0);
 }
 
 errorToast(String text) {

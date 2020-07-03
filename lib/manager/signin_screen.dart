@@ -5,12 +5,12 @@ import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/User.dart';
 
-class HomePageManager extends StatefulWidget {
+class SigninScreen extends StatefulWidget {
   @override
-  _HomePageManagerState createState() => _HomePageManagerState();
+  _SigninScreenState createState() => _SigninScreenState();
 }
 
-class _HomePageManagerState extends State<HomePageManager> {
+class _SigninScreenState extends State<SigninScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   PersistentBottomSheetController _sheetController;

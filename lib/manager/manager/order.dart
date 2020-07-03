@@ -6,6 +6,24 @@ import 'package:intl/intl.dart' as intl;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
+class OrderManager extends StatefulWidget {
+  @override
+  _OrderManagerState createState() => _OrderManagerState();
+}
+
+class _OrderManagerState extends State<OrderManager> {
+  @override
+  Widget build(BuildContext context) {
+    return orders(context, searchOrder);
+  }
+
+  searchOrder(String search) {
+    setState(() {
+      orderNumber = search;
+    });
+  }
+}
+
 String orderNumber;
 TextEditingController search = TextEditingController();
 Widget orders(BuildContext context, Function searchOrder) {
