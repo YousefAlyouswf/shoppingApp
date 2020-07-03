@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shop_app/widgets/langauge.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:location/location.dart';
 
@@ -39,18 +40,6 @@ class _GmapState extends State<Gmap> {
   }
 
   serveiceRequest() async {
-    // _serviceEnabled = await location.serviceEnabled();
-    // if (!_serviceEnabled) {
-    //   _serviceEnabled = await location.requestService();
-    //   if (!_serviceEnabled) {
-    //     // setState(() {
-    //     //   long = 46.674976;
-    //     //   lat = 24.711906;
-    //     // });
-
-    //   }
-    // }
-
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied ||
         _permissionGranted == PermissionStatus.deniedForever) {
@@ -105,7 +94,9 @@ class _GmapState extends State<Gmap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      appBar: AppBar(
+        title: Text(word("select_map", context)),
+      ),
       body: Stack(
         children: [
           lat == null

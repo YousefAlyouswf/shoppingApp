@@ -157,7 +157,9 @@ Widget addAddress(BuildContext context, Function moveToMapScreen) {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 InkWell(
-                  onTap: moveToMapScreen,
+                  onTap: () {
+                    moveToMapScreen(context);
+                  },
                   child: Container(
                     padding: EdgeInsets.all(16.0),
                     decoration: BoxDecoration(

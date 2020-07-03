@@ -1,11 +1,10 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as gmap;
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/addressModel.dart';
 import 'package:shop_app/screens/gmap.dart';
+import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/widgets/langauge.dart';
 import 'package:shop_app/widgets/user/shipping.dart';
 import 'package:shop_app/widgets/widgets.dart';
@@ -58,23 +57,40 @@ class _AddressState extends State<Address> {
     }
   }
 
+  String accountSid;
+  String authToken;
+  String twilioNumber;
   tw.TwilioFlutter twilioFlutter;
   @override
   void initState() {
     super.initState();
     fetchAddress();
+
+    twilioInfo();
+  }
+
+  twilioInfo() async {
+    await Firestore.instance.collection("twilio").getDocuments().then((v) {
+      v.documents.forEach((e) {
+        setState(() {
+          accountSid = e['accountSid'];
+          authToken = e['authToken'];
+          twilioNumber = e['twilioNumber'];
+        });
+      });
+    });
     twilioFlutter = tw.TwilioFlutter(
-      accountSid: 'AC4f6c997eeefaf5c2f2c5bd7d8a914837',
-      authToken: 'd2dc920a8ef46ccca1be173b3fee92e5',
+      accountSid: accountSid,
+      authToken: authToken,
       twilioNumber: '+12054966662',
     );
   }
 
-  void updateLocation(LatLng location) {
+  void updateLocation(gmap.LatLng location) {
     setState(() => customerLocation = location);
   }
 
-  moveToMapScreen() async {
+  moveToMapScreen(BuildContext context) async {
     final location = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Gmap()),

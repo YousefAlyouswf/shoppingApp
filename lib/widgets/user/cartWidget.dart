@@ -30,7 +30,8 @@ Widget header(BuildContext context) {
   );
 }
 
-Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
+Widget invoiceTable(BuildContext context, Function fetchMyCart,
+    Function emptyCartGoToCategory) {
   return Expanded(
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -54,7 +55,7 @@ Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
                           ),
                         ),
                         Text(
-                          isEnglish ? english[37] : arabic[37],
+                          word("cart_empty", context),
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 18),
                         ),
@@ -71,8 +72,7 @@ Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
                             ),
                             child: Center(
                                 child: Text(
-                              isEnglish ? english[38] : arabic[38],
-                              textDirection: TextDirection.rtl,
+                              word("products", context),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -363,14 +363,14 @@ Widget buttons(
                                     controller: discountController,
                                     textDirection: TextDirection.rtl,
                                     decoration: InputDecoration(
-                                      hintText: "أدخل كود الخصم",
+                                      hintText: word("type_coupon", context),
                                     ),
                                   ),
                                 ),
                                 FlatButton(
                                   onPressed: applyDiscount,
                                   child: Text(
-                                    'تفعيل',
+                                    word("coupon_confirm", context),
                                     style: TextStyle(
                                         color: Color(0xFFFF834F),
                                         fontSize: 18.0,

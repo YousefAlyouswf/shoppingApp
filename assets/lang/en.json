@@ -30,5 +30,10 @@
     "received": "Received",
     "delivered": "Delivered",
     "pickup_location": "Pickup location",
-    "tax_delivered_msg": "Tax & Shipping are included"
+    "tax_delivered_msg": "Tax & Shipping are included",
+    "coupon_confirm": "Confirm",
+    "type_coupon": "Type the coupon",
+    "cart_empty": "Cart is empty\nGo to products page to add your items",
+    "products": "Producs",
+    "select_map": "Select your location"
 }
