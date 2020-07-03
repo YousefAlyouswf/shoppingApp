@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/lunchApp.dart';
+import 'package:shop_app/widgets/lang/appLocale.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -73,27 +74,29 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.teal,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        //   scaffoldBackgroundColor: isDark ? Colors.grey[800] : Colors.white,
         brightness: brightness,
       ),
       localizationsDelegates: [
+        AppLocale.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: [
         Locale('en', ''),
         Locale('ar', ''),
       ],
       localeResolutionCallback: (currentLocale, supportedLocale) {
-        if (currentLocale != null) {
-          for (Locale locale in supportedLocale) {
-            if (currentLocale.languageCode == locale.languageCode) {
-              return currentLocale;
-            }
-          }
-        }
-        return supportedLocale.first;
+        Locale ar = Locale('en', '');
+        // print(currentLocale);
+        // if (currentLocale != null) {
+        //   for (Locale locale in supportedLocale) {
+        //     if (currentLocale.languageCode == locale.languageCode) {
+        //       return currentLocale;
+        //     }
+        //   }
+        // }
+        return ar;
+        // return supportedLocale.first;
       },
       home: LunchApp(
         onThemeChanged: onThemeChanged,

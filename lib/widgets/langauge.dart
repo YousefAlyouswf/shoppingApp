@@ -1,3 +1,7 @@
+import 'package:flutter/cupertino.dart';
+
+import 'lang/appLocale.dart';
+
 List<String> english = [
   'Home',
   'deliver',
@@ -127,3 +131,7 @@ List<String> arabic = [
   "السعر شامل الضريبة والتوصيل",
   "ر.س",
 ];
+
+String word(String key, BuildContext context) {
+  return AppLocale.of(context).getTranslated(key);
+}

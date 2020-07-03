@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shop_app/models/myOrderModel.dart';
 import 'package:shop_app/widgets/langauge.dart';
+import 'package:shop_app/widgets/widgets2.dart';
 
 import '../widgets.dart';
 
@@ -52,7 +54,7 @@ Widget orderScreen(BuildContext context, String userID) {
                     String formatTime = timeFormat.format(orderDate);
 
                     String formatted =
-                        "${isEnglish ? english[42] : arabic[42]} $formatDate  $formatTime";
+                        "${word("order_date", context)} $formatDate  $formatTime";
                     return Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -69,10 +71,23 @@ Widget orderScreen(BuildContext context, String userID) {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                       children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Clipboard.setData(
+                                              new ClipboardData(
+                                                text: ds['orderID'],
+                                              ),
+                                            );
+                                            addCartToast(word("copy", context));
+                                          },
+                                          child: Text(
+                                            "${word("order_num", context)} ${ds['orderID']}",
+                                            style: TextStyle(fontSize: 19),
+                                          ),
+                                        ),
                                         //Order Date
                                         Text(
                                           formatted,
-                                          textDirection: TextDirection.rtl,
                                         ),
 
                                         Table(
@@ -84,17 +99,17 @@ Widget orderScreen(BuildContext context, String userID) {
                                           children: [
                                             TableRow(children: [
                                               Center(
-                                                  child: Text(isEnglish
-                                                      ? english[43]
-                                                      : arabic[43])),
+                                                child: Text(
+                                                    word("product", context)),
+                                              ),
                                               Center(
-                                                  child: Text(isEnglish
-                                                      ? english[44]
-                                                      : arabic[44])),
+                                                child: Text(
+                                                    word("quantity", context)),
+                                              ),
                                               Center(
-                                                  child: Text(isEnglish
-                                                      ? english[45]
-                                                      : arabic[45])),
+                                                child: Text(
+                                                    word("price", context)),
+                                              ),
                                             ])
                                           ],
                                         ),
@@ -165,110 +180,126 @@ Widget orderScreen(BuildContext context, String userID) {
                                             onPressed: () {
                                               if (status == "0") {
                                                 showDialog(
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext
-                                                                context) =>
-                                                            Dialog(
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            12.0),
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          Dialog(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12.0),
+                                                    ),
+                                                    child: Container(
+                                                      height: 300.0,
+                                                      width: 300.0,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceAround,
+                                                        children: <Widget>[
+                                                          Center(
+                                                            child: Text(
+                                                              word("cancel",
+                                                                  context),
+                                                              style: TextStyle(
+                                                                  fontSize: 20),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        16.0),
+                                                            child: Container(
+                                                              child: Text(
+                                                                word(
+                                                                    "cancel_msg",
+                                                                    context),
                                                               ),
-                                                              child: Container(
-                                                                height: 300.0,
-                                                                width: 300.0,
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceAround,
-                                                                  children: <
-                                                                      Widget>[
-                                                                    Center(
-                                                                      child:
-                                                                          Text(
-                                                                        isEnglish
-                                                                            ? english[46]
-                                                                            : arabic[46],
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                20),
-                                                                      ),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .symmetric(
-                                                                          horizontal:
-                                                                              16.0),
-                                                                      child:
-                                                                          Container(
-                                                                        child:
-                                                                            Text(
-                                                                          isEnglish
-                                                                              ? english[47]
-                                                                              : arabic[47],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceAround,
-                                                                      children: [
-                                                                        FlatButton(
-                                                                          onPressed:
-                                                                              () {
-                                                                            Firestore.instance.collection('order').where('orderID', isEqualTo: ds['orderID']).where('userID', isEqualTo: ds['userID']).getDocuments().then((value) {
-                                                                              value.documents.forEach((element) {
-                                                                                Firestore.instance.collection('order').document(element.documentID).delete();
-                                                                              });
-                                                                            });
-                                                                            Navigator.pop(context);
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                          child:
-                                                                              Text(
-                                                                            isEnglish
-                                                                                ? english[48]
-                                                                                : arabic[48],
-                                                                            style:
-                                                                                TextStyle(color: Colors.purple, fontSize: 18.0),
-                                                                          ),
-                                                                        ),
-                                                                        FlatButton(
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                          child:
-                                                                              Text(
-                                                                            isEnglish
-                                                                                ? english[49]
-                                                                                : arabic[49],
-                                                                            style:
-                                                                                TextStyle(color: Colors.purple, fontSize: 18.0),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ],
+                                                            ),
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              FlatButton(
+                                                                onPressed: () {
+                                                                  Firestore
+                                                                      .instance
+                                                                      .collection(
+                                                                          'order')
+                                                                      .where(
+                                                                          'orderID',
+                                                                          isEqualTo: ds[
+                                                                              'orderID'])
+                                                                      .where(
+                                                                          'userID',
+                                                                          isEqualTo: ds[
+                                                                              'userID'])
+                                                                      .getDocuments()
+                                                                      .then(
+                                                                          (value) {
+                                                                    value
+                                                                        .documents
+                                                                        .forEach(
+                                                                            (element) {
+                                                                      Firestore
+                                                                          .instance
+                                                                          .collection(
+                                                                              'order')
+                                                                          .document(
+                                                                              element.documentID)
+                                                                          .delete();
+                                                                    });
+                                                                  });
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child: Text(
+                                                                  word("sure",
+                                                                      context),
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .purple,
+                                                                      fontSize:
+                                                                          18.0),
                                                                 ),
                                                               ),
-                                                            ));
+                                                              FlatButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child: Text(
+                                                                  word("exit",
+                                                                      context),
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .purple,
+                                                                      fontSize:
+                                                                          18.0),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
                                               } else {
                                                 errorToast(
-                                                  isEnglish
-                                                      ? english[50]
-                                                      : arabic[50],
+                                                  word("cant_cancel", context),
                                                 );
                                               }
                                             },
                                             label: Text(
-                                              isEnglish
-                                                  ? english[46]
-                                                  : arabic[46],
+                                              word("cancel", context),
                                             ),
                                           ),
                                         ),
@@ -281,28 +312,6 @@ Widget orderScreen(BuildContext context, String userID) {
                             child: Card(
                               child: Column(
                                 children: [
-                                  InkWell(
-                                    onTap: () {
-                                      Clipboard.setData(new ClipboardData(
-                                          text: ds['orderID']));
-                                      Scaffold.of(context)
-                                        ..showSnackBar(
-                                          new SnackBar(
-                                            duration: Duration(seconds: 1),
-                                            content: new Text(
-                                              isEnglish
-                                                  ? english[51]
-                                                  : arabic[51],
-                                            ),
-                                          ),
-                                        );
-                                    },
-                                    child: Text(
-                                      "${isEnglish ? english[52] : arabic[52]} ${ds['orderID']}",
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(fontSize: 19),
-                                    ),
-                                  ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Stack(
@@ -352,9 +361,8 @@ Widget orderScreen(BuildContext context, String userID) {
                                                   child: Icon(Icons.store),
                                                 ),
                                                 Text(
-                                                  isEnglish
-                                                      ? english[54]
-                                                      : arabic[54],
+                                                  word(
+                                                      "receive_order", context),
                                                   style: TextStyle(
                                                     color: status == "0"
                                                         ? Colors.black
@@ -390,12 +398,10 @@ Widget orderScreen(BuildContext context, String userID) {
                                                 ),
                                                 Text(
                                                   noDelvier
-                                                      ? isEnglish
-                                                          ? english[55]
-                                                          : arabic[55]
-                                                      : isEnglish
-                                                          ? english[56]
-                                                          : arabic[56],
+                                                      ? word("ready_to_Pickup",
+                                                          context)
+                                                      : word('ready_to_deliver',
+                                                          context),
                                                   style: TextStyle(
                                                     color: status == "1"
                                                         ? Colors.black
@@ -437,9 +443,8 @@ Widget orderScreen(BuildContext context, String userID) {
                                                             .directions_car),
                                                       ),
                                                       Text(
-                                                        isEnglish
-                                                            ? english[57]
-                                                            : arabic[57],
+                                                        word("on_its_way",
+                                                            context),
                                                         style: TextStyle(
                                                           color: status == "2"
                                                               ? Colors.black
@@ -474,12 +479,10 @@ Widget orderScreen(BuildContext context, String userID) {
                                                 ),
                                                 Text(
                                                   noDelvier
-                                                      ? isEnglish
-                                                          ? english[58]
-                                                          : arabic[58]
-                                                      : isEnglish
-                                                          ? english[59]
-                                                          : arabic[59],
+                                                      ? word(
+                                                          "received", context)
+                                                      : word(
+                                                          "delivered", context),
                                                   style: TextStyle(
                                                     color: status == "3"
                                                         ? Colors.black
@@ -514,9 +517,8 @@ Widget orderScreen(BuildContext context, String userID) {
                                                       );
                                                     },
                                                     child: Text(
-                                                      isEnglish
-                                                          ? english[53]
-                                                          : arabic[53],
+                                                      word("pickup_location",
+                                                          context),
                                                     ),
                                                   ),
                                                 )
@@ -524,33 +526,29 @@ Widget orderScreen(BuildContext context, String userID) {
                                           Column(
                                             children: [
                                               Container(
-                                                alignment:
-                                                    Alignment.centerRight,
                                                 child: Text(
-                                                  '${ds['total']} ${isEnglish ? english[61] : arabic[61]}',
-                                                  textDirection:
-                                                      TextDirection.rtl,
+                                                  '${ds['total']} ${word("currancy", context)}',
                                                   style:
                                                       TextStyle(fontSize: 22),
                                                 ),
                                               ),
                                               Container(
-                                                alignment:
-                                                    Alignment.centerRight,
                                                 child: noDelvier
                                                     ? Text(
-                                                        isEnglish
-                                                            ? english[40]
-                                                            : arabic[40],
+                                                        word(
+                                                            "tax_msg", context),
                                                         style: TextStyle(
-                                                            fontSize: 9),
+                                                          fontSize: 9,
+                                                        ),
                                                       )
                                                     : Text(
-                                                        isEnglish
-                                                            ? english[60]
-                                                            : arabic[60],
+                                                        word(
+                                                            "tax_delivered_msg",
+                                                            context),
                                                         style: TextStyle(
-                                                            fontSize: 9)),
+                                                          fontSize: 9,
+                                                        ),
+                                                      ),
                                               ),
                                             ],
                                           ),

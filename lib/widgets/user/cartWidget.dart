@@ -19,17 +19,13 @@ int tax = 0;
 int delivery = 0;
 bool isDeliver = true;
 
-Widget header() {
-  return Align(
-    alignment: Alignment.centerRight,
-    child: Padding(
-      padding: const EdgeInsets.only(right: 32.0, top: 40.0),
-      child: Text(
-        isEnglish ? english[11] : arabic[11],
-        textDirection: TextDirection.rtl,
-        style: TextStyle(
-            fontSize: 25, fontWeight: FontWeight.w900, fontFamily: "MainFont"),
-      ),
+Widget header(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.only(top: 40.0),
+    child: Text(
+      word("cart_header", context),
+      style: TextStyle(
+          fontSize: 25, fontWeight: FontWeight.w900, fontFamily: "MainFont"),
     ),
   );
 }
@@ -248,9 +244,7 @@ Widget invoiceTable(Function fetchMyCart, Function emptyCartGoToCategory) {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Container(
                                         child: Text(
-                                          isEnglish
-                                              ? "${cart[i].itemPrice} ${english[15]}"
-                                              : "${cart[i].itemPrice} ${arabic[15]}",
+                                          "${cart[i].itemPrice} ${word('currancy', context)}",
                                           textDirection: TextDirection.rtl,
                                           style: TextStyle(
                                               color: Colors.teal,
@@ -332,9 +326,7 @@ Widget buttons(
                         color: Colors.white,
                       ),
                       label: Text(
-                        isEnglish
-                            ? "$totalAfterTax ${english[16]}"
-                            : "$totalAfterTax ${arabic[16]}",
+                        "$totalAfterTax ${word('currancy', context)}",
                         textDirection: TextDirection.rtl,
                         style: TextStyle(
                             color: Colors.white,
@@ -347,14 +339,8 @@ Widget buttons(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Container(
-                    alignment: isEnglish
-                        ? Alignment.bottomLeft
-                        : Alignment.bottomRight,
                     child: Text(
-                      isEnglish
-                          ? "${english[40]} $tax%"
-                          : "${arabic[40]} $tax%",
-                      textDirection: TextDirection.rtl,
+                      "${word('tax_msg', context)} $tax%",
                     ),
                   ),
                   InkWell(
@@ -401,7 +387,7 @@ Widget buttons(
                       color: Colors.grey[300],
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("كوبون خصم"),
+                        child: Text(word("coupon", context)),
                       ),
                     ),
                   ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
+import 'package:shop_app/widgets/lang/appLocale.dart';
 import 'package:shop_app/widgets/langauge.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
 import 'package:shop_app/widgets/user/categoroes.dart';
@@ -55,7 +56,9 @@ class _HomePageState extends State<HomePage>
     double imageShowSize = height / 3;
 
     return Scaffold(
-      appBar: navIndex == 0 ? appBar(goToCartScreen: goToCartScreen) : null,
+      appBar: navIndex == 0
+          ? appBar(goToCartScreen: goToCartScreen, context: context)
+          : null,
       drawer: drawer(
         context,
         widget.onThemeChanged,
@@ -69,7 +72,7 @@ class _HomePageState extends State<HomePage>
                 children: [
                   discountShow(context),
                   Text(
-                    isEnglish ? english[36] : arabic[36],
+                    word('NEW_ARRIVAL', context),
                     style: TextStyle(
                         fontSize: 35,
                         fontFamily: isEnglish ? "summer" : "MainFont"),
@@ -104,7 +107,7 @@ class _HomePageState extends State<HomePage>
                   ? Container(
                       child: Column(
                         children: [
-                          header(),
+                          header(context),
                           invoiceTable(
                             fetchToMyCart,
                             emptyCartGoToCategory,
@@ -119,7 +122,7 @@ class _HomePageState extends State<HomePage>
                       ),
                     )
                   : navIndex == 3 ? orderScreen(context, userID) : Container(),
-      bottomNavigationBar: bottomNavgation(bottomNavIndex),
+      bottomNavigationBar: bottomNavgation(bottomNavIndex, context),
     );
   }
 

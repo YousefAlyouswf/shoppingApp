@@ -2,6 +2,7 @@
 
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:shop_app/widgets/langauge.dart';
 
 List<NetworkImage> networkImage;
 List<NetworkImage> networkImage2;
@@ -42,7 +43,7 @@ Widget discountShow(BuildContext context) {
   return Column(
     children: [
       Text(
-        "عروضنا المخفظه",
+        word('discount', context),
         style: TextStyle(fontSize: 35, fontFamily: "MainFont"),
       ),
       Container(

@@ -22,8 +22,9 @@ class _LunchAppState extends State<LunchApp> {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) => HomePage(
-            onThemeChanged: widget.onThemeChanged,
-            changeLangauge: widget.changeLangauge),
+          onThemeChanged: widget.onThemeChanged,
+          changeLangauge: widget.changeLangauge,
+        ),
       ),
     );
   }

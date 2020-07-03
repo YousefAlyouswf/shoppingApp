@@ -9,6 +9,8 @@ import 'package:shop_app/models/appInfo.dart';
 import 'package:shop_app/widgets/langauge.dart';
 import 'package:uuid/uuid.dart';
 
+import 'lang/appLocale.dart';
+
 var uuid = Uuid();
 int cartCount = 0;
 List<AppInfoModel> appInfo = [];
@@ -18,13 +20,14 @@ AppBar appBar(
     bool search = false,
     bool cart = false,
     BuildContext context}) {
+  String appName = AppLocale.of(context).getTranslated('appName');
   return AppBar(
     elevation: 0,
     iconTheme: new IconThemeData(
       color: Colors.black54,
     ),
     title: Text(
-      isEnglish ? "RFOOF" : "رفــــوف",
+      appName,
       style: TextStyle(
           fontFamily: isEnglish ? 'EN' : "MainFont", color: Colors.black),
     ),
@@ -170,14 +173,14 @@ Drawer drawer(
           },
         ),
         ListTile(
-          title: Text(isEnglish ? english[7] : arabic[7]),
+          title: Text(word("dark", context)),
           leading: Icon(
             Icons.lightbulb_outline,
           ),
           onTap: onThemeChanged,
         ),
         ListTile(
-          title: Text(isEnglish ? english[8] : arabic[8]),
+          title: Text(word("info", context)),
           leading: Icon(
             Icons.help,
           ),
@@ -289,15 +292,14 @@ class Destination {
   final MaterialColor color;
 }
 
-List<Destination> allDestinations = <Destination>[
-  Destination(isEnglish ? english[0] : arabic[0], Icons.home, Colors.teal),
-  Destination(isEnglish ? english[4] : arabic[4], Icons.category, Colors.cyan),
-  Destination(
-      isEnglish ? english[2] : arabic[2], Icons.shopping_basket, Colors.orange),
-  Destination(isEnglish ? english[3] : arabic[3], Icons.receipt, Colors.blue)
-];
 int navIndex = 0;
-Widget bottomNavgation(Function bottomNavIndex) {
+Widget bottomNavgation(Function bottomNavIndex, BuildContext context) {
+  List<Destination> allDestinations = <Destination>[
+    Destination(word('HOME', context), Icons.home, Colors.teal),
+    Destination(word('category', context), Icons.category, Colors.cyan),
+    Destination(word('cart', context), Icons.shopping_basket, Colors.orange),
+    Destination(word('order', context), Icons.receipt, Colors.blue)
+  ];
   return BottomNavigationBar(
     backgroundColor: Colors.grey[200],
     currentIndex: navIndex,
