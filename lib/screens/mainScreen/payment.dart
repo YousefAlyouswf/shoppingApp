@@ -7,8 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
-
-import 'package:shop_app/widgets/widgets.dart';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
@@ -275,12 +273,6 @@ class _PaymentState extends State<Payment> {
         setState(() {});
       });
     } catch (e) {}
-  }
-
-  goToHome() {
-    Navigator.popUntil(context, (route) => route.isFirst);
-    navIndex = 0;
-    setState(() {});
   }
 }
 

@@ -4,10 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' as gmap;
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/addressModel.dart';
 import 'package:shop_app/screens/gmap.dart';
-import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/widgets/langauge.dart';
 import 'package:shop_app/widgets/user/shipping.dart';
-import 'package:shop_app/widgets/widgets.dart';
 import 'package:twilio_flutter/twilio_flutter.dart' as tw;
 
 class Address extends StatefulWidget {
@@ -159,12 +157,6 @@ class _AddressState extends State<Address> {
         preAddress = !preAddress;
       },
     );
-  }
-
-  goToHome() {
-    Navigator.popUntil(context, (route) => route.isFirst);
-    navIndex = 0;
-    setState(() {});
   }
 
   formatPhoneNumber() {

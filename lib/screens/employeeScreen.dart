@@ -5,7 +5,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shop_app/models/myOrderModel.dart';
-import 'package:shop_app/widgets/widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EmployeeScreen extends StatefulWidget {

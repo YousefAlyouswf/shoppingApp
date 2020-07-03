@@ -164,8 +164,8 @@ Widget addItem(
                               _takeFromGalaryForItems, context);
                         },
                         child: Container(
-                          width: 70,
-                          height: 70,
+                          width: 200,
+                          height: 200,
                           decoration: new BoxDecoration(
                             shape: BoxShape.rectangle,
                             image: new DecorationImage(

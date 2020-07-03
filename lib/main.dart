@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/lunchApp.dart';
 import 'package:shop_app/widgets/lang/appLocale.dart';
-import 'package:shop_app/widgets/user/cartWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -85,7 +84,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: brightness,
       ),

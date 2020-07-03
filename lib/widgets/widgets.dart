@@ -22,16 +22,14 @@ AppBar appBar(int countCart,
     BuildContext context}) {
   String appName = AppLocale.of(context).getTranslated('appName');
   return AppBar(
+    backgroundColor: Theme.of(context).primaryColorLight,
     elevation: 0,
-    iconTheme: new IconThemeData(
-      color: Colors.black54,
-    ),
     title: Text(
       appName,
       style: TextStyle(
-          fontFamily: isEnglish ? 'EN' : "MainFont", color: Colors.black),
+        fontFamily: isEnglish ? 'EN' : "MainFont",
+      ),
     ),
-    backgroundColor: Colors.grey[200],
     centerTitle: true,
     actions: <Widget>[
       Padding(
@@ -41,7 +39,6 @@ AppBar appBar(int countCart,
             IconButton(
               icon: Icon(
                 Icons.shopping_basket,
-                color: Colors.black54,
                 size: 35,
               ),
               onPressed: goToCartScreen,
@@ -113,7 +110,10 @@ Drawer drawer(
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
-                            color: Colors.grey[200],
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Theme.of(context).primaryColorDark),
+                            ),
                             child: ListTile(
                               onTap: () {
                                 goToCategoryPage(choseCategory, i);
@@ -292,32 +292,4 @@ class Destination {
   final String title;
   final IconData icon;
   final MaterialColor color;
-}
-
-int navIndex = 0;
-Widget bottomNavgation(Function bottomNavIndex, BuildContext context) {
-  List<Destination> allDestinations = <Destination>[
-    Destination(word('HOME', context), Icons.home, Colors.teal),
-    Destination(word('category', context), Icons.category, Colors.cyan),
-    Destination(word('cart', context), Icons.shopping_basket, Colors.orange),
-    Destination(word('order', context), Icons.receipt, Colors.blue)
-  ];
-  return BottomNavigationBar(
-    backgroundColor: Colors.grey[200],
-    currentIndex: navIndex,
-    onTap: bottomNavIndex,
-    type: BottomNavigationBarType.fixed,
-    fixedColor: Color(0xFFFF834F),
-    iconSize: 35,
-    items: allDestinations.map((Destination destination) {
-      return BottomNavigationBarItem(
-        icon: Icon(destination.icon),
-        backgroundColor: destination.color,
-        title: Text(
-          destination.title,
-          style: TextStyle(fontFamily: "MainFont"),
-        ),
-      );
-    }).toList(),
-  );
 }

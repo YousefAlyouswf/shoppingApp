@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
-import 'package:shop_app/widgets/widgets.dart';
-
 import 'helper/HelperFunction.dart';
 
 class LunchApp extends StatefulWidget {
