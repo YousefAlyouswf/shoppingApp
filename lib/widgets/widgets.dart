@@ -14,7 +14,7 @@ import 'lang/appLocale.dart';
 var uuid = Uuid();
 int cartCount = 0;
 List<AppInfoModel> appInfo = [];
-AppBar appBar(
+AppBar appBar(int countCart,
     {Function goToCartScreen,
     String text = "رفوف",
     bool search = false,
@@ -46,7 +46,7 @@ AppBar appBar(
               ),
               onPressed: goToCartScreen,
             ),
-            cartCount == 0
+            countCart == 0
                 ? Container()
                 : Align(
                     alignment: Alignment(0, 0),
@@ -64,8 +64,10 @@ AppBar appBar(
                           ),
                         ),
                         Text(
-                          "$cartCount",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          "$countCart",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),

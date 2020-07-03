@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +13,38 @@ import 'package:shop_app/widgets/langauge.dart';
 import 'package:shop_app/widgets/widgets2.dart';
 
 import '../widgets.dart';
+
+class OrderWidget extends StatefulWidget {
+  @override
+  _OrderWidgetState createState() => _OrderWidgetState();
+}
+
+class _OrderWidgetState extends State<OrderWidget> {
+  String userID;
+  AndroidDeviceInfo androidInfo;
+  IosDeviceInfo iosDeviceInfo;
+  void deviceID() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      androidInfo = await deviceInfo.androidInfo;
+      userID = androidInfo.androidId;
+    } else if (Platform.isIOS) {
+      iosDeviceInfo = await deviceInfo.iosInfo;
+      userID = iosDeviceInfo.identifierForVendor;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    deviceID();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return orderScreen(context, userID);
+  }
+}
 
 Widget orderScreen(BuildContext context, String userID) {
   return Container(

@@ -48,7 +48,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(text: widget.name),
+      //  appBar: appBar(text: widget.name),
       body: Container(
         child: StreamBuilder(
             stream: Firestore.instance
@@ -446,7 +446,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                                         MainAxisAlignment
                                                             .spaceAround,
                                                     children: [
-                                                      
                                                       Text(
                                                         '${ds['total']} ر.س',
                                                         textDirection:
@@ -456,7 +455,6 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                                                       ),
                                                     ],
                                                   ),
-                                               
                                                   Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment

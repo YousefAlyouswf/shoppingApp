@@ -16,7 +16,6 @@ class ShowItem extends StatefulWidget {
   final String name;
   final String des;
   final String price;
-  final Function fetchToMyCart;
   final String imageID;
   final String buyPrice;
   final List size;
@@ -29,7 +28,6 @@ class ShowItem extends StatefulWidget {
     this.name,
     this.des,
     this.price,
-    this.fetchToMyCart,
     this.imageID,
     this.buyPrice,
     this.size,
@@ -52,6 +50,7 @@ class _ShowItemState extends State<ShowItem>
     setState(() {
       quantity = int.parse(widget.totalQuantity);
     });
+    fetchToMyCart();
   }
 
   @override
@@ -234,8 +233,8 @@ class _ShowItemState extends State<ShowItem>
                         fontWeight: FontWeight.bold),
                   ),
                   onPressed: () async {
+                    fetchToMyCart();
                     if (widget.size.length == 0) {
-                      await widget.fetchToMyCart();
                       int q = 0;
                       int id;
                       for (var i = 0; i < cartToCheck.length; i++) {
@@ -283,7 +282,6 @@ class _ShowItemState extends State<ShowItem>
                       if (sizeChose == '') {
                         errorToast("أختر المقاس");
                       } else {
-                        await widget.fetchToMyCart();
                         int q = 0;
                         int id;
                         for (var i = 0; i < cart.length; i++) {
@@ -418,6 +416,70 @@ class _ShowItemState extends State<ShowItem>
             )
           },
         );
+  }
+
+  double sumPrice = 0;
+  double sumBuyPrice = 0;
+  double eachPrice = 0;
+  double eachBuyPrice = 0;
+  double totalAfterTax = 0;
+
+  bool deleteIcon = false;
+  int tax = 0;
+  int delivery = 0;
+  bool isDeliver = true;
+  List<ItemShow> cart = [];
+
+  Future<void> fetchToMyCart() async {
+    sumPrice = 0;
+    sumBuyPrice = 0;
+    final dataList = await DBHelper.getData('cart');
+    setState(() {
+      cart = dataList
+          .map(
+            (item) => ItemShow(
+              id: item['id'],
+              itemName: item['name'],
+              itemPrice: item['price'],
+              image: item['image'],
+              itemDes: item['des'],
+              quantity: item['q'],
+              buyPrice: item['buyPrice'],
+              sizeChose: item['size'],
+              productID: item['productID'],
+            ),
+          )
+          .toList();
+    });
+
+    for (var i = 0; i < cart.length; i++) {
+      eachPrice =
+          double.parse(cart[i].quantity) * double.parse(cart[i].itemPrice);
+      eachBuyPrice =
+          double.parse(cart[i].quantity) * double.parse(cart[i].buyPrice);
+    }
+
+    for (var i = 0; i < cart.length; i++) {
+      sumPrice +=
+          double.parse(cart[i].quantity) * double.parse(cart[i].itemPrice);
+    }
+    for (var i = 0; i < cart.length; i++) {
+      sumBuyPrice +=
+          double.parse(cart[i].quantity) * double.parse(cart[i].buyPrice);
+    }
+    quantity = 0;
+    for (var i = 0; i < cart.length; i++) {
+      quantity += int.parse(cart[i].quantity);
+    }
+
+    if (isDeliver) {
+      totalAfterTax = sumPrice * tax / 100 + sumPrice + delivery;
+    } else {
+      totalAfterTax = sumPrice * tax / 100 + sumPrice;
+    }
+    if (totalAfterTax == delivery) {
+      totalAfterTax = 0.0;
+    }
   }
 }
 

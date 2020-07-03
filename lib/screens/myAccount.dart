@@ -17,7 +17,7 @@ class _MyAccountState extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(text: "حسابي"),
+      //  appBar: appBar(text: "حسابي"),
       body: Container(
         height: MediaQuery.of(context).size.height / 2,
         child: Column(

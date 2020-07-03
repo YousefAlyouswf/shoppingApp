@@ -205,7 +205,7 @@ class _PaymentState extends State<Payment> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: appBar(),
+      //  appBar: appBar(),
       body: Container(
         child: Center(
           child: Text(" $a"),

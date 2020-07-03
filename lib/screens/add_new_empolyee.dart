@@ -36,7 +36,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(text: "تسجيل مندوب جديد"),
+      //   appBar: appBar(text: "تسجيل مندوب جديد"),
       body: isloading
           ? Container(
               child: Center(

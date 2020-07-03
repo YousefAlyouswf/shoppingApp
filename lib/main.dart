@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
         .then((querySnapshot) {
       querySnapshot.documents.forEach((r) {
         setState(() {
-          tax = r['tax'];
+          //  tax = r['tax'];
         });
       });
     });

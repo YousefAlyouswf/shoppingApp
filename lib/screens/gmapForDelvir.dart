@@ -9,7 +9,7 @@ class GmapForDeliver extends StatefulWidget {
 }
 
 class _GmapForDeliverState extends State<GmapForDeliver> {
-   Location location;
+  Location location;
   LocationData _locationData;
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
@@ -25,8 +25,7 @@ class _GmapForDeliverState extends State<GmapForDeliver> {
       position: latLng,
       infoWindow: InfoWindow(
           title: "المنطقة القريبة منك", snippet: 'مع تحيات تطبيق تنوتو'),
-      onTap: () {
-      },
+      onTap: () {},
     );
 
     setState(() {
@@ -52,10 +51,9 @@ class _GmapForDeliverState extends State<GmapForDeliver> {
 
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
-     
       setState(() {
         long = 46.674976;
-        lat =  24.711906;
+        lat = 24.711906;
       });
     }
   }
@@ -99,7 +97,7 @@ class _GmapForDeliverState extends State<GmapForDeliver> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    appBar: appBar(),
+      //  appBar: appBar(),
       body: Stack(
         children: [
           lat == null
@@ -160,7 +158,6 @@ class _GmapForDeliverState extends State<GmapForDeliver> {
                   if (customerLocation == null) {
                     errorToast("أختر الموقع من الخريطة");
                   } else {
-           
                     Navigator.pop(context, customerLocation);
                   }
                 },
@@ -182,7 +179,6 @@ class _GmapForDeliverState extends State<GmapForDeliver> {
           ),
         ],
       ),
-
     );
   }
 }
