@@ -22,6 +22,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    //HelperFunction.firstTimeChooseLang(true);
     saveLangaugeHelper();
   }
 
@@ -48,15 +49,27 @@ class _MyAppState extends State<MyApp> {
     setState(() {});
   }
 
-  changeLangauge() async {
-    setState(() {
-      isEnglish = !isEnglish;
-    });
+  changeLangauge({String chooseOne = "non"}) async {
+    if (chooseOne == "non") {
+      setState(() {
+        isEnglish = !isEnglish;
+      });
+    } else if (chooseOne == "en") {
+      setState(() {
+        isEnglish = true;
+      });
+    } else if (chooseOne == "ar") {
+      setState(() {
+        isEnglish = false;
+      });
+    }
+
     HelperFunction.saveLanguage(isEnglish);
   }
 
+  bool checkValue;
   saveLangaugeHelper() async {
-    bool checkValue = await HelperFunction.getLangauge();
+    checkValue = await HelperFunction.getLangauge();
     if (checkValue == null || checkValue == false) {
       isEnglish = false;
     } else {
@@ -85,18 +98,19 @@ class _MyAppState extends State<MyApp> {
         Locale('en', ''),
         Locale('ar', ''),
       ],
+      locale: isEnglish ? Locale('en', '') : Locale('ar', ''),
       localeResolutionCallback: (currentLocale, supportedLocale) {
-        Locale ar = Locale('en', '');
-        // print(currentLocale);
-        // if (currentLocale != null) {
-        //   for (Locale locale in supportedLocale) {
-        //     if (currentLocale.languageCode == locale.languageCode) {
-        //       return currentLocale;
-        //     }
-        //   }
-        // }
-        return ar;
-        // return supportedLocale.first;
+        //  Locale ar = Locale('ar', '');
+
+        if (currentLocale != null) {
+          for (Locale locale in supportedLocale) {
+            if (currentLocale.languageCode == locale.languageCode) {
+              return currentLocale;
+            }
+          }
+        }
+        //return ar;
+        return supportedLocale.first;
       },
       home: LunchApp(
         onThemeChanged: onThemeChanged,

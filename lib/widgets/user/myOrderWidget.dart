@@ -24,7 +24,7 @@ Widget orderScreen(BuildContext context, String userID) {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
-              child: Text(isEnglish ? english[41] : arabic[41]),
+              child: Text(""),
             );
           } else {
             return Container(
@@ -56,10 +56,9 @@ Widget orderScreen(BuildContext context, String userID) {
                     String formatted =
                         "${word("order_date", context)} $formatDate  $formatTime";
                     return Column(
-                      mainAxisSize: MainAxisSize.max,
                       children: [
                         Container(
-                          height: 240,
+                          height: 120,
                           child: InkWell(
                             onTap: () {
                               showModalBottomSheet(
@@ -71,23 +70,64 @@ Widget orderScreen(BuildContext context, String userID) {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                       children: [
-                                        InkWell(
-                                          onTap: () {
-                                            Clipboard.setData(
-                                              new ClipboardData(
-                                                text: ds['orderID'],
-                                              ),
-                                            );
-                                            addCartToast(word("copy", context));
-                                          },
-                                          child: Text(
-                                            "${word("order_num", context)} ${ds['orderID']}",
-                                            style: TextStyle(fontSize: 19),
-                                          ),
-                                        ),
-                                        //Order Date
-                                        Text(
-                                          formatted,
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Column(
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    Clipboard.setData(
+                                                      new ClipboardData(
+                                                        text: ds['orderID'],
+                                                      ),
+                                                    );
+                                                    addCartToast(
+                                                        word("copy", context));
+                                                  },
+                                                  child: Text(
+                                                    "${word("order_num", context)} ${ds['orderID']}",
+                                                    style:
+                                                        TextStyle(fontSize: 19),
+                                                  ),
+                                                ),
+                                                //Order Date
+                                                Text(
+                                                  formatted,
+                                                ),
+                                              ],
+                                            ),
+                                            Column(
+                                              children: [
+                                                Container(
+                                                  child: Text(
+                                                    '${ds['total']} ${word("currancy", context)}',
+                                                    style:
+                                                        TextStyle(fontSize: 22),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  child: noDelvier
+                                                      ? Text(
+                                                          word("tax_msg",
+                                                              context),
+                                                          style: TextStyle(
+                                                            fontSize: 9,
+                                                          ),
+                                                        )
+                                                      : Text(
+                                                          word(
+                                                              "tax_delivered_msg",
+                                                              context),
+                                                          style: TextStyle(
+                                                            fontSize: 9,
+                                                          ),
+                                                        ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
 
                                         Table(
@@ -95,7 +135,6 @@ Widget orderScreen(BuildContext context, String userID) {
                                             0: FractionColumnWidth(0.5)
                                           },
                                           border: TableBorder.all(),
-                                          textDirection: TextDirection.rtl,
                                           children: [
                                             TableRow(children: [
                                               Center(
@@ -124,8 +163,6 @@ Widget orderScreen(BuildContext context, String userID) {
                                                     0: FractionColumnWidth(0.5)
                                                   },
                                                   border: TableBorder.all(),
-                                                  textDirection:
-                                                      TextDirection.rtl,
                                                   children: [
                                                     TableRow(children: [
                                                       Padding(
@@ -133,8 +170,8 @@ Widget orderScreen(BuildContext context, String userID) {
                                                             const EdgeInsets
                                                                 .all(8.0),
                                                         child: Align(
-                                                          alignment: Alignment
-                                                              .centerRight,
+                                                          alignment:
+                                                              Alignment.center,
                                                           child: Text(
                                                               myOrderList[index]
                                                                   .name),
@@ -345,8 +382,8 @@ Widget orderScreen(BuildContext context, String userID) {
                                                     gradient: LinearGradient(
                                                       colors: status == "0"
                                                           ? [
-                                                              Colors.lightGreen,
-                                                              Colors.green[800]
+                                                              Colors.yellow,
+                                                              Colors.orange[800]
                                                             ]
                                                           : [
                                                               Colors.grey,
@@ -380,8 +417,8 @@ Widget orderScreen(BuildContext context, String userID) {
                                                     gradient: LinearGradient(
                                                       colors: status == "1"
                                                           ? [
-                                                              Colors.lightGreen,
-                                                              Colors.green[800]
+                                                              Colors.green[500],
+                                                              Colors.yellow,
                                                             ]
                                                           : [
                                                               Colors.grey,
@@ -427,7 +464,7 @@ Widget orderScreen(BuildContext context, String userID) {
                                                                     Colors
                                                                         .lightGreen,
                                                                     Colors.green[
-                                                                        800]
+                                                                        500],
                                                                   ]
                                                                 : [
                                                                     Colors.grey,
@@ -462,8 +499,8 @@ Widget orderScreen(BuildContext context, String userID) {
                                                     gradient: LinearGradient(
                                                       colors: status == "3"
                                                           ? [
-                                                              Colors.lightGreen,
-                                                              Colors.green[800]
+                                                              Colors.green[500],
+                                                              Colors.green,
                                                             ]
                                                           : [
                                                               Colors.grey,
@@ -523,35 +560,6 @@ Widget orderScreen(BuildContext context, String userID) {
                                                   ),
                                                 )
                                               : Container(),
-                                          Column(
-                                            children: [
-                                              Container(
-                                                child: Text(
-                                                  '${ds['total']} ${word("currancy", context)}',
-                                                  style:
-                                                      TextStyle(fontSize: 22),
-                                                ),
-                                              ),
-                                              Container(
-                                                child: noDelvier
-                                                    ? Text(
-                                                        word(
-                                                            "tax_msg", context),
-                                                        style: TextStyle(
-                                                          fontSize: 9,
-                                                        ),
-                                                      )
-                                                    : Text(
-                                                        word(
-                                                            "tax_delivered_msg",
-                                                            context),
-                                                        style: TextStyle(
-                                                          fontSize: 9,
-                                                        ),
-                                                      ),
-                                              ),
-                                            ],
-                                          ),
                                         ],
                                       ),
                                     ),

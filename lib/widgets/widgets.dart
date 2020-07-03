@@ -101,7 +101,12 @@ Drawer drawer(
                       itemCount:
                           snapshot.data.documents[0].data['collection'].length,
                       itemBuilder: (context, i) {
-                        String categoryName = snapshot
+                        String categoryName = isEnglish
+                            ? snapshot.data.documents[0].data['collection'][i]
+                                ['en_name']
+                            : snapshot.data.documents[0].data['collection'][i]
+                                ['name'];
+                        String choseCategory = snapshot
                             .data.documents[0].data['collection'][i]['name'];
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -109,7 +114,7 @@ Drawer drawer(
                             color: Colors.grey[200],
                             child: ListTile(
                               onTap: () {
-                                goToCategoryPage(categoryName, i);
+                                goToCategoryPage(choseCategory, i);
                                 Navigator.pop(context);
                               },
                               title: Text(
@@ -131,7 +136,7 @@ Drawer drawer(
           thickness: 1,
         ),
         ListTile(
-          title: Text(isEnglish ? english[6] : arabic[6]),
+          title: Text(word("settings", context)),
           leading: Icon(
             Icons.settings,
           ),
@@ -156,13 +161,8 @@ Drawer drawer(
                         FlatButton(
                           onPressed: () {
                             changeLangauge();
-                            try {
-                              fetchMyCart();
-                            } catch (e) {
-                              print("Error 1000");
-                            }
                           },
-                          child: Text(isEnglish ? english[10] : arabic[10]),
+                          child: Text(word("arabic", context)),
                         ),
                       ],
                     ),

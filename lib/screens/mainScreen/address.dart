@@ -102,7 +102,7 @@ class _AddressState extends State<Address> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
-          title: new Text(isEnglish ? english[18] : arabic[18]),
+          title: new Text(word("address_appBar", context)),
         ),
         body: widget.isDeliver
             ? Column(

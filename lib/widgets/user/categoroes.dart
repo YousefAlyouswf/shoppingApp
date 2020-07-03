@@ -31,9 +31,11 @@ Widget headerCatgory(Function switchBetweenCategory) {
             scrollDirection: Axis.horizontal,
             itemCount: snapshot.data.documents[0].data['collection'].length,
             itemBuilder: (context, i) {
-              String name =
+              String categoryName = isEnglish
+                  ? snapshot.data.documents[0].data['collection'][i]['en_name']
+                  : snapshot.data.documents[0].data['collection'][i]['name'];
+              String choseCategory =
                   snapshot.data.documents[0].data['collection'][i]['name'];
-
               return Container(
                 width: 100,
                 decoration: BoxDecoration(
@@ -44,11 +46,11 @@ Widget headerCatgory(Function switchBetweenCategory) {
                 ),
                 child: InkWell(
                   onTap: () {
-                    switchBetweenCategory(name, i);
+                    switchBetweenCategory(choseCategory, i);
                   },
                   child: Center(
                     child: Text(
-                      name,
+                      categoryName,
                       style: TextStyle(
                           color: selected[i] ? Colors.teal : Colors.grey[600],
                           fontFamily: "MainFont"),
@@ -133,6 +135,8 @@ Widget subCollection(
                 listImages.add(ListHirezontalImage(
                   name: asyncSnapshot.data.documents[0].data['items'][i]
                       ['name'],
+                  nameEn: asyncSnapshot.data.documents[0].data['items'][i]
+                      ['name_en'],
                   image: asyncSnapshot.data.documents[0].data['items'][i]
                       ['image'],
                   description: asyncSnapshot.data.documents[0].data['items'][i]
@@ -169,94 +173,103 @@ Widget subCollection(
                         ),
                         itemCount: listImages.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ShowItem(
-                                    image: listImages[index].image,
-                                    name: listImages[index].name,
-                                    des: listImages[index].description,
-                                    price: listImages[index].price,
-                                    fetchToMyCart: fetchMyCart,
-                                    imageID: listImages[index].imageID,
-                                    buyPrice: listImages[index].buyPrice,
-                                    size: listImages[index].size,
-                                    totalQuantity: "4",
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: <Widget>[
-                                  new Container(
-                                    height: 170,
-                                    decoration: new BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(8)),
-                                      image: new DecorationImage(
-                                        fit: BoxFit.fill,
-                                        image: new NetworkImage(
-                                            listImages[index].image),
+                          return Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey)),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ShowItem(
+                                        image: listImages[index].image,
+                                        name: listImages[index].name,
+                                        des: listImages[index].description,
+                                        price: listImages[index].price,
+                                        fetchToMyCart: fetchMyCart,
+                                        imageID: listImages[index].imageID,
+                                        buyPrice: listImages[index].buyPrice,
+                                        size: listImages[index].size,
+                                        totalQuantity: "4",
                                       ),
                                     ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        child: IconButton(
-                                            icon: Icon(
-                                              Icons.add_shopping_cart,
-                                              color: Colors.teal[600],
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: <Widget>[
+                                      new Container(
+                                        height: 170,
+                                        decoration: new BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8)),
+                                          image: new DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: new NetworkImage(
+                                                listImages[index].image),
+                                          ),
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            child: IconButton(
+                                                icon: Icon(
+                                                  Icons.add_shopping_cart,
+                                                  color: Colors.teal[600],
+                                                ),
+                                                onPressed: () {
+                                                  addToMyCartFromCategory(
+                                                    context,
+                                                    listImages[index].size,
+                                                    fetchMyCart,
+                                                    listImages[index].name,
+                                                    listImages[index].price,
+                                                    listImages[index]
+                                                        .description,
+                                                    listImages[index].image,
+                                                    listImages[index].imageID,
+                                                    listImages[index].buyPrice,
+                                                  );
+                                                }),
+                                          ),
+                                          Container(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 8.0),
+                                            alignment: Alignment.bottomRight,
+                                            child: Text(
+                                              isEnglish
+                                                  ? listImages[index].nameEn
+                                                  : listImages[index].name,
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.grey[600]),
                                             ),
-                                            onPressed: () {
-                                              addToMyCartFromCategory(
-                                                context,
-                                                listImages[index].size,
-                                                fetchMyCart,
-                                                listImages[index].name,
-                                                listImages[index].price,
-                                                listImages[index].description,
-                                                listImages[index].image,
-                                                listImages[index].imageID,
-                                                listImages[index].buyPrice,
-                                              );
-                                            }),
+                                          ),
+                                        ],
                                       ),
                                       Container(
                                         margin: EdgeInsets.symmetric(
                                             horizontal: 8.0),
+                                        width: double.infinity,
                                         alignment: Alignment.bottomRight,
                                         child: Text(
-                                          listImages[index].name,
+                                          "${listImages[index].price} ${word("currancy", context)}",
                                           style: TextStyle(
-                                              fontSize: 18,
+                                              color: Colors.teal,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.grey[600]),
+                                              fontSize: 20),
                                         ),
                                       ),
                                     ],
                                   ),
-                                  Container(
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 8.0),
-                                    width: double.infinity,
-                                    alignment: Alignment.bottomRight,
-                                    child: Text(
-                                      "${listImages[index].price} ${isEnglish ? english[61] : arabic[61]}",
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(
-                                          color: Colors.teal,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           );

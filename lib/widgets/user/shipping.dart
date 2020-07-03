@@ -35,7 +35,7 @@ Widget storedAddress(
       child: Column(
         children: [
           Text(
-            isEnglish ? english[19] : arabic[19],
+            word("choose_address", context),
             textDirection: TextDirection.rtl,
             style: TextStyle(
               fontSize: 22,
@@ -47,7 +47,7 @@ Widget storedAddress(
                 String address = addressList[index].address;
 
                 if (address == "") {
-                  address = "العنوان من الخريطة";
+                  address = word("address_msg_from_map", context);
                 }
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -112,7 +112,7 @@ Widget addAddress(BuildContext context, Function moveToMapScreen) {
             height: 30,
           ),
           Text(
-            isEnglish ? english[22] : arabic[22],
+            word("personal_info_address", context),
             textDirection: TextDirection.rtl,
             style: TextStyle(
               fontSize: 22,
@@ -124,14 +124,14 @@ Widget addAddress(BuildContext context, Function moveToMapScreen) {
                 width: MediaQuery.of(context).size.width / 2,
                 child: MyTextFormField(
                   editingController: name,
-                  hintText: isEnglish ? english[23] : arabic[23],
+                  hintText: word("full_name", context),
                 ),
               ),
               Container(
                 width: MediaQuery.of(context).size.width / 2,
                 child: MyTextFormField(
                   editingController: phone,
-                  hintText: isEnglish ? english[24] : arabic[24],
+                  hintText: word("phone_number", context),
                   isNumber: true,
                 ),
               ),
@@ -145,7 +145,7 @@ Widget addAddress(BuildContext context, Function moveToMapScreen) {
             color: Colors.black,
           ),
           Text(
-            isEnglish ? english[25] : arabic[25],
+            word("address_info", context),
             textDirection: TextDirection.rtl,
             style: TextStyle(
               fontSize: 22,
@@ -166,7 +166,7 @@ Widget addAddress(BuildContext context, Function moveToMapScreen) {
                         color: Colors.blueGrey,
                         borderRadius: BorderRadius.all(Radius.circular(20))),
                     child: Text(
-                      isEnglish ? english[27] : arabic[27],
+                      word("open_map", context),
                       textDirection: TextDirection.rtl,
                       style: TextStyle(fontSize: 22, color: Colors.white),
                     ),
@@ -177,7 +177,7 @@ Widget addAddress(BuildContext context, Function moveToMapScreen) {
                       ? Container()
                       : Center(
                           child: Text(
-                            "تم تحديد موقع التوصيل بنجاح",
+                            word("confirm_address", context),
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -220,7 +220,7 @@ Widget buttonsBoth(
             color: Colors.blue,
             child: Center(
               child: Text(
-                isEnglish ? english[20] : arabic[20],
+                word("new_address_botton", context),
                 textDirection: TextDirection.rtl,
                 style: TextStyle(
                     fontSize: 22,
@@ -233,9 +233,9 @@ Widget buttonsBoth(
       : InkWell(
           onTap: () {
             if (name.text.length < 5) {
-              isEnglish ? errorToast(english[33]) : errorToast(arabic[33]);
+              errorToast(word("full_name_error", context));
             } else if (phone.text.length < 10) {
-              isEnglish ? errorToast(english[34]) : errorToast(arabic[34]);
+              errorToast(word("phone_error", context));
             } else {
               if (customerLocation != null) {
                 codeOneController.clear();
@@ -275,7 +275,7 @@ Widget buttonsBoth(
                             children: <Widget>[
                               Center(
                                 child: Text(
-                                  "أدخل الكود المرسل الى رقم جوالك",
+                                  word("toast_type_code", context),
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ),
@@ -321,11 +321,11 @@ Widget buttonsBoth(
 
                                     Navigator.pop(context);
                                   } else {
-                                    errorToast("رمز التحقق خطأ");
+                                    errorToast(word("code_error", context));
                                   }
                                 },
                                 child: Text(
-                                  'تأكيد',
+                                  word("sure", context),
                                   style: TextStyle(
                                       color: Colors.purple, fontSize: 18.0),
                                 ),
@@ -338,7 +338,7 @@ Widget buttonsBoth(
                   ),
                 );
               } else {
-                isEnglish ? errorToast(english[35]) : errorToast(arabic[35]);
+                errorToast(word("choose_address_error", context));
               }
             }
           },
@@ -348,7 +348,7 @@ Widget buttonsBoth(
             color: Colors.blue,
             child: Center(
               child: Text(
-                isEnglish ? english[21] : arabic[21],
+                word("confirm_number", context),
                 textDirection: TextDirection.rtl,
                 style: TextStyle(
                     fontSize: 22,
@@ -393,14 +393,14 @@ Widget noDeliver(
             width: MediaQuery.of(context).size.width / 2,
             child: MyTextFormField(
               editingController: name,
-              hintText: isEnglish ? english[23] : arabic[23],
+              hintText: word('full_name', context),
             ),
           ),
           Container(
             width: MediaQuery.of(context).size.width / 2,
             child: MyTextFormField(
               editingController: phone,
-              hintText: isEnglish ? english[24] : arabic[24],
+              hintText: word("phone_number", context),
               isNumber: true,
             ),
           ),
@@ -439,8 +439,7 @@ Widget noDeliver(
           color: Colors.blue,
           child: Center(
             child: Text(
-              isEnglish ? english[21] : arabic[21],
-              textDirection: TextDirection.rtl,
+              word("continue", context),
               style: TextStyle(
                   fontSize: 22,
                   color: Colors.white,

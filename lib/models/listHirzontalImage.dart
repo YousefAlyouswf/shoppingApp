@@ -2,6 +2,7 @@ import 'package:shop_app/models/sizeListModel.dart';
 
 class ListHirezontalImage {
   String name;
+  String nameEn;
   String image;
   String description;
   String price;
@@ -15,6 +16,7 @@ class ListHirezontalImage {
 
   ListHirezontalImage({
     this.name,
+    this.nameEn,
     this.image,
     this.description,
     this.price,

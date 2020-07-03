@@ -149,7 +149,7 @@ Widget invoiceTable(BuildContext context, Function fetchMyCart,
                                         cart[i].sizeChose == ''
                                             ? Container()
                                             : Text(
-                                                "(${cart[i].sizeChose}) ${isEnglish ? english[39] : arabic[39]}",
+                                                "(${cart[i].sizeChose}) ${word("size", context)}",
                                                 style: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.w300,
