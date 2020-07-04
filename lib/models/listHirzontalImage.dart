@@ -13,6 +13,7 @@ class ListHirezontalImage {
   List<String> size;
   List<SizeListModel> sizeModel;
   String totalQuantity;
+  String priceOld;
 
   ListHirezontalImage({
     this.name,
@@ -27,5 +28,6 @@ class ListHirezontalImage {
     this.size,
     this.sizeModel,
     this.totalQuantity,
+    this.priceOld,
   });
 }

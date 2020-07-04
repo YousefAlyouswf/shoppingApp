@@ -143,6 +143,8 @@ Widget subCatgory(
                 sizeModel: sizes,
                 totalQuantity: asyncSnapshot.data.documents[0].data['items'][i]
                     ['totalQuantity'],
+                priceOld: asyncSnapshot.data.documents[0].data['items'][i]
+                    ['priceOld'],
               ));
             }
           } catch (e) {
@@ -174,380 +176,410 @@ Widget subCatgory(
                 Expanded(
                   child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3, childAspectRatio: 0.7),
+                          crossAxisCount: 3, childAspectRatio: 1 / 1.7),
                       itemCount: listImages.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return InkWell(
-                          onTap: () {
-                            showBottomSheet(
-                              backgroundColor: Colors.black87,
-                              context: context,
-                              builder: (context) => StatefulBuilder(
-                                builder: (BuildContext context,
-                                    StateSetter
-                                        setState /*You can rename this!*/) {
-                                  return SingleChildScrollView(
-                                    child: Container(
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black54,
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(40),
-                                          topLeft: Radius.circular(40),
+                        return Container(
+                          margin: EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey)),
+                          child: InkWell(
+                            onTap: () {
+                              showBottomSheet(
+                                backgroundColor: Colors.black87,
+                                context: context,
+                                builder: (context) => StatefulBuilder(
+                                  builder: (BuildContext context,
+                                      StateSetter
+                                          setState /*You can rename this!*/) {
+                                    return SingleChildScrollView(
+                                      child: Container(
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black54,
+                                          borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(40),
+                                            topLeft: Radius.circular(40),
+                                          ),
                                         ),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            height: 100,
-                                            width: double.infinity,
-                                            child: StreamBuilder(
-                                                stream: Firestore.instance
-                                                    .collection("images")
-                                                    .where("imageID",
-                                                        isEqualTo:
-                                                            listImages[index]
-                                                                .imageID)
-                                                    .snapshots(),
-                                                builder: (context, snapshot) {
-                                                  if (!snapshot.hasData) {
-                                                    return Text("Loading");
-                                                  } else {
-                                                    return ListView.builder(
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        itemCount: snapshot
-                                                            .data
-                                                            .documents[0]
-                                                            .data['images']
-                                                            .length,
-                                                        itemBuilder:
-                                                            (context, i) {
-                                                          String listImage =
-                                                              snapshot
-                                                                      .data
-                                                                      .documents[0]
-                                                                      .data[
-                                                                  'images'][i];
-                                                          return InkWell(
-                                                            onLongPress: () {
-                                                              if (i == 0) {
-                                                                errorToast(
-                                                                    "لا يمكن حذف أول صورة من هذا المكان");
-                                                              } else {
-                                                                FirestoreFunctions().deleteImagesForList(
-                                                                    snapshot
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              height: 100,
+                                              width: double.infinity,
+                                              child: StreamBuilder(
+                                                  stream: Firestore.instance
+                                                      .collection("images")
+                                                      .where("imageID",
+                                                          isEqualTo:
+                                                              listImages[index]
+                                                                  .imageID)
+                                                      .snapshots(),
+                                                  builder: (context, snapshot) {
+                                                    if (!snapshot.hasData) {
+                                                      return Text("Loading");
+                                                    } else {
+                                                      return ListView.builder(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          itemCount: snapshot
+                                                              .data
+                                                              .documents[0]
+                                                              .data['images']
+                                                              .length,
+                                                          itemBuilder:
+                                                              (context, i) {
+                                                            String listImage =
+                                                                snapshot
                                                                         .data
                                                                         .documents[
                                                                             0]
-                                                                        .data['imageID'],
-                                                                    listImage);
-                                                              }
-                                                            },
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: Container(
-                                                                height: 100,
-                                                                width: 100,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  image:
-                                                                      DecorationImage(
-                                                                    fit: BoxFit
-                                                                        .fill,
+                                                                        .data[
+                                                                    'images'][i];
+                                                            return InkWell(
+                                                              onLongPress: () {
+                                                                if (i == 0) {
+                                                                  errorToast(
+                                                                      "لا يمكن حذف أول صورة من هذا المكان");
+                                                                } else {
+                                                                  FirestoreFunctions().deleteImagesForList(
+                                                                      snapshot
+                                                                          .data
+                                                                          .documents[
+                                                                              0]
+                                                                          .data['imageID'],
+                                                                      listImage);
+                                                                }
+                                                              },
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        8.0),
+                                                                child:
+                                                                    Container(
+                                                                  height: 100,
+                                                                  width: 100,
+                                                                  decoration:
+                                                                      BoxDecoration(
                                                                     image:
-                                                                        NetworkImage(
-                                                                      listImage,
+                                                                        DecorationImage(
+                                                                      fit: BoxFit
+                                                                          .fill,
+                                                                      image:
+                                                                          NetworkImage(
+                                                                        listImage,
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                          );
-                                                        });
-                                                  }
+                                                            );
+                                                          });
+                                                    }
+                                                  }),
+                                            ),
+                                            IconButton(
+                                                icon: Icon(
+                                                  Icons.add,
+                                                  size: 44,
+                                                  color: Colors.white,
+                                                ),
+                                                onPressed: () async {
+                                                  await getImageForCatgory(
+                                                      takeImageCameraForList(
+                                                          listImages[index]
+                                                              .imageID),
+                                                      takeImageGalaryForList(
+                                                          listImages[index]
+                                                              .imageID),
+                                                      context);
                                                 }),
-                                          ),
-                                          IconButton(
-                                              icon: Icon(
-                                                Icons.add,
-                                                size: 44,
-                                                color: Colors.white,
-                                              ),
-                                              onPressed: () async {
-                                                await getImageForCatgory(
-                                                    takeImageCameraForList(
-                                                        listImages[index]
-                                                            .imageID),
-                                                    takeImageGalaryForList(
-                                                        listImages[index]
-                                                            .imageID),
-                                                    context);
-                                              }),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              IconButton(
-                                                  icon: Icon(Icons.edit,
-                                                      color: Colors.blue),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                IconButton(
+                                                    icon: Icon(Icons.edit,
+                                                        color: Colors.blue),
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              EditItem(
+                                                            listImages[index]
+                                                                .name,
+                                                            listImages[index]
+                                                                .nameEn,
+                                                            listImages[index]
+                                                                .image,
+                                                            listImages[index]
+                                                                .price,
+                                                            listImages[index]
+                                                                .description,
+                                                            listImages[index]
+                                                                .imageID,
+                                                            listImages[index]
+                                                                .show,
+                                                            catgoryName,
+                                                            listImages[index]
+                                                                .buyPrice,
+                                                            listImages[index]
+                                                                .sizeModel,
+                                                            listImages[index]
+                                                                .totalQuantity,
+                                                            listImages[index]
+                                                                .priceOld,
+                                                          ),
+                                                        ),
+                                                      ).then((value) =>
+                                                          Navigator.pop(
+                                                              context));
+                                                    }),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      16.0),
+                                                  child: Column(
+                                                    children: [
+                                                      Text(
+                                                        "${listImages[index].price} ر.س",
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Text(
+                                                        "${listImages[index].buyPrice} ر.س",
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      16.0),
+                                                  child: Text(
+                                                    listImages[index].name,
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                IconButton(
+                                                  icon: Icon(
+                                                    !listImages[index].show
+                                                        ? Icons.cancel
+                                                        : Icons.check_circle,
+                                                    size: 40,
+                                                    color:
+                                                        !listImages[index].show
+                                                            ? Colors.red
+                                                            : Colors.green,
+                                                  ),
                                                   onPressed: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            EditItem(
-                                                          listImages[index]
-                                                              .name,
-                                                          listImages[index]
-                                                              .nameEn,
-                                                          listImages[index]
-                                                              .image,
-                                                          listImages[index]
-                                                              .price,
-                                                          listImages[index]
-                                                              .description,
-                                                          listImages[index]
-                                                              .imageID,
-                                                          listImages[index]
-                                                              .show,
-                                                          catgoryName,
+                                                    Map<String, dynamic>
+                                                        sizingMap =
+                                                        Map.fromIterable(
+                                                            listImages[index]
+                                                                .sizeModel,
+                                                            key: (e) =>
+                                                                e.sizeName,
+                                                            value: (e) =>
+                                                                e.value);
+
+                                                    Map<String, dynamic>
+                                                        itemMapRemove = {
+                                                      "buyPrice":
                                                           listImages[index]
                                                               .buyPrice,
+                                                      "name": listImages[index]
+                                                          .name,
+                                                      "name_en":
                                                           listImages[index]
-                                                              .sizeModel,
+                                                              .nameEn,
+                                                      "description":
                                                           listImages[index]
-                                                              .totalQuantity,
-                                                        ),
-                                                      ),
-                                                    ).then((value) =>
-                                                        Navigator.pop(context));
-                                                  }),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(16.0),
-                                                child: Column(
-                                                  children: [
-                                                    Text(
-                                                      "${listImages[index].price} ر.س",
-                                                      textDirection:
-                                                          TextDirection.rtl,
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    Text(
-                                                      "${listImages[index].buyPrice} ر.س",
-                                                      textDirection:
-                                                          TextDirection.rtl,
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(16.0),
-                                                child: Text(
-                                                  listImages[index].name,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ),
-                                              IconButton(
-                                                icon: Icon(
-                                                  !listImages[index].show
-                                                      ? Icons.cancel
-                                                      : Icons.check_circle,
-                                                  size: 40,
-                                                  color: !listImages[index].show
-                                                      ? Colors.red
-                                                      : Colors.green,
-                                                ),
-                                                onPressed: () {
-                                                  Map<String, dynamic>
-                                                      sizingMap =
-                                                      Map.fromIterable(
+                                                              .description,
+                                                      "price": listImages[index]
+                                                          .price,
+                                                      "image": listImages[index]
+                                                          .image,
+                                                      "show": false,
+                                                      "imageID":
                                                           listImages[index]
-                                                              .sizeModel,
-                                                          key: (e) =>
-                                                              e.sizeName,
-                                                          value: (e) =>
-                                                              e.value);
-
-                                                  Map<String, dynamic>
-                                                      itemMapRemove = {
-                                                    "buyPrice":
-                                                        listImages[index]
-                                                            .buyPrice,
-                                                    "name":
-                                                        listImages[index].name,
-                                                    "name_en": listImages[index]
-                                                        .nameEn,
-                                                    "description":
-                                                        listImages[index]
-                                                            .description,
-                                                    "price":
-                                                        listImages[index].price,
-                                                    "image":
-                                                        listImages[index].image,
-                                                    "show": false,
-                                                    "imageID": listImages[index]
-                                                        .imageID,
-                                                    'size': sizingMap,
-                                                    'totalQuantity':
-                                                        listImages[index]
-                                                            .totalQuantity
-                                                  };
-                                                  Map<String, dynamic>
-                                                      itemMapAdd = {
-                                                    "buyPrice":
-                                                        listImages[index]
-                                                            .buyPrice,
-                                                    "name":
-                                                        listImages[index].name,
-                                                    "name_en": listImages[index]
-                                                        .nameEn,
-                                                    "description":
-                                                        listImages[index]
-                                                            .description,
-                                                    "price":
-                                                        listImages[index].price,
-                                                    "image":
-                                                        listImages[index].image,
-                                                    "show": true,
-                                                    "imageID": listImages[index]
-                                                        .imageID,
-                                                    'size': sizingMap,
-                                                    'totalQuantity':
-                                                        listImages[index]
-                                                            .totalQuantity
-                                                  };
-                                                  if (listImages[index].show) {
-                                                    FirestoreFunctions()
-                                                        .changeShowStatus(
-                                                      catgoryName,
-                                                      itemMapAdd,
-                                                      itemMapRemove,
-                                                    );
-                                                  } else {
-                                                    FirestoreFunctions()
-                                                        .changeShowStatus(
-                                                      catgoryName,
-                                                      itemMapRemove,
-                                                      itemMapAdd,
-                                                    );
-                                                  }
-                                                  setState(() {});
-                                                  Navigator.pop(context);
-                                                },
-                                              )
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: 200,
-                                              child: SingleChildScrollView(
-                                                child: Card(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      children: [
-                                                        Center(
-                                                          child: Text(
-                                                            "وصف المنتج",
+                                                              .imageID,
+                                                      'size': sizingMap,
+                                                      'totalQuantity':
+                                                          listImages[index]
+                                                              .totalQuantity
+                                                    };
+                                                    Map<String, dynamic>
+                                                        itemMapAdd = {
+                                                      "buyPrice":
+                                                          listImages[index]
+                                                              .buyPrice,
+                                                      "name": listImages[index]
+                                                          .name,
+                                                      "name_en":
+                                                          listImages[index]
+                                                              .nameEn,
+                                                      "description":
+                                                          listImages[index]
+                                                              .description,
+                                                      "price": listImages[index]
+                                                          .price,
+                                                      "image": listImages[index]
+                                                          .image,
+                                                      "show": true,
+                                                      "imageID":
+                                                          listImages[index]
+                                                              .imageID,
+                                                      'size': sizingMap,
+                                                      'totalQuantity':
+                                                          listImages[index]
+                                                              .totalQuantity
+                                                    };
+                                                    if (listImages[index]
+                                                        .show) {
+                                                      FirestoreFunctions()
+                                                          .changeShowStatus(
+                                                        catgoryName,
+                                                        itemMapAdd,
+                                                        itemMapRemove,
+                                                      );
+                                                    } else {
+                                                      FirestoreFunctions()
+                                                          .changeShowStatus(
+                                                        catgoryName,
+                                                        itemMapRemove,
+                                                        itemMapAdd,
+                                                      );
+                                                    }
+                                                    setState(() {});
+                                                    Navigator.pop(context);
+                                                  },
+                                                )
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: Container(
+                                                width: double.infinity,
+                                                height: 200,
+                                                child: SingleChildScrollView(
+                                                  child: Card(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Center(
+                                                            child: Text(
+                                                              "وصف المنتج",
+                                                              textDirection:
+                                                                  TextDirection
+                                                                      .rtl,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            listImages[index]
+                                                                .description,
                                                             textDirection:
                                                                 TextDirection
                                                                     .rtl,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
                                                           ),
-                                                        ),
-                                                        Text(
-                                                          listImages[index]
-                                                              .description,
-                                                          textDirection:
-                                                              TextDirection.rtl,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            onLongPress: () {
+                              Map<String, dynamic> sizingMap = Map.fromIterable(
+                                  listImages[index].sizeModel,
+                                  key: (e) => e.sizeName,
+                                  value: (e) => e.value);
+                              Map<String, dynamic> itemMap = {
+                                'buyPrice': listImages[index].buyPrice,
+                                "name": listImages[index].name,
+                                "name_en": listImages[index].nameEn,
+                                "description": listImages[index].description,
+                                "price": listImages[index].price,
+                                "image": listImages[index].image,
+                                'show': listImages[index].show,
+                                'imageID': listImages[index].imageID,
+                                'size': sizingMap,
+                                'totalQuantity': listImages[index].totalQuantity
+                              };
+                              deleteItemDialog(
+                                context,
+                                listImages[index].name,
+                                catgoryName,
+                                itemMap,
+                                listImages[index].image,
+                                listImages[index].price,
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: <Widget>[
+                                  new Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 3,
+                                    height: 100,
+                                    decoration: new BoxDecoration(
+                                      image: new DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: new NetworkImage(
+                                            listImages[index].image),
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                          onLongPress: () {
-                            Map<String, dynamic> sizingMap = Map.fromIterable(
-                                listImages[index].sizeModel,
-                                key: (e) => e.sizeName,
-                                value: (e) => e.value);
-                            Map<String, dynamic> itemMap = {
-                              'buyPrice': listImages[index].buyPrice,
-                              "name": listImages[index].name,
-                              "name_en": listImages[index].nameEn,
-                              "description": listImages[index].description,
-                              "price": listImages[index].price,
-                              "image": listImages[index].image,
-                              'show': listImages[index].show,
-                              'imageID': listImages[index].imageID,
-                              'size': sizingMap,
-                              'totalQuantity': listImages[index].totalQuantity
-                            };
-                            deleteItemDialog(
-                              context,
-                              listImages[index].name,
-                              catgoryName,
-                              itemMap,
-                              listImages[index].image,
-                              listImages[index].price,
-                            );
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: <Widget>[
-                                new Container(
-                                  width: MediaQuery.of(context).size.width / 3,
-                                  height: 100,
-                                  decoration: new BoxDecoration(
-                                    image: new DecorationImage(
-                                      fit: BoxFit.fill,
-                                      image: new NetworkImage(
-                                          listImages[index].image),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.all(8.0),
+                                    decoration:
+                                        BoxDecoration(border: Border.all()),
+                                    child: Text(
+                                      listImages[index].imageID,
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Text(listImages[index].name),
-                                Text(listImages[index].price),
-                              ],
+                                  Text(listImages[index].name),
+                                  Text(listImages[index].price),
+                                ],
+                              ),
                             ),
                           ),
                         );

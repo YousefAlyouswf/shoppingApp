@@ -577,6 +577,7 @@ Widget addItem(
                         'size': checkedSize
                             ? sizeNum ? sizeNumMap : sizeWordMap
                             : {},
+                        'priceOld': '',
                       };
                       Map<String, dynamic> itemMapForNew = {
                         "category": categoryName.text,

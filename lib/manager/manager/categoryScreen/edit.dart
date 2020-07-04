@@ -20,6 +20,7 @@ class EditItem extends StatefulWidget {
   final String buyPrice;
   final String totalQuantity;
   final List<SizeListModel> size;
+  final String priceOld;
 
   const EditItem(
     this.name,
@@ -33,6 +34,7 @@ class EditItem extends StatefulWidget {
     this.buyPrice,
     this.size,
     this.totalQuantity,
+    this.priceOld,
   );
   @override
   _EditItemState createState() => _EditItemState();
@@ -45,6 +47,7 @@ class _EditItemState extends State<EditItem> {
   TextEditingController des = TextEditingController();
   TextEditingController buyPrice = TextEditingController();
   TextEditingController totalQuantity = TextEditingController();
+  TextEditingController priceOld = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -54,6 +57,7 @@ class _EditItemState extends State<EditItem> {
     des.text = widget.des;
     buyPrice.text = widget.buyPrice;
     totalQuantity.text = widget.totalQuantity;
+    priceOld.text = widget.priceOld;
     if (widget.size.length > 0) {
       checkedSize = true;
       if (widget.size.length == 5) {
@@ -173,13 +177,25 @@ class _EditItemState extends State<EditItem> {
                         ),
                       ],
                     ),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 2,
-                      child: MyTextFormField(
-                        hintText: "الكمية",
-                        editingController: totalQuantity,
-                        isNumber: true,
-                      ),
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: MyTextFormField(
+                            hintText: "سعر قبل الخصم",
+                            editingController: priceOld,
+                            isNumber: true,
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          child: MyTextFormField(
+                            hintText: "الكمية",
+                            editingController: totalQuantity,
+                            isNumber: true,
+                          ),
+                        ),
+                      ],
                     ),
                     MyTextFormField(
                       editingController: des,
@@ -306,6 +322,7 @@ class _EditItemState extends State<EditItem> {
                     'show': widget.show,
                     'size': sizingMap,
                     'totalQuantity': widget.totalQuantity,
+                    'priceOld': widget.priceOld,
                   };
                   Map<String, dynamic> itemMapAdd = {
                     'buyPrice': buyPrice.text,
@@ -319,6 +336,7 @@ class _EditItemState extends State<EditItem> {
                     'size':
                         checkedSize ? sizeNum ? sizeNumMap : sizeWordMap : {},
                     'totalQuantity': totalQuantity.text,
+                    'priceOld': priceOld.text,
                   };
                   FirestoreFunctions()
                       .upDateItems(widget.category, itemMapRemove, itemMapAdd)
@@ -339,6 +357,7 @@ class _EditItemState extends State<EditItem> {
                     'show': widget.show,
                     'size': {},
                     'totalQuantity': widget.totalQuantity,
+                    'priceOld': widget.priceOld,
                   };
                   Map<String, dynamic> itemMapAdd = {
                     'buyPrice': buyPrice.text,
@@ -351,6 +370,7 @@ class _EditItemState extends State<EditItem> {
                     'show': widget.show,
                     'size': {},
                     'totalQuantity': totalQuantity.text,
+                    'priceOld': priceOld.text,
                   };
                   FirestoreFunctions()
                       .upDateItems(widget.category, itemMapRemove, itemMapAdd)

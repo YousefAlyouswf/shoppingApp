@@ -168,6 +168,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                       size: sizes,
                       totalQuantity: asyncSnapshot
                           .data.documents[0].data['items'][i]['totalQuantity'],
+                      priceOld: asyncSnapshot.data.documents[0].data['items'][i]
+                          ['priceOld'],
                     ),
                   );
                 }
@@ -197,7 +199,13 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               padding: const EdgeInsets.all(2.0),
                               child: Container(
                                 decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey)),
+                                  border: Border.all(
+                                    color: Colors.grey[300],
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(15),
+                                  ),
+                                ),
                                 child: InkWell(
                                   onTap: () {
                                     Navigator.push(
@@ -288,22 +296,30 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                           alignment: Alignment.bottomRight,
                                           child: Column(
                                             children: [
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: <TextSpan>[
-                                                    new TextSpan(
-                                                      text:
-                                                          '2500 ${word("currancy", context)}',
-                                                      style: new TextStyle(
-                                                        color: Colors.grey,
-                                                        decoration:
-                                                            TextDecoration
-                                                                .lineThrough,
+                                              listImages[index].priceOld ==
+                                                          "" ||
+                                                      listImages[index]
+                                                              .priceOld ==
+                                                          null
+                                                  ? Container()
+                                                  : Text.rich(
+                                                      TextSpan(
+                                                        children: <TextSpan>[
+                                                          new TextSpan(
+                                                            text:
+                                                                '${listImages[index].priceOld} ${word("currancy", context)}',
+                                                            style:
+                                                                new TextStyle(
+                                                              color:
+                                                                  Colors.grey,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .lineThrough,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
                                               Text(
                                                 "${listImages[index].price} ${word("currancy", context)}",
                                                 style: TextStyle(
