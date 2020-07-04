@@ -595,10 +595,12 @@ Widget headerCatgory(Function switchBetweenCategory) {
             return Container(
               width: 100,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                border: Border.all(
+                //   borderRadius: BorderRadius.all(Radius.circular(5)),
+                border: Border(
+                    bottom: BorderSide(
+                  width: 5,
                   color: selected[i] ? Color(0xFFFF834F) : Colors.transparent,
-                ),
+                )),
               ),
               child: InkWell(
                 onTap: () {

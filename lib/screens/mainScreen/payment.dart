@@ -1,12 +1,16 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
+import 'package:shop_app/screens/mainScreen/homePage.dart';
+import 'package:shop_app/widgets/widgets.dart';
+import 'package:twilio_flutter/twilio_flutter.dart';
 import 'dart:math' show cos, sqrt, asin;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
@@ -42,7 +46,6 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Future<void> _getPayTabs() async {
     const platform = MethodChannel('samples.flutter.dev/battery');
     if (zipCode == null) {
@@ -60,18 +63,45 @@ class _PaymentState extends State<Payment> {
         'address': addressLine,
       };
       final Map result = await platform.invokeMethod('getPayTabs', map);
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-            elevation: 0,
-            content: Text(
-              result['pt_result'] == "Your transaction is succesfully completed"
-                  ? "تمت عملية الدفع بنجاح"
-                  : "فشلت عملية الدفع",
-              style: TextStyle(color: Colors.white),
-            ),
-            duration: Duration(seconds: 3),
-            backgroundColor: Colors.green),
-      );
+
+      if (result['pt_result'] == "Your transaction is succesfully completed") {
+        getTheDeriver();
+        await Firestore.instance.collection('order').add({
+          'driverID': id,
+          'driverName': name,
+          'orderID': orderID,
+          'date': DateTime.now().toString(),
+          'status': '0',
+          'address': widget.address,
+          'total': widget.totalAfterTax,
+          'lat': widget.lat,
+          'long': widget.long,
+          'name': widget.name,
+          'phone': widget.phone,
+          'priceForSell': widget.price,
+          'priceForBuy': widget.buyPrice,
+          'items': FieldValue.arrayUnion(mapItems),
+          'userID': androidInfo.androidId == null
+              ? iosDeviceInfo.identifierForVendor
+              : androidInfo.androidId,
+        }).then((value) {
+          paymentToast("تم إستلام طلبك يمكنك متابعه الطلب من قسم الطلبات");
+          DBHelper.deleteAllItem("cart");
+          Navigator.popUntil(context, (route) => route.isFirst);
+          navIndex = 3;
+          twilioFlutter.sendSMS(
+              toNumber: phone,
+              messageBody:
+                  'رفوف\nمرحبا ${widget.name} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
+        });
+        DBHelper.deleteAllItem("cart");
+        navIndex = 3;
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      } else {
+        errorToast("فشلت عملية الدفع");
+        Navigator.pop(context);
+      }
+      print("------------>> ${result['pt_result']}");
     } on PlatformException catch (e) {
       print(e);
     }
@@ -85,6 +115,7 @@ class _PaymentState extends State<Payment> {
   String zipCode;
   String addressLine;
   String state;
+
   @override
   void initState() {
     super.initState();
@@ -93,10 +124,42 @@ class _PaymentState extends State<Payment> {
     Uuid id = Uuid();
     String uid = id.v1();
     orderID = uid.substring(0, 13);
-
+    deviceID();
     items = '';
     quantity = '';
     unitPrice = '';
+    twilioInfo();
+  }
+
+  String accountSid;
+  String authToken;
+  String twilioNumber;
+  String phone;
+  TwilioFlutter twilioFlutter;
+  twilioInfo() async {
+    await Firestore.instance.collection("twilio").getDocuments().then((v) {
+      v.documents.forEach((e) {
+        setState(() {
+          accountSid = e['accountSid'];
+          authToken = e['authToken'];
+          twilioNumber = e['twilioNumber'];
+        });
+      });
+    });
+    twilioFlutter = TwilioFlutter(
+      accountSid: accountSid,
+      authToken: authToken,
+      twilioNumber: '+12054966662',
+    );
+
+    phone = widget.phone;
+    if (phone.substring(0, 2) == "05") {
+      phone = phone.substring(1);
+
+      phone = "+966$phone";
+    } else {
+      phone = "+1$phone";
+    }
   }
 
   String a = '';
@@ -199,17 +262,20 @@ class _PaymentState extends State<Payment> {
     findAddress();
   }
 
+  AndroidDeviceInfo androidInfo;
+  IosDeviceInfo iosDeviceInfo;
+  void deviceID() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      androidInfo = await deviceInfo.androidInfo;
+    } else if (Platform.isIOS) {
+      iosDeviceInfo = await deviceInfo.iosInfo;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      //  appBar: appBar(),
-      body: Container(
-        child: Center(
-          child: Text(" $a"),
-        ),
-      ),
-    );
+    return Scaffold();
   }
 
   double min = 0.0;

@@ -374,21 +374,24 @@ class _CartWidgetState extends State<CartWidget> {
                             ),
                           ),
                           Align(
-                            alignment: Alignment.topRight,
+                            alignment: isEnglish
+                                ? Alignment.topRight
+                                : Alignment.topLeft,
                             child: IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.grey,
-                                ),
-                                onPressed: () {
-                                  deleteCategoryDialog(
-                                    context,
-                                    cart[i].itemName,
-                                    cart[i].image,
-                                    cart[i].id,
-                                    fetchToMyCart,
-                                  );
-                                }),
+                              icon: Icon(
+                                Icons.delete,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                deleteCategoryDialog(
+                                  context,
+                                  cart[i].itemName,
+                                  cart[i].image,
+                                  cart[i].id,
+                                  fetchToMyCart,
+                                );
+                              },
+                            ),
                           ),
                         ],
                       );
@@ -426,7 +429,7 @@ class _CartWidgetState extends State<CartWidget> {
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.7,
                     decoration: BoxDecoration(
-                        color: Color(0xFFFF834F),
+                        color: Theme.of(context).unselectedWidgetColor,
                         borderRadius: BorderRadius.all(Radius.circular(5))),
                     child: FlatButton.icon(
                         onPressed: () {
@@ -507,7 +510,6 @@ class _CartWidgetState extends State<CartWidget> {
                         );
                       },
                       child: Card(
-                        color: Colors.grey[300],
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(word("coupon", context)),

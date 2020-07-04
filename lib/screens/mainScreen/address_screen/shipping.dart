@@ -216,7 +216,7 @@ Widget buttonsBoth(
           child: Container(
             height: 50,
             width: MediaQuery.of(context).size.width / 2,
-            color: Colors.blue,
+            color: Theme.of(context).unselectedWidgetColor,
             child: Center(
               child: Text(
                 word("new_address_botton", context),

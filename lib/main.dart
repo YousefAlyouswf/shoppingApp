@@ -84,6 +84,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
+        splashColor: Color(0xFFFF834F),
+        unselectedWidgetColor: Color(0xFFFF834F),
         primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: brightness,
