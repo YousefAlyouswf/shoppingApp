@@ -50,6 +50,9 @@ class _LunchAppState extends State<LunchApp> {
   Future<bool> areYouFristTimeOpenApp() async {
     firstTime = await HelperFunction.getFirstLangauge();
     setState(() {});
+    if (firstTime == null) {
+      firstTime = true;
+    }
     return firstTime;
   }
 

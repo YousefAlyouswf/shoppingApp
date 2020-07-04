@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<key>io.flutter.embedded_views_preview</key>
-<string>YES</string>
+	<key>io.flutter.embedded_views_preview</key>
+	<string>YES</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>السماح الوصول لموقعك لتوفير البحث عن الموقع</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -51,5 +51,10 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>ar </string>
+	</array>
 </dict>
 </plist>
