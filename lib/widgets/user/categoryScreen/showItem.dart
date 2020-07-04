@@ -95,7 +95,7 @@ class _ShowItemState extends State<ShowItem>
                           width: double.infinity,
                           alignment: Alignment.centerRight,
                           child: Text(
-                            "${widget.name}",
+                            isEnglish ? widget.nameEn : widget.name,
                             style: TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.bold),
                           ),
@@ -104,10 +104,10 @@ class _ShowItemState extends State<ShowItem>
                             ? Container(
                                 child: Text(
                                   quantity == 1
-                                      ? "أخر قطعه لدينا"
+                                      ? word("lastOne", context)
                                       : quantity == 2
-                                          ? "أخر قطعتين لدينا"
-                                          : "أخر $quantity قطع متوفرة",
+                                          ? word("lastTwo", context)
+                                          : word("almostOutOfStock", context),
                                   textDirection: TextDirection.rtl,
                                   style: TextStyle(color: Colors.red),
                                 ),
@@ -131,7 +131,7 @@ class _ShowItemState extends State<ShowItem>
                             : Column(
                                 children: [
                                   Text(
-                                    "المقاس",
+                                    word("size", context),
                                     style: TextStyle(fontSize: 22),
                                   ),
                                   Container(
@@ -192,7 +192,7 @@ class _ShowItemState extends State<ShowItem>
                                     children: [
                                       Center(
                                         child: Text(
-                                          "وصف المنتج",
+                                          word("itemDes", context),
                                           textDirection: TextDirection.rtl,
                                         ),
                                       ),
@@ -224,7 +224,7 @@ class _ShowItemState extends State<ShowItem>
               width: double.infinity,
               child: FlatButton(
                 child: Text(
-                  "أضف إلى سلة التسوق",
+                  word("addToCart", context),
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,

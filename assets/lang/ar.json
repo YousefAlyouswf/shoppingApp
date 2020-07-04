@@ -55,7 +55,12 @@
     "english": "English",
     "full_name_error": "أكتب أسمك كامل",
     "phone_error": "رقم الجوال 10 أرقام\n05XXXXXXXX",
-    "continue":"متابعه",
-    "size":"المقاس",
-    "outOfStock":"الكمية غير متوفرة "
+    "continue": "متابعه",
+    "size": "المقاس",
+    "outOfStock": "الكمية غير متوفرة ",
+    "lastOne": "أخر قطعه لدينا",
+    "lastTwo": "أخر قطعتين لدينا",
+    "almostOutOfStock": "الكمية محدودة جداٌ",
+    "itemDes":"وصف المنتج",
+    "addToCart":"أضف إلى سلة التسوق"
 }

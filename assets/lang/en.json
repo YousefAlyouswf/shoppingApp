@@ -56,6 +56,11 @@
     "full_name_error": "Type your full name",
     "phone_error": "Phone Number 10 Digits\n05XXXXXXXX",
     "continue": "Continue",
-    "size":"Size",
-    "outOfStock":"Out of stock"
+    "size": "Size",
+    "outOfStock": "Out of stock",
+    "lastOne": "One piece left",
+    "lastTwo": "Two pieces left",
+    "almostOutOfStock": "Almost out of stock",
+    "itemDes":"Product Description",
+    "addToCart":"ADD TO CART"
 }
