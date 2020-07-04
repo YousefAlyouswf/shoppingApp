@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shop_app/screens/gmapForDelvir.dart';
 import 'package:shop_app/widgets/widgets.dart';
+
+import 'gmapForDelvir.dart';
 
 class AddNewEmployee extends StatefulWidget {
   @override

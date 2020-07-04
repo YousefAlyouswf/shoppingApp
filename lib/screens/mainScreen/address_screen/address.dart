@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmap;
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/addressModel.dart';
-import 'package:shop_app/screens/gmap.dart';
-import 'package:shop_app/widgets/user/shipping.dart';
 import 'package:twilio_flutter/twilio_flutter.dart' as tw;
 
-import 'homePage.dart';
+import '../homePage.dart';
+import 'gmap.dart';
+import 'shipping.dart';
 
 class Address extends StatefulWidget {
   final String totalAfterTax;

@@ -5,12 +5,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/database/firestore.dart';
-import 'package:shop_app/manager/edit.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 import 'package:shop_app/models/sizeListModel.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
-import 'addItem.dart';
+import '../addItem.dart';
+import 'edit.dart';
 
 String catgoryName = "";
 

@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shop_app/screens/add_new_empolyee.dart';
-import 'package:shop_app/screens/employeeScreen.dart';
+import 'package:shop_app/manager/manager/addItem.dart';
+
 import 'package:shop_app/widgets/widgets.dart';
-import 'mainScreen/address.dart';
+
+import 'add_new_empolyee.dart';
+import 'employeeScreen.dart';
 
 class MyAccount extends StatefulWidget {
   @override

@@ -42,7 +42,6 @@ dependencies:
   sqflite: ^1.3.1
   uuid: ^2.1.0
   path: ^1.7.0
-  stripe_payment: ^1.0.7
   url_launcher: ^5.4.10
   flutter_launcher_icons: ^0.7.5
   google_maps_flutter: ^0.5.28+1
@@ -53,7 +52,6 @@ dependencies:
   maps_launcher: ^1.2.0
   shimmer: ^1.1.1
   twilio_flutter: ^0.0.5
-  flutter_credit_card: ^0.1.3
   geocoder: ^0.2.1
 
 dev_dependencies:
@@ -79,7 +77,6 @@ flutter:
   assets:
     - assets/images/
     - assets/images/logo.png
-    - assets/images/logoBig.png
     - assets/images/logoBigTrans.png
     - assets/lang/
   

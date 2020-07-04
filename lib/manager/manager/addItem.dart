@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
-import 'category.dart';
+import 'categoryScreen/category.dart';
 
 class AddItemManager extends StatefulWidget {
   @override

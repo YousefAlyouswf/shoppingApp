@@ -4,9 +4,9 @@ import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
-import 'package:shop_app/screens/showItem.dart';
 
-import '../widgets.dart';
+import '../../widgets.dart';
+import 'showItem.dart';
 
 class CategoryWidget extends StatefulWidget {
   @override

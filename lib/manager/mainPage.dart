@@ -6,7 +6,7 @@ import 'package:shop_app/models/tabModels.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
 import 'manager/addItem.dart';
-import 'manager/category.dart';
+import 'manager/categoryScreen/category.dart';
 import 'manager/employeeWidget.dart';
 import 'manager/order.dart';
 

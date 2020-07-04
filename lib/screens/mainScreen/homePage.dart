@@ -4,7 +4,7 @@ import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/widgets/lang/appLocale.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
-import 'package:shop_app/widgets/user/categoroesWidget.dart';
+import 'package:shop_app/widgets/user/categoryScreen/categoroesWidget.dart';
 import 'package:shop_app/widgets/user/homeWidget.dart';
 import 'package:shop_app/widgets/user/myOrderWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';

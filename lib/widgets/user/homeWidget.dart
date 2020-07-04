@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
-import 'package:shop_app/screens/showItem.dart';
 
 import '../widgets.dart';
+import 'categoryScreen/showItem.dart';
 
 class HomeWidget extends StatefulWidget {
   @override
