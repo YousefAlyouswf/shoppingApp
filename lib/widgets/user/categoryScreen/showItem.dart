@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
+import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/widgets/user/homeWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
@@ -12,6 +13,7 @@ class ShowItem extends StatefulWidget {
   final Function changeLangauge;
   final String image;
   final String name;
+  final String nameEn;
   final String des;
   final String price;
   final String imageID;
@@ -24,6 +26,7 @@ class ShowItem extends StatefulWidget {
     this.changeLangauge,
     this.image,
     this.name,
+    this.nameEn,
     this.des,
     this.price,
     this.imageID,
@@ -45,7 +48,7 @@ class _ShowItemState extends State<ShowItem>
   void initState() {
     getImagesToShowItems();
     super.initState();
-
+    print(widget.totalQuantity);
     fetchToMyCart();
     setState(() {
       quantity = int.parse(widget.totalQuantity);
@@ -54,7 +57,6 @@ class _ShowItemState extends State<ShowItem>
 
   @override
   Widget build(BuildContext context) {
-    print(quantity);
     return Scaffold(
       body: Column(
         children: [
@@ -116,7 +118,7 @@ class _ShowItemState extends State<ShowItem>
                           width: double.infinity,
                           alignment: Alignment.centerRight,
                           child: Text(
-                            "${widget.price} ر.س",
+                            "${widget.price} ${word("currancy", context)}",
                             textDirection: TextDirection.rtl,
                             style: TextStyle(
                                 fontSize: 22,
@@ -229,7 +231,7 @@ class _ShowItemState extends State<ShowItem>
                       fontWeight: FontWeight.bold),
                 ),
                 onPressed: () async {
-                  fetchToMyCart();
+                  await fetchToMyCart();
                   if (widget.size.length == 0) {
                     int q = 0;
                     int id;
@@ -255,23 +257,34 @@ class _ShowItemState extends State<ShowItem>
                           'buyPrice': widget.buyPrice,
                           'size': '',
                           'productID': widget.imageID,
+                          'nameEn': widget.nameEn,
+                          'totalQ': widget.totalQuantity,
                         },
                       ).whenComplete(() => addCartToast("تم وضعها في سلتك"));
                     } else {
-                      await DBHelper.updateData(
-                              'cart',
-                              {
-                                'name': widget.name,
-                                'price': widget.price,
-                                'image': widget.image,
-                                'des': widget.des,
-                                'q': q.toString(),
-                                'buyPrice': widget.buyPrice,
-                                'size': '',
-                                'productID': widget.imageID,
-                              },
-                              id)
-                          .whenComplete(() => addCartToast("تم وضعها في سلتك"));
+                      int totalQint = int.parse(widget.totalQuantity);
+
+                      if (q > totalQint) {
+                        errorToast(word("outOfStock", context));
+                      } else {
+                        await DBHelper.updateData(
+                                'cart',
+                                {
+                                  'name': widget.name,
+                                  'price': widget.price,
+                                  'image': widget.image,
+                                  'des': widget.des,
+                                  'q': q.toString(),
+                                  'buyPrice': widget.buyPrice,
+                                  'size': '',
+                                  'productID': widget.imageID,
+                                  'nameEn': widget.nameEn,
+                                  'totalQ': widget.totalQuantity,
+                                },
+                                id)
+                            .whenComplete(
+                                () => addCartToast("تم وضعها في سلتك"));
+                      }
                     }
                     Navigator.pop(context);
                   } else {
@@ -302,24 +315,34 @@ class _ShowItemState extends State<ShowItem>
                             'buyPrice': widget.buyPrice,
                             'size': sizeChose,
                             'productID': widget.imageID,
+                            'nameEn': widget.nameEn,
+                            'totalQ': widget.totalQuantity,
                           },
                         ).whenComplete(() => addCartToast("تم وضعها في سلتك"));
                       } else {
-                        await DBHelper.updateData(
-                                'cart',
-                                {
-                                  'name': widget.name,
-                                  'price': widget.price,
-                                  'image': widget.image,
-                                  'des': widget.des,
-                                  'q': q.toString(),
-                                  'buyPrice': widget.buyPrice,
-                                  'size': sizeChose,
-                                  'productID': widget.imageID,
-                                },
-                                id)
-                            .whenComplete(
-                                () => addCartToast("تم وضعها في سلتك"));
+                        int totalQint = int.parse(widget.totalQuantity);
+
+                        if (q > totalQint) {
+                          errorToast(word("outOfStock", context));
+                        } else {
+                          await DBHelper.updateData(
+                                  'cart',
+                                  {
+                                    'name': widget.name,
+                                    'price': widget.price,
+                                    'image': widget.image,
+                                    'des': widget.des,
+                                    'q': q.toString(),
+                                    'buyPrice': widget.buyPrice,
+                                    'size': sizeChose,
+                                    'productID': widget.imageID,
+                                    'nameEn': widget.nameEn,
+                                    'totalQ': widget.totalQuantity,
+                                  },
+                                  id)
+                              .whenComplete(
+                                  () => addCartToast("تم وضعها في سلتك"));
+                        }
                       }
                       Navigator.pop(context);
                     }

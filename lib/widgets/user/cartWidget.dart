@@ -5,6 +5,7 @@ import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/address_screen/address.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import '../widgets.dart';
+import 'categoryScreen/showItem.dart';
 
 class CartWidget extends StatefulWidget {
   @override
@@ -42,6 +43,8 @@ class _CartWidgetState extends State<CartWidget> {
               buyPrice: item['buyPrice'],
               sizeChose: item['size'],
               productID: item['productID'],
+              nameEn: item['nameEn'],
+              totalQuantity: item['totalQ'],
             ),
           )
           .toList();
@@ -66,15 +69,15 @@ class _CartWidgetState extends State<CartWidget> {
     for (var i = 0; i < cart.length; i++) {
       quantity += int.parse(cart[i].quantity);
     }
-
-    if (isDeliver) {
-      totalAfterTax = sumPrice * tax / 100 + sumPrice + delivery;
-    } else {
-      totalAfterTax = sumPrice * tax / 100 + sumPrice;
-    }
-    if (totalAfterTax == delivery) {
-      totalAfterTax = 0.0;
-    }
+    totalAfterTax = sumPrice * tax / 100 + sumPrice;
+    // if (isDeliver) {
+    //   totalAfterTax = sumPrice * tax / 100 + sumPrice + delivery;
+    // } else {
+    //   totalAfterTax = sumPrice * tax / 100 + sumPrice;
+    // }
+    // if (totalAfterTax == delivery) {
+    //   totalAfterTax = 0.0;
+    // }
   }
 
   emptyCartGoToCategory() {
@@ -211,7 +214,9 @@ class _CartWidgetState extends State<CartWidget> {
                       return Stack(
                         children: [
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              // print(cart[i].totalQuantity);
+                            },
                             child: Dismissible(
                               key: ValueKey(item),
                               direction: DismissDirection.endToStart,
@@ -253,7 +258,9 @@ class _CartWidgetState extends State<CartWidget> {
                                       Column(
                                         children: [
                                           Text(
-                                            cart[i].itemName,
+                                            isEnglish
+                                                ? cart[i].nameEn
+                                                : cart[i].itemName,
                                             style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w700,
@@ -268,14 +275,26 @@ class _CartWidgetState extends State<CartWidget> {
                                                     fontWeight: FontWeight.w300,
                                                   ),
                                                 ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
                                           Container(
                                             width: 100,
+                                            decoration: BoxDecoration(
+                                              color: Colors.orange[100],
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(20),
+                                              ),
+                                            ),
                                             child: Table(
                                               columnWidths: {
                                                 1: FractionColumnWidth(0.5)
                                               },
-                                              border: TableBorder.all(
-                                                  color: Colors.grey[300]),
+                                              border: TableBorder.symmetric(
+                                                inside: BorderSide(
+                                                  color: Colors.grey[600],
+                                                ),
+                                              ),
                                               defaultVerticalAlignment:
                                                   TableCellVerticalAlignment
                                                       .middle,
@@ -324,7 +343,16 @@ class _CartWidgetState extends State<CartWidget> {
                                                         onTap: () {
                                                           int q = int.parse(
                                                               cart[i].quantity);
-                                                          q++;
+                                                          int totalQ =
+                                                              int.parse(cart[i]
+                                                                  .totalQuantity);
+                                                          if (q >= totalQ) {
+                                                            errorToast(word(
+                                                                "outOfStock",
+                                                                context));
+                                                          } else {
+                                                            q++;
+                                                          }
 
                                                           DBHelper.updateData(
                                                               "cart",

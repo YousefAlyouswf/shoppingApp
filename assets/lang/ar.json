@@ -56,5 +56,6 @@
     "full_name_error": "أكتب أسمك كامل",
     "phone_error": "رقم الجوال 10 أرقام\n05XXXXXXXX",
     "continue":"متابعه",
-    "size":"المقاس"
+    "size":"المقاس",
+    "outOfStock":"الكمية غير متوفرة "
 }

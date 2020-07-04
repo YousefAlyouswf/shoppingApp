@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/signin_screen.dart';
 import 'package:shop_app/manager/mainPage.dart';
@@ -32,6 +33,11 @@ AppBar appBar(int countCart,
     ),
     centerTitle: true,
     actions: <Widget>[
+      // FlatButton(
+      //     onPressed: () {
+      //       DBHelper.deleteAllItem("cart");
+      //     },
+      //     child: Icon(Icons.accessibility)),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Stack(
@@ -240,8 +246,8 @@ errorToast(String text) {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
       timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
+      backgroundColor: Colors.grey[200],
+      textColor: Colors.black,
       fontSize: 16.0);
 }
 
