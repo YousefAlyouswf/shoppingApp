@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:country_code/country_code.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,7 @@ class Payment extends StatefulWidget {
   final Function onThemeChanged;
   final Function changeLangauge;
   final String name;
+  final String name2;
   final String phone;
   final String address;
   final String lat;
@@ -33,6 +35,7 @@ class Payment extends StatefulWidget {
     this.onThemeChanged,
     this.changeLangauge,
     this.name,
+    this.name2,
     this.phone,
     this.address,
     this.lat,
@@ -115,7 +118,8 @@ class _PaymentState extends State<Payment> {
   String zipCode;
   String addressLine;
   String state;
-
+  String country;
+  String isoCode;
   @override
   void initState() {
     super.initState();
@@ -178,6 +182,8 @@ class _PaymentState extends State<Payment> {
         'phone': widget.phone,
         'orderID': orderID,
         'firstName': widget.name,
+        'country': country,
+        'ISO': isoCode,
       };
       setState(() {
         a = map.toString();
@@ -187,12 +193,16 @@ class _PaymentState extends State<Payment> {
         if (await canLaunch(response.body)) {
           await launch(response.body, forceWebView: false);
         } else {
-          throw 'Could not launch ${response.body}';
+          print('Could not launch ${response.body}');
         }
 
         return response.body;
-      } else {}
-    } catch (e) {}
+      } else {
+        print("response.body");
+      }
+    } catch (e) {
+      print(e);
+    }
     return null;
   }
 
@@ -206,13 +216,11 @@ class _PaymentState extends State<Payment> {
     zipCode = first.postalCode;
     addressLine = first.addressLine;
     state = first.adminArea;
-    setState(() {});
+    country = first.countryName;
+    var code = CountryCode.tryParse(first.countryCode);
+    isoCode = code.alpha3;
 
-    if (Platform.isAndroid) {
-      _getPayTabs();
-    } else {
-      paymantPage();
-    }
+    setState(() {});
   }
 
   List<ItemShow> cart = [];
@@ -275,7 +283,29 @@ class _PaymentState extends State<Payment> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: Container(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              FlatButton(
+                onPressed: () {
+                  _getPayTabs();
+                },
+                child: Text("PAY IN APP"),
+              ),
+              FlatButton(
+                onPressed: () {
+                  paymantPage();
+                },
+                child: Text("PAY FROM WEBSITE"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   double min = 0.0;

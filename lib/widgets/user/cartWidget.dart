@@ -432,8 +432,9 @@ class _CartWidgetState extends State<CartWidget> {
   }
 
   Widget header(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 40.0),
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      alignment: isEnglish ? Alignment.centerLeft : Alignment.centerRight,
       child: Text(
         word("cart_header", context),
         style: TextStyle(
