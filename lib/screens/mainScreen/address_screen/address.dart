@@ -101,6 +101,8 @@ class _AddressState extends State<Address> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
+          backgroundColor: Colors.grey[200],
+          elevation: 0,
           title: new Text(word("address_appBar", context)),
         ),
         body: widget.isDeliver

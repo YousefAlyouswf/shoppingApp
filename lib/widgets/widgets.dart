@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/signin_screen.dart';
@@ -196,7 +197,7 @@ Drawer drawer(
             showAboutDialog(
               context: context,
               applicationName: "RFOOF",
-              applicationVersion: "0.0.14",
+              applicationVersion: "0.0.15",
               applicationLegalese: "Developed by Yousef Al Yousef",
               useRootNavigator: false,
               children: [Icon(Icons.developer_board)],
@@ -266,6 +267,6 @@ infoToast(String text) {
 class Destination {
   const Destination(this.title, this.icon, this.color);
   final String title;
-  final IconData icon;
+  final FaIcon icon;
   final MaterialColor color;
 }

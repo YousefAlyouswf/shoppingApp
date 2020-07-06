@@ -1,5 +1,7 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
@@ -173,6 +175,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                     ),
                   );
                 }
+                listImages
+                    .sort((b, a) => a.totalQuantity.compareTo(b.totalQuantity));
               } catch (e) {
                 setFirstElemntInSubCollection();
                 return Center(
@@ -195,150 +199,216 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           ),
                           itemCount: listImages.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey[300],
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ShowItem(
-                                          image: listImages[index].image,
-                                          name: listImages[index].name,
-                                          nameEn: listImages[index].nameEn,
-                                          des: listImages[index].description,
-                                          price: listImages[index].price,
-                                          imageID: listImages[index].imageID,
-                                          buyPrice: listImages[index].buyPrice,
-                                          size: listImages[index].size,
-                                          totalQuantity:
-                                              listImages[index].totalQuantity,
-                                        ),
+                            int totalQuantity =
+                                int.parse(listImages[index].totalQuantity);
+                            return Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey[300],
                                       ),
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: <Widget>[
-                                        new Container(
-                                          height: 170,
-                                          decoration: new BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8)),
-                                            image: new DecorationImage(
-                                              fit: BoxFit.fill,
-                                              image: new NetworkImage(
-                                                  listImages[index].image),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(15),
+                                      ),
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ShowItem(
+                                              image: listImages[index].image,
+                                              name: listImages[index].name,
+                                              nameEn: listImages[index].nameEn,
+                                              des:
+                                                  listImages[index].description,
+                                              price: listImages[index].price,
+                                              imageID:
+                                                  listImages[index].imageID,
+                                              buyPrice:
+                                                  listImages[index].buyPrice,
+                                              size: listImages[index].size,
+                                              totalQuantity: listImages[index]
+                                                  .totalQuantity,
                                             ),
                                           ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.add_shopping_cart,
-                                                    color: Colors.teal[600],
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          children: <Widget>[
+                                            new Container(
+                                              height: 170,
+                                              decoration: new BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8)),
+                                                image: new DecorationImage(
+                                                  fit: BoxFit.fill,
+                                                  image: new NetworkImage(
+                                                      listImages[index].image),
+                                                ),
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  child: IconButton(
+                                                      icon: FaIcon(
+                                                        FontAwesomeIcons
+                                                            .shoppingCart,
+                                                        color: Colors.teal[600],
+                                                      ),
+                                                      onPressed: () async {
+                                                        await addToMyCartFromCategory(
+                                                          context,
+                                                          listImages[index]
+                                                              .size,
+                                                          listImages[index]
+                                                              .name,
+                                                          listImages[index]
+                                                              .price,
+                                                          listImages[index]
+                                                              .description,
+                                                          listImages[index]
+                                                              .image,
+                                                          listImages[index]
+                                                              .imageID,
+                                                          listImages[index]
+                                                              .buyPrice,
+                                                          listImages[index]
+                                                              .nameEn,
+                                                          listImages[index]
+                                                              .totalQuantity,
+                                                        );
+                                                        fetchToMyCart()
+                                                            .then((value) {
+                                                          setState(() {
+                                                            print(value);
+                                                            cartCount = value;
+                                                          });
+                                                        });
+                                                      }),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      3.5,
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
+                                                  alignment:
+                                                      Alignment.bottomRight,
+                                                  child: AutoSizeText(
+                                                    isEnglish
+                                                        ? listImages[index]
+                                                            .nameEn
+                                                        : listImages[index]
+                                                            .name,
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color:
+                                                            Colors.grey[600]),
+                                                    maxLines: 2,
                                                   ),
-                                                  onPressed: () async {
-                                                    await addToMyCartFromCategory(
-                                                      context,
-                                                      listImages[index].size,
-                                                      listImages[index].name,
-                                                      listImages[index].price,
-                                                      listImages[index]
-                                                          .description,
-                                                      listImages[index].image,
-                                                      listImages[index].imageID,
-                                                      listImages[index]
-                                                          .buyPrice,
-                                                      listImages[index].nameEn,
-                                                      listImages[index]
-                                                          .totalQuantity,
-                                                    );
-                                                    fetchToMyCart()
-                                                        .then((value) {
-                                                      setState(() {
-                                                        print(value);
-                                                        cartCount = value;
-                                                      });
-                                                    });
-                                                  }),
+                                                ),
+                                              ],
                                             ),
                                             Container(
                                               margin: EdgeInsets.symmetric(
                                                   horizontal: 8.0),
+                                              width: double.infinity,
                                               alignment: Alignment.bottomRight,
-                                              child: Text(
-                                                isEnglish
-                                                    ? listImages[index].nameEn
-                                                    : listImages[index].name,
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.grey[600]),
+                                              child: Column(
+                                                children: [
+                                                  listImages[index].priceOld ==
+                                                              "" ||
+                                                          listImages[index]
+                                                                  .priceOld ==
+                                                              null
+                                                      ? Container()
+                                                      : Text.rich(
+                                                          TextSpan(
+                                                            children: <
+                                                                TextSpan>[
+                                                              new TextSpan(
+                                                                text:
+                                                                    '${listImages[index].priceOld} ${word("currancy", context)}',
+                                                                style:
+                                                                    new TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  decoration:
+                                                                      TextDecoration
+                                                                          .lineThrough,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                  Text(
+                                                    "${listImages[index].price} ${word("currancy", context)}",
+                                                    style: TextStyle(
+                                                        color: Colors.teal,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ],
                                         ),
-                                        Container(
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          width: double.infinity,
-                                          alignment: Alignment.bottomRight,
-                                          child: Column(
-                                            children: [
-                                              listImages[index].priceOld ==
-                                                          "" ||
-                                                      listImages[index]
-                                                              .priceOld ==
-                                                          null
-                                                  ? Container()
-                                                  : Text.rich(
-                                                      TextSpan(
-                                                        children: <TextSpan>[
-                                                          new TextSpan(
-                                                            text:
-                                                                '${listImages[index].priceOld} ${word("currancy", context)}',
-                                                            style:
-                                                                new TextStyle(
-                                                              color:
-                                                                  Colors.grey,
-                                                              decoration:
-                                                                  TextDecoration
-                                                                      .lineThrough,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                              Text(
-                                                "${listImages[index].price} ${word("currancy", context)}",
-                                                style: TextStyle(
-                                                    color: Colors.teal,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                                totalQuantity <= 1
+                                    ? Align(
+                                        alignment: Alignment.center,
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white70,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(8),
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Container(
+                                              width: double.infinity,
+                                              color: Colors.black38,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  "Out Of Stock",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
+                              ],
                             );
                           }),
                     ),

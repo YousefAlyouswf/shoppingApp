@@ -5,6 +5,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shop_app/models/myOrderModel.dart';
@@ -466,11 +467,16 @@ Widget orderScreen(BuildContext context, String userID) {
                                                             Radius.circular(50),
                                                           ),
                                                         ),
-                                                        child: Icon(Icons.store,
-                                                            color: status == "0"
-                                                                ? Colors.black
-                                                                : Colors
-                                                                    .grey[200]),
+                                                        child: Center(
+                                                          child: FaIcon(
+                                                              FontAwesomeIcons
+                                                                  .storeAlt,
+                                                              color: status ==
+                                                                      "0"
+                                                                  ? Colors.black
+                                                                  : Colors.grey[
+                                                                      200]),
+                                                        ),
                                                       ),
                                                       Text(
                                                         word("receive_order",
@@ -512,12 +518,15 @@ Widget orderScreen(BuildContext context, String userID) {
                                                             Radius.circular(50),
                                                           ),
                                                         ),
-                                                        child: Icon(
-                                                          Icons.shopping_basket,
-                                                          color: status == "1"
-                                                              ? Colors.black
-                                                              : Colors
-                                                                  .grey[300],
+                                                        child: Center(
+                                                          child: FaIcon(
+                                                            FontAwesomeIcons
+                                                                .shoppingBasket,
+                                                            color: status == "1"
+                                                                ? Colors.black
+                                                                : Colors
+                                                                    .grey[200],
+                                                          ),
                                                         ),
                                                       ),
                                                       Text(
@@ -568,14 +577,17 @@ Widget orderScreen(BuildContext context, String userID) {
                                                                           50),
                                                                 ),
                                                               ),
-                                                              child: Icon(
-                                                                  Icons
-                                                                      .directions_car,
+                                                              child: Center(
+                                                                child: FaIcon(
+                                                                  FontAwesomeIcons
+                                                                      .shippingFast,
                                                                   color: status == "2"
                                                                       ? Colors
                                                                           .black
                                                                       : Colors.grey[
-                                                                          300]),
+                                                                          300],
+                                                                ),
+                                                              ),
                                                             ),
                                                             Text(
                                                               word("on_its_way",
@@ -619,11 +631,16 @@ Widget orderScreen(BuildContext context, String userID) {
                                                             Radius.circular(50),
                                                           ),
                                                         ),
-                                                        child: Icon(Icons.home,
-                                                            color: status == "3"
-                                                                ? Colors.black
-                                                                : Colors
-                                                                    .grey[300]),
+                                                        child: Center(
+                                                          child: FaIcon(
+                                                              FontAwesomeIcons
+                                                                  .thumbsUp,
+                                                              color: status ==
+                                                                      "3"
+                                                                  ? Colors.black
+                                                                  : Colors.grey[
+                                                                      200]),
+                                                        ),
                                                       ),
                                                       Text(
                                                         noDelvier

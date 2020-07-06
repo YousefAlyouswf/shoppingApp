@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
@@ -150,10 +151,14 @@ class _HomePageState extends State<HomePage>
 
   Widget bottomNavgation(Function bottomNavIndex, BuildContext context) {
     List<Destination> allDestinations = <Destination>[
-      Destination(word('HOME', context), Icons.home, Colors.teal),
-      Destination(word('category', context), Icons.category, Colors.cyan),
-      Destination(word('cart', context), Icons.shopping_basket, Colors.orange),
-      Destination(word('order', context), Icons.receipt, Colors.blue)
+      Destination(
+          word('HOME', context), FaIcon(FontAwesomeIcons.home), Colors.teal),
+      Destination(word('category', context), FaIcon(FontAwesomeIcons.delicious),
+          Colors.cyan),
+      Destination(word('cart', context),
+          FaIcon(FontAwesomeIcons.shoppingBasket), Colors.orange),
+      Destination(
+          word('order', context), FaIcon(FontAwesomeIcons.receipt), Colors.blue)
     ];
     return BottomNavigationBar(
       currentIndex: navIndex,
@@ -163,7 +168,7 @@ class _HomePageState extends State<HomePage>
       iconSize: 35,
       items: allDestinations.map((Destination destination) {
         return BottomNavigationBarItem(
-          icon: Icon(destination.icon),
+          icon: destination.icon,
           backgroundColor: destination.color,
           title: Text(
             destination.title,
