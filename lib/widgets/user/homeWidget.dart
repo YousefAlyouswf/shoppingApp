@@ -96,16 +96,7 @@ class _HomeWidgetState extends State<HomeWidget> {
         children: [
           ourNewProduct(imageShowSize),
           discountShow(context),
-          Text(
-            "جميع الأقسام",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                fontFamily: "MainFont"),
-          ),
-          SizedBox(
-            height: 20,
-          ),
+          labelAllCategories(),
           categories(),
         ],
       ),
@@ -352,6 +343,23 @@ class _HomeWidgetState extends State<HomeWidget> {
     );
   }
 
+  Widget labelAllCategories() {
+    return Column(
+      children: [
+        Text(
+          "جميع الأقسام",
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              fontFamily: "MainFont"),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+      ],
+    );
+  }
+
   Widget categories() {
     return Container(
       height: MediaQuery.of(context).size.height,
@@ -377,6 +385,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                       snapshot.data.documents[0].data['collection'][i]['name'];
                   String nameEn = snapshot.data.documents[0].data['collection']
                       [i]['en_name'];
+                  String image =
+                      snapshot.data.documents[0].data['collection'][i]['image'];
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
@@ -387,20 +397,34 @@ class _HomeWidgetState extends State<HomeWidget> {
                         widget.goToCategoryPage(nameAr, i);
                       },
                       child: Container(
+                        alignment: Alignment.bottomCenter,
                         decoration: BoxDecoration(
                           border: Border.all(),
                           color: Theme.of(context).unselectedWidgetColor,
                           borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(100),
-                            bottomLeft: Radius.circular(100),
+                            topRight: Radius.circular(20),
+                            bottomLeft: Radius.circular(20),
                           ),
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                image,
+                              ),
+                              fit: BoxFit.fill),
                         ),
-                        child: Center(
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                            ),
+                          ),
                           child: Text(
                             isEnglish ? nameEn : nameAr,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 22,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: "MainFont"),
                           ),
