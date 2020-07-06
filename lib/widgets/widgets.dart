@@ -44,8 +44,9 @@ AppBar appBar(int countCart,
         child: Stack(
           children: [
             IconButton(
-              icon: Icon(
-                Icons.shopping_basket,
+              icon: FaIcon(
+                FontAwesomeIcons.shoppingBag,
+                color: Theme.of(context).unselectedWidgetColor,
                 size: 35,
               ),
               onPressed: goToCartScreen,
@@ -61,7 +62,7 @@ AppBar appBar(int countCart,
                           height: 25,
                           width: 25,
                           decoration: BoxDecoration(
-                            color: Color(0xFFFF834F),
+                            color: Colors.black.withOpacity(0.6),
                             borderRadius: BorderRadius.all(
                               Radius.circular(50),
                             ),
@@ -70,8 +71,7 @@ AppBar appBar(int countCart,
                         Text(
                           "$countCart",
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                              fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ],
                     ),

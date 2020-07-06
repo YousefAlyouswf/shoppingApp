@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage>
         changeLangauge: widget.changeLangauge,
       ),
       body: navIndex == 0
-          ? HomeWidget()
+          ? HomeWidget(goToCategoryPage: goToCategoryPage)
           : navIndex == 1
               ? CategoryWidget()
               : navIndex == 2
