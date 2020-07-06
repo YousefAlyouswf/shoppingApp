@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,6 +18,7 @@ import 'dart:math' show cos, sqrt, asin;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
+import 'package:webview_flutter/webview_flutter.dart';
 
 class Payment extends StatefulWidget {
   final Function onThemeChanged;
@@ -49,67 +52,6 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
-  Future<void> _getPayTabs() async {
-    const platform = MethodChannel('samples.flutter.dev/battery');
-    if (zipCode == null) {
-      zipCode = '00966';
-    }
-    try {
-      Map<String, String> map = {
-        'amount': widget.totalAfterTax,
-        'phone': widget.phone,
-        'orderID': orderID,
-        'items': items,
-        'city': city,
-        'state': state,
-        'zipCode': zipCode,
-        'address': addressLine,
-      };
-      final Map result = await platform.invokeMethod('getPayTabs', map);
-
-      if (result['pt_result'] == "Your transaction is succesfully completed") {
-        getTheDeriver();
-        await Firestore.instance.collection('order').add({
-          'driverID': id,
-          'driverName': name,
-          'orderID': orderID,
-          'date': DateTime.now().toString(),
-          'status': '0',
-          'address': widget.address,
-          'total': widget.totalAfterTax,
-          'lat': widget.lat,
-          'long': widget.long,
-          'name': widget.name,
-          'phone': widget.phone,
-          'priceForSell': widget.price,
-          'priceForBuy': widget.buyPrice,
-          'items': FieldValue.arrayUnion(mapItems),
-          'userID': androidInfo.androidId == null
-              ? iosDeviceInfo.identifierForVendor
-              : androidInfo.androidId,
-        }).then((value) {
-          paymentToast("تم إستلام طلبك يمكنك متابعه الطلب من قسم الطلبات");
-          DBHelper.deleteAllItem("cart");
-          Navigator.popUntil(context, (route) => route.isFirst);
-          navIndex = 3;
-          twilioFlutter.sendSMS(
-              toNumber: phone,
-              messageBody:
-                  'رفوف\nمرحبا ${widget.name} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
-        });
-        DBHelper.deleteAllItem("cart");
-        navIndex = 3;
-        Navigator.of(context).popUntil((route) => route.isFirst);
-      } else {
-        errorToast("فشلت عملية الدفع");
-        Navigator.pop(context);
-      }
-      print("------------>> ${result['pt_result']}");
-    } on PlatformException catch (e) {
-      print(e);
-    }
-  }
-
   String orderID;
   String items;
   String quantity;
@@ -120,19 +62,43 @@ class _PaymentState extends State<Payment> {
   String state;
   String country;
   String isoCode;
+  Uuid idOrder;
   @override
   void initState() {
     super.initState();
-    fetchMyCart();
 
-    Uuid id = Uuid();
-    String uid = id.v1();
+    idOrder = Uuid();
+    String uid = idOrder.v1();
     orderID = uid.substring(0, 13);
+    print(orderID);
     deviceID();
     items = '';
     quantity = '';
     unitPrice = '';
     twilioInfo();
+  }
+
+  addThisOrderToFirestore() async {
+    Firestore.instance.collection('order').add({
+      'payment': '',
+      'driverID': id,
+      'driverName': name,
+      'orderID': orderID,
+      'date': '',
+      'status': '0',
+      'total': widget.totalAfterTax,
+      'lat': widget.lat,
+      'long': widget.long,
+      'name': widget.name,
+      'phone': widget.phone,
+      'priceForSell': widget.price,
+      'priceForBuy': widget.buyPrice,
+      'items': FieldValue.arrayUnion(mapItems),
+      'userID': androidInfo.androidId == null
+          ? iosDeviceInfo.identifierForVendor
+          : androidInfo.androidId,
+    });
+    paymantPage();
   }
 
   String accountSid;
@@ -166,7 +132,7 @@ class _PaymentState extends State<Payment> {
     }
   }
 
-  String a = '';
+  String webviewUrl = "";
   static const ROOT = "http://geniusloop.co/payment/index.php";
   Future<String> paymantPage() async {
     try {
@@ -185,16 +151,19 @@ class _PaymentState extends State<Payment> {
         'country': country,
         'ISO': isoCode,
       };
-      setState(() {
-        a = map.toString();
-      });
+
       final response = await http.post(ROOT, body: map);
       if (200 == response.statusCode) {
-        if (await canLaunch(response.body)) {
-          await launch(response.body, forceWebView: false);
-        } else {
-          print('Could not launch ${response.body}');
-        }
+        // if (await canLaunch(response.body)) {
+        //   await launch(response.body);
+        // } else {
+        //   print('Could not launch ${response.body}');
+        // }
+        // print("---->>${response.body}");
+        // print(map);
+        setState(() {
+          webviewUrl = response.body;
+        });
 
         return response.body;
       } else {
@@ -221,6 +190,7 @@ class _PaymentState extends State<Payment> {
     isoCode = code.alpha3;
 
     setState(() {});
+    addThisOrderToFirestore();
   }
 
   List<ItemShow> cart = [];
@@ -244,7 +214,7 @@ class _PaymentState extends State<Payment> {
           )
           .toList();
     });
-
+    setState(() {});
     for (var i = 0; i < cart.length; i++) {
       mapItems.add({
         'name': cart[i].itemName,
@@ -279,32 +249,74 @@ class _PaymentState extends State<Payment> {
     } else if (Platform.isIOS) {
       iosDeviceInfo = await deviceInfo.iosInfo;
     }
+    fetchMyCart();
   }
+
+  WebViewController _controller;
 
   @override
   Widget build(BuildContext context) {
+    // print("----------->>>>>$webviewUrl");
+
     return Scaffold(
-      body: Container(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              FlatButton(
-                onPressed: () {
-                  _getPayTabs();
-                },
-                child: Text("PAY IN APP"),
-              ),
-              FlatButton(
-                onPressed: () {
-                  paymantPage();
-                },
-                child: Text("PAY FROM WEBSITE"),
-              ),
-            ],
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColorLight,
+        elevation: 0,
+        title: Text(
+          word("appName", context),
+          style: TextStyle(
+            fontFamily: isEnglish ? 'EN' : "MainFont",
           ),
         ),
+        actions: [
+          IconButton(
+              icon: Icon(Icons.share),
+              onPressed: () {
+                print(webviewUrl);
+              })
+        ],
       ),
+      body: webviewUrl == ""
+          ? Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(
+                    "https://cdn.dribbble.com/users/2129935/screenshots/8868815/media/cfc18f3a1bb266b52c8d3f2677c999e4.gif",
+                  ),
+                ),
+              ),
+            )
+          : WebView(
+              key: UniqueKey(),
+              initialUrl: webviewUrl,
+              javascriptMode: JavascriptMode.unrestricted,
+              onPageFinished: (url) {
+                if (url == "http://geniusloop.co/payment/succed.php") {
+                  addCartToast("Succssful");
+                  navIndex = 3;
+                  DBHelper.deleteAllItem("cart");
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                } else if (url == "http://geniusloop.co/payment/failed.php") {
+                  errorToast("Ooh! Failed");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Payment(
+                        totalAfterTax: widget.totalAfterTax,
+                        price: widget.price,
+                        buyPrice: widget.buyPrice,
+                        onThemeChanged: widget.onThemeChanged,
+                        changeLangauge: widget.changeLangauge,
+                        name: widget.name,
+                        phone: widget.phone,
+                        lat: widget.lat,
+                        long: widget.long,
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
     );
   }
 

@@ -54,6 +54,8 @@ dependencies:
   twilio_flutter: ^0.0.5
   geocoder: ^0.2.1
   country_code: ^0.1.1
+  characters: ^1.0.0
+  webview_flutter: ^0.3.22+1
 
 dev_dependencies:
   flutter_test:
