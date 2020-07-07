@@ -46,6 +46,7 @@ class _HomeWidgetState extends State<HomeWidget> {
         builder: (context) => ShowItem(
           image: itemShow[i].image,
           name: itemShow[i].itemName,
+          nameEn: itemShow[i].nameEn,
           des: itemShow[i].itemDes,
           price: itemShow[i].itemPrice,
           imageID: itemShow[i].imageID,
@@ -89,7 +90,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double imageShowSize = height / 2;
+    double imageShowSize = height / 4;
     return SingleChildScrollView(
       controller: scrollController,
       child: Column(
@@ -122,6 +123,15 @@ class _HomeWidgetState extends State<HomeWidget> {
                 Text(
                   word('discount', context),
                   style: TextStyle(fontSize: 25, fontFamily: "MainFont"),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Container(
+                    height: 3,
+                    color: Colors.black45,
+                  ),
                 ),
               ],
             ),
@@ -331,6 +341,15 @@ class _HomeWidgetState extends State<HomeWidget> {
                   word('NEW_ARRIVAL', context),
                   style: TextStyle(fontSize: 35, fontFamily: "MainFont"),
                 ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Container(
+                    height: 3,
+                    color: Colors.black45,
+                  ),
+                ),
               ],
             ),
           ),
@@ -351,12 +370,35 @@ class _HomeWidgetState extends State<HomeWidget> {
   Widget labelAllCategories() {
     return Column(
       children: [
-        Text(
-          word("all_categories", context),
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              fontFamily: "MainFont"),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 3,
+                  color: Colors.black38,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  word("all_categories", context),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    fontFamily: "MainFont",
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  height: 3,
+                  color: Colors.black38,
+                ),
+              ),
+            ],
+          ),
         ),
         SizedBox(
           height: 20,
@@ -443,40 +485,42 @@ class _HomeWidgetState extends State<HomeWidget> {
       ),
     );
   }
+
+  Widget imageCarousel(double height, Function imageOnTap) {
+    return networkImage2.length == 0
+        ? Container(
+            height: 100,
+            width: 100,
+            child: Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Theme.of(context).unselectedWidgetColor,
+              ),
+            ),
+          )
+        : StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                height: height,
+                width: MediaQuery.of(context).size.width / 2,
+                child: Carousel(
+                  boxFit: BoxFit.fill,
+                  images: networkImage2,
+                  animationCurve: Curves.easeInExpo,
+                  animationDuration: Duration(seconds: 1),
+                  autoplay: true,
+                  autoplayDuration: Duration(seconds: 5),
+                  onImageTap: imageOnTap,
+                  showIndicator: false,
+                ),
+              );
+            },
+          );
+  }
 }
 
 List<NetworkImage> networkImage;
 List<NetworkImage> networkImage2;
 NetworkImage imageNetwork;
-Widget imageCarousel(double height, Function imageOnTap) {
-  return networkImage2.length == 0
-      ? Container(
-          height: 100,
-          width: 100,
-          child: Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.blue,
-            ),
-          ),
-        )
-      : StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              height: height,
-              child: Carousel(
-                boxFit: BoxFit.fill,
-                images: networkImage2,
-                animationCurve: Curves.easeInExpo,
-                animationDuration: Duration(seconds: 1),
-                autoplay: true,
-                autoplayDuration: Duration(seconds: 5),
-                onImageTap: imageOnTap,
-                showIndicator: false,
-              ),
-            );
-          },
-        );
-}
 
 //End Image in the Header
 class MyBehavior extends ScrollBehavior {

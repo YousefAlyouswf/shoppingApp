@@ -233,6 +233,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                               size: listImages[index].size,
                                               totalQuantity: listImages[index]
                                                   .totalQuantity,
+                                              priceOld:
+                                                  listImages[index].priceOld,
                                             ),
                                           ),
                                         );
