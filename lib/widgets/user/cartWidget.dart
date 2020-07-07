@@ -230,9 +230,6 @@ class _CartWidgetState extends State<CartWidget> {
                       var item = cart[i].id.toString();
                       return Dismissible(
                         key: ValueKey(item),
-                        onResize: () {
-                          print("----");
-                        },
                         direction: DismissDirection.endToStart,
                         background: Container(
                           alignment: isEnglish
@@ -254,6 +251,76 @@ class _CartWidgetState extends State<CartWidget> {
                           cart.removeAt(i);
                         },
                         child: GestureDetector(
+                          onTap: () {
+                            Map<String, dynamic> test = {
+                              'image': cart[i].image,
+                              'name': cart[i].itemName,
+                              'nameEn': cart[i].nameEn,
+                              'des': cart[i].itemDes,
+                              'price': cart[i].itemPrice,
+                              'productID': cart[i].productID,
+                              'buyPrice': cart[i].buyPrice,
+                              'size': cart[i].sizeChose,
+                              'totalQuantity': cart[i].totalQuantity,
+                            };
+                            print(test);
+
+                            if (cart[i].sizeChose == "") {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ShowItem(
+                                    image: cart[i].image,
+                                    name: cart[i].itemName,
+                                    nameEn: cart[i].nameEn,
+                                    des: cart[i].itemDes,
+                                    price: cart[i].itemPrice,
+                                    imageID: cart[i].productID,
+                                    buyPrice: cart[i].buyPrice,
+                                    size: [],
+                                    totalQuantity: cart[i].totalQuantity,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              List<String> sizing = [];
+                              String compare = cart[i].sizeChose;
+                              if (compare == "XS" ||
+                                  compare == "S" ||
+                                  compare == "M" ||
+                                  compare == "L" ||
+                                  compare == "XL") {
+                                sizing = ['XS', 'S', 'M', 'L', 'XL'];
+                              } else {
+                                sizing = [
+                                  '35',
+                                  '36',
+                                  '37',
+                                  '38',
+                                  '39',
+                                  '40',
+                                  '41',
+                                  '42'
+                                ];
+                              }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ShowItem(
+                                    image: cart[i].image,
+                                    name: cart[i].itemName,
+                                    nameEn: cart[i].nameEn,
+                                    des: cart[i].itemDes,
+                                    price: cart[i].itemPrice,
+                                    imageID: cart[i].productID,
+                                    buyPrice: cart[i].buyPrice,
+                                    size: sizing,
+                                    totalQuantity: cart[i].totalQuantity,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
                           child: Container(
                             color: Colors.white,
                             child: Padding(
@@ -505,87 +572,94 @@ class _CartWidgetState extends State<CartWidget> {
                           )),
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => Dialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          child: Container(
-                            height: 250.0,
-                            width: 300.0,
-                            child: Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      FaIcon(FontAwesomeIcons.gift),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        word("coupon", context),
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontFamily: "MainFont"),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Divider(),
-                                Expanded(
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width / 2,
-                                    child: TextField(
-                                      controller: discountController,
-                                      textDirection: TextDirection.rtl,
-                                      decoration: InputDecoration(
-                                        hintText: word("type_coupon", context),
-                                      ),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: Container(
+                              height: 250.0,
+                              width: 300.0,
+                              child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        FaIcon(FontAwesomeIcons.gift),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          word("coupon", context),
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: "MainFont"),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: InkWell(
-                                    onTap: applyDiscount,
+                                  Divider(),
+                                  Expanded(
                                     child: Container(
-                                      height: 50,
-                                      alignment: Alignment.center,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5)),
-                                        color: Theme.of(context)
-                                            .unselectedWidgetColor,
-                                      ),
-                                      child: Text(
-                                        word("coupon_confirm", context),
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold),
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                      child: TextField(
+                                        controller: discountController,
+                                        textDirection: TextDirection.rtl,
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              word("type_coupon", context),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                )
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InkWell(
+                                      onTap: applyDiscount,
+                                      child: Container(
+                                        height: 50,
+                                        alignment: Alignment.center,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                          color: Theme.of(context)
+                                              .unselectedWidgetColor,
+                                        ),
+                                        child: Text(
+                                          word("coupon_confirm", context),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
+                        );
+                      },
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                              child: Text(
+                            word("coupon", context),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          )),
                         ),
-                      );
-                    },
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(word("coupon", context)),
                       ),
                     ),
                   ),
