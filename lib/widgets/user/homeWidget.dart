@@ -278,12 +278,17 @@ class _HomeWidgetState extends State<HomeWidget> {
                                   color:
                                       Theme.of(context).unselectedWidgetColor,
                                   borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(10),
+                                    bottomLeft: isEnglish
+                                        ? Radius.circular(0)
+                                        : Radius.circular(10),
+                                    bottomRight: isEnglish
+                                        ? Radius.circular(10)
+                                        : Radius.circular(0),
                                   )),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  "خصم %${discountOffer[i].percentage}",
+                                  "${word("off", context)} %${discountOffer[i].percentage}",
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.white,
@@ -347,7 +352,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     return Column(
       children: [
         Text(
-          "جميع الأقسام",
+          word("all_categories", context),
           style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,

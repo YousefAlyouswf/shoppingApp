@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_launcher_icons/xml_templates.dart';
@@ -275,14 +276,20 @@ class _CartWidgetState extends State<CartWidget> {
                                   ),
                                   Column(
                                     children: [
-                                      Text(
-                                        isEnglish
-                                            ? cart[i].nameEn
-                                            : cart[i].itemName,
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: "MainFont"),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3,
+                                        child: AutoSizeText(
+                                          isEnglish
+                                              ? cart[i].nameEn
+                                              : cart[i].itemName,
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w700,
+                                              fontFamily: "MainFont"),
+                                          maxLines: 2,
+                                        ),
                                       ),
                                       cart[i].sizeChose == ''
                                           ? Container()
@@ -415,7 +422,7 @@ class _CartWidgetState extends State<CartWidget> {
                                       IconButton(
                                         icon: FaIcon(
                                           FontAwesomeIcons.solidTrashAlt,
-                                          size: 30,
+                                          size: 20,
                                         ),
                                         onPressed: () {
                                           deleteCategoryDialog(
@@ -520,7 +527,7 @@ class _CartWidgetState extends State<CartWidget> {
                                         width: 10,
                                       ),
                                       Text(
-                                        "كوبون",
+                                        word("coupon", context),
                                         style: TextStyle(
                                             fontSize: 20,
                                             fontFamily: "MainFont"),

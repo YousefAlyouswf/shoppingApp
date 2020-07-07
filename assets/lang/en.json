@@ -62,5 +62,8 @@
     "lastTwo": "Two pieces left",
     "almostOutOfStock": "Almost out of stock",
     "itemDes":"Product Description",
-    "addToCart":"ADD TO CART"
+    "addToCart":"ADD TO CART",
+    "off":"OFF",
+    "all_categories":"ALL CATEGORIES",
+    "sizes":"SIZES"
 }

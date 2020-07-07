@@ -517,155 +517,202 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: Container(
-                height: 350.0,
+                height: 400.0,
                 width: 300.0,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    Center(
-                      child: Text(
-                        "أختر المقاس",
-                        style: TextStyle(fontSize: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            word("sizes", context),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "MainFont",
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Container(
-                        height: 200,
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.all(8.0),
-                        padding: EdgeInsets.symmetric(vertical: 8.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
+                    Divider(
+                      thickness: 3,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Container(
+                          height: 200,
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.all(8.0),
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
                           ),
-                        ),
-                        child: GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 1.5,
-                            mainAxisSpacing: 10,
-                          ),
-                          itemCount: size.length,
-                          itemBuilder: (context, i) {
-                            return Container(
-                              margin: EdgeInsets.symmetric(horizontal: 8.0),
-                              decoration: BoxDecoration(
-                                  color: sizeChoseCatgetory == size[i]
-                                      ? Colors.grey
-                                      : Colors.white,
-                                  border: Border.all(),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15))),
-                              child: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    sizeChoseCatgetory = size[i];
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0),
-                                  child: Center(
-                                    child: Text(
-                                      size[i],
-                                      style: TextStyle(
-                                        color: sizeChoseCatgetory != size[i]
-                                            ? Colors.grey
-                                            : Colors.white,
+                          child: ScrollConfiguration(
+                            behavior: MyBehavior(),
+                            child: GridView.builder(
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 1.5,
+                                mainAxisSpacing: 10,
+                              ),
+                              itemCount: size.length,
+                              itemBuilder: (context, i) {
+                                return Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                  decoration: BoxDecoration(
+                                      color: sizeChoseCatgetory == size[i]
+                                          ? Theme.of(context)
+                                              .unselectedWidgetColor
+                                          : Colors.white,
+                                      border: Border.all(),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15))),
+                                  child: InkWell(
+                                    splashColor: Colors.transparent,
+                                    onTap: () {
+                                      setState(() {
+                                        sizeChoseCatgetory = size[i];
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      child: Center(
+                                        child: Text(
+                                          size[i],
+                                          style: TextStyle(
+                                            color: sizeChoseCatgetory != size[i]
+                                                ? Colors.grey
+                                                : Colors.white,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                          },
+                                );
+                              },
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            'إلغاء',
-                            style: TextStyle(fontSize: 18.0),
-                          ),
-                        ),
-                        FlatButton(
-                          onPressed: () async {
-                            if (sizeChoseCatgetory == '') {
-                              errorToast("أختر المقاس");
-                            } else {
-                              await fetchToMyCart();
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        splashColor: Colors.transparent,
+                        onTap: () async {
+                          if (sizeChoseCatgetory == '') {
+                            errorToast("أختر المقاس");
+                          } else {
+                            await fetchToMyCart();
 
-                              int id;
-                              for (var i = 0; i < cart.length; i++) {
-                                if (cart[i].itemName == name &&
-                                    cart[i].itemPrice == price &&
-                                    cart[i].itemDes == des &&
-                                    cart[i].sizeChose == sizeChoseCatgetory) {
-                                  id = cart[i].id;
-                                  q = int.parse(cart[i].quantity);
-                                }
+                            int id;
+                            for (var i = 0; i < cart.length; i++) {
+                              if (cart[i].itemName == name &&
+                                  cart[i].itemPrice == price &&
+                                  cart[i].itemDes == des &&
+                                  cart[i].sizeChose == sizeChoseCatgetory) {
+                                id = cart[i].id;
+                                q = int.parse(cart[i].quantity);
                               }
-                              q++;
-                              setState(() {});
-                              if (q == 1) {
-                                await DBHelper.insert(
-                                  'cart',
-                                  {
-                                    'name': name,
-                                    'price': price,
-                                    'image': image,
-                                    'des': des,
-                                    'q': q.toString(),
-                                    'buyPrice': buyPrice,
-                                    'size': sizeChoseCatgetory,
-                                    'productID': imageID,
-                                    'nameEn': nameEn,
-                                    'totalQ': totalQ,
-                                  },
-                                ).whenComplete(
-                                    () => addCartToast("تم وضعها في سلتك"));
-                              } else {
-                                int totalQint = int.parse(totalQ);
-
-                                if (q >= totalQint) {
-                                  errorToast(word("outOfStock", context));
-                                } else {
-                                  await DBHelper.updateData(
-                                          'cart',
-                                          {
-                                            'name': name,
-                                            'price': price,
-                                            'image': image,
-                                            'des': des,
-                                            'q': q.toString(),
-                                            'buyPrice': buyPrice,
-                                            'size': sizeChoseCatgetory,
-                                            'productID': imageID,
-                                            'nameEn': nameEn,
-                                            'totalQ': totalQ,
-                                          },
-                                          id)
-                                      .whenComplete(() =>
-                                          addCartToast("تم وضعها في سلتك"));
-                                }
-                              }
-                              Navigator.pop(context);
                             }
-                          },
-                          child: Text(
-                            'أضف',
-                            style: TextStyle(fontSize: 18.0),
+                            q++;
+                            setState(() {});
+                            if (q == 1) {
+                              await DBHelper.insert(
+                                'cart',
+                                {
+                                  'name': name,
+                                  'price': price,
+                                  'image': image,
+                                  'des': des,
+                                  'q': q.toString(),
+                                  'buyPrice': buyPrice,
+                                  'size': sizeChoseCatgetory,
+                                  'productID': imageID,
+                                  'nameEn': nameEn,
+                                  'totalQ': totalQ,
+                                },
+                              ).whenComplete(
+                                  () => addCartToast("تم وضعها في سلتك"));
+                            } else {
+                              int totalQint = int.parse(totalQ);
+
+                              if (q >= totalQint) {
+                                errorToast(word("outOfStock", context));
+                              } else {
+                                await DBHelper.updateData(
+                                        'cart',
+                                        {
+                                          'name': name,
+                                          'price': price,
+                                          'image': image,
+                                          'des': des,
+                                          'q': q.toString(),
+                                          'buyPrice': buyPrice,
+                                          'size': sizeChoseCatgetory,
+                                          'productID': imageID,
+                                          'nameEn': nameEn,
+                                          'totalQ': totalQ,
+                                        },
+                                        id)
+                                    .whenComplete(
+                                        () => addCartToast("تم وضعها في سلتك"));
+                              }
+                            }
+                          }
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).unselectedWidgetColor,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              word("addToCart", context),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 18.0, color: Colors.white),
+                            ),
                           ),
                         ),
-                      ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        splashColor: Colors.transparent,
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              word("exit", context),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 18.0),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -742,4 +789,12 @@ Widget seprater() {
     width: double.infinity,
     color: Colors.grey[300],
   );
+}
+
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
+  }
 }
