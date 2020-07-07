@@ -87,6 +87,8 @@ class _MyAppState extends State<MyApp> {
         splashColor: Color(0xFFFF834F),
         unselectedWidgetColor: Color(0xFFFF834F),
         primarySwatch: Colors.grey,
+        textSelectionHandleColor: Color(0xFFFF834F),
+        textSelectionColor: Color(0xFFFF834F),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: brightness,
       ),

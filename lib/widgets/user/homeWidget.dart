@@ -90,7 +90,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double imageShowSize = height / 4;
+    double imageShowSize = height / 2.5;
     return SingleChildScrollView(
       controller: scrollController,
       child: Column(
@@ -249,9 +249,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                             Container(
                               width: 120,
                               child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Container(
-                                    height: 150,
+                                    height: 120,
                                     width: 150,
                                     child: Image.network(
                                       discountOffer[i].image,
@@ -276,9 +278,10 @@ class _HomeWidgetState extends State<HomeWidget> {
                                   Text(
                                     "${discountOffer[i].price} ${word("currancy", context)}",
                                     style: TextStyle(
-                                        color: Colors.teal,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
+                                      color: Colors.teal,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -339,7 +342,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                 ),
                 Text(
                   word('NEW_ARRIVAL', context),
-                  style: TextStyle(fontSize: 35, fontFamily: "MainFont"),
+                  style: TextStyle(fontSize: 25, fontFamily: "MainFont"),
                 ),
                 SizedBox(
                   width: 10,
@@ -490,7 +493,6 @@ class _HomeWidgetState extends State<HomeWidget> {
     return networkImage2.length == 0
         ? Container(
             height: 100,
-            width: 100,
             child: Center(
               child: CircularProgressIndicator(
                 backgroundColor: Theme.of(context).unselectedWidgetColor,
@@ -501,7 +503,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             builder: (BuildContext context, StateSetter setState) {
               return Container(
                 height: height,
-                width: MediaQuery.of(context).size.width / 2,
+                width: MediaQuery.of(context).size.width * 0.8,
                 child: Carousel(
                   boxFit: BoxFit.fill,
                   images: networkImage2,

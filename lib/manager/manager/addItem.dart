@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -652,7 +653,6 @@ class MyTextFormField extends StatelessWidget {
           contentPadding: EdgeInsets.all(15.0),
           border: InputBorder.none,
           filled: true,
-          fillColor: Colors.grey[200],
         ),
         obscureText: isPassword ? true : false,
         maxLines: null,

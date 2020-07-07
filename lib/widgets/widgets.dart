@@ -95,8 +95,12 @@ Drawer drawer(
   return Drawer(
     child: Column(
       children: [
+        Container(
+          height: 50,
+        ),
         Expanded(
           child: Container(
+            decoration: BoxDecoration(border: Border.all()),
             child: StreamBuilder(
                 stream: Firestore.instance.collection('categories').snapshots(),
                 builder: (context, snapshot) {

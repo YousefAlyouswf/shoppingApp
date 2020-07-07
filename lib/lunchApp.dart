@@ -71,42 +71,40 @@ class _LunchAppState extends State<LunchApp> {
                     child: CircularProgressIndicator(),
                   ),
                 )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        widget.changeLangauge(chooseOne: 'ar');
-                        HelperFunction.firstTimeChooseLang(false);
-                        mock().then((value) {
-                          if (value) {
-                            navgateToHome();
-                          }
-                        });
-                        ispressed = true;
-                        setState(() {});
-                      },
-                      child: flagLanguage(
-                          "https://i.pinimg.com/originals/dd/6e/8a/dd6e8ae6fff5534ca42e4bd7687190cd.png",
-                          "عربي"),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        widget.changeLangauge(chooseOne: 'en');
-                        HelperFunction.firstTimeChooseLang(false);
-                        mock().then((value) {
-                          if (value) {
-                            navgateToHome();
-                          }
-                        });
-                        ispressed = true;
-                        setState(() {});
-                      },
-                      child: flagLanguage(
-                          "https://ak.picdn.net/shutterstock/videos/1021489162/thumb/1.jpg",
-                          "English"),
-                    ),
-                  ],
+              : Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          widget.changeLangauge(chooseOne: 'ar');
+                          HelperFunction.firstTimeChooseLang(false);
+                          mock().then((value) {
+                            if (value) {
+                              navgateToHome();
+                            }
+                          });
+                          ispressed = true;
+                          setState(() {});
+                        },
+                        child: flagLanguage("عربي"),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          widget.changeLangauge(chooseOne: 'en');
+                          HelperFunction.firstTimeChooseLang(false);
+                          mock().then((value) {
+                            if (value) {
+                              navgateToHome();
+                            }
+                          });
+                          ispressed = true;
+                          setState(() {});
+                        },
+                        child: flagLanguage("English"),
+                      ),
+                    ],
+                  ),
                 )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,24 +154,23 @@ class _LunchAppState extends State<LunchApp> {
     ));
   }
 
-  Widget flagLanguage(String url, String label) {
+  Widget flagLanguage(String label) {
     return Container(
+      margin: EdgeInsets.all(16.0),
       alignment: Alignment.bottomCenter,
-      width: MediaQuery.of(context).size.width / 2,
-      height: MediaQuery.of(context).size.height / 4,
+      width: MediaQuery.of(context).size.width / 3,
+      height: MediaQuery.of(context).size.height / 5,
       decoration: BoxDecoration(
+        border: Border.all(),
         borderRadius: BorderRadius.all(
           Radius.circular(50),
         ),
-        image: DecorationImage(
-          image: NetworkImage(
-            url,
-          ),
-        ),
       ),
-      child: Text(
-        label,
-        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+      child: Center(
+        child: Text(
+          label,
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
