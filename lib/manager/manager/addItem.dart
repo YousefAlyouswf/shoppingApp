@@ -664,7 +664,9 @@ class MyTextFormField extends StatelessWidget {
             ? TextInputType.number
             : isMultiLine
                 ? TextInputType.multiline
-                : isEmail ? TextInputType.emailAddress : TextInputType.text,
+                : isEmail
+                    ? TextInputType.emailAddress
+                    : TextInputType.visiblePassword,
       ),
     );
   }

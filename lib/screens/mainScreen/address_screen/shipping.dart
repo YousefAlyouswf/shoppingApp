@@ -48,6 +48,7 @@ Widget storedAddress(
                   child: Card(
                     child: ListTile(
                       onTap: () {
+                        print(email.text);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -57,9 +58,9 @@ Widget storedAddress(
                               buyPrice: buyPrice,
                               onThemeChanged: onThemeChanged,
                               changeLangauge: changeLangauge,
-                              firstName: firstName,
-                              lastName: lastName,
-                              email: email.text,
+                              firstName: addressList[index].firstName,
+                              lastName: addressList[index].lastName,
+                              email: addressList[index].email,
                               phone: addressList[index].phone,
                               address: addressList[index].address,
                               lat: addressList[index].lat,

@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_code/country_code.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:shop_app/database/local_db.dart';
@@ -15,7 +12,6 @@ import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
 import 'dart:math' show cos, sqrt, asin;
-import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';
@@ -72,7 +68,6 @@ class _PaymentState extends State<Payment> {
     idOrder = Uuid();
     String uid = idOrder.v1();
     orderID = uid.substring(0, 13);
-    print(orderID);
     deviceID();
     items = '';
     quantity = '';
@@ -157,7 +152,7 @@ class _PaymentState extends State<Payment> {
         'country': country,
         'ISO': isoCode,
       };
-
+      print(map);
       final response = await http.post(ROOT, body: map);
       if (200 == response.statusCode) {
         setState(() {
@@ -251,8 +246,6 @@ class _PaymentState extends State<Payment> {
     fetchMyCart();
   }
 
-  WebViewController _controller;
-
   @override
   Widget build(BuildContext context) {
     // print("----------->>>>>$webviewUrl");
@@ -291,12 +284,16 @@ class _PaymentState extends State<Payment> {
               javascriptMode: JavascriptMode.unrestricted,
               onPageFinished: (url) {
                 if (url == "http://geniusloop.co/payment/succed.php") {
-                  addCartToast("Succssful");
+                  twilioFlutter.sendSMS(
+                      toNumber: phone,
+                      messageBody:
+                          'رفوف\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
+                  addCartToast(word("Succssful", context));
                   navIndex = 3;
                   DBHelper.deleteAllItem("cart");
                   Navigator.popUntil(context, (route) => route.isFirst);
                 } else if (url == "http://geniusloop.co/payment/failed.php") {
-                  errorToast("Ooh! Failed");
+                  errorToast(word("Failed", context));
                   Navigator.push(
                     context,
                     MaterialPageRoute(

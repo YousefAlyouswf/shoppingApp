@@ -56,7 +56,7 @@
     "english": "الإنجليزية",
     "full_name_error": "Type your full name",
     "phone_error": "Phone Number 10 Digits\n05XXXXXXXX",
-    "email_error":"Correct e-mail format",
+    "email_error": "Correct e-mail format",
     "continue": "Continue",
     "size": "Size",
     "outOfStock": "Out of stock",
@@ -67,5 +67,7 @@
     "addToCart": "ADD TO CART",
     "off": "OFF",
     "all_categories": "ALL CATEGORIES",
-    "sizes": "SIZES"
+    "sizes": "SIZES",
+    "Succssful": "Payment Succssful",
+    "Failed": "Payment Failed"
 }
