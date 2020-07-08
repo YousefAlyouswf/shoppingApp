@@ -289,63 +289,63 @@ class _CartWidgetState extends State<CartWidget> {
                           fetchToMyCart();
                           cart.removeAt(i);
                         },
-                        child: GestureDetector(
-                          onTap: () {
-                            if (cart[i].sizeChose == "") {
-                              goToShowItem(
-                                cart[i].image,
-                                cart[i].itemName,
-                                cart[i].nameEn,
-                                cart[i].itemDes,
-                                cart[i].itemPrice,
-                                cart[i].productID,
-                                cart[i].buyPrice,
-                                [],
-                                cart[i].totalQuantity,
-                                cart[i].preiceOld,
-                              );
-                            } else {
-                              List<String> sizing = [];
-                              String compare = cart[i].sizeChose;
-                              if (compare == "XS" ||
-                                  compare == "S" ||
-                                  compare == "M" ||
-                                  compare == "L" ||
-                                  compare == "XL") {
-                                sizing = ['XS', 'S', 'M', 'L', 'XL'];
-                              } else {
-                                sizing = [
-                                  '35',
-                                  '36',
-                                  '37',
-                                  '38',
-                                  '39',
-                                  '40',
-                                  '41',
-                                  '42'
-                                ];
-                              }
-                              goToShowItem(
-                                cart[i].image,
-                                cart[i].itemName,
-                                cart[i].nameEn,
-                                cart[i].itemDes,
-                                cart[i].itemPrice,
-                                cart[i].productID,
-                                cart[i].buyPrice,
-                                sizing,
-                                cart[i].totalQuantity,
-                                cart[i].preiceOld,
-                              );
-                            }
-                          },
-                          child: Container(
-                            color: Colors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  Container(
+                        child: Container(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    if (cart[i].sizeChose == "") {
+                                      goToShowItem(
+                                        cart[i].image,
+                                        cart[i].itemName,
+                                        cart[i].nameEn,
+                                        cart[i].itemDes,
+                                        cart[i].itemPrice,
+                                        cart[i].productID,
+                                        cart[i].buyPrice,
+                                        [],
+                                        cart[i].totalQuantity,
+                                        cart[i].preiceOld,
+                                      );
+                                    } else {
+                                      List<String> sizing = [];
+                                      String compare = cart[i].sizeChose;
+                                      if (compare == "XS" ||
+                                          compare == "S" ||
+                                          compare == "M" ||
+                                          compare == "L" ||
+                                          compare == "XL") {
+                                        sizing = ['XS', 'S', 'M', 'L', 'XL'];
+                                      } else {
+                                        sizing = [
+                                          '35',
+                                          '36',
+                                          '37',
+                                          '38',
+                                          '39',
+                                          '40',
+                                          '41',
+                                          '42'
+                                        ];
+                                      }
+                                      goToShowItem(
+                                        cart[i].image,
+                                        cart[i].itemName,
+                                        cart[i].nameEn,
+                                        cart[i].itemDes,
+                                        cart[i].itemPrice,
+                                        cart[i].productID,
+                                        cart[i].buyPrice,
+                                        sizing,
+                                        cart[i].totalQuantity,
+                                        cart[i].preiceOld,
+                                      );
+                                    }
+                                  },
+                                  child: Container(
                                     width: 100,
                                     height: 100,
                                     decoration: new BoxDecoration(
@@ -356,10 +356,61 @@ class _CartWidgetState extends State<CartWidget> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Column(
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    if (cart[i].sizeChose == "") {
+                                      goToShowItem(
+                                        cart[i].image,
+                                        cart[i].itemName,
+                                        cart[i].nameEn,
+                                        cart[i].itemDes,
+                                        cart[i].itemPrice,
+                                        cart[i].productID,
+                                        cart[i].buyPrice,
+                                        [],
+                                        cart[i].totalQuantity,
+                                        cart[i].preiceOld,
+                                      );
+                                    } else {
+                                      List<String> sizing = [];
+                                      String compare = cart[i].sizeChose;
+                                      if (compare == "XS" ||
+                                          compare == "S" ||
+                                          compare == "M" ||
+                                          compare == "L" ||
+                                          compare == "XL") {
+                                        sizing = ['XS', 'S', 'M', 'L', 'XL'];
+                                      } else {
+                                        sizing = [
+                                          '35',
+                                          '36',
+                                          '37',
+                                          '38',
+                                          '39',
+                                          '40',
+                                          '41',
+                                          '42'
+                                        ];
+                                      }
+                                      goToShowItem(
+                                        cart[i].image,
+                                        cart[i].itemName,
+                                        cart[i].nameEn,
+                                        cart[i].itemDes,
+                                        cart[i].itemPrice,
+                                        cart[i].productID,
+                                        cart[i].buyPrice,
+                                        sizing,
+                                        cart[i].totalQuantity,
+                                        cart[i].preiceOld,
+                                      );
+                                    }
+                                  },
+                                  child: Column(
                                     children: [
                                       Container(
                                         width:
@@ -402,85 +453,44 @@ class _CartWidgetState extends State<CartWidget> {
                                       ),
                                     ],
                                   ),
-                                  Spacer(),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                          // color: Colors.orange[100],
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(20),
-                                          ),
+                                ),
+                                Spacer(),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        // color: Colors.orange[100],
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(20),
                                         ),
-                                        child: Table(
-                                          columnWidths: {
-                                            1: FractionColumnWidth(0.5)
-                                          },
-                                          border: TableBorder.symmetric(
-                                              // inside: BorderSide(
-                                              //   color: Colors.grey[600],
-                                              // ),
-                                              outside: BorderSide(
-                                            color: Colors.grey[600],
-                                          )),
-                                          defaultVerticalAlignment:
-                                              TableCellVerticalAlignment.middle,
-                                          children: [
-                                            TableRow(
-                                              children: [
-                                                Center(
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      int q = int.parse(
-                                                          cart[i].quantity);
+                                      ),
+                                      child: Table(
+                                        columnWidths: {
+                                          1: FractionColumnWidth(0.5)
+                                        },
+                                        border: TableBorder.symmetric(
+                                            // inside: BorderSide(
+                                            //   color: Colors.grey[600],
+                                            // ),
+                                            outside: BorderSide(
+                                          color: Colors.grey[600],
+                                        )),
+                                        defaultVerticalAlignment:
+                                            TableCellVerticalAlignment.middle,
+                                        children: [
+                                          TableRow(
+                                            children: [
+                                              Center(
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    int q = int.parse(
+                                                        cart[i].quantity);
 
-                                                      if (q == 1) {
-                                                      } else {
-                                                        q--;
-                                                        DBHelper.updateData(
-                                                            "cart",
-                                                            {
-                                                              'q': q.toString(),
-                                                            },
-                                                            cart[i].id);
-                                                        fetchToMyCart();
-                                                      }
-                                                    },
-                                                    child: Container(
-                                                      child: Text(
-                                                        "-",
-                                                        style: TextStyle(
-                                                            fontSize: 30,
-                                                            color: Colors.grey),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Center(
-                                                  child: Text(
-                                                    cart[i].quantity,
-                                                    style:
-                                                        TextStyle(fontSize: 20),
-                                                  ),
-                                                ),
-                                                Center(
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      int q = int.parse(
-                                                          cart[i].quantity);
-                                                      int totalQ = int.parse(
-                                                          cart[i]
-                                                              .totalQuantity);
-                                                      if (q >= totalQ) {
-                                                        errorToast(word(
-                                                            "outOfStock",
-                                                            context));
-                                                      } else {
-                                                        q++;
-                                                      }
-
+                                                    if (q == 1) {
+                                                    } else {
+                                                      q--;
                                                       DBHelper.updateData(
                                                           "cart",
                                                           {
@@ -488,41 +498,81 @@ class _CartWidgetState extends State<CartWidget> {
                                                           },
                                                           cart[i].id);
                                                       fetchToMyCart();
-                                                    },
-                                                    child: Container(
-                                                      child: Text(
-                                                        "+",
-                                                        style: TextStyle(
-                                                            fontSize: 25,
-                                                            color: Colors.grey),
-                                                      ),
+                                                    }
+                                                  },
+                                                  child: Container(
+                                                    child: Text(
+                                                      "-",
+                                                      style: TextStyle(
+                                                          fontSize: 30,
+                                                          color: Colors.grey),
                                                     ),
                                                   ),
                                                 ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
+                                              ),
+                                              Center(
+                                                child: Text(
+                                                  cart[i].quantity,
+                                                  style:
+                                                      TextStyle(fontSize: 20),
+                                                ),
+                                              ),
+                                              Center(
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    int q = int.parse(
+                                                        cart[i].quantity);
+                                                    int totalQ = int.parse(
+                                                        cart[i].totalQuantity);
+                                                    if (q >= totalQ) {
+                                                      errorToast(word(
+                                                          "outOfStock",
+                                                          context));
+                                                    } else {
+                                                      q++;
+                                                    }
+
+                                                    DBHelper.updateData(
+                                                        "cart",
+                                                        {
+                                                          'q': q.toString(),
+                                                        },
+                                                        cart[i].id);
+                                                    fetchToMyCart();
+                                                  },
+                                                  child: Container(
+                                                    child: Text(
+                                                      "+",
+                                                      style: TextStyle(
+                                                          fontSize: 25,
+                                                          color: Colors.grey),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
                                       ),
-                                      IconButton(
-                                        icon: FaIcon(
-                                          FontAwesomeIcons.solidTrashAlt,
-                                          size: 20,
-                                        ),
-                                        onPressed: () {
-                                          deleteCategoryDialog(
-                                            context,
-                                            cart[i].itemName,
-                                            cart[i].image,
-                                            cart[i].id,
-                                            fetchToMyCart,
-                                          );
-                                        },
+                                    ),
+                                    IconButton(
+                                      icon: FaIcon(
+                                        FontAwesomeIcons.solidTrashAlt,
+                                        size: 20,
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                      onPressed: () {
+                                        deleteCategoryDialog(
+                                          context,
+                                          cart[i].itemName,
+                                          cart[i].image,
+                                          cart[i].id,
+                                          fetchToMyCart,
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
