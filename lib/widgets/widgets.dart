@@ -200,7 +200,7 @@ Drawer drawer(
             showAboutDialog(
               context: context,
               applicationName: "RFOOF",
-              applicationVersion: "0.0.16",
+              applicationVersion: "0.0.17",
               applicationLegalese: "Developed by Yousef Al Yousef",
               useRootNavigator: false,
               children: [Icon(Icons.developer_board)],

@@ -82,6 +82,7 @@ Widget orders(BuildContext context, Function searchOrder) {
                               name: ds['items'][j]['name'],
                               price: ds['items'][j]['sellPrice'],
                               quatity: ds['items'][j]['quantity'],
+                              productID: ds['items'][j]['productID'],
                             ));
                           }
                           bool noDelvier;
@@ -90,24 +91,34 @@ Widget orders(BuildContext context, Function searchOrder) {
                           } else {
                             noDelvier = false;
                           }
-                          String status = ds['status'];
-                          DateTime orderDate = DateTime.parse(ds['date']);
-                          var formatter = new intl.DateFormat('dd/MM/yyyy');
-                          var timeFormat = new intl.DateFormat.jm();
-                          String formatDate = formatter.format(orderDate);
-                          String formatTime = timeFormat.format(orderDate);
 
-                          String formatted =
-                              "تاريخ الطلب $formatDate  $formatTime";
+                          String status;
+                          String formatted;
                           bool mapNavgation;
-                          if (ds['lat'] == '' ||
-                              ds['long'] == '' ||
-                              ds['lat'] == null ||
-                              ds['long'] == null) {
-                            mapNavgation = false;
+
+                          if (ds['date'] == "") {
+                            return null;
                           } else {
-                            mapNavgation = true;
+                            status = ds['status'];
+                            DateTime orderDate = DateTime.parse(ds['date']);
+                            var formatter = new intl.DateFormat('dd/MM/yyyy');
+                            var timeFormat = new intl.DateFormat.jm();
+                            String formatDate = formatter.format(orderDate);
+                            String formatTime = timeFormat.format(orderDate);
+
+                            ;
+                            formatted = "تاريخ الطلب $formatDate  $formatTime";
+                            ;
+                            if (ds['lat'] == '' ||
+                                ds['long'] == '' ||
+                                ds['lat'] == null ||
+                                ds['long'] == null) {
+                              mapNavgation = false;
+                            } else {
+                              mapNavgation = true;
+                            }
                           }
+
                           return Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
@@ -169,10 +180,18 @@ Widget orders(BuildContext context, Function searchOrder) {
                                                               child: Align(
                                                                 alignment: Alignment
                                                                     .centerRight,
-                                                                child: Text(
-                                                                    myOrderList[
+                                                                child: Column(
+                                                                  children: [
+                                                                    Text(myOrderList[
                                                                             index]
                                                                         .name),
+                                                                    Text(
+                                                                      myOrderList[
+                                                                              index]
+                                                                          .productID,
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                               ),
                                                             ),
                                                             Padding(
@@ -654,7 +673,7 @@ Widget orders(BuildContext context, Function searchOrder) {
                                                           MainAxisAlignment
                                                               .spaceAround,
                                                       children: [
-                                                        Text(ds['name']),
+                                                        Text(ds['firstName']),
                                                         FlatButton(
                                                             onPressed: () => launch(
                                                                 "tel://${ds['phone']}"),
