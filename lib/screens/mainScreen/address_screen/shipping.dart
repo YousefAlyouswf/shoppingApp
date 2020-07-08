@@ -21,13 +21,15 @@ bool preAddress = false;
 String addressLine = "";
 String deliverCost = "";
 Widget storedAddress(
-    BuildContext context,
-    String totalAfterTax,
-    String price,
-    String buyPrice,
-    Function onThemeChanged,
-    Function changeLangauge,
-    Function fetchAddress) {
+  BuildContext context,
+  String totalAfterTax,
+  String price,
+  String buyPrice,
+  Function onThemeChanged,
+  Function changeLangauge,
+  Function fetchAddress,
+  String discount,
+) {
   return Visibility(
     visible: preAddress,
     child: Container(
@@ -66,6 +68,7 @@ Widget storedAddress(
                               lat: addressList[index].lat,
                               long: addressList[index].long,
                               delvierCost: addressList[index].deliverCost,
+                              discount: discount,
                             ),
                           ),
                         );
@@ -87,7 +90,7 @@ Widget storedAddress(
                           SizedBox(
                             height: 10,
                           ),
-                          Text(addressLine),
+                          Text(addressList[index].address),
                           Text(
                               "${word("deliverCost", context)} : ${addressList[index].deliverCost} ${word("currancy", context)}")
                         ],
@@ -128,39 +131,49 @@ Widget addAddress(
               fontSize: 22,
             ),
           ),
-          Row(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width / 2,
-                child: MyTextFormField(
-                  editingController: name,
-                  hintText: word("full_name", context),
-                ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              padding: EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2.2,
+                        child: MyTextFormField(
+                          editingController: name,
+                          hintText: word("full_name", context),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2.2,
+                        child: MyTextFormField(
+                          editingController: phone,
+                          hintText: word("phone_number", context),
+                          isNumber: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    child: MyTextFormField(
+                      editingController: email,
+                      isEmail: true,
+                      hintText: word("email", context),
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                width: MediaQuery.of(context).size.width / 2,
-                child: MyTextFormField(
-                  editingController: phone,
-                  hintText: word("phone_number", context),
-                  isNumber: true,
-                ),
-              ),
-            ],
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width / 1.5,
-            child: MyTextFormField(
-              editingController: email,
-              isEmail: true,
-              hintText: word("email", context),
             ),
           ),
           SizedBox(
             height: 30,
-          ),
-          Divider(
-            thickness: 3,
-            color: Colors.black,
           ),
           Text(
             word("address_info", context),
@@ -197,7 +210,7 @@ Widget addAddress(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text(
-                            "سعر التوصيل: $deliverCost",
+                            "${word("deliverCost", context)}: $deliverCost",
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -211,7 +224,7 @@ Widget addAddress(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
                             child: Text(
-                              "الإجمالي: $total ${word("currancy", context)}",
+                              "${word("total", context)}: $total ${word("currancy", context)}",
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
@@ -243,6 +256,7 @@ Widget buttonsBoth(
   Function toggelToAddAddress,
   Function formatPhoneNumber,
   Function spiltName,
+  String discount,
 ) {
   return preAddress
       ? InkWell(
@@ -367,6 +381,7 @@ Widget buttonsBoth(
                                             long: customerLocation.longitude
                                                 .toString(),
                                             delvierCost: cost.toString(),
+                                            discount: discount,
                                           ),
                                         ),
                                       );
@@ -399,8 +414,11 @@ Widget buttonsBoth(
           },
           child: Container(
             height: 50,
-            width: MediaQuery.of(context).size.width / 2,
-            color: Theme.of(context).unselectedWidgetColor,
+            width: MediaQuery.of(context).size.width / 1.1,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              color: Theme.of(context).unselectedWidgetColor,
+            ),
             child: Center(
               child: Text(
                 word("confirm_number", context),

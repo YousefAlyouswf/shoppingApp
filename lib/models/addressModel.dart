@@ -4,7 +4,7 @@ class AddressModel {
   final String lastName;
   final String phone;
   final String email;
-  final String address;
+  String address;
   final String lat;
   final String long;
   final String deliverCost;

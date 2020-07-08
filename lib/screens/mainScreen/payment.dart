@@ -32,6 +32,7 @@ class Payment extends StatefulWidget {
   final String totalAfterTax;
   final String email;
   final String delvierCost;
+  final String discount;
 
   const Payment({
     Key key,
@@ -48,6 +49,7 @@ class Payment extends StatefulWidget {
     this.price,
     this.totalAfterTax,
     this.delvierCost,
+    this.discount,
   }) : super(key: key);
   @override
   _PaymentState createState() => _PaymentState();
@@ -87,6 +89,7 @@ class _PaymentState extends State<Payment> {
       'orderID': orderID,
       'date': '',
       'status': '0',
+      'discount': widget.discount,
       'total': widget.totalAfterTax,
       'lat': widget.lat,
       'long': widget.long,
@@ -139,8 +142,10 @@ class _PaymentState extends State<Payment> {
   String webviewUrl = "";
   static const ROOT = "http://geniusloop.co/payment/index.php";
   Future<String> paymantPage() async {
-    double total =
-        double.parse(widget.totalAfterTax) + double.parse(widget.delvierCost);
+    double total = double.parse(widget.totalAfterTax) +
+        double.parse(widget.delvierCost) +
+        double.parse(widget.discount);
+
     try {
       Map<String, dynamic> map = {
         'amount': total.toString(),
@@ -154,8 +159,10 @@ class _PaymentState extends State<Payment> {
         'phone': widget.phone,
         'email': widget.email,
         'orderID': orderID,
+        'discount': widget.discount,
         'firstName': widget.firstName,
         'lastName': widget.lastName,
+        'language': isEnglish ? "English" : "Arabic",
         'country': country,
         'ISO': isoCode,
         'deliverCost': widget.delvierCost
@@ -166,11 +173,9 @@ class _PaymentState extends State<Payment> {
         setState(() {
           webviewUrl = response.body;
         });
-
+        print("--------------> ${response.body}");
         return response.body;
-      } else {
-        print("response.body");
-      }
+      } else {}
     } catch (e) {
       print(e);
     }
@@ -292,6 +297,7 @@ class _PaymentState extends State<Payment> {
               javascriptMode: JavascriptMode.unrestricted,
               onPageFinished: (url) async {
                 if (url == "http://geniusloop.co/payment/succed.php") {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   twilioFlutter.sendSMS(
                       toNumber: phone,
                       messageBody:
@@ -302,6 +308,7 @@ class _PaymentState extends State<Payment> {
                   DBHelper.deleteAllItem("cart");
                   Navigator.popUntil(context, (route) => route.isFirst);
                 } else if (url == "http://geniusloop.co/payment/failed.php") {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   errorToast(word("Failed", context));
                   Navigator.push(
                     context,

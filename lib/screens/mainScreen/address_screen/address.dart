@@ -18,7 +18,7 @@ class Address extends StatefulWidget {
   final Function changeLangauge;
   final String buyPrice;
   final String price;
-  final bool isDeliver;
+  final String discount;
   const Address({
     Key key,
     this.totalAfterTax,
@@ -26,7 +26,7 @@ class Address extends StatefulWidget {
     this.changeLangauge,
     this.buyPrice,
     this.price,
-    this.isDeliver,
+    this.discount,
   }) : super(key: key);
 
   @override
@@ -60,7 +60,7 @@ class _AddressState extends State<Address> {
       var addresses =
           await Geocoder.local.findAddressesFromCoordinates(coordinates);
       var first = addresses.first;
-      addressLine = first.addressLine;
+      addressList[i].address = first.addressLine;
     }
     if (addressList.length > 0) {
       setState(() {
@@ -77,7 +77,7 @@ class _AddressState extends State<Address> {
   void initState() {
     super.initState();
     fetchAddress();
-
+    print(widget.discount);
     twilioInfo();
     listenSMS();
   }
@@ -109,6 +109,7 @@ class _AddressState extends State<Address> {
     try {
       setState(() => customerLocation = location);
       calcualteDeliverCost();
+      FocusScope.of(context).requestFocus(FocusNode());
     } catch (e) {}
   }
 
@@ -144,13 +145,15 @@ class _AddressState extends State<Address> {
                       height: 30,
                     ),
                     storedAddress(
-                        context,
-                        widget.totalAfterTax,
-                        widget.price,
-                        widget.buyPrice,
-                        widget.onThemeChanged,
-                        widget.changeLangauge,
-                        fetchAddress),
+                      context,
+                      widget.totalAfterTax,
+                      widget.price,
+                      widget.buyPrice,
+                      widget.onThemeChanged,
+                      widget.changeLangauge,
+                      fetchAddress,
+                      widget.discount,
+                    ),
                     addAddress(context, moveToMapScreen),
                   ],
                 ),
@@ -167,6 +170,7 @@ class _AddressState extends State<Address> {
               toggelToAddAddress,
               formatPhoneNumber,
               spiltName,
+              widget.discount,
             ),
             SizedBox(
               height: 20,

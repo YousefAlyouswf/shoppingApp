@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/local_db.dart';
+import 'package:shop_app/manager/manager/addItem.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/address_screen/address.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
@@ -24,8 +25,6 @@ class _CartWidgetState extends State<CartWidget> {
 
   bool deleteIcon = false;
   int tax = 0;
-  int delivery = 0;
-  bool isDeliver = true;
   List<ItemShow> cart = [];
 
   Future<void> fetchToMyCart() async {
@@ -89,6 +88,7 @@ class _CartWidgetState extends State<CartWidget> {
     setState(() {});
   }
 
+  double discount = 0.0;
   bool codeApllied = false;
   applyDiscount() async {
     bool isCorrect = false;
@@ -99,8 +99,10 @@ class _CartWidgetState extends State<CartWidget> {
           if (e['code'] == discountController.text) {
             isCorrect = true;
             double x = double.parse(e['discount']);
+            double beforeDiscount = totalAfterTax;
             setState(() {
               totalAfterTax = (x * totalAfterTax / 100 - totalAfterTax) * -1;
+              discount = beforeDiscount - totalAfterTax;
             });
           }
           discountController.clear();
@@ -129,7 +131,6 @@ class _CartWidgetState extends State<CartWidget> {
       value.documents.forEach((element) {
         setState(() {
           tax = element['tax'];
-          delivery = element['delivery'];
         });
       });
     });
@@ -142,9 +143,46 @@ class _CartWidgetState extends State<CartWidget> {
     getTaxAndDeliveryPrice();
   }
 
+  void updateCart(cart) {
+    try {
+      fetchToMyCart();
+      FocusScope.of(context).requestFocus(FocusNode());
+    } catch (e) {}
+  }
+
+  goToShowItem(
+      String image,
+      String itemName,
+      String nameEn,
+      String itemDes,
+      String itemPrice,
+      String productID,
+      String buyPrice,
+      List<String> size,
+      String totalQuantity,
+      String preiceOld) async {
+    final cart = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShowItem(
+          image: image,
+          name: itemName,
+          nameEn: nameEn,
+          des: itemDes,
+          price: itemPrice,
+          imageID: productID,
+          buyPrice: buyPrice,
+          size: size,
+          totalQuantity: totalQuantity,
+          priceOld: preiceOld,
+        ),
+      ),
+    );
+    updateCart(cart);
+  }
+
   @override
   Widget build(BuildContext context) {
-    fetchToMyCart();
     return Container(
       child: Column(
         children: [
@@ -253,36 +291,18 @@ class _CartWidgetState extends State<CartWidget> {
                         },
                         child: GestureDetector(
                           onTap: () {
-                            Map<String, dynamic> test = {
-                              'image': cart[i].image,
-                              'name': cart[i].itemName,
-                              'nameEn': cart[i].nameEn,
-                              'des': cart[i].itemDes,
-                              'price': cart[i].itemPrice,
-                              'productID': cart[i].productID,
-                              'buyPrice': cart[i].buyPrice,
-                              'size': cart[i].sizeChose,
-                              'totalQuantity': cart[i].totalQuantity,
-                            };
-                            print(test);
-
                             if (cart[i].sizeChose == "") {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ShowItem(
-                                    image: cart[i].image,
-                                    name: cart[i].itemName,
-                                    nameEn: cart[i].nameEn,
-                                    des: cart[i].itemDes,
-                                    price: cart[i].itemPrice,
-                                    imageID: cart[i].productID,
-                                    buyPrice: cart[i].buyPrice,
-                                    size: [],
-                                    totalQuantity: cart[i].totalQuantity,
-                                    priceOld: cart[i].preiceOld,
-                                  ),
-                                ),
+                              goToShowItem(
+                                cart[i].image,
+                                cart[i].itemName,
+                                cart[i].nameEn,
+                                cart[i].itemDes,
+                                cart[i].itemPrice,
+                                cart[i].productID,
+                                cart[i].buyPrice,
+                                [],
+                                cart[i].totalQuantity,
+                                cart[i].preiceOld,
                               );
                             } else {
                               List<String> sizing = [];
@@ -305,22 +325,17 @@ class _CartWidgetState extends State<CartWidget> {
                                   '42'
                                 ];
                               }
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ShowItem(
-                                    image: cart[i].image,
-                                    name: cart[i].itemName,
-                                    nameEn: cart[i].nameEn,
-                                    des: cart[i].itemDes,
-                                    price: cart[i].itemPrice,
-                                    imageID: cart[i].productID,
-                                    buyPrice: cart[i].buyPrice,
-                                    size: sizing,
-                                    totalQuantity: cart[i].totalQuantity,
-                                    priceOld: cart[i].preiceOld,
-                                  ),
-                                ),
+                              goToShowItem(
+                                cart[i].image,
+                                cart[i].itemName,
+                                cart[i].nameEn,
+                                cart[i].itemDes,
+                                cart[i].itemPrice,
+                                cart[i].productID,
+                                cart[i].buyPrice,
+                                sizing,
+                                cart[i].totalQuantity,
+                                cart[i].preiceOld,
                               );
                             }
                           },
@@ -560,7 +575,7 @@ class _CartWidgetState extends State<CartWidget> {
                                   totalAfterTax: totalAfterTax.toString(),
                                   buyPrice: sumBuyPrice.toString(),
                                   price: sumPrice.toString(),
-                                  isDeliver: isDeliver,
+                                  discount: discount.toString(),
                                 ),
                               ),
                             );

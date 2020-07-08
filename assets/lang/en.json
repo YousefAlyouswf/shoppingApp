@@ -72,5 +72,7 @@
     "Failed": "Payment Failed",
     "subject_email": "RFOOF INVOICE",
     "body_email": "Hello,\nThank you for your shopping with us.\nWe received your order.\nYou can track your order via Rfoof app with you order number: ",
-    "deliverCost": "Delivery cost will be"
+    "deliverCost": "Delivery cost",
+    "total":"Total"
+   
 }
