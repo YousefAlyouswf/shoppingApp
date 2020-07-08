@@ -316,6 +316,7 @@ class _ShowItemState extends State<ShowItem>
                             'productID': widget.imageID,
                             'nameEn': widget.nameEn,
                             'totalQ': widget.totalQuantity,
+                            'priceOld': widget.priceOld,
                           },
                         ).whenComplete(() => addCartToast("تم وضعها في سلتك"));
                       } else {
@@ -337,6 +338,7 @@ class _ShowItemState extends State<ShowItem>
                                     'productID': widget.imageID,
                                     'nameEn': widget.nameEn,
                                     'totalQ': widget.totalQuantity,
+                                    'priceOld': widget.priceOld,
                                   },
                                   id)
                               .whenComplete(
@@ -374,6 +376,7 @@ class _ShowItemState extends State<ShowItem>
                               'productID': widget.imageID,
                               'nameEn': widget.nameEn,
                               'totalQ': widget.totalQuantity,
+                              'priceOld': widget.priceOld,
                             },
                           ).whenComplete(
                               () => addCartToast("تم وضعها في سلتك"));
@@ -396,6 +399,7 @@ class _ShowItemState extends State<ShowItem>
                                       'productID': widget.imageID,
                                       'nameEn': widget.nameEn,
                                       'totalQ': widget.totalQuantity,
+                                      'priceOld': widget.priceOld,
                                     },
                                     id)
                                 .whenComplete(

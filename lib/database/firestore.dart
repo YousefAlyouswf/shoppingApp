@@ -175,6 +175,7 @@ class FirestoreFunctions {
                   imageID: element.data['items'][i]['imageID'],
                   productID: element.data['items'][i]['imageID'],
                   buyPrice: element.data['items'][i]['buyPrice'],
+                  preiceOld: element.data['items'][i]['priceOld'],
                   totalQuantity: element.data['items'][i]['totalQuantity'],
                   size: sizes,
                 ),

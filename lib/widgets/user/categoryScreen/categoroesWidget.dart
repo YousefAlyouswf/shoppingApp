@@ -288,6 +288,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                               .nameEn,
                                                           listImages[index]
                                                               .totalQuantity,
+                                                          listImages[index]
+                                                              .priceOld,
                                                         );
                                                         fetchToMyCart()
                                                             .then((value) {
@@ -454,6 +456,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
     String buyPrice,
     String nameEn,
     String totalQ,
+    String priceOld,
   ) async {
     int q = 0;
     if (size.length == 0) {
@@ -483,6 +486,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             'productID': imageID,
             'nameEn': nameEn,
             'totalQ': totalQ,
+            'priceOld': priceOld,
           },
         ).whenComplete(() => addCartToast("تم وضعها في سلتك"));
       } else {
@@ -504,6 +508,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                     'productID': imageID,
                     'nameEn': nameEn,
                     'totalQ': totalQ,
+                    'priceOld': priceOld,
                   },
                   id)
               .whenComplete(() => addCartToast("تم وضعها في سلتك"));
@@ -639,6 +644,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                   'productID': imageID,
                                   'nameEn': nameEn,
                                   'totalQ': totalQ,
+                                  'priceOld': priceOld,
                                 },
                               ).whenComplete(
                                   () => addCartToast("تم وضعها في سلتك"));
@@ -661,6 +667,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                           'productID': imageID,
                                           'nameEn': nameEn,
                                           'totalQ': totalQ,
+                                          'priceOld': priceOld,
                                         },
                                         id)
                                     .whenComplete(

@@ -12,6 +12,7 @@ class ItemShow {
   final String sizeChose;
   final String productID;
   final String totalQuantity;
+  final String preiceOld;
 
   ItemShow({
     this.id,
@@ -27,5 +28,6 @@ class ItemShow {
     this.productID,
     this.totalQuantity,
     this.nameEn,
+    this.preiceOld,
   });
 }

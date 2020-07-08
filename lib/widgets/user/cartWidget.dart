@@ -47,6 +47,7 @@ class _CartWidgetState extends State<CartWidget> {
               productID: item['productID'],
               nameEn: item['nameEn'],
               totalQuantity: item['totalQ'],
+              preiceOld: item['priceOld'],
             ),
           )
           .toList();
@@ -143,6 +144,7 @@ class _CartWidgetState extends State<CartWidget> {
 
   @override
   Widget build(BuildContext context) {
+    fetchToMyCart();
     return Container(
       child: Column(
         children: [
@@ -278,6 +280,7 @@ class _CartWidgetState extends State<CartWidget> {
                                     buyPrice: cart[i].buyPrice,
                                     size: [],
                                     totalQuantity: cart[i].totalQuantity,
+                                    priceOld: cart[i].preiceOld,
                                   ),
                                 ),
                               );
@@ -315,6 +318,7 @@ class _CartWidgetState extends State<CartWidget> {
                                     buyPrice: cart[i].buyPrice,
                                     size: sizing,
                                     totalQuantity: cart[i].totalQuantity,
+                                    priceOld: cart[i].preiceOld,
                                   ),
                                 ),
                               );
