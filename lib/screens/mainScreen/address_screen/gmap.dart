@@ -18,42 +18,49 @@ class _GmapState extends State<Gmap> {
       <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS
 
   void _add(LatLng latLng) {
-    final MarkerId markerId = MarkerId('0');
+    try {
+      final MarkerId markerId = MarkerId('0');
 
-    // creating a new MARKER
-    final Marker marker = Marker(
-      markerId: markerId,
-      position: latLng,
-      infoWindow: InfoWindow(title: "الموقع الي بنوصله الطلب", snippet: 'رفوف'),
-      onTap: () {},
-    );
+      // creating a new MARKER
+      final Marker marker = Marker(
+        markerId: markerId,
+        position: latLng,
+        infoWindow:
+            InfoWindow(title: "الموقع الي بنوصله الطلب", snippet: 'رفوف'),
+        onTap: () {},
+      );
 
-    setState(() {
-      // adding a new marker to map
-      markers[markerId] = marker;
-    });
+      setState(() {
+        // adding a new marker to map
+        markers[markerId] = marker;
+      });
+    } catch (e) {}
   }
 
   GoogleMapController googleMapController;
   onapCareated(GoogleMapController controller) {
-    googleMapController = controller;
-    setState(() {});
+    try {
+      googleMapController = controller;
+      setState(() {});
+    } catch (e) {}
   }
 
   serveiceRequest() async {
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied ||
-        _permissionGranted == PermissionStatus.deniedForever) {
-      setState(() {
-        long = 46.674976;
-        lat = 24.711906;
-      });
-    } else {
-      setState(() {
-        long = 46.674976;
-        lat = 24.711906;
-      });
-    }
+    try {
+      _permissionGranted = await location.hasPermission();
+      if (_permissionGranted == PermissionStatus.denied ||
+          _permissionGranted == PermissionStatus.deniedForever) {
+        setState(() {
+          long = 46.674976;
+          lat = 24.711906;
+        });
+      } else {
+        setState(() {
+          long = 46.674976;
+          lat = 24.711906;
+        });
+      }
+    } catch (e) {}
   }
 
   double long;
@@ -69,26 +76,32 @@ class _GmapState extends State<Gmap> {
   }
 
   getLocation() async {
-    _locationData = await location.getLocation();
+    try {
+      _locationData = await location.getLocation();
 
-    setState(() {
-      long = _locationData.longitude;
-      lat = _locationData.latitude;
-    });
+      setState(() {
+        long = _locationData.longitude;
+        lat = _locationData.latitude;
+      });
+    } catch (e) {
+      print("PERMISSION_DENIED");
+    }
   }
 
   MapType mapType;
   bool isNormalType = true;
   changeMapType() {
-    setState(() {
-      if (isNormalType) {
-        mapType = MapType.normal;
-        isNormalType = false;
-      } else {
-        mapType = MapType.satellite;
-        isNormalType = true;
-      }
-    });
+    try {
+      setState(() {
+        if (isNormalType) {
+          mapType = MapType.normal;
+          isNormalType = false;
+        } else {
+          mapType = MapType.satellite;
+          isNormalType = true;
+        }
+      });
+    } catch (e) {}
   }
 
   LatLng customerLocation;
@@ -112,10 +125,12 @@ class _GmapState extends State<Gmap> {
                   onMapCreated: onapCareated,
                   markers: Set<Marker>.of(markers.values),
                   onTap: (latLng) {
-                    setState(() {
-                      customerLocation = latLng;
-                    });
-                    _add(latLng);
+                    try {
+                      setState(() {
+                        customerLocation = latLng;
+                      });
+                      _add(latLng);
+                    } catch (e) {}
                   },
                   onLongPress: (latLng) {
                     setState(() {
@@ -158,10 +173,14 @@ class _GmapState extends State<Gmap> {
               padding: const EdgeInsets.all(32.0),
               child: InkWell(
                 onTap: () {
-                  if (customerLocation == null) {
-                    errorToast("أختر موقع المنزل من الخريطة");
-                  } else {
-                    Navigator.pop(context, customerLocation);
+                  try {
+                    if (customerLocation == null) {
+                      errorToast("أختر موقع المنزل من الخريطة");
+                    } else {
+                      Navigator.pop(context, customerLocation);
+                    }
+                  } catch (e) {
+                    print("Press back");
                   }
                 },
                 child: Container(

@@ -31,6 +31,7 @@ class Payment extends StatefulWidget {
   final String price;
   final String totalAfterTax;
   final String email;
+  final String delvierCost;
 
   const Payment({
     Key key,
@@ -46,6 +47,7 @@ class Payment extends StatefulWidget {
     this.email,
     this.price,
     this.totalAfterTax,
+    this.delvierCost,
   }) : super(key: key);
   @override
   _PaymentState createState() => _PaymentState();
@@ -91,6 +93,7 @@ class _PaymentState extends State<Payment> {
       'firstName': widget.firstName,
       'lastName': widget.lastName,
       'phone': widget.phone,
+      'deliverCost': widget.delvierCost,
       'email': widget.email,
       'priceForSell': widget.price,
       'priceForBuy': widget.buyPrice,
@@ -136,9 +139,11 @@ class _PaymentState extends State<Payment> {
   String webviewUrl = "";
   static const ROOT = "http://geniusloop.co/payment/index.php";
   Future<String> paymantPage() async {
+    double total =
+        double.parse(widget.totalAfterTax) + double.parse(widget.delvierCost);
     try {
       Map<String, dynamic> map = {
-        'amount': widget.totalAfterTax,
+        'amount': total.toString(),
         'items': items,
         'quantity': quantity,
         'unitPrice': unitPrice,
@@ -153,6 +158,7 @@ class _PaymentState extends State<Payment> {
         'lastName': widget.lastName,
         'country': country,
         'ISO': isoCode,
+        'deliverCost': widget.delvierCost
       };
       print(map);
       final response = await http.post(ROOT, body: map);

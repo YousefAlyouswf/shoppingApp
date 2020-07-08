@@ -7,6 +7,7 @@ class AddressModel {
   final String address;
   final String lat;
   final String long;
+  final String deliverCost;
 
   AddressModel(
       {this.firstName,
@@ -15,6 +16,7 @@ class AddressModel {
       this.address,
       this.email,
       this.lat,
+      this.deliverCost,
       this.long,
       this.id});
 }

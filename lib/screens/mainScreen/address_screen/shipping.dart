@@ -18,7 +18,8 @@ String lastName;
 List<AddressModel> addressList = new List();
 LatLng customerLocation;
 bool preAddress = false;
-
+String addressLine = "";
+String deliverCost = "";
 Widget storedAddress(
     BuildContext context,
     String totalAfterTax,
@@ -48,7 +49,6 @@ Widget storedAddress(
                   child: Card(
                     child: ListTile(
                       onTap: () {
-                        print(email.text);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -65,6 +65,7 @@ Widget storedAddress(
                               address: addressList[index].address,
                               lat: addressList[index].lat,
                               long: addressList[index].long,
+                              delvierCost: addressList[index].deliverCost,
                             ),
                           ),
                         );
@@ -83,7 +84,12 @@ Widget storedAddress(
                         children: [
                           Text("${addressList[index].phone}"),
                           Text("${addressList[index].email}"),
-                          Text(word("address_msg_from_map", context)),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(addressLine),
+                          Text(
+                              "${word("deliverCost", context)} : ${addressList[index].deliverCost} ${word("currancy", context)}")
                         ],
                       ),
                     ),
@@ -100,7 +106,12 @@ Widget storedAddress(
   );
 }
 
-Widget addAddress(BuildContext context, Function moveToMapScreen) {
+double total = 0.0;
+double cost = 0.0;
+Widget addAddress(
+  BuildContext context,
+  Function moveToMapScreen,
+) {
   return Visibility(
     visible: !preAddress,
     child: Container(
@@ -159,7 +170,7 @@ Widget addAddress(BuildContext context, Function moveToMapScreen) {
             ),
           ),
           Container(
-            height: 200,
+            height: MediaQuery.of(context).size.height / 4,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -180,19 +191,35 @@ Widget addAddress(BuildContext context, Function moveToMapScreen) {
                     ),
                   ),
                 ),
-                Container(
-                  child: customerLocation == null
-                      ? Container()
-                      : Center(
-                          child: Text(
-                            word("confirm_address", context),
+                customerLocation == null
+                    ? Container()
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            "سعر التوصيل: $deliverCost",
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                ),
+                          Container(
+                            margin: EdgeInsets.all(16.0),
+                            padding: EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                                border: Border.all(),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: Text(
+                              "الإجمالي: $total ${word("currancy", context)}",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
               ],
             ),
           ),
@@ -320,6 +347,7 @@ Widget buttonsBoth(
                                           customerLocation.latitude.toString(),
                                       'long':
                                           customerLocation.longitude.toString(),
+                                      'deliverCost': cost.toString()
                                     }).then((value) {
                                       Navigator.push(
                                         context,
@@ -338,6 +366,7 @@ Widget buttonsBoth(
                                                 .toString(),
                                             long: customerLocation.longitude
                                                 .toString(),
+                                            delvierCost: cost.toString(),
                                           ),
                                         ),
                                       );
@@ -371,7 +400,7 @@ Widget buttonsBoth(
           child: Container(
             height: 50,
             width: MediaQuery.of(context).size.width / 2,
-            color: Colors.blue,
+            color: Theme.of(context).unselectedWidgetColor,
             child: Center(
               child: Text(
                 word("confirm_number", context),
@@ -384,108 +413,4 @@ Widget buttonsBoth(
             ),
           ),
         );
-}
-
-Widget noDeliver(
-  BuildContext context,
-  String totalAfterTax,
-  String price,
-  String buyPrice,
-  Function onThemeChanged,
-  Function changeLangauge,
-) {
-  return Column(
-    children: [
-      Container(
-        child: Center(
-          child: Text(
-            "موقعنا الرياض المملكة العربية السعودية",
-            style: TextStyle(fontSize: 18),
-          ),
-        ),
-      ),
-      Container(
-        child: Center(
-          child: Text(
-            "في حال إتمام الشراء سوف يظهر لديكم الموقع في الخريطة",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18),
-          ),
-        ),
-      ),
-      Row(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width / 2,
-            child: MyTextFormField(
-              editingController: name,
-              hintText: word('full_name', context),
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width / 2,
-            child: MyTextFormField(
-              editingController: phone,
-              hintText: word("phone_number", context),
-              isNumber: true,
-            ),
-          ),
-        ],
-      ),
-      SizedBox(
-        height: 30,
-      ),
-      InkWell(
-        onTap: () {
-          if (name.text.length < 3 || phone.text.length < 10) {
-            errorToast("أكتب بياناتك بالشكل الصحيح");
-          } else {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Payment(
-                  totalAfterTax: totalAfterTax,
-                  price: price,
-                  buyPrice: buyPrice,
-                  onThemeChanged: onThemeChanged,
-                  changeLangauge: changeLangauge,
-                  firstName: firstName,
-                  lastName: lastName,
-                  email: email.text,
-                  phone: phone.text,
-                  address: '',
-                  lat: '',
-                  long: '',
-                ),
-              ),
-            );
-          }
-        },
-        child: Container(
-          height: 50,
-          width: MediaQuery.of(context).size.width / 2,
-          color: Colors.blue,
-          child: Center(
-            child: Text(
-              word("continue", context),
-              style: TextStyle(
-                  fontSize: 22,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      ),
-      SizedBox(
-        height: 20,
-      ),
-      InkWell(
-        onTap: () => Navigator.pop(context),
-        child: Text(
-          "العودة إلى السلة",
-          style: TextStyle(decoration: TextDecoration.underline),
-        ),
-      )
-    ],
-  );
 }

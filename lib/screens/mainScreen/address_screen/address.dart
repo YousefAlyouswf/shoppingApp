@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmap;
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/addressModel.dart';
@@ -48,11 +49,19 @@ class _AddressState extends State<Address> {
               id: item['id'],
               lat: item['lat'],
               long: item['long'],
+              deliverCost: item['deliverCost'],
             ),
           )
           .toList();
     });
-
+    for (var i = 0; i < addressList.length; i++) {
+      final coordinates = new Coordinates(
+          double.parse(addressList[i].lat), double.parse(addressList[i].long));
+      var addresses =
+          await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first = addresses.first;
+      addressLine = first.addressLine;
+    }
     if (addressList.length > 0) {
       setState(() {
         preAddress = true;
@@ -97,15 +106,20 @@ class _AddressState extends State<Address> {
   }
 
   void updateLocation(gmap.LatLng location) {
-    setState(() => customerLocation = location);
+    try {
+      setState(() => customerLocation = location);
+      calcualteDeliverCost();
+    } catch (e) {}
   }
 
   moveToMapScreen(BuildContext context) async {
-    final location = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Gmap()),
-    );
-    updateLocation(location);
+    try {
+      final location = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Gmap()),
+      );
+      updateLocation(location);
+    } catch (e) {}
   }
 
   void listenSMS() async {
@@ -120,54 +134,65 @@ class _AddressState extends State<Address> {
           elevation: 0,
           title: new Text(word("address_appBar", context)),
         ),
-        body: widget.isDeliver
-            ? Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 30,
-                          ),
-                          storedAddress(
-                              context,
-                              widget.totalAfterTax,
-                              widget.price,
-                              widget.buyPrice,
-                              widget.onThemeChanged,
-                              widget.changeLangauge,
-                              fetchAddress),
-                          addAddress(context, moveToMapScreen),
-                        ],
-                      ),
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 30,
                     ),
-                  ),
-                  buttonsBoth(
-                    context,
-                    widget.totalAfterTax,
-                    widget.price,
-                    widget.buyPrice,
-                    widget.onThemeChanged,
-                    widget.changeLangauge,
-                    fetchAddress,
-                    toggelToAddAddress,
-                    formatPhoneNumber,
-                    spiltName,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  )
-                ],
-              )
-            : noDeliver(
-                context,
-                widget.totalAfterTax,
-                widget.price,
-                widget.buyPrice,
-                widget.onThemeChanged,
-                widget.changeLangauge,
-              ));
+                    storedAddress(
+                        context,
+                        widget.totalAfterTax,
+                        widget.price,
+                        widget.buyPrice,
+                        widget.onThemeChanged,
+                        widget.changeLangauge,
+                        fetchAddress),
+                    addAddress(context, moveToMapScreen),
+                  ],
+                ),
+              ),
+            ),
+            buttonsBoth(
+              context,
+              widget.totalAfterTax,
+              widget.price,
+              widget.buyPrice,
+              widget.onThemeChanged,
+              widget.changeLangauge,
+              fetchAddress,
+              toggelToAddAddress,
+              formatPhoneNumber,
+              spiltName,
+            ),
+            SizedBox(
+              height: 20,
+            )
+          ],
+        ));
+  }
+
+  calcualteDeliverCost() async {
+    total = 0.0;
+    final coordinates =
+        new Coordinates(customerLocation.latitude, customerLocation.longitude);
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    String city = first.locality;
+    setState(() {});
+    if (city == "Riyadh") {
+      cost = 40;
+      deliverCost = "40 ${word("currancy", context)}";
+    } else {
+      cost = 70;
+      deliverCost = "70 ${word("currancy", context)}";
+    }
+    total = double.parse(widget.totalAfterTax) + cost;
+    print(total);
   }
 
   toggelToAddAddress() {

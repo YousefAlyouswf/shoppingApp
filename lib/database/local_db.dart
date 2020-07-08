@@ -14,7 +14,7 @@ class DBHelper {
         await db.execute(
             "CREATE TABLE cart(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, nameEn TEXT,  price TEXT, image TEXT, des TEXT, q TEXT, buyPrice TEXT, size TEXT, productID TEXT, totalQ TEXT, priceOld TEXT)");
         await db.execute(
-            "CREATE TABLE address(id INTEGER PRIMARY KEY AUTOINCREMENT, Firstname TEXT, LastName TEXT,email TEXT, phone TEXT, userAddress TEXT, lat TEXT, long TEXT)");
+            "CREATE TABLE address(id INTEGER PRIMARY KEY AUTOINCREMENT, Firstname TEXT, LastName TEXT,email TEXT, phone TEXT, userAddress TEXT, lat TEXT, long TEXT, deliverCost TEXT)");
       },
       version: 1,
     );
