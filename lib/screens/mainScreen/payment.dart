@@ -23,8 +23,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 class Payment extends StatefulWidget {
   final Function onThemeChanged;
   final Function changeLangauge;
-  final String name;
-  final String name2;
+  final String firstName;
+  final String lastName;
   final String phone;
   final String address;
   final String lat;
@@ -32,18 +32,20 @@ class Payment extends StatefulWidget {
   final String buyPrice;
   final String price;
   final String totalAfterTax;
+  final String email;
 
   const Payment({
     Key key,
     this.onThemeChanged,
     this.changeLangauge,
-    this.name,
-    this.name2,
+    this.firstName,
+    this.lastName,
     this.phone,
     this.address,
     this.lat,
     this.long,
     this.buyPrice,
+    this.email,
     this.price,
     this.totalAfterTax,
   }) : super(key: key);
@@ -89,8 +91,10 @@ class _PaymentState extends State<Payment> {
       'total': widget.totalAfterTax,
       'lat': widget.lat,
       'long': widget.long,
-      'name': widget.name,
+      'firstName': widget.firstName,
+      'lastName': widget.lastName,
       'phone': widget.phone,
+      'email': widget.email,
       'priceForSell': widget.price,
       'priceForBuy': widget.buyPrice,
       'items': FieldValue.arrayUnion(mapItems),
@@ -146,21 +150,16 @@ class _PaymentState extends State<Payment> {
         'zipCode': zipCode,
         'address': addressLine,
         'phone': widget.phone,
+        'email': widget.email,
         'orderID': orderID,
-        'firstName': widget.name,
+        'firstName': widget.firstName,
+        'lastName': widget.lastName,
         'country': country,
         'ISO': isoCode,
       };
 
       final response = await http.post(ROOT, body: map);
       if (200 == response.statusCode) {
-        // if (await canLaunch(response.body)) {
-        //   await launch(response.body);
-        // } else {
-        //   print('Could not launch ${response.body}');
-        // }
-        // print("---->>${response.body}");
-        // print(map);
         setState(() {
           webviewUrl = response.body;
         });
@@ -307,7 +306,8 @@ class _PaymentState extends State<Payment> {
                         buyPrice: widget.buyPrice,
                         onThemeChanged: widget.onThemeChanged,
                         changeLangauge: widget.changeLangauge,
-                        name: widget.name,
+                        firstName: widget.firstName,
+                        lastName: widget.lastName,
                         phone: widget.phone,
                         lat: widget.lat,
                         long: widget.long,

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmap;
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/addressModel.dart';
+import 'package:shop_app/widgets/widgets.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'package:twilio_flutter/twilio_flutter.dart' as tw;
 
 import '../homePage.dart';
@@ -38,8 +40,10 @@ class _AddressState extends State<Address> {
       addressList = dataList
           .map(
             (item) => AddressModel(
-              name: item['name'],
+              firstName: item['Firstname'],
+              lastName: item['LastName'],
               phone: item['phone'],
+              email: item['email'],
               address: item['userAddress'],
               id: item['id'],
               lat: item['lat'],
@@ -66,6 +70,13 @@ class _AddressState extends State<Address> {
     fetchAddress();
 
     twilioInfo();
+    listenSMS();
+  }
+
+  @override
+  void dispose() {
+    SmsAutoFill().unregisterListener();
+    super.dispose();
   }
 
   twilioInfo() async {
@@ -95,6 +106,10 @@ class _AddressState extends State<Address> {
       MaterialPageRoute(builder: (context) => Gmap()),
     );
     updateLocation(location);
+  }
+
+  void listenSMS() async {
+    await SmsAutoFill().listenForCode;
   }
 
   @override
@@ -138,6 +153,7 @@ class _AddressState extends State<Address> {
                     fetchAddress,
                     toggelToAddAddress,
                     formatPhoneNumber,
+                    spiltName,
                   ),
                   SizedBox(
                     height: 20,
@@ -177,7 +193,38 @@ class _AddressState extends State<Address> {
     print("Controller ----> ${phone.text}");
     print('PhoneSms ------>> $phoneSMS');
     twilioFlutter.sendSMS(
-        toNumber: phoneSMS, messageBody: 'رفوف\nالكود هو: $codeID');
+        toNumber: phoneSMS,
+        messageBody: ' متجر رفوف \n الكود هو $codeID \n $signCode');
+  }
+
+  spiltName() {
+    if (name.text.length == 0) {
+      errorToast(word("full_name_error", context));
+    } else {
+      setState(() {
+        firstName = '';
+        lastName = '';
+        var n = 0;
+        bool isFrist = true;
+        if (name.text[0] == " ") {
+          n = 1;
+        }
+        if (name.text[1] == " ") {
+          n = 2;
+        }
+        for (var i = n; i < name.text.length; i++) {
+          if (name.text[i] == " ") {
+            isFrist = false;
+          } else {
+            if (isFrist) {
+              firstName += name.text[i];
+            } else {
+              lastName += name.text[i];
+            }
+          }
+        }
+      });
+    }
   }
 }
 

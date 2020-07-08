@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/widgets/widgets.dart';
@@ -632,6 +633,7 @@ class MyTextFormField extends StatelessWidget {
   final bool isNumber;
   final Function isChanged;
   final bool isMultiLine;
+  final bool isEmail;
   final TextEditingController editingController;
   MyTextFormField({
     this.hintText,
@@ -640,6 +642,7 @@ class MyTextFormField extends StatelessWidget {
     this.editingController,
     this.isChanged,
     this.isMultiLine = false,
+    this.isEmail = false,
   });
   @override
   Widget build(BuildContext context) {
@@ -647,6 +650,7 @@ class MyTextFormField extends StatelessWidget {
       padding: EdgeInsets.all(8.0),
       child: TextField(
         onChanged: isChanged,
+        autocorrect: false,
         controller: editingController,
         decoration: InputDecoration(
           hintText: hintText,
@@ -658,7 +662,9 @@ class MyTextFormField extends StatelessWidget {
         maxLines: null,
         keyboardType: isNumber
             ? TextInputType.number
-            : isMultiLine ? TextInputType.multiline : TextInputType.text,
+            : isMultiLine
+                ? TextInputType.multiline
+                : isEmail ? TextInputType.emailAddress : TextInputType.text,
       ),
     );
   }

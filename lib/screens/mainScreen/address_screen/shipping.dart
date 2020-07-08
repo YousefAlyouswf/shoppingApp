@@ -6,14 +6,14 @@ import 'package:shop_app/models/addressModel.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/screens/mainScreen/payment.dart';
 import 'package:shop_app/widgets/widgets.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'package:uuid/uuid.dart';
 
-TextEditingController city = TextEditingController();
-TextEditingController ditrict = TextEditingController();
-TextEditingController street = TextEditingController();
-TextEditingController house = TextEditingController();
 TextEditingController name = TextEditingController();
 TextEditingController phone = TextEditingController();
+TextEditingController email = TextEditingController();
+String firstName;
+String lastName;
 
 List<AddressModel> addressList = new List();
 LatLng customerLocation;
@@ -43,11 +43,6 @@ Widget storedAddress(
           Expanded(
             child: ListView.separated(
               itemBuilder: (context, index) {
-                String address = addressList[index].address;
-
-                if (address == "") {
-                  address = word("address_msg_from_map", context);
-                }
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
@@ -62,7 +57,9 @@ Widget storedAddress(
                               buyPrice: buyPrice,
                               onThemeChanged: onThemeChanged,
                               changeLangauge: changeLangauge,
-                              name: addressList[index].name,
+                              firstName: firstName,
+                              lastName: lastName,
+                              email: email.text,
                               phone: addressList[index].phone,
                               address: addressList[index].address,
                               lat: addressList[index].lat,
@@ -71,7 +68,8 @@ Widget storedAddress(
                           ),
                         );
                       },
-                      title: Text(addressList[index].name),
+                      title: Text(
+                          "${addressList[index].firstName} ${addressList[index].lastName}"),
                       trailing: IconButton(
                           icon: Icon(Icons.delete),
                           onPressed: () {
@@ -83,7 +81,8 @@ Widget storedAddress(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("${addressList[index].phone}"),
-                          Text("$address")
+                          Text("${addressList[index].email}"),
+                          Text(word("address_msg_from_map", context)),
                         ],
                       ),
                     ),
@@ -136,6 +135,14 @@ Widget addAddress(BuildContext context, Function moveToMapScreen) {
               ),
             ],
           ),
+          Container(
+            width: MediaQuery.of(context).size.width / 1.5,
+            child: MyTextFormField(
+              editingController: email,
+              isEmail: true,
+              hintText: word("email", context),
+            ),
+          ),
           SizedBox(
             height: 30,
           ),
@@ -156,6 +163,7 @@ Widget addAddress(BuildContext context, Function moveToMapScreen) {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 InkWell(
+                  splashColor: Colors.transparent,
                   onTap: () {
                     moveToMapScreen(context);
                   },
@@ -193,12 +201,9 @@ Widget addAddress(BuildContext context, Function moveToMapScreen) {
   );
 }
 
-TextEditingController codeOneController = TextEditingController();
-TextEditingController codeTwoController = TextEditingController();
-TextEditingController codeThreeController = TextEditingController();
-TextEditingController codeFourController = TextEditingController();
-
+String signCode;
 String codeID;
+String codeInput;
 Widget buttonsBoth(
   BuildContext context,
   String totalAfterTax,
@@ -209,6 +214,7 @@ Widget buttonsBoth(
   Function fetchAddress,
   Function toggelToAddAddress,
   Function formatPhoneNumber,
+  Function spiltName,
 ) {
   return preAddress
       ? InkWell(
@@ -230,17 +236,19 @@ Widget buttonsBoth(
           ),
         )
       : InkWell(
-          onTap: () {
-            if (name.text.length < 5) {
+          onTap: () async {
+            spiltName();
+            bool emailValid = RegExp(
+                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                .hasMatch(email.text);
+            if (firstName == "" || lastName == "") {
               errorToast(word("full_name_error", context));
             } else if (phone.text.length < 10) {
               errorToast(word("phone_error", context));
+            } else if (!emailValid) {
+              errorToast(word("email_error", context));
             } else {
               if (customerLocation != null) {
-                codeOneController.clear();
-                codeTwoController.clear();
-                codeThreeController.clear();
-                codeFourController.clear();
                 Uuid uid = Uuid();
                 codeID = uid.v1();
                 List<String> list = codeID.split('');
@@ -255,6 +263,7 @@ Widget buttonsBoth(
                     }
                   }
                 }
+                signCode = await SmsAutoFill().getAppSignature;
                 formatPhoneNumber();
                 print("--------------->>>$codeID");
 
@@ -272,27 +281,40 @@ Widget buttonsBoth(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
-                              Center(
-                                child: Text(
-                                  word("toast_type_code", context),
-                                  style: TextStyle(fontSize: 20),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
+                                child: Center(
+                                  child: Text(
+                                    word("toast_type_code", context),
+                                    style: TextStyle(fontSize: 15),
+                                  ),
                                 ),
                               ),
-                              O2Screen(
-                                codeOneController: codeOneController,
-                                codeTwoController: codeTwoController,
-                                codeThreeController: codeThreeController,
-                                codeFourController: codeFourController,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 50),
+                                child: PinFieldAutoFill(
+                                  decoration: UnderlineDecoration(
+                                    textStyle: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  onCodeChanged: (v) {
+                                    codeInput = v;
+                                  },
+                                  codeLength: 4,
+                                ),
                               ),
                               FlatButton(
                                 onPressed: () async {
-                                  String codeInput =
-                                      "${codeOneController.text}${codeTwoController.text}${codeThreeController.text}${codeFourController.text}";
                                   if (codeInput == codeID) {
                                     DBHelper.insertAddress('address', {
-                                      'name': name.text,
+                                      'Firstname': firstName,
+                                      'LastName': lastName,
                                       'phone': phone.text,
-                                      'userAddress': '',
+                                      'email': email.text,
                                       'lat':
                                           customerLocation.latitude.toString(),
                                       'long':
@@ -307,7 +329,9 @@ Widget buttonsBoth(
                                             buyPrice: buyPrice,
                                             onThemeChanged: onThemeChanged,
                                             changeLangauge: changeLangauge,
-                                            name: name.text,
+                                            firstName: firstName,
+                                            lastName: lastName,
+                                            email: email.text,
                                             phone: phone.text,
                                             lat: customerLocation.latitude
                                                 .toString(),
@@ -326,7 +350,9 @@ Widget buttonsBoth(
                                 child: Text(
                                   word("sure", context),
                                   style: TextStyle(
-                                      color: Colors.purple, fontSize: 18.0),
+                                      color: Theme.of(context)
+                                          .unselectedWidgetColor,
+                                      fontSize: 18.0),
                                 ),
                               ),
                             ],
@@ -422,7 +448,9 @@ Widget noDeliver(
                   buyPrice: buyPrice,
                   onThemeChanged: onThemeChanged,
                   changeLangauge: changeLangauge,
-                  name: name.text,
+                  firstName: firstName,
+                  lastName: lastName,
+                  email: email.text,
                   phone: phone.text,
                   address: '',
                   lat: '',
@@ -459,116 +487,4 @@ Widget noDeliver(
       )
     ],
   );
-}
-
-class O2Screen extends StatefulWidget {
-  final TextEditingController codeOneController;
-  final TextEditingController codeTwoController;
-  final TextEditingController codeThreeController;
-  final TextEditingController codeFourController;
-
-  const O2Screen(
-      {Key key,
-      this.codeOneController,
-      this.codeTwoController,
-      this.codeThreeController,
-      this.codeFourController})
-      : super(key: key);
-  @override
-  _O2ScreenState createState() => _O2ScreenState();
-}
-
-class _O2ScreenState extends State<O2Screen> {
-  FocusNode firstFocus = FocusNode();
-  FocusNode secondFocus = FocusNode();
-  FocusNode thirdFocus = FocusNode();
-  FocusNode fourthFocus = FocusNode();
-  var outLineInputBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(10.0),
-  );
-  int pinIndex = 0;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          PinNumber(
-            outLineInputBorder: outLineInputBorder,
-            textEditingController: widget.codeOneController,
-            enabled: true,
-            firstFocus: firstFocus,
-            secondFocus: secondFocus,
-          ),
-          PinNumber(
-            outLineInputBorder: outLineInputBorder,
-            textEditingController: widget.codeTwoController,
-            enabled: true,
-            firstFocus: secondFocus,
-            secondFocus: thirdFocus,
-          ),
-          PinNumber(
-            outLineInputBorder: outLineInputBorder,
-            textEditingController: widget.codeThreeController,
-            enabled: true,
-            firstFocus: thirdFocus,
-            secondFocus: fourthFocus,
-          ),
-          PinNumber(
-            outLineInputBorder: outLineInputBorder,
-            textEditingController: widget.codeFourController,
-            enabled: true,
-            firstFocus: fourthFocus,
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class PinNumber extends StatelessWidget {
-  final OutlineInputBorder outLineInputBorder;
-  final TextEditingController textEditingController;
-  final FocusNode firstFocus;
-  final FocusNode secondFocus;
-  final bool enabled;
-  const PinNumber(
-      {Key key,
-      this.outLineInputBorder,
-      this.textEditingController,
-      this.enabled,
-      this.firstFocus,
-      this.secondFocus})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 50,
-      child: TextField(
-        focusNode: firstFocus,
-        controller: textEditingController,
-        enabled: enabled,
-        autofocus: true,
-        maxLength: 1,
-        onChanged: (v) {
-          if (textEditingController.text.length > 0) {
-            firstFocus.unfocus();
-            FocusScope.of(context).requestFocus(secondFocus);
-          }
-        },
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          counterText: '',
-          contentPadding: EdgeInsets.all(16.0),
-          border: outLineInputBorder,
-          filled: true,
-          fillColor: Colors.grey,
-        ),
-        cursorColor: Colors.white,
-        style: TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 21, color: Colors.white),
-      ),
-    );
-  }
 }
