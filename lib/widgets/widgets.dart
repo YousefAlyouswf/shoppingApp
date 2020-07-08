@@ -7,7 +7,8 @@ import 'package:shop_app/manager/signin_screen.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/appInfo.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
-
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart'; //For creating the SMTP Server
 import 'package:uuid/uuid.dart';
 
 import 'lang/appLocale.dart';
@@ -28,7 +29,7 @@ AppBar appBar(int countCart,
     title: Text(
       appName,
       style: TextStyle(
-        fontFamily: isEnglish ? 'EN' : "MainFont",
+        fontFamily: "MainFont",
       ),
     ),
     centerTitle: true,
@@ -99,7 +100,6 @@ Drawer drawer(
         ),
         Expanded(
           child: Container(
-            decoration: BoxDecoration(border: Border.all()),
             child: StreamBuilder(
                 stream: Firestore.instance.collection('categories').snapshots(),
                 builder: (context, snapshot) {
@@ -171,7 +171,7 @@ Drawer drawer(
                     child: Column(
                       children: [
                         FlatButton(
-                          onPressed: () {
+                          onPressed: () async {
                             changeLangauge();
                           },
                           child: Text(word("arabic", context)),
