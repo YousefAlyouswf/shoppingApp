@@ -6,6 +6,7 @@ import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/signin_screen.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/appInfo.dart';
+import 'package:shop_app/screens/employeeScreen/myAccount.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart'; //For creating the SMTP Server
@@ -168,15 +169,64 @@ Drawer drawer(
                         topLeft: Radius.circular(40),
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        FlatButton(
-                          onPressed: () async {
-                            changeLangauge();
-                          },
-                          child: Text(word("arabic", context)),
-                        ),
-                      ],
+                    child: Container(
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: changeLangauge,
+                              child: Container(
+                                height: 50,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.black26,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    word("arabic", context),
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyAccount()),
+                                );
+                              },
+                              child: Container(
+                                height: 50,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.black26,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  "المندوب",
+                                  style: TextStyle(fontSize: 20),
+                                )),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -242,6 +292,17 @@ addCartToast(String text) {
       backgroundColor: Colors.green,
       textColor: Colors.white,
       fontSize: 16.0);
+}
+
+errorMapChosen(String text) {
+  Fluttertoast.showToast(
+      msg: text,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black,
+      textColor: Colors.yellow,
+      fontSize: 18.0);
 }
 
 errorToast(String text) {

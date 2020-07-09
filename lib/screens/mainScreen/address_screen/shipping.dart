@@ -114,6 +114,9 @@ double cost = 0.0;
 Widget addAddress(
   BuildContext context,
   Function moveToMapScreen,
+  String addressLineFromSa,
+  String postalCoseSa,
+  String cityFromSa,
 ) {
   return Visibility(
     visible: !preAddress,
@@ -173,7 +176,7 @@ Widget addAddress(
             ),
           ),
           SizedBox(
-            height: 30,
+            height: 15,
           ),
           Text(
             word("address_info", context),
@@ -183,9 +186,8 @@ Widget addAddress(
             ),
           ),
           Container(
-            height: MediaQuery.of(context).size.height / 4,
+            height: MediaQuery.of(context).size.height / 2,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 InkWell(
                   splashColor: Colors.transparent,
@@ -193,7 +195,7 @@ Widget addAddress(
                     moveToMapScreen(context);
                   },
                   child: Container(
-                    padding: EdgeInsets.all(16.0),
+                    padding: EdgeInsets.all(8.0),
                     decoration: BoxDecoration(
                         color: Colors.blueGrey,
                         borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -204,11 +206,28 @@ Widget addAddress(
                     ),
                   ),
                 ),
-                customerLocation == null
+                SizedBox(
+                  height: 10,
+                ),
+                addressLineFromSa == ""
                     ? Container()
                     : Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Container(
+                              padding: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(border: Border.all()),
+                              child: Text(
+                                "${word("address_info", context)}: $addressLineFromSa\n${word('city', context)}: $cityFromSa \n${word('post', context)}: $postalCoseSa",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
                           Text(
                             "${word("deliverCost", context)}: $deliverCost",
                             style: TextStyle(
@@ -246,18 +265,18 @@ String signCode;
 String codeID;
 String codeInput;
 Widget buttonsBoth(
-  BuildContext context,
-  String totalAfterTax,
-  String price,
-  String buyPrice,
-  Function onThemeChanged,
-  Function changeLangauge,
-  Function fetchAddress,
-  Function toggelToAddAddress,
-  Function formatPhoneNumber,
-  Function spiltName,
-  String discount,
-) {
+    BuildContext context,
+    String totalAfterTax,
+    String price,
+    String buyPrice,
+    Function onThemeChanged,
+    Function changeLangauge,
+    Function fetchAddress,
+    Function toggelToAddAddress,
+    Function formatPhoneNumber,
+    Function spiltName,
+    String discount,
+    String addressLineFromSa) {
   return preAddress
       ? InkWell(
           onTap: toggelToAddAddress,
@@ -290,7 +309,7 @@ Widget buttonsBoth(
             } else if (!emailValid) {
               errorToast(word("email_error", context));
             } else {
-              if (customerLocation != null) {
+              if (addressLineFromSa != "") {
                 Uuid uid = Uuid();
                 codeID = uid.v1();
                 List<String> list = codeID.split('');

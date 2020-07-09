@@ -53,7 +53,6 @@
     "toast_type_code": "Insert the code",
     "settings": "Settings",
     "arabic": "العربية",
-    "english": "الإنجليزية",
     "full_name_error": "Type your full name",
     "phone_error": "Phone Number 10 Digits\n05XXXXXXXX",
     "email_error": "Correct e-mail format",
@@ -73,6 +72,7 @@
     "subject_email": "RFOOF INVOICE",
     "body_email": "Hello,\nThank you for your shopping with us.\nWe received your order.\nYou can track your order via Rfoof app with you order number: ",
     "deliverCost": "Delivery cost",
-    "total":"Total"
-   
+    "total": "Total",
+    "city": "City",
+    "post": "Postal code"
 }

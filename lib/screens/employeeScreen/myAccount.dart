@@ -99,6 +99,7 @@ class _MyAccountState extends State<MyAccount> {
                     });
                   }
                 },
+                splashColor: Colors.transparent,
                 child: Center(
                   child: Text(
                     "دخـــول",

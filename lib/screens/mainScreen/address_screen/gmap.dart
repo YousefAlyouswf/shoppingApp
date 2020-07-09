@@ -48,17 +48,13 @@ class _GmapState extends State<Gmap> {
   serveiceRequest() async {
     try {
       _permissionGranted = await location.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied ||
-          _permissionGranted == PermissionStatus.deniedForever) {
+      if (_permissionGranted == PermissionStatus.denied) {
         setState(() {
           long = 46.674976;
           lat = 24.711906;
         });
       } else {
-        setState(() {
-          long = 46.674976;
-          lat = 24.711906;
-        });
+        getLocation();
       }
     } catch (e) {}
   }
@@ -71,7 +67,7 @@ class _GmapState extends State<Gmap> {
 
     location = new Location();
     serveiceRequest();
-    getLocation();
+
     changeMapType();
   }
 
@@ -123,6 +119,7 @@ class _GmapState extends State<Gmap> {
                   compassEnabled: true,
                   mapType: mapType,
                   onMapCreated: onapCareated,
+                  myLocationButtonEnabled: true,
                   markers: Set<Marker>.of(markers.values),
                   onTap: (latLng) {
                     try {
@@ -145,6 +142,23 @@ class _GmapState extends State<Gmap> {
                   myLocationEnabled: true,
                 ),
           Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: MediaQuery.of(context).size.width / 1.5,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "ضع الدبوس على منتصف موقع التوصيل ليتم تحديد عنوانك بدقة أكثر ولتجنب الأخطاء\nيمكنك أستخدام وضع القمر الصناعي لتحديد المكان بوضوح",
+                    style: TextStyle(fontFamily: "MainFont", fontSize: 12),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Align(
             alignment: Alignment.topLeft,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -152,7 +166,7 @@ class _GmapState extends State<Gmap> {
                 onTap: changeMapType,
                 child: Container(
                   alignment: Alignment.center,
-                  height: 30,
+                  height: 50,
                   decoration: BoxDecoration(
                       color: !isNormalType ? Colors.orange : Colors.black,
                       borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -161,6 +175,8 @@ class _GmapState extends State<Gmap> {
                     !isNormalType ? "قمر صناعي" : "خريطة",
                     style: TextStyle(
                       color: isNormalType ? Colors.orange : Colors.black,
+                      fontSize: 15,
+                      fontFamily: "MainFont",
                     ),
                   ),
                 ),
@@ -184,7 +200,7 @@ class _GmapState extends State<Gmap> {
                   }
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width / 2,
+                  width: MediaQuery.of(context).size.width / 1.4,
                   height: 50,
                   decoration: BoxDecoration(
                     color: customerLocation == null ? Colors.grey : Colors.blue,
@@ -192,7 +208,11 @@ class _GmapState extends State<Gmap> {
                   child: Center(
                     child: Text(
                       "أرسل هذا الموقع",
-                      style: TextStyle(color: Colors.white, fontSize: 22),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontFamily: "MainFont",
+                      ),
                     ),
                   ),
                 ),

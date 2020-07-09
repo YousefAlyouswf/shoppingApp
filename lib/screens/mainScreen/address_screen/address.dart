@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmap;
+import 'package:http/http.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/addressModel.dart';
 import 'package:shop_app/widgets/widgets.dart';
@@ -105,12 +108,16 @@ class _AddressState extends State<Address> {
     );
   }
 
-  void updateLocation(gmap.LatLng location) {
+  Future<gmap.LatLng> updateLocation(gmap.LatLng location) {
     try {
       setState(() => customerLocation = location);
       calcualteDeliverCost();
       FocusScope.of(context).requestFocus(FocusNode());
-    } catch (e) {}
+
+      return Future.value(customerLocation);
+    } catch (e) {
+      return null;
+    }
   }
 
   moveToMapScreen(BuildContext context) async {
@@ -119,7 +126,9 @@ class _AddressState extends State<Address> {
         context,
         MaterialPageRoute(builder: (context) => Gmap()),
       );
-      updateLocation(location);
+      updateLocation(location).then((v) async {
+        await getNationalAddress(v.latitude.toString(), v.longitude.toString());
+      });
     } catch (e) {}
   }
 
@@ -127,24 +136,81 @@ class _AddressState extends State<Address> {
     await SmsAutoFill().listenForCode;
   }
 
+  bool isLoading = false;
+  getNationalAddress(String lat, String long) async {
+    setState(() {
+      isLoading = true;
+    });
+    String url =
+        "https://apina.address.gov.sa/NationalAddress/v3.1/Address/address-geocode?lat=$lat&long=$long&language=A&format=json&encode=utf8";
+    String urlEN =
+        "https://apina.address.gov.sa/NationalAddress/v3.1/Address/address-geocode?lat=$lat&long=$long&language=E&format=json&encode=utf8";
+
+    Response response = await get(isEnglish ? urlEN : url,
+        headers: {"api_key": "f2dae307076b4f79b4778f89807d4801"});
+    setState(() {
+      final jsonData = json.decode(response.body);
+      try {
+        addressLineFromSa = jsonData['Addresses'][0]['Address1'];
+        postalCoseSa = jsonData['Addresses'][0]['PostCode'];
+        cityFromSa = jsonData['Addresses'][0]['City'];
+        isLoading = false;
+      } catch (e) {
+        errorMapChosen(
+            "لم يتم تحديد موقع التوصيل أرجو أختيار الموقع بدقه أكثر");
+      }
+    });
+  }
+
+  String addressLineFromSa = "";
+  String postalCoseSa = "";
+  String cityFromSa = "";
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        backgroundColor: Colors.white,
         appBar: new AppBar(
           backgroundColor: Colors.grey[200],
           elevation: 0,
           title: new Text(word("address_appBar", context)),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 30,
+        body: isLoading
+            ? Center(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        "https://gifimage.net/wp-content/uploads/2018/11/map-icon-gif-5.gif",
+                      ),
                     ),
-                    storedAddress(
+                  ),
+                ),
+              )
+            : Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          storedAddress(
+                            context,
+                            widget.totalAfterTax,
+                            widget.price,
+                            widget.buyPrice,
+                            widget.onThemeChanged,
+                            widget.changeLangauge,
+                            fetchAddress,
+                            widget.discount,
+                          ),
+                          addAddress(context, moveToMapScreen,
+                              addressLineFromSa, postalCoseSa, cityFromSa),
+                        ],
+                      ),
+                    ),
+                  ),
+                  buttonsBoth(
                       context,
                       widget.totalAfterTax,
                       widget.price,
@@ -152,31 +218,16 @@ class _AddressState extends State<Address> {
                       widget.onThemeChanged,
                       widget.changeLangauge,
                       fetchAddress,
+                      toggelToAddAddress,
+                      formatPhoneNumber,
+                      spiltName,
                       widget.discount,
-                    ),
-                    addAddress(context, moveToMapScreen),
-                  ],
-                ),
-              ),
-            ),
-            buttonsBoth(
-              context,
-              widget.totalAfterTax,
-              widget.price,
-              widget.buyPrice,
-              widget.onThemeChanged,
-              widget.changeLangauge,
-              fetchAddress,
-              toggelToAddAddress,
-              formatPhoneNumber,
-              spiltName,
-              widget.discount,
-            ),
-            SizedBox(
-              height: 20,
-            )
-          ],
-        ));
+                      addressLineFromSa),
+                  SizedBox(
+                    height: 20,
+                  )
+                ],
+              ));
   }
 
   calcualteDeliverCost() async {
