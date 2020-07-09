@@ -122,9 +122,10 @@ Drawer drawer(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Theme.of(context).primaryColorDark),
-                            ),
+                                border: Border.all(
+                                    color: Theme.of(context).primaryColorDark),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
                             child: ListTile(
                               onTap: () {
                                 goToCategoryPage(choseCategory, i);
@@ -133,7 +134,9 @@ Drawer drawer(
                               title: Text(
                                 categoryName,
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "MainFont"),
                                 textAlign: TextAlign.center,
                               ),
                             ),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/manager/addItem.dart';
 
 import 'package:shop_app/widgets/widgets.dart';
@@ -16,6 +17,28 @@ class MyAccount extends StatefulWidget {
 class _MyAccountState extends State<MyAccount> {
   TextEditingController id = TextEditingController();
   TextEditingController pass = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    loginDirctory();
+  }
+
+  void loginDirctory() async {
+    String id = await HelperFunction.getEmployeeLogin();
+    if (id == "" || id == null) {
+      return null;
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EmployeeScreen(
+                  id: id,
+                )),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +97,8 @@ class _MyAccountState extends State<MyAccount> {
                             } else if (e['accept'] == '2') {
                               infoToast("تم رفض طلبك");
                             } else {
-                              Navigator.push(
+                              HelperFunction.emplyeeLogin(e['id']);
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => EmployeeScreen(

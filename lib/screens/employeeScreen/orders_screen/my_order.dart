@@ -72,26 +72,45 @@ class _MyOrderState extends State<MyOrder> {
                       child: InkWell(
                         onTap: () {},
                         child: Card(
-                          color: status != '3' ? Colors.red[50] : Colors.white,
+                          color:
+                              status != '3' ? Colors.green[200] : Colors.white,
                           child: Column(
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  Clipboard.setData(
-                                      new ClipboardData(text: ds['orderID']));
-                                  Scaffold.of(context)
-                                    ..showSnackBar(
-                                      new SnackBar(
-                                        duration: Duration(seconds: 1),
-                                        content: new Text("تم النسخ"),
-                                      ),
-                                    );
-                                },
-                                child: Text(
-                                  "رقم الطلب: ${ds['orderID']}",
-                                  textDirection: TextDirection.rtl,
-                                  style: TextStyle(fontSize: 19),
-                                ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      await Firestore.instance
+                                          .collection("order")
+                                          .document(ds.documentID)
+                                          .updateData({'driverID': ''});
+                                    },
+                                    child: Text(
+                                      "إلغاء الطلبية",
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Clipboard.setData(new ClipboardData(
+                                          text: ds['orderID']));
+                                      Scaffold.of(context)
+                                        ..showSnackBar(
+                                          new SnackBar(
+                                            duration: Duration(seconds: 1),
+                                            content: new Text("تم النسخ"),
+                                          ),
+                                        );
+                                    },
+                                    child: Text(
+                                      "رقم الطلب: ${ds['orderID']}",
+                                      textDirection: TextDirection.rtl,
+                                      style: TextStyle(fontSize: 19),
+                                    ),
+                                  ),
+                                ],
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -324,7 +343,6 @@ class _MyOrderState extends State<MyOrder> {
                                           ),
                                           Text(
                                             formatted,
-                                            textDirection: TextDirection.rtl,
                                           )
                                         ],
                                       ),

@@ -333,7 +333,7 @@ Widget buttonsBoth(
                   }
                 }
                 signCode = await SmsAutoFill().getAppSignature;
-                //   formatPhoneNumber();
+                formatPhoneNumber();
                 print("--------------->>>$codeID");
 
                 showDialog(
@@ -393,31 +393,31 @@ Widget buttonsBoth(
                                       'city': cityFromSa,
                                       'postCode': postCodeFromSa,
                                     }).then((v) {
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => Payment(
-                                      //       totalAfterTax: totalAfterTax,
-                                      //       price: price,
-                                      //       buyPrice: buyPrice,
-                                      //       onThemeChanged: onThemeChanged,
-                                      //       changeLangauge: changeLangauge,
-                                      //       firstName: firstName,
-                                      //       lastName: lastName,
-                                      //       email: email.text,
-                                      //       phone: phone.text,
-                                      //       lat: customerLocation.latitude
-                                      //           .toString(),
-                                      //       long: customerLocation.longitude
-                                      //           .toString(),
-                                      //       delvierCost: cost.toString(),
-                                      //       discount: discount,
-                                      //       address: addressLineFromSa,
-                                      //       city: cityFromSa,
-                                      //       postCose: postCodeFromSa,
-                                      //     ),
-                                      //   ),
-                                      // );
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Payment(
+                                            totalAfterTax: totalAfterTax,
+                                            price: price,
+                                            buyPrice: buyPrice,
+                                            onThemeChanged: onThemeChanged,
+                                            changeLangauge: changeLangauge,
+                                            firstName: firstName,
+                                            lastName: lastName,
+                                            email: email.text,
+                                            phone: phone.text,
+                                            lat: customerLocation.latitude
+                                                .toString(),
+                                            long: customerLocation.longitude
+                                                .toString(),
+                                            delvierCost: cost.toString(),
+                                            discount: discount,
+                                            address: addressLineFromSa,
+                                            city: cityFromSa,
+                                            postCose: postCodeFromSa,
+                                          ),
+                                        ),
+                                      );
                                     });
 
                                     Navigator.pop(context);
