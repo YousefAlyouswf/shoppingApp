@@ -30,7 +30,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).primaryColorDark,
+      color: Theme.of(context).primaryColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -60,14 +60,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color:
-                                          Theme.of(context).primaryColorDark),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
                                 child: ListTile(
                                   onTap: () {
                                     widget.goToCategoryPage(choseCategory, i);

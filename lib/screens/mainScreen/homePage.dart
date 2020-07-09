@@ -99,14 +99,11 @@ class _HomePageState extends State<HomePage>
 
       body: Stack(
         children: [
-          Visibility(
-            visible: toogel,
-            child: DrawerScreen(
-              onThemeChanged: widget.onThemeChanged,
-              goToCategoryPage: goToCategoryPage,
-              changeLangauge: widget.changeLangauge,
-              darwerPressdAnimation: darwerPressdAnimation,
-            ),
+          DrawerScreen(
+            onThemeChanged: widget.onThemeChanged,
+            goToCategoryPage: goToCategoryPage,
+            changeLangauge: widget.changeLangauge,
+            darwerPressdAnimation: darwerPressdAnimation,
           ),
           allMainScreens(),
         ],
@@ -123,6 +120,7 @@ class _HomePageState extends State<HomePage>
         yOffest = 0;
         scaleFactor = 1;
         radius = 0;
+        borderWidth = 0;
       } else {
         xOffest = isEnglish
             ? MediaQuery.of(context).size.width / 1.5
@@ -130,6 +128,7 @@ class _HomePageState extends State<HomePage>
         yOffest = 150;
         scaleFactor = 0.6;
         radius = 20;
+        borderWidth = 5;
       }
       toogel = !toogel;
     });
@@ -139,24 +138,40 @@ class _HomePageState extends State<HomePage>
   double yOffest = 0.0;
   double radius = 0;
   double scaleFactor = 1;
+  double borderWidth = 0;
 
   Widget allMainScreens() {
-    return AnimatedContainer(
-      transform: Matrix4.translationValues(xOffest, yOffest, 0)
-        ..scale(scaleFactor),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(radius),
+    return GestureDetector(
+      onTap: () {
+        if (toogel) {
+          darwerPressdAnimation();
+        }
+      },
+      onHorizontalDragStart: (d) {
+        darwerPressdAnimation();
+      },
+      child: AnimatedContainer(
+        transform: Matrix4.translationValues(xOffest, yOffest, 0)
+          ..scale(scaleFactor),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(width: borderWidth, color: Colors.grey),
+          borderRadius: BorderRadius.all(
+            Radius.circular(radius),
+          ),
         ),
+        duration: Duration(milliseconds: 250),
+        child: navIndex == 0
+            ? HomeWidget(
+                goToCategoryPage: goToCategoryPage,
+                darwerPressdAnimation: darwerPressdAnimation,
+                toogel: toogel)
+            : navIndex == 1
+                ? CategoryWidget()
+                : navIndex == 2
+                    ? CartWidget()
+                    : navIndex == 3 ? OrderWidget() : Container(),
       ),
-      duration: Duration(milliseconds: 250),
-      child: navIndex == 0
-          ? HomeWidget(goToCategoryPage: goToCategoryPage)
-          : navIndex == 1
-              ? CategoryWidget()
-              : navIndex == 2
-                  ? CartWidget()
-                  : navIndex == 3 ? OrderWidget() : Container(),
     );
   }
 
@@ -188,6 +203,9 @@ class _HomePageState extends State<HomePage>
   }
 
   bottomNavIndex(int i) {
+    if (toogel) {
+      darwerPressdAnimation();
+    }
     setState(() {
       navIndex = i;
     });

@@ -195,7 +195,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            childAspectRatio: 1 / 1.5,
+                            childAspectRatio: 1 / 1.55,
                           ),
                           itemCount: listImages.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -300,28 +300,27 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                         });
                                                       }),
                                                 ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      3.5,
-                                                  margin: EdgeInsets.symmetric(
-                                                      horizontal: 8.0),
-                                                  alignment:
-                                                      Alignment.bottomRight,
-                                                  child: AutoSizeText(
-                                                    isEnglish
-                                                        ? listImages[index]
-                                                            .nameEn
-                                                        : listImages[index]
-                                                            .name,
-                                                    style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            Colors.grey[600]),
-                                                    maxLines: 2,
+                                                Expanded(
+                                                  child: Container(
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 8.0),
+                                                    alignment:
+                                                        Alignment.bottomRight,
+                                                    child: AutoSizeText(
+                                                      isEnglish
+                                                          ? listImages[index]
+                                                              .nameEn
+                                                          : listImages[index]
+                                                              .name,
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              Colors.grey[600]),
+                                                      maxLines: 2,
+                                                    ),
                                                   ),
                                                 ),
                                               ],

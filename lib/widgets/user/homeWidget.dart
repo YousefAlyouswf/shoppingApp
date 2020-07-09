@@ -14,8 +14,12 @@ import 'categoryScreen/showItem.dart';
 
 class HomeWidget extends StatefulWidget {
   final Function goToCategoryPage;
+  final Function darwerPressdAnimation;
+  final bool toogel;
 
-  const HomeWidget({Key key, this.goToCategoryPage}) : super(key: key);
+  const HomeWidget(
+      {Key key, this.goToCategoryPage, this.darwerPressdAnimation, this.toogel})
+      : super(key: key);
   @override
   _HomeWidgetState createState() => _HomeWidgetState();
 }
@@ -96,7 +100,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       controller: scrollController,
       child: Column(
         children: [
-          ourNewProduct(imageShowSize),
+          ourNewProduct(imageShowSize, widget.darwerPressdAnimation),
           discountShow(context),
           labelAllCategories(),
           categories(),
@@ -326,7 +330,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     );
   }
 
-  Widget ourNewProduct(double imageShowSize) {
+  Widget ourNewProduct(double imageShowSize, darwerPressdAnimation) {
     return Container(
       margin: EdgeInsets.all(8.0),
       child: Column(
@@ -366,7 +370,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                     child: CircularProgressIndicator(),
                   ),
                 )
-              : imageCarousel(imageShowSize, imageOnTap),
+              : imageCarousel(imageShowSize, imageOnTap, darwerPressdAnimation,
+                  widget.toogel),
         ],
       ),
     );
@@ -491,7 +496,8 @@ class _HomeWidgetState extends State<HomeWidget> {
     );
   }
 
-  Widget imageCarousel(double height, Function imageOnTap) {
+  Widget imageCarousel(double height, Function imageOnTap,
+      Function darwerPressdAnimation, bool toogel) {
     return networkImage2.length == 0
         ? Container(
             height: 100,
@@ -513,7 +519,13 @@ class _HomeWidgetState extends State<HomeWidget> {
                   animationDuration: Duration(seconds: 1),
                   autoplay: true,
                   autoplayDuration: Duration(seconds: 5),
-                  onImageTap: imageOnTap,
+                  onImageTap: (i) {
+                    if (toogel) {
+                      darwerPressdAnimation();
+                    } else {
+                      imageOnTap(i);
+                    }
+                  },
                   showIndicator: false,
                 ),
               );
