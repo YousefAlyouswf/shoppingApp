@@ -429,7 +429,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                 controller: _controllerGridViewCatgories,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 3 / 2,
+                  childAspectRatio: 1.3,
                 ),
                 itemCount: categoryLength,
                 itemBuilder: (BuildContext context, int i) {

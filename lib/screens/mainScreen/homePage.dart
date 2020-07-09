@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
+import 'package:shop_app/widgets/drawerScreen.dart';
 import 'package:shop_app/widgets/lang/appLocale.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
 import 'package:shop_app/widgets/user/categoryScreen/categoroesWidget.dart';
@@ -86,23 +87,76 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     callCartCount();
     return Scaffold(
-      appBar:
-          appBar(countCart, goToCartScreen: goToCartScreen, context: context),
-      drawer: drawer(
-        context,
-        widget.onThemeChanged,
-        goToHome,
-        goToCategoryPage,
-        changeLangauge: widget.changeLangauge,
+      appBar: appBar(countCart, darwerPressdAnimation, toogel,
+          goToCartScreen: goToCartScreen, context: context),
+      // drawer: drawer(
+      //   context,
+      //   widget.onThemeChanged,
+      //   goToHome,
+      //   goToCategoryPage,
+      //   changeLangauge: widget.changeLangauge,
+      // ),
+
+      body: Stack(
+        children: [
+          Visibility(
+            visible: toogel,
+            child: DrawerScreen(
+              onThemeChanged: widget.onThemeChanged,
+              goToCategoryPage: goToCategoryPage,
+              changeLangauge: widget.changeLangauge,
+              darwerPressdAnimation: darwerPressdAnimation,
+            ),
+          ),
+          allMainScreens(),
+        ],
       ),
-      body: navIndex == 0
+      bottomNavigationBar: bottomNavgation(bottomNavIndex, context),
+    );
+  }
+
+  bool toogel = false;
+  darwerPressdAnimation() {
+    setState(() {
+      if (toogel) {
+        xOffest = 0;
+        yOffest = 0;
+        scaleFactor = 1;
+        radius = 0;
+      } else {
+        xOffest = isEnglish
+            ? MediaQuery.of(context).size.width / 1.5
+            : MediaQuery.of(context).size.width / -3;
+        yOffest = 150;
+        scaleFactor = 0.6;
+        radius = 20;
+      }
+      toogel = !toogel;
+    });
+  }
+
+  double xOffest = 0.0;
+  double yOffest = 0.0;
+  double radius = 0;
+  double scaleFactor = 1;
+
+  Widget allMainScreens() {
+    return AnimatedContainer(
+      transform: Matrix4.translationValues(xOffest, yOffest, 0)
+        ..scale(scaleFactor),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(radius),
+        ),
+      ),
+      duration: Duration(milliseconds: 250),
+      child: navIndex == 0
           ? HomeWidget(goToCategoryPage: goToCategoryPage)
           : navIndex == 1
               ? CategoryWidget()
               : navIndex == 2
                   ? CartWidget()
                   : navIndex == 3 ? OrderWidget() : Container(),
-      bottomNavigationBar: bottomNavgation(bottomNavIndex, context),
     );
   }
 

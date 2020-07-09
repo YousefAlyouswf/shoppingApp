@@ -17,7 +17,8 @@ import 'lang/appLocale.dart';
 var uuid = Uuid();
 int cartCount = 0;
 List<AppInfoModel> appInfo = [];
-AppBar appBar(int countCart, {Function goToCartScreen, BuildContext context}) {
+AppBar appBar(int countCart, darwerPressdAnimation, toogel,
+    {Function goToCartScreen, BuildContext context}) {
   String appName = AppLocale.of(context).getTranslated('appName');
   return AppBar(
     backgroundColor: Theme.of(context).primaryColorLight,
@@ -29,6 +30,12 @@ AppBar appBar(int countCart, {Function goToCartScreen, BuildContext context}) {
       ),
     ),
     centerTitle: true,
+    leading: IconButton(
+      icon: toogel
+          ? FaIcon(FontAwesomeIcons.times)
+          : FaIcon(FontAwesomeIcons.stream),
+      onPressed: darwerPressdAnimation,
+    ),
     actions: <Widget>[
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -66,10 +73,10 @@ AppBar appBar(int countCart, {Function goToCartScreen, BuildContext context}) {
                         ),
                       ],
                     ),
-                  )
+                  ),
           ],
         ),
-      )
+      ),
     ],
   );
 }
