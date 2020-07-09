@@ -69,6 +69,8 @@ Widget storedAddress(
                               long: addressList[index].long,
                               delvierCost: addressList[index].deliverCost,
                               discount: discount,
+                              city: addressList[index].city,
+                              postCose: addressList[index].postCode,
                             ),
                           ),
                         );
@@ -228,6 +230,9 @@ Widget addAddress(
                               ),
                             ),
                           ),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Text(
                             "${word("deliverCost", context)}: $deliverCost",
                             style: TextStyle(
@@ -265,18 +270,21 @@ String signCode;
 String codeID;
 String codeInput;
 Widget buttonsBoth(
-    BuildContext context,
-    String totalAfterTax,
-    String price,
-    String buyPrice,
-    Function onThemeChanged,
-    Function changeLangauge,
-    Function fetchAddress,
-    Function toggelToAddAddress,
-    Function formatPhoneNumber,
-    Function spiltName,
-    String discount,
-    String addressLineFromSa) {
+  BuildContext context,
+  String totalAfterTax,
+  String price,
+  String buyPrice,
+  Function onThemeChanged,
+  Function changeLangauge,
+  Function fetchAddress,
+  Function toggelToAddAddress,
+  Function formatPhoneNumber,
+  Function spiltName,
+  String discount,
+  String addressLineFromSa,
+  String cityFromSa,
+  String postCodeFromSa,
+) {
   return preAddress
       ? InkWell(
           onTap: toggelToAddAddress,
@@ -325,7 +333,7 @@ Widget buttonsBoth(
                   }
                 }
                 signCode = await SmsAutoFill().getAppSignature;
-                formatPhoneNumber();
+                //   formatPhoneNumber();
                 print("--------------->>>$codeID");
 
                 showDialog(
@@ -380,30 +388,36 @@ Widget buttonsBoth(
                                           customerLocation.latitude.toString(),
                                       'long':
                                           customerLocation.longitude.toString(),
-                                      'deliverCost': cost.toString()
-                                    }).then((value) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Payment(
-                                            totalAfterTax: totalAfterTax,
-                                            price: price,
-                                            buyPrice: buyPrice,
-                                            onThemeChanged: onThemeChanged,
-                                            changeLangauge: changeLangauge,
-                                            firstName: firstName,
-                                            lastName: lastName,
-                                            email: email.text,
-                                            phone: phone.text,
-                                            lat: customerLocation.latitude
-                                                .toString(),
-                                            long: customerLocation.longitude
-                                                .toString(),
-                                            delvierCost: cost.toString(),
-                                            discount: discount,
-                                          ),
-                                        ),
-                                      );
+                                      'deliverCost': cost.toString(),
+                                      'address': addressLineFromSa,
+                                      'city': cityFromSa,
+                                      'postCode': postCodeFromSa,
+                                    }).then((v) {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => Payment(
+                                      //       totalAfterTax: totalAfterTax,
+                                      //       price: price,
+                                      //       buyPrice: buyPrice,
+                                      //       onThemeChanged: onThemeChanged,
+                                      //       changeLangauge: changeLangauge,
+                                      //       firstName: firstName,
+                                      //       lastName: lastName,
+                                      //       email: email.text,
+                                      //       phone: phone.text,
+                                      //       lat: customerLocation.latitude
+                                      //           .toString(),
+                                      //       long: customerLocation.longitude
+                                      //           .toString(),
+                                      //       delvierCost: cost.toString(),
+                                      //       discount: discount,
+                                      //       address: addressLineFromSa,
+                                      //       city: cityFromSa,
+                                      //       postCose: postCodeFromSa,
+                                      //     ),
+                                      //   ),
+                                      // );
                                     });
 
                                     Navigator.pop(context);

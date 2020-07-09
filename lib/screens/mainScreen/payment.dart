@@ -25,6 +25,8 @@ class Payment extends StatefulWidget {
   final String lastName;
   final String phone;
   final String address;
+  final String city;
+  final String postCose;
   final String lat;
   final String long;
   final String buyPrice;
@@ -50,6 +52,8 @@ class Payment extends StatefulWidget {
     this.totalAfterTax,
     this.delvierCost,
     this.discount,
+    this.city,
+    this.postCose,
   }) : super(key: key);
   @override
   _PaymentState createState() => _PaymentState();
@@ -79,9 +83,16 @@ class _PaymentState extends State<Payment> {
     quantity = '';
     unitPrice = '';
     twilioInfo();
+    if (widget.postCose == "" || widget.postCose == null) {
+      zipCode = "00966";
+    } else {
+      zipCode = widget.postCose;
+    }
   }
 
   addThisOrderToFirestore() async {
+    double total =
+        double.parse(widget.totalAfterTax) + double.parse(widget.delvierCost);
     Firestore.instance.collection('order').add({
       'payment': '',
       'driverID': id,
@@ -89,8 +100,11 @@ class _PaymentState extends State<Payment> {
       'orderID': orderID,
       'date': '',
       'status': '0',
+      'address': widget.address,
+      'city': widget.city,
+      'postCode': zipCode,
       'discount': widget.discount,
-      'total': widget.totalAfterTax,
+      'total': total,
       'lat': widget.lat,
       'long': widget.long,
       'firstName': widget.firstName,
@@ -152,10 +166,10 @@ class _PaymentState extends State<Payment> {
         'items': items,
         'quantity': quantity,
         'unitPrice': unitPrice,
-        'city': city,
+        'city': widget.city,
         'state': state,
         'zipCode': zipCode,
-        'address': addressLine,
+        'address': widget.address,
         'phone': widget.phone,
         'email': widget.email,
         'orderID': orderID,
@@ -189,7 +203,7 @@ class _PaymentState extends State<Payment> {
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
     city = first.locality;
-    zipCode = first.postalCode;
+
     addressLine = first.addressLine;
     state = first.adminArea;
     country = first.countryName;

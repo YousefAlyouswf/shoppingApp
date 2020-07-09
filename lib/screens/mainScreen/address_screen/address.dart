@@ -48,22 +48,24 @@ class _AddressState extends State<Address> {
               lastName: item['LastName'],
               phone: item['phone'],
               email: item['email'],
-              address: item['userAddress'],
+              address: item['address'],
               id: item['id'],
               lat: item['lat'],
               long: item['long'],
               deliverCost: item['deliverCost'],
+              city: item['city'],
+              postCode: item['postCode'],
             ),
           )
           .toList();
     });
+
     for (var i = 0; i < addressList.length; i++) {
       final coordinates = new Coordinates(
           double.parse(addressList[i].lat), double.parse(addressList[i].long));
       var addresses =
           await Geocoder.local.findAddressesFromCoordinates(coordinates);
       var first = addresses.first;
-      addressList[i].address = first.addressLine;
     }
     if (addressList.length > 0) {
       setState(() {
@@ -158,6 +160,7 @@ class _AddressState extends State<Address> {
       } catch (e) {
         errorMapChosen(
             "لم يتم تحديد موقع التوصيل أرجو أختيار الموقع بدقه أكثر");
+        isLoading = false;
       }
     });
   }
@@ -222,7 +225,9 @@ class _AddressState extends State<Address> {
                       formatPhoneNumber,
                       spiltName,
                       widget.discount,
-                      addressLineFromSa),
+                      addressLineFromSa,
+                      cityFromSa,
+                      postalCoseSa),
                   SizedBox(
                     height: 20,
                   )

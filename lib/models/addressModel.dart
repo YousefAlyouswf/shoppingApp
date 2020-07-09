@@ -4,19 +4,24 @@ class AddressModel {
   final String lastName;
   final String phone;
   final String email;
-  String address;
+  final String address;
+  final String city;
+  final String postCode;
   final String lat;
   final String long;
   final String deliverCost;
 
-  AddressModel(
-      {this.firstName,
-      this.lastName,
-      this.phone,
-      this.address,
-      this.email,
-      this.lat,
-      this.deliverCost,
-      this.long,
-      this.id});
+  AddressModel({
+    this.firstName,
+    this.lastName,
+    this.phone,
+    this.address,
+    this.email,
+    this.lat,
+    this.deliverCost,
+    this.long,
+    this.id,
+    this.city,
+    this.postCode,
+  });
 }
