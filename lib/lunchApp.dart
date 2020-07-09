@@ -134,9 +134,9 @@ class _LunchAppState extends State<LunchApp> {
                   child: Padding(
                     padding: const EdgeInsets.all(32.0),
                     child: Text(
-                      "RFOOF",
+                      "Colors & Touches",
                       style: TextStyle(
-                        fontSize: 40,
+                        fontSize: 35,
                         fontFamily: "EN",
                         color: Color(0xFFFF834F),
                         shadows: <Shadow>[

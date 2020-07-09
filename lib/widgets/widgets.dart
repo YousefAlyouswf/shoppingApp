@@ -17,12 +17,7 @@ import 'lang/appLocale.dart';
 var uuid = Uuid();
 int cartCount = 0;
 List<AppInfoModel> appInfo = [];
-AppBar appBar(int countCart,
-    {Function goToCartScreen,
-    String text = "رفوف",
-    bool search = false,
-    bool cart = false,
-    BuildContext context}) {
+AppBar appBar(int countCart, {Function goToCartScreen, BuildContext context}) {
   String appName = AppLocale.of(context).getTranslated('appName');
   return AppBar(
     backgroundColor: Theme.of(context).primaryColorLight,
@@ -35,11 +30,6 @@ AppBar appBar(int countCart,
     ),
     centerTitle: true,
     actions: <Widget>[
-      // FlatButton(
-      //     onPressed: () {
-      //       DBHelper.deleteAllItem("cart");
-      //     },
-      //     child: Icon(Icons.accessibility)),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Stack(
@@ -252,8 +242,8 @@ Drawer drawer(
           onTap: () {
             showAboutDialog(
               context: context,
-              applicationName: "RFOOF",
-              applicationVersion: "0.0.17",
+              applicationName: "ألوان ولمسات",
+              applicationVersion: "0.0.18",
               applicationLegalese: "Developed by Yousef Al Yousef",
               useRootNavigator: false,
               children: [Icon(Icons.developer_board)],

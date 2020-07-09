@@ -25,8 +25,9 @@ class _GmapState extends State<Gmap> {
       final Marker marker = Marker(
         markerId: markerId,
         position: latLng,
-        infoWindow:
-            InfoWindow(title: "الموقع الي بنوصله الطلب", snippet: 'رفوف'),
+        infoWindow: InfoWindow(
+            title: "سوف يتم شحن الطلبية الى هذا الموقع",
+            snippet: 'ألوان ولمسات'),
         onTap: () {},
       );
 

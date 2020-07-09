@@ -279,7 +279,7 @@ class _AddressState extends State<Address> {
     print('PhoneSms ------>> $phoneSMS');
     twilioFlutter.sendSMS(
         toNumber: phoneSMS,
-        messageBody: ' متجر رفوف \n الكود هو $codeID \n $signCode');
+        messageBody: ' ألوان ولمسات \n الكود هو $codeID \n $signCode');
   }
 
   spiltName() {
