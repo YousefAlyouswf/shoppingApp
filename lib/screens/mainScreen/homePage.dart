@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/firestore.dart';
@@ -10,6 +11,8 @@ import 'package:shop_app/widgets/user/categoryScreen/categoroesWidget.dart';
 import 'package:shop_app/widgets/user/homeWidget.dart';
 import 'package:shop_app/widgets/user/myOrderWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';
+
+import '../../push_nofitications.dart';
 
 class HomePage extends StatefulWidget {
   final Function onThemeChanged;
@@ -68,6 +71,8 @@ class _HomePageState extends State<HomePage>
     });
   }
 
+  FirebaseMessaging _fcm = FirebaseMessaging();
+
   @override
   void initState() {
     super.initState();
@@ -75,6 +80,31 @@ class _HomePageState extends State<HomePage>
     getAppInfoFireBase();
     controller.addListener(_scrollListener);
     callCartCount();
+
+    //CLOUD MESSAGING
+    _fcm.subscribeToTopic("News");
+    //PushNotificationsManager().init();
+    //  _fcm.requestNotificationPermissions(IosNotificationSettings());
+    _fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage:-----> $message");
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              title: Text(message['notification']['title']),
+            ),
+          ),
+        );
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onMessage:-----> $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onMessage:-----> $message");
+      },
+    );
   }
 
   @override
