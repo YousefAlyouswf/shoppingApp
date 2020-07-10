@@ -56,8 +56,13 @@ class _MyOrderState extends State<MyOrder> {
                       child: InkWell(
                         onTap: () {},
                         child: Card(
-                          color:
-                              status != '3' ? Colors.green[200] : Colors.white,
+                          color: status == '1'
+                              ? Colors.green
+                              : status == '2'
+                                  ? Colors.amber
+                                  : status == '3'
+                                      ? Colors.white
+                                      : Colors.yellow[100],
                           child: Column(
                             children: [
                               Row(
@@ -304,11 +309,25 @@ class _MyOrderState extends State<MyOrder> {
                                                   ),
                                                 ],
                                               ),
-                                              Text(
-                                                '${ds['total']} ر.س',
-                                                textDirection:
-                                                    TextDirection.rtl,
-                                                style: TextStyle(fontSize: 15),
+                                              Column(
+                                                children: [
+                                                  Text(
+                                                    '${ds['total']} ر.س',
+                                                    textDirection:
+                                                        TextDirection.rtl,
+                                                    style:
+                                                        TextStyle(fontSize: 15),
+                                                  ),
+                                                  Text(
+                                                    ds['payment'] == "cash"
+                                                        ? 'الدفع كاش '
+                                                        : 'تم الدفع',
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontFamily: "MainFont",
+                                                        color: Colors.red),
+                                                  ),
+                                                ],
                                               ),
                                               FlatButton.icon(
                                                 onPressed: () {

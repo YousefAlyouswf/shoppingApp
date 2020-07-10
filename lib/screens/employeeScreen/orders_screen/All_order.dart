@@ -35,7 +35,8 @@ class _AllOrderState extends State<AllOrder> {
             List<EmployeeOrderList> orderList = [];
             for (var i = 0; i < snapshot.data.documents.length; i++) {
               String city = snapshot.data.documents[i]['city'];
-              if (snapshot.data.documents[i]['payment'] == "100" &&
+              if ((snapshot.data.documents[i]['payment'] == "100" ||
+                      snapshot.data.documents[i]['payment'] == "cash") &&
                   city.contains("RIYADH") &&
                   snapshot.data.documents[i]['driverID'] == "") {
                 orderList.add(EmployeeOrderList(

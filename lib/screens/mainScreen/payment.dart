@@ -122,6 +122,7 @@ class _PaymentState extends State<Payment> {
     paymantPage();
   }
 
+  bool paymentMethodForRiyadh = false;
   String accountSid;
   String authToken;
   String twilioNumber;
@@ -203,7 +204,11 @@ class _PaymentState extends State<Payment> {
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
     city = first.locality;
-
+    if (city == "Riyadh") {
+      setState(() {
+        paymentMethodForRiyadh = true;
+      });
+    }
     addressLine = first.addressLine;
     state = first.adminArea;
     country = first.countryName;
@@ -275,8 +280,6 @@ class _PaymentState extends State<Payment> {
 
   @override
   Widget build(BuildContext context) {
-    // print("----------->>>>>$webviewUrl");
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColorLight,
@@ -295,55 +298,176 @@ class _PaymentState extends State<Payment> {
               })
         ],
       ),
-      body: webviewUrl == ""
-          ? Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                    "https://cdn.dribbble.com/users/2129935/screenshots/8868815/media/cfc18f3a1bb266b52c8d3f2677c999e4.gif",
-                  ),
+      body: paymentMethodForRiyadh
+          ? Center(
+              child: Container(
+                height: 250.0,
+                width: 300.0,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "أختر طريقة الدفع",
+                            style:
+                                TextStyle(fontSize: 20, fontFamily: "MainFont"),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            paymentMethodForRiyadh = false;
+                          });
+                        },
+                        child: Container(
+                          height: 50,
+                          alignment: Alignment.center,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            color: Theme.of(context).unselectedWidgetColor,
+                          ),
+                          child: Text(
+                            "بطاقة",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () async {
+                          double total = double.parse(widget.totalAfterTax) +
+                              double.parse(widget.delvierCost);
+                          Firestore.instance.collection('order').add({
+                            'payment': 'cash',
+                            'driverID': id,
+                            'driverName': name,
+                            'orderID': orderID,
+                            'date': DateTime.now().toString(),
+                            'status': '0',
+                            'address': widget.address,
+                            'city': widget.city,
+                            'postCode': zipCode,
+                            'discount': widget.discount,
+                            'total': total,
+                            'lat': widget.lat,
+                            'long': widget.long,
+                            'firstName': widget.firstName,
+                            'lastName': widget.lastName,
+                            'phone': widget.phone,
+                            'deliverCost': widget.delvierCost,
+                            'email': widget.email,
+                            'priceForSell': widget.price,
+                            'priceForBuy': widget.buyPrice,
+                            'items': FieldValue.arrayUnion(mapItems),
+                            'userID': androidInfo.androidId == null
+                                ? iosDeviceInfo.identifierForVendor
+                                : androidInfo.androidId,
+                          }).then((value) {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            twilioFlutter.sendSMS(
+                                toNumber: phone,
+                                messageBody:
+                                    'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
+                            sendEmailToCustomer();
+                            addCartToast(
+                                "تمت علمية الشراء يمكنك متابعه طلبك من هنا");
+                            navIndex = 3;
+                            DBHelper.deleteAllItem("cart");
+                            Navigator.popUntil(
+                                context, (route) => route.isFirst);
+                          });
+                        },
+                        child: Container(
+                          height: 50,
+                          alignment: Alignment.center,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            color: Theme.of(context).unselectedWidgetColor,
+                          ),
+                          child: Text(
+                            "كاش",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    )
+                  ],
                 ),
               ),
             )
-          : WebView(
-              key: UniqueKey(),
-              initialUrl: webviewUrl,
-              javascriptMode: JavascriptMode.unrestricted,
-              onPageFinished: (url) async {
-                if (url == "http://geniusloop.co/payment/succed.php") {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  twilioFlutter.sendSMS(
-                      toNumber: phone,
-                      messageBody:
-                          'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
-                  sendEmailToCustomer();
-                  addCartToast(word("Succssful", context));
-                  navIndex = 3;
-                  DBHelper.deleteAllItem("cart");
-                  Navigator.popUntil(context, (route) => route.isFirst);
-                } else if (url == "http://geniusloop.co/payment/failed.php") {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  errorToast(word("Failed", context));
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Payment(
-                        totalAfterTax: widget.totalAfterTax,
-                        price: widget.price,
-                        buyPrice: widget.buyPrice,
-                        onThemeChanged: widget.onThemeChanged,
-                        changeLangauge: widget.changeLangauge,
-                        firstName: widget.firstName,
-                        lastName: widget.lastName,
-                        phone: widget.phone,
-                        lat: widget.lat,
-                        long: widget.long,
+          : webviewUrl == ""
+              ? Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        "https://cdn.dribbble.com/users/2129935/screenshots/8868815/media/cfc18f3a1bb266b52c8d3f2677c999e4.gif",
                       ),
                     ),
-                  );
-                }
-              },
-            ),
+                  ),
+                )
+              : WebView(
+                  key: UniqueKey(),
+                  initialUrl: webviewUrl,
+                  javascriptMode: JavascriptMode.unrestricted,
+                  onPageFinished: (url) async {
+                    if (url == "http://geniusloop.co/payment/succed.php") {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      twilioFlutter.sendSMS(
+                          toNumber: phone,
+                          messageBody:
+                              'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
+                      sendEmailToCustomer();
+                      addCartToast(word("Succssful", context));
+                      navIndex = 3;
+                      DBHelper.deleteAllItem("cart");
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    } else if (url ==
+                        "http://geniusloop.co/payment/failed.php") {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      errorToast(word("Failed", context));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Payment(
+                            totalAfterTax: widget.totalAfterTax,
+                            price: widget.price,
+                            buyPrice: widget.buyPrice,
+                            onThemeChanged: widget.onThemeChanged,
+                            changeLangauge: widget.changeLangauge,
+                            firstName: widget.firstName,
+                            lastName: widget.lastName,
+                            phone: widget.phone,
+                            lat: widget.lat,
+                            long: widget.long,
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
     );
   }
 

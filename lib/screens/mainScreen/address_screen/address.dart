@@ -85,6 +85,23 @@ class _AddressState extends State<Address> {
     print(widget.discount);
     twilioInfo();
     listenSMS();
+    getDeliverPrice();
+  }
+
+  int costInRiyadh = 0;
+  int costOutRiyadh = 0;
+  getDeliverPrice() async {
+    await Firestore.instance.collection('app').getDocuments().then(
+          (value) => value.documents.forEach(
+            (e) {
+              setState(() {
+                costInRiyadh = e['inRiyadh'];
+                costOutRiyadh = e['outRiyadh'];
+              });
+            },
+          ),
+        );
+    print("-------------->..$costOutRiyadh");
   }
 
   @override
@@ -113,7 +130,7 @@ class _AddressState extends State<Address> {
   Future<gmap.LatLng> updateLocation(gmap.LatLng location) {
     try {
       setState(() => customerLocation = location);
-      calcualteDeliverCost();
+
       FocusScope.of(context).requestFocus(FocusNode());
 
       return Future.value(customerLocation);
@@ -130,6 +147,7 @@ class _AddressState extends State<Address> {
       );
       updateLocation(location).then((v) async {
         await getNationalAddress(v.latitude.toString(), v.longitude.toString());
+        calcualteDeliverCost();
       });
     } catch (e) {}
   }
@@ -142,6 +160,9 @@ class _AddressState extends State<Address> {
   getNationalAddress(String lat, String long) async {
     setState(() {
       isLoading = true;
+      addressLineFromSa = "";
+      postalCoseSa = "";
+      cityFromSa = "";
     });
     String url =
         "https://apina.address.gov.sa/NationalAddress/v3.1/Address/address-geocode?lat=$lat&long=$long&language=A&format=json&encode=utf8";
@@ -158,6 +179,7 @@ class _AddressState extends State<Address> {
         cityFromSa = jsonData['Addresses'][0]['City'];
         isLoading = false;
       } catch (e) {
+        print("--------------------->>>>>$e");
         errorMapChosen(
             "لم يتم تحديد موقع التوصيل أرجو أختيار الموقع بدقه أكثر");
         isLoading = false;
@@ -236,22 +258,30 @@ class _AddressState extends State<Address> {
   }
 
   calcualteDeliverCost() async {
-    total = 0.0;
+    total = double.parse(widget.totalAfterTax);
+    cost = 0;
     final coordinates =
         new Coordinates(customerLocation.latitude, customerLocation.longitude);
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
     String city = first.locality;
-    setState(() {});
+    print("---------------$city");
     if (city == "Riyadh") {
-      cost = 40;
-      deliverCost = "40 ${word("currancy", context)}";
+      setState(() {
+        cost = costInRiyadh;
+        deliverCost = "$costInRiyadh ${word("currancy", context)}";
+      });
     } else {
-      cost = 70;
-      deliverCost = "70 ${word("currancy", context)}";
+      setState(() {
+        cost = costOutRiyadh;
+        deliverCost = "$costOutRiyadh ${word("currancy", context)}";
+      });
     }
-    total = double.parse(widget.totalAfterTax) + cost;
+    setState(() {
+      total = double.parse(widget.totalAfterTax) + cost;
+    });
+
     print(total);
   }
 

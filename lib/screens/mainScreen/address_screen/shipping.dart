@@ -111,8 +111,9 @@ Widget storedAddress(
   );
 }
 
-double total = 0.0;
-double cost = 0.0;
+double total = 0;
+
+int cost = 0;
 Widget addAddress(
   BuildContext context,
   Function moveToMapScreen,
@@ -211,7 +212,10 @@ Widget addAddress(
                 SizedBox(
                   height: 10,
                 ),
-                addressLineFromSa == ""
+                addressLineFromSa == "" ||
+                        customerLocation == null ||
+                        cityFromSa == "" ||
+                        postalCoseSa == ""
                     ? Container()
                     : Column(
                         children: [
