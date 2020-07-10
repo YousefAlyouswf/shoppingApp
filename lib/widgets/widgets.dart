@@ -311,7 +311,7 @@ errorToast(String text) {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
       timeInSecForIosWeb: 1,
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.orange[400],
       textColor: Colors.black,
       fontSize: 16.0);
 }

@@ -179,6 +179,7 @@ class _HomePageState extends State<HomePage>
     setState(() {
       navIndex = 1;
       categoryNameSelected = categoryName;
+
       for (var j = 0; j < 20; j++) {
         if (j == i) {
           selected[j] = true;

@@ -7,7 +7,16 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
-import 'gmapForDelvir.dart';
+class Post {
+  final String body;
+
+  Post(this.body);
+  factory Post.fromJson(Map<String, dynamic> json) {
+    return Post(
+      json['body'],
+    );
+  }
+}
 
 class AddNewEmployee extends StatefulWidget {
   @override
@@ -20,24 +29,19 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
   TextEditingController id = TextEditingController();
   TextEditingController pass = TextEditingController();
   TextEditingController city = TextEditingController();
+  TextEditingController iban = TextEditingController();
   bool isloading = false;
-  LatLng customerLocation;
-  void updateLocation(LatLng location) {
-    setState(() => customerLocation = location);
-  }
-
-  moveToMapScreen() async {
-    final location = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => GmapForDeliver()),
-    );
-    updateLocation(location);
-  }
-
+  bool checkedValue = false;
+  String terms;
   @override
   Widget build(BuildContext context) {
+    terms =
+        "أتعهد أنا ${name.text} رقم الهوية ${id.text} على صحة جميع بياناتي المذكوره اعلاه وفي حال ثبت عكس ذلك يحق لمؤسسة ألوان ولمسات بإتخاذ الاجراءات القانونية حيال ذلك";
     return Scaffold(
       //   appBar: appBar(text: "تسجيل مندوب جديد"),
+      appBar: AppBar(
+        title: Text("تسجيل مندوب جديد"),
+      ),
       body: isloading
           ? Container(
               child: Center(
@@ -45,93 +49,119 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
               ),
             )
           : Container(
-              height: MediaQuery.of(context).size.height / 2,
+              height: MediaQuery.of(context).size.height,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: MyTextFormFieldAccount(
-                          editingController: name,
-                          hintText: "الأسم كامل",
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: MyTextFormFieldAccount(
-                          editingController: phone,
-                          isNumber: true,
-                          hintText: "رقم الجوال",
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: MyTextFormFieldAccount(
-                          editingController: id,
-                          isNumber: true,
-                          hintText: "رقم الهوية",
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: MyTextFormFieldAccount(
-                          editingController: pass,
-                          hintText: "كلمة المرور",
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Container(
-                            decoration: BoxDecoration(color: Colors.orange),
-                            child: InkWell(
-                              onTap: moveToMapScreen,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "أختر المنطقة الأقرب لك",
-                                  textDirection: TextDirection.rtl,
+                          Row(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: MyTextFormFieldAccount(
+                                  editingController: name,
+                                  hintText: "الأسم كامل",
                                 ),
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: MyTextFormFieldAccount(
+                                  editingController: phone,
+                                  isNumber: true,
+                                  hintText: "رقم الجوال",
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: MyTextFormFieldAccount(
+                                  editingController: city,
+                                  hintText: "المدينة",
+                                ),
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: MyTextFormFieldAccount(
+                                  editingController: pass,
+                                  hintText: "كلمة المرور",
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            width: double.infinity,
+                            child: MyTextFormFieldAccount(
+                              editingController: id,
+                              isNumber: true,
+                              hintText: "رقم الهوية",
+                            ),
+                          ),
+                          Container(
+                            width: double.infinity,
+                            child: MyTextFormFieldAccount(
+                              editingController: iban,
+                              hintText: "رقم الايبان لا تكتب SA",
+                              isNumber: true,
+                              helper: "SA0000000000000000000000",
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                forImage("صورة الهوية", idImage, idFile),
+                                forImage("صورة الرخصة", idLicImage, idLic),
+                                forImage("صورة الإستمارة", idCarImage, idCar),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
+                            width: double.infinity,
+                            child: Card(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "تعهد",
+                                    style: TextStyle(
+                                      fontFamily: "MainFont",
+                                      fontSize: 22,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(terms),
+                                  ),
+                                  CheckboxListTile(
+                                    title: Text("قبول التعهد"),
+                                    value: checkedValue,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        checkedValue = newValue;
+                                      });
+                                    },
+                                    controlAffinity: ListTileControlAffinity
+                                        .leading, //  <-- leading Checkbox
+                                  )
+                                ],
                               ),
                             ),
                           ),
-                          customerLocation == null
-                              ? Text("لم يتم أختيار")
-                              : Text("تم تحديد الموقع بنجاح"),
                         ],
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: MyTextFormFieldAccount(
-                          editingController: city,
-                          hintText: "المدينة",
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        forImage("صورة الهوية", idImage, idFile),
-                        forImage("صورة الرخصة", idLicImage, idLic),
-                        forImage("صورة الإستمارة", idCarImage, idCar),
-                      ],
                     ),
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width / 2,
+                    margin: EdgeInsets.all(8.0),
+                    width: double.infinity,
                     height: 50,
                     decoration: BoxDecoration(
                       color: Colors.blue,
@@ -150,10 +180,12 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                           errorToast("رقم الهوية مكون من عشرة أرقام فقط");
                         } else if (pass.text.length < 6) {
                           errorToast("كلمة المرور يجب ان تتكون من 6 خانات");
-                        } else if (customerLocation == null) {
-                          errorToast("يجب تحديد أقرب مكان لتوصيل الطلبات");
                         } else if (city.text.length < 2) {
                           errorToast("أكتب أسم المدينة المتواجد فيها");
+                        } else if (iban.text.length < 22) {
+                          errorToast("أكتب رقم IBAN بشكل الصحيح 22 رقم");
+                        } else if (!checkedValue) {
+                          errorToast("يجب قبول التعهد");
                         } else {
                           checkIDs().then((value) {
                             if (value) {
@@ -276,9 +308,9 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
           'licImage': licURL,
           'carImage': carURL,
           'accept': '0',
-          'lat': customerLocation.latitude,
-          'long': customerLocation.longitude,
-          'city': city.text
+          'city': city.text,
+          'iban': iban.text,
+          'terms': terms,
         });
         addRequestToast("طلبك قيد الدراسة");
         Navigator.pop(context);
@@ -286,6 +318,7 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
         errorToast("صور");
       }
     } catch (e) {
+      print("--------------------------->>>>>>$e");
       errorToast("يجب إظافة جميع الصور");
       setState(() {
         isloading = false;
@@ -336,6 +369,7 @@ class MyTextFormFieldAccount extends StatelessWidget {
   final bool isNumber;
   final Function isChanged;
   final bool isMultiLine;
+  final String helper;
   final TextEditingController editingController;
   MyTextFormFieldAccount({
     this.hintText,
@@ -344,6 +378,7 @@ class MyTextFormFieldAccount extends StatelessWidget {
     this.editingController,
     this.isChanged,
     this.isMultiLine = false,
+    this.helper,
   });
   @override
   Widget build(BuildContext context) {
@@ -354,6 +389,7 @@ class MyTextFormFieldAccount extends StatelessWidget {
         controller: editingController,
         decoration: InputDecoration(
           hintText: hintText,
+          helperText: helper,
           contentPadding: EdgeInsets.all(15.0),
           border: InputBorder.none,
           filled: true,

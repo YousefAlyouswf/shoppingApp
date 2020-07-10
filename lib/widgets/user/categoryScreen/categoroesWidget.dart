@@ -75,14 +75,30 @@ class _CategoryWidgetState extends State<CategoryWidget> {
     return count;
   }
 
+  ScrollController _controller;
   @override
   void initState() {
     super.initState();
     fetchToMyCart();
+    _controller = ScrollController();
+    _controller.addListener(_scrollListener);
+  }
+
+  _scrollListener() {
+    if (_controller.offset >= _controller.position.maxScrollExtent &&
+        !_controller.position.outOfRange) {
+      print("TOP");
+    }
+    if (_controller.offset <= _controller.position.minScrollExtent &&
+        !_controller.position.outOfRange) {
+      print("BOTTPM");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+// Scroll to first selected item
+
     return Container(
       child: Column(
         children: [
@@ -93,6 +109,58 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             setFirstElemntInSubCollection,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget headerCatgory(Function switchBetweenCategory) {
+    catgoryEnglish = [];
+    return Container(
+      decoration: BoxDecoration(),
+      height: 50,
+      width: double.infinity,
+      child: StreamBuilder(
+        stream: Firestore.instance.collection('categories').snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Text("Loading");
+
+          return ListView.builder(
+            controller: _controller,
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data.documents[0].data['collection'].length,
+            itemBuilder: (context, i) {
+              String categoryName = isEnglish
+                  ? snapshot.data.documents[0].data['collection'][i]['en_name']
+                  : snapshot.data.documents[0].data['collection'][i]['name'];
+              String choseCategory =
+                  snapshot.data.documents[0].data['collection'][i]['name'];
+              return Container(
+                width: 100,
+                decoration: BoxDecoration(
+                  //   borderRadius: BorderRadius.all(Radius.circular(5)),
+                  border: Border(
+                      bottom: BorderSide(
+                    width: 5,
+                    color: selected[i] ? Color(0xFFFF834F) : Colors.transparent,
+                  )),
+                ),
+                child: InkWell(
+                  onTap: () {
+                    switchBetweenCategory(choseCategory, i);
+                  },
+                  child: Center(
+                    child: Text(
+                      categoryName,
+                      style: TextStyle(
+                          color: selected[i] ? Colors.teal : Colors.grey[600],
+                          fontFamily: "MainFont"),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -738,57 +806,6 @@ List<String> catgoryArabic = [];
 List<String> catgoryEnglish = [];
 
 List<bool> selected = List.generate(20, (i) => false);
-
-Widget headerCatgory(Function switchBetweenCategory) {
-  catgoryEnglish = [];
-  return Container(
-    decoration: BoxDecoration(),
-    height: 50,
-    width: double.infinity,
-    child: StreamBuilder(
-      stream: Firestore.instance.collection('categories').snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return Text("Loading");
-
-        return ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: snapshot.data.documents[0].data['collection'].length,
-          itemBuilder: (context, i) {
-            String categoryName = isEnglish
-                ? snapshot.data.documents[0].data['collection'][i]['en_name']
-                : snapshot.data.documents[0].data['collection'][i]['name'];
-            String choseCategory =
-                snapshot.data.documents[0].data['collection'][i]['name'];
-            return Container(
-              width: 100,
-              decoration: BoxDecoration(
-                //   borderRadius: BorderRadius.all(Radius.circular(5)),
-                border: Border(
-                    bottom: BorderSide(
-                  width: 5,
-                  color: selected[i] ? Color(0xFFFF834F) : Colors.transparent,
-                )),
-              ),
-              child: InkWell(
-                onTap: () {
-                  switchBetweenCategory(choseCategory, i);
-                },
-                child: Center(
-                  child: Text(
-                    categoryName,
-                    style: TextStyle(
-                        color: selected[i] ? Colors.teal : Colors.grey[600],
-                        fontFamily: "MainFont"),
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    ),
-  );
-}
 
 Widget seprater() {
   return Container(

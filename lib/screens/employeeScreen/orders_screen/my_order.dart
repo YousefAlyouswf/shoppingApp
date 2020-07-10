@@ -15,21 +15,6 @@ class MyOrder extends StatefulWidget {
 }
 
 class _MyOrderState extends State<MyOrder> {
-  Widget checkDriverStatuse() {
-    return StreamBuilder(
-        stream: Firestore.instance
-            .collection('employee')
-            .where('id', isEqualTo: widget.id)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return Container();
-          if (snapshot.data.documents[0]['accept'] != '1') {
-            Navigator.pop(context);
-          }
-          return Container();
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -65,7 +50,6 @@ class _MyOrderState extends State<MyOrder> {
                 return Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    checkDriverStatuse(),
                     Container(
                       height: 300,
                       color: Colors.grey,

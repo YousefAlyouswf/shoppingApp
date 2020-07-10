@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -46,6 +47,21 @@ class _EmployeeScreenState extends State<EmployeeScreen>
     _tabController = TabController(length: pages.length, vsync: this);
   }
 
+  Widget checkDriverStatuse() {
+    return StreamBuilder(
+        stream: Firestore.instance
+            .collection('employee')
+            .where('id', isEqualTo: widget.id)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Container();
+          if (snapshot.data.documents[0]['accept'] != '1') {
+            Navigator.pop(context);
+          }
+          return Container();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,11 +91,16 @@ class _EmployeeScreenState extends State<EmployeeScreen>
           ),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Stack(
         children: [
-          AllOrder(id: widget.id),
-          MyOrder(id: widget.id),
+          checkDriverStatuse(),
+          TabBarView(
+            controller: _tabController,
+            children: [
+              AllOrder(id: widget.id),
+              MyOrder(id: widget.id),
+            ],
+          ),
         ],
       ),
     );

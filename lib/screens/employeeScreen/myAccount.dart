@@ -29,13 +29,26 @@ class _MyAccountState extends State<MyAccount> {
     if (id == "" || id == null) {
       return null;
     } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => EmployeeScreen(
+      Firestore.instance
+          .collection('employee')
+          .where('id', isEqualTo: id)
+          .getDocuments()
+          .then((value) {
+        value.documents.forEach((e) {
+          if (e['accept'] == '1') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EmployeeScreen(
                   id: id,
-                )),
-      );
+                ),
+              ),
+            );
+          } else {
+            errorToast("تم إلغاء عضويتك وشكرا على تعاونك");
+          }
+        });
+      });
     }
   }
 
@@ -104,10 +117,6 @@ class _MyAccountState extends State<MyAccount> {
                                     builder: (context) => EmployeeScreen(
                                           name: e['name'],
                                           phone: e['phone'],
-                                          latLng: LatLng(
-                                            e['lat'],
-                                            e['long'],
-                                          ),
                                           city: e['city'],
                                           accept: e['accept'],
                                           id: e['id'],

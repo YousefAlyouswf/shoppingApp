@@ -98,7 +98,14 @@ class _EmplyeeManagerState extends State<EmplyeeManager> {
                                   ),
                                 ],
                               ),
-                              Text("${ds['city']}"),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text("SA${ds['iban']}"),
+                                  Text("${ds['city']}"),
+                                ],
+                              ),
                               Column(
                                 children: [
                                   Row(
