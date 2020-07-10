@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
@@ -72,7 +73,7 @@ class _HomePageState extends State<HomePage>
   }
 
   FirebaseMessaging _fcm = FirebaseMessaging();
-
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   @override
   void initState() {
     super.initState();
@@ -82,29 +83,55 @@ class _HomePageState extends State<HomePage>
     callCartCount();
 
     //CLOUD MESSAGING
+    initialzation();
     _fcm.subscribeToTopic("News");
     //PushNotificationsManager().init();
     //  _fcm.requestNotificationPermissions(IosNotificationSettings());
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage:-----> $message");
-
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            content: ListTile(
-              title: Text(message['notification']['title']),
-            ),
-          ),
-        );
+        showNotification(message['notification']['title']);
+        // showDialog(
+        //   context: context,
+        //   builder: (context) => AlertDialog(
+        //     content: ListTile(
+        //       title: Text(message['notification']['title']),
+        //     ),
+        //   ),
+        // );
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onMessage:-----> $message");
+        showNotification(message['notification']['title']);
       },
       onResume: (Map<String, dynamic> message) async {
         print("onMessage:-----> $message");
+        showNotification(message['notification']['title']);
       },
     );
+  }
+
+  void initialzation() async {
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    var android = new AndroidInitializationSettings('logo');
+    var ios = new IOSInitializationSettings();
+    var initSettings = new InitializationSettings(android, ios);
+    await flutterLocalNotificationsPlugin.initialize(initSettings,
+        onSelectNotification: onSelectNotification);
+  }
+
+  Future onSelectNotification(String payLoad) {
+    print("-------------> $payLoad");
+  }
+
+  showNotification(String title) async {
+    var android = AndroidNotificationDetails(
+        'channel_ID', 'channel name', 'channel description',
+        importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+    var ios = IOSNotificationDetails();
+    var platform = NotificationDetails(android, ios);
+    await flutterLocalNotificationsPlugin.show(0, title, 'body', platform,
+        payload: 'item x');
   }
 
   @override
