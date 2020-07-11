@@ -113,11 +113,7 @@ class _HomePageState extends State<HomePage>
     var ios = new IOSInitializationSettings();
     var initSettings = new InitializationSettings(android, ios);
     await flutterLocalNotificationsPlugin.initialize(initSettings,
-        onSelectNotification: onSelectNotification);
-  }
-
-  Future onSelectNotification(String payLoad) {
-    print("-------------> $payLoad");
+        onSelectNotification: (payload) => null);
   }
 
   showNotification(String title, String body) async {

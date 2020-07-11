@@ -20,7 +20,7 @@ exports.customerMsg = functions.firestore.document(
     var payLoad = {
         notification: {
             title: msgData.title,
-            body: "Thanks for downloading our app",
+            body: msgData.body,
             icon: "default",
             sound: "default"
 

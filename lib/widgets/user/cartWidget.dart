@@ -290,7 +290,11 @@ class _CartWidgetState extends State<CartWidget> {
                           cart.removeAt(i);
                         },
                         child: Container(
-                          color: Colors.white,
+                          margin: EdgeInsets.symmetric(vertical: 8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            border: Border.all(color: Colors.grey),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
@@ -346,8 +350,10 @@ class _CartWidgetState extends State<CartWidget> {
                                     }
                                   },
                                   child: Container(
-                                    width: 100,
-                                    height: 100,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.2,
+                                    height:
+                                        MediaQuery.of(context).size.width * 0.2,
                                     decoration: new BoxDecoration(
                                       shape: BoxShape.rectangle,
                                       image: new DecorationImage(
@@ -358,7 +364,8 @@ class _CartWidgetState extends State<CartWidget> {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 20,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.05,
                                 ),
                                 InkWell(
                                   onTap: () {
@@ -424,7 +431,7 @@ class _CartWidgetState extends State<CartWidget> {
                                               fontSize: 18,
                                               fontWeight: FontWeight.w700,
                                               fontFamily: "MainFont"),
-                                          maxLines: 2,
+                                          maxLines: 1,
                                         ),
                                       ),
                                       cart[i].sizeChose == ''
@@ -437,14 +444,15 @@ class _CartWidgetState extends State<CartWidget> {
                                               ),
                                             ),
                                       SizedBox(
-                                        height: 10,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.01,
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
                                           child: Text(
                                             "${cart[i].itemPrice} ${word('currancy', context)}",
-                                            textDirection: TextDirection.rtl,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontFamily: "MainFont"),
@@ -459,7 +467,8 @@ class _CartWidgetState extends State<CartWidget> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
-                                      width: 100,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.25,
                                       decoration: BoxDecoration(
                                         // color: Colors.orange[100],
                                         borderRadius: BorderRadius.all(
@@ -471,9 +480,6 @@ class _CartWidgetState extends State<CartWidget> {
                                           1: FractionColumnWidth(0.5)
                                         },
                                         border: TableBorder.symmetric(
-                                            // inside: BorderSide(
-                                            //   color: Colors.grey[600],
-                                            // ),
                                             outside: BorderSide(
                                           color: Colors.grey[600],
                                         )),
