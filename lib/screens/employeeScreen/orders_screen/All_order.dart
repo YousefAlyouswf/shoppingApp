@@ -16,6 +16,8 @@ class AllOrder extends StatefulWidget {
 class _AllOrderState extends State<AllOrder> {
   @override
   Widget build(BuildContext context) {
+    double heigh = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Container(
       color: Colors.grey[700],
       child: StreamBuilder(
@@ -39,7 +41,8 @@ class _AllOrderState extends State<AllOrder> {
               if ((snapshot.data.documents[i]['payment'] == "100" ||
                       snapshot.data.documents[i]['payment'] == "cash") &&
                   city.contains("RIYADH") &&
-                  snapshot.data.documents[i]['driverID'] == "") {
+                  snapshot.data.documents[i]['driverID'] == "" &&
+                  snapshot.data.documents[i]['status'] == "1") {
                 orderList.add(EmployeeOrderList(
                   date: snapshot.data.documents[i]['date'],
                   lat: snapshot.data.documents[i]['lat'],
@@ -50,7 +53,6 @@ class _AllOrderState extends State<AllOrder> {
             }
 //EmployeeOrderList
             return Container(
-              width: double.infinity,
               child: ListView.builder(
                 itemCount: orderList.length,
                 itemBuilder: (context, i) {
@@ -66,13 +68,12 @@ class _AllOrderState extends State<AllOrder> {
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
                       child: Container(
-                        width: double.infinity,
                         color: Theme.of(context).unselectedWidgetColor,
                         child: Row(
                           children: [
                             Container(
-                              margin: EdgeInsets.all(8.0),
-                              padding: EdgeInsets.all(16.0),
+                              margin: EdgeInsets.all(width * 0.025),
+                              padding: EdgeInsets.all(width * 0.025),
                               decoration: BoxDecoration(
                                 border: Border.all(),
                                 borderRadius: BorderRadius.all(
@@ -82,13 +83,13 @@ class _AllOrderState extends State<AllOrder> {
                               child: Text(
                                 "$numberOfOrder",
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: width * 0.05,
                                   color: Colors.white,
                                 ),
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(width * 0.025),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -103,7 +104,7 @@ class _AllOrderState extends State<AllOrder> {
                                     label: Text(
                                       "موقع التوصيل",
                                       style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: width * 0.05,
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                           fontFamily: "MainFont"),
@@ -118,7 +119,7 @@ class _AllOrderState extends State<AllOrder> {
                             ),
                             Spacer(),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(width * 0.025),
                               child: InkWell(
                                 onTap: () async {
                                   await Firestore.instance
@@ -130,7 +131,7 @@ class _AllOrderState extends State<AllOrder> {
                                   });
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(16.0),
+                                  padding: EdgeInsets.all(width * 0.05),
                                   decoration: BoxDecoration(
                                     color: Colors.green,
                                     borderRadius: BorderRadius.all(
@@ -140,7 +141,7 @@ class _AllOrderState extends State<AllOrder> {
                                   child: Text(
                                     "قبول",
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: width * 0.05,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                         fontFamily: "MainFont"),

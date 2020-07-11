@@ -18,6 +18,8 @@ class MyOrder extends StatefulWidget {
 class _MyOrderState extends State<MyOrder> {
   @override
   Widget build(BuildContext context) {
+    double heigh = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return StreamBuilder(
       stream: Firestore.instance
           .collection('order')
@@ -52,18 +54,14 @@ class _MyOrderState extends State<MyOrder> {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Container(
-                      height: 200,
+                      height: heigh < 700 ? heigh * 0.3 : heigh * 0.22,
                       color: Colors.grey,
                       child: InkWell(
                         onTap: () {},
                         child: Card(
-                          color: status == '1'
-                              ? Colors.green
-                              : status == '2'
-                                  ? Colors.amber
-                                  : status == '3'
-                                      ? Colors.white
-                                      : Colors.yellow[100],
+                          color: status == '3'
+                              ? Colors.green[200]
+                              : Colors.yellow[200],
                           child: InkWell(
                             splashColor: Colors.transparent,
                             onTap: () {
@@ -73,7 +71,7 @@ class _MyOrderState extends State<MyOrder> {
                                   color: Colors.grey[100],
                                   width: MediaQuery.of(context).size.width,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(width * 0.025),
                                     child: Column(
                                       children: [
                                         Row(
@@ -87,6 +85,8 @@ class _MyOrderState extends State<MyOrder> {
                                                     .document(ds.documentID)
                                                     .updateData(
                                                         {'driverID': ''});
+
+                                                Navigator.pop(context);
                                               },
                                               child: Text(
                                                 "إلغاء الطلبية",
@@ -113,7 +113,8 @@ class _MyOrderState extends State<MyOrder> {
                                                 "رقم الطلب: ${ds['orderID']}",
                                                 textDirection:
                                                     TextDirection.rtl,
-                                                style: TextStyle(fontSize: 19),
+                                                style: TextStyle(
+                                                    fontSize: width * 0.05),
                                               ),
                                             ),
                                           ],
@@ -138,8 +139,8 @@ class _MyOrderState extends State<MyOrder> {
                                             }
                                           },
                                           child: Container(
-                                            height: 50,
-                                            width: 50,
+                                            height: heigh * 0.1,
+                                            width: heigh * 0.1,
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
                                                 image: NetworkImage(
@@ -158,14 +159,14 @@ class _MyOrderState extends State<MyOrder> {
                             child: Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: EdgeInsets.all(width * 0.025),
                                   child: Stack(
                                     children: [
                                       Positioned.fill(
                                         child: Align(
                                           alignment: Alignment(0, -0.3),
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(
+                                            padding: EdgeInsets.symmetric(
                                                 horizontal: 16.0),
                                             child: Container(
                                               height: 3,
@@ -362,8 +363,8 @@ class _MyOrderState extends State<MyOrder> {
                                                       onPressed: () => launch(
                                                           "tel://${ds['phone']}"),
                                                       child: Container(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
+                                                        padding: EdgeInsets.all(
+                                                            width * 0.025),
                                                         decoration: BoxDecoration(
                                                             color:
                                                                 Colors.blueGrey,
@@ -377,6 +378,8 @@ class _MyOrderState extends State<MyOrder> {
                                                         child: Text(
                                                           "الإتصال بالعميل",
                                                           style: TextStyle(
+                                                              fontSize:
+                                                                  width * 0.03,
                                                               color:
                                                                   Colors.white),
                                                         ),
@@ -386,27 +389,30 @@ class _MyOrderState extends State<MyOrder> {
                                                 ),
                                                 Column(
                                                   children: [
-                                                    Text(
-                                                      '${ds['total']} ر.س',
-                                                      textDirection:
-                                                          TextDirection.rtl,
-                                                      style: TextStyle(
-                                                          fontSize: 15),
-                                                    ),
+                                                    ds['payment'] == "cash"
+                                                        ? Text(
+                                                            '${ds['total']} ر.س',
+                                                            style: TextStyle(
+                                                              fontSize:
+                                                                  width * 0.03,
+                                                            ),
+                                                          )
+                                                        : Container(),
                                                     Text(
                                                       ds['payment'] == "cash"
                                                           ? 'الدفع كاش '
                                                           : 'تم الدفع',
                                                       style: TextStyle(
-                                                          fontSize: 20,
+                                                          fontSize:
+                                                              width * 0.04,
                                                           fontFamily:
                                                               "MainFont",
                                                           color: Colors.red),
                                                     ),
                                                   ],
                                                 ),
-                                                FlatButton.icon(
-                                                  onPressed: () {
+                                                InkWell(
+                                                  onTap: () {
                                                     MapsLauncher
                                                         .launchCoordinates(
                                                       double.parse(ds['lat']),
@@ -415,8 +421,16 @@ class _MyOrderState extends State<MyOrder> {
                                                       ),
                                                     );
                                                   },
-                                                  icon: Icon(Icons.map),
-                                                  label: Text("موقع التوصيل"),
+                                                  child: Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 8.0),
+                                                      decoration: BoxDecoration(
+                                                          color:
+                                                              Colors.grey[200],
+                                                          border: Border.all()),
+                                                      child:
+                                                          Text("موقع التوصيل")),
                                                 ),
                                               ],
                                             ),
