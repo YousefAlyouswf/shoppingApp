@@ -6,6 +6,7 @@ import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/signin_screen.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/appInfo.dart';
+import 'package:shop_app/push_nofitications.dart';
 import 'package:shop_app/screens/employeeScreen/myAccount.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:mailer/mailer.dart';
@@ -262,6 +263,8 @@ Drawer drawer(
                       value = false;
                     }
                     if (value) {
+                      print(value);
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => MainPage()),

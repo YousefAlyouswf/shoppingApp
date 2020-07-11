@@ -7,8 +7,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class MyOrder extends StatefulWidget {
   final String id;
+  final String name;
 
-  const MyOrder({Key key, this.id}) : super(key: key);
+  const MyOrder({Key key, this.id, this.name}) : super(key: key);
 
   @override
   _MyOrderState createState() => _MyOrderState();

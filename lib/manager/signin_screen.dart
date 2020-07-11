@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/User.dart';
+import 'package:shop_app/push_nofitications.dart';
 
 class SigninScreen extends StatefulWidget {
   @override
@@ -121,6 +122,7 @@ class _SigninScreenState extends State<SigninScreen> {
               }
           }
           if (errorMsg == "") {
+            PushNotificationsManager().init();
             HelperFunction.saveManagerLogin(true);
             Navigator.push(
               context,

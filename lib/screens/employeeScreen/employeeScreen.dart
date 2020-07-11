@@ -97,8 +97,8 @@ class _EmployeeScreenState extends State<EmployeeScreen>
           TabBarView(
             controller: _tabController,
             children: [
-              AllOrder(id: widget.id),
-              MyOrder(id: widget.id),
+              AllOrder(id: widget.id, name: widget.name),
+              MyOrder(id: widget.id, name: widget.name),
             ],
           ),
         ],

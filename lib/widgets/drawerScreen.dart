@@ -8,6 +8,8 @@ import 'package:shop_app/screens/employeeScreen/myAccount.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
+import '../push_nofitications.dart';
+
 class DrawerScreen extends StatefulWidget {
   final Function goToCategoryPage;
   final Function changeLangauge;
@@ -219,6 +221,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         value = false;
                       }
                       if (value) {
+                        PushNotificationsManager().init();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => MainPage()),

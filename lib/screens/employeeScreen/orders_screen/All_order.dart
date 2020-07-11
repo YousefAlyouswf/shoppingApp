@@ -6,8 +6,9 @@ import 'package:shop_app/models/employeeOrderList.dart';
 
 class AllOrder extends StatefulWidget {
   final String id;
+  final String name;
 
-  const AllOrder({Key key, this.id}) : super(key: key);
+  const AllOrder({Key key, this.id, this.name}) : super(key: key);
   @override
   _AllOrderState createState() => _AllOrderState();
 }
@@ -123,7 +124,10 @@ class _AllOrderState extends State<AllOrder> {
                                   await Firestore.instance
                                       .collection("order")
                                       .document(orderList[i].id)
-                                      .updateData({'driverID': widget.id});
+                                      .updateData({
+                                    'driverID': widget.id,
+                                    'driverName': widget.name,
+                                  });
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(16.0),

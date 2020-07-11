@@ -26,6 +26,7 @@ class _MyAccountState extends State<MyAccount> {
 
   void loginDirctory() async {
     String id = await HelperFunction.getEmployeeLogin();
+    String name = await HelperFunction.getEmployeeName();
     if (id == "" || id == null) {
       return null;
     } else {
@@ -41,6 +42,7 @@ class _MyAccountState extends State<MyAccount> {
               MaterialPageRoute(
                 builder: (context) => EmployeeScreen(
                   id: id,
+                  name: name,
                 ),
               ),
             );
@@ -111,6 +113,7 @@ class _MyAccountState extends State<MyAccount> {
                               infoToast("تم رفض طلبك");
                             } else {
                               HelperFunction.emplyeeLogin(e['id']);
+                              HelperFunction.setEmplyeeName(e['name']);
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(

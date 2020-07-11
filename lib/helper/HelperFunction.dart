@@ -5,7 +5,7 @@ class HelperFunction {
   static String language = "language";
   static String firstlanguage = "Firstlanguage";
   static String employeeInfo = "employeeInfo";
-
+  static String employeeName = "employeeName";
   static Future<void> saveManagerLogin(bool isUserLoggedIn) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return await prefs.setBool(managerLogin, isUserLoggedIn);
@@ -24,6 +24,11 @@ class HelperFunction {
   static Future<void> emplyeeLogin(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return await prefs.setString(employeeInfo, id);
+  }
+
+  static Future<void> setEmplyeeName(String name) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.setString(employeeName, name);
   }
 
   //Get Data
@@ -46,5 +51,10 @@ class HelperFunction {
   static Future<String> getEmployeeLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(employeeInfo);
+  }
+
+  static Future<String> getEmployeeName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(employeeName);
   }
 }

@@ -86,27 +86,23 @@ class _HomePageState extends State<HomePage>
     initialzation();
     _fcm.subscribeToTopic("News");
     //PushNotificationsManager().init();
-    //  _fcm.requestNotificationPermissions(IosNotificationSettings());
+    _fcm.requestNotificationPermissions(IosNotificationSettings());
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage:-----> $message");
-        showNotification(message['notification']['title']);
-        // showDialog(
-        //   context: context,
-        //   builder: (context) => AlertDialog(
-        //     content: ListTile(
-        //       title: Text(message['notification']['title']),
-        //     ),
-        //   ),
-        // );
+
+        showNotification(
+            message['notification']['title'], message['notification']['body']);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onMessage:-----> $message");
-        showNotification(message['notification']['title']);
+        // showNotification(
+        //     message['notification']['title'], message['notification']['body']);
       },
       onResume: (Map<String, dynamic> message) async {
         print("onMessage:-----> $message");
-        showNotification(message['notification']['title']);
+        // showNotification(
+        //     message['notification']['title'], message['notification']['body']);
       },
     );
   }
@@ -124,13 +120,13 @@ class _HomePageState extends State<HomePage>
     print("-------------> $payLoad");
   }
 
-  showNotification(String title) async {
+  showNotification(String title, String body) async {
     var android = AndroidNotificationDetails(
         'channel_ID', 'channel name', 'channel description',
         importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
     var ios = IOSNotificationDetails();
     var platform = NotificationDetails(android, ios);
-    await flutterLocalNotificationsPlugin.show(0, title, 'body', platform,
+    await flutterLocalNotificationsPlugin.show(0, title, body, platform,
         payload: 'item x');
   }
 
