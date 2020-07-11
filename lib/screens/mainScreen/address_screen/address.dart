@@ -266,8 +266,8 @@ class _AddressState extends State<Address> {
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
     String city = first.locality;
-    print("---------------$city");
-    if (city == "Riyadh") {
+    print("//////////////////////////$city");
+    if (city == "Riyadh" || city == "الرياض") {
       setState(() {
         cost = costInRiyadh;
         deliverCost = "$costInRiyadh ${word("currancy", context)}";
