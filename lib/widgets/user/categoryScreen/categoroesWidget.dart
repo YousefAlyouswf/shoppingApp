@@ -16,6 +16,8 @@ class CategoryWidget extends StatefulWidget {
 }
 
 String categoryNameSelected = '';
+double height;
+double width;
 
 class _CategoryWidgetState extends State<CategoryWidget> {
   switchBetweenCategory(String name, int i) {
@@ -98,7 +100,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   @override
   Widget build(BuildContext context) {
 // Scroll to first selected item
-
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     return Container(
       child: Column(
         children: [
@@ -250,20 +253,30 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                 return Center(
                   child: Container(
                       height: 200,
-                      width: MediaQuery.of(context).size.width * .9,
+                      width: width * .9,
                       child: CircularProgressIndicator()),
                 );
               }
-
+////-------------------------------------- UI START HETE
+///////-------------------------------------- UI START HETE
+///////-------------------------------------- UI START HETE
+///////-------------------------------------- UI START HETE
+///////-------------------------------------- UI START HETE
+              // print(height);
               return Container(
                 child: Column(
                   children: [
                     Expanded(
                       child: GridView.builder(
+                          shrinkWrap: true,
+                          primary: false,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            childAspectRatio: 1 / 1.55,
+                            childAspectRatio: height < 690
+                                ? height * 0.0012
+                                : height * 0.0009,
+                            mainAxisSpacing: 2.0,
                           ),
                           itemCount: listImages.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -312,7 +325,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         child: Column(
                                           children: <Widget>[
                                             new Container(
-                                              height: 170,
+                                              height: height * 0.2,
                                               decoration: new BoxDecoration(
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8)),
@@ -387,7 +400,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                               FontWeight.bold,
                                                           color:
                                                               Colors.grey[600]),
-                                                      maxLines: 2,
+                                                      maxLines: 1,
                                                     ),
                                                   ),
                                                 ),
@@ -395,18 +408,26 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                             ),
                                             Container(
                                               margin: EdgeInsets.symmetric(
-                                                  horizontal: 8.0),
+                                                horizontal: 8.0,
+                                              ),
                                               width: double.infinity,
                                               alignment: Alignment.bottomRight,
-                                              child: Column(
+                                              child: Row(
+                                                mainAxisAlignment: listImages[
+                                                                index]
+                                                            .priceOld ==
+                                                        ""
+                                                    ? MainAxisAlignment.start
+                                                    : MainAxisAlignment
+                                                        .spaceAround,
                                                 children: [
                                                   listImages[index].priceOld ==
                                                               "" ||
                                                           listImages[index]
                                                                   .priceOld ==
-                                                              null
+                                                              ""
                                                       ? Container()
-                                                      : Text.rich(
+                                                      : AutoSizeText.rich(
                                                           TextSpan(
                                                             children: <
                                                                 TextSpan>[
@@ -415,6 +436,9 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                                     '${listImages[index].priceOld} ${word("currancy", context)}',
                                                                 style:
                                                                     new TextStyle(
+                                                                  fontSize:
+                                                                      width *
+                                                                          0.03,
                                                                   color: Colors
                                                                       .grey,
                                                                   decoration:
@@ -424,14 +448,17 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                               ),
                                                             ],
                                                           ),
+                                                          maxLines: 1,
                                                         ),
-                                                  Text(
+                                                  AutoSizeText(
                                                     "${listImages[index].price} ${word("currancy", context)}",
                                                     style: TextStyle(
-                                                        color: Colors.teal,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 20),
+                                                      color: Colors.teal,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: width * 0.05,
+                                                    ),
+                                                    maxLines: 1,
                                                   ),
                                                 ],
                                               ),
@@ -507,6 +534,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
         ),
       ),
     );
+    ////-------------------------------------- UI END HERE
+    ///////-------------------------------------- UI END HERE
+    ///////-------------------------------------- UI END HERE
+    ///////-------------------------------------- UI END HERE
+    ///////-------------------------------------- UI END HERE
   }
 
   List<String> sizes = [];
