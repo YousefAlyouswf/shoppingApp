@@ -92,10 +92,13 @@ class _HomeWidgetState extends State<HomeWidget> {
     }
   }
 
+  double heigh;
+  double width;
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double imageShowSize = height / 2.5;
+    heigh = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
+    double imageShowSize = heigh / 2.5;
     return SingleChildScrollView(
       controller: scrollController,
       child: Column(
@@ -127,7 +130,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                 ),
                 Text(
                   word('discount', context),
-                  style: TextStyle(fontSize: 25, fontFamily: "MainFont"),
+                  style:
+                      TextStyle(fontSize: width * 0.07, fontFamily: "MainFont"),
                 ),
                 SizedBox(
                   width: 10,
@@ -142,7 +146,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             ),
           ),
           Container(
-            height: MediaQuery.of(context).size.height * .3,
+            height: heigh < 700 ? heigh * .38 : heigh * .3,
             width: double.infinity,
             child: StreamBuilder(
               stream: Firestore.instance.collection('subCategory').snapshots(),
@@ -255,8 +259,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                             Container(
                               width: 120,
                               child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Container(
                                     height: 120,
@@ -348,7 +350,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                 ),
                 Text(
                   word('NEW_ARRIVAL', context),
-                  style: TextStyle(fontSize: 25, fontFamily: "MainFont"),
+                  style:
+                      TextStyle(fontSize: width * 0.07, fontFamily: "MainFont"),
                 ),
                 SizedBox(
                   width: 10,

@@ -325,7 +325,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                         child: Column(
                                           children: <Widget>[
                                             new Container(
-                                              height: height * 0.2,
+                                              height: height * 0.19,
                                               decoration: new BoxDecoration(
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(8)),
