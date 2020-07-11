@@ -6,17 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/widgets/widgets.dart';
-
-class Post {
-  final String body;
-
-  Post(this.body);
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      json['body'],
-    );
-  }
-}
+import 'package:twilio_flutter/twilio_flutter.dart' as tw;
+import 'package:sms_autofill/sms_autofill.dart';
+import 'package:uuid/uuid.dart';
 
 class AddNewEmployee extends StatefulWidget {
   @override
@@ -33,6 +25,39 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
   bool isloading = false;
   bool checkedValue = false;
   String terms;
+
+  String accountSid;
+  String authToken;
+  String twilioNumber;
+  tw.TwilioFlutter twilioFlutter;
+  @override
+  void initState() {
+    super.initState();
+    twilioInfo();
+    listenSMS();
+  }
+
+  twilioInfo() async {
+    await Firestore.instance.collection("twilio").getDocuments().then((v) {
+      v.documents.forEach((e) {
+        setState(() {
+          accountSid = e['accountSid'];
+          authToken = e['authToken'];
+          twilioNumber = e['twilioNumber'];
+        });
+      });
+    });
+    twilioFlutter = tw.TwilioFlutter(
+      accountSid: accountSid,
+      authToken: authToken,
+      twilioNumber: '+12054966662',
+    );
+  }
+
+  void listenSMS() async {
+    await SmsAutoFill().listenForCode;
+  }
+
   @override
   Widget build(BuildContext context) {
     terms =
@@ -187,14 +212,103 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
                         } else if (!checkedValue) {
                           errorToast("يجب قبول التعهد");
                         } else {
-                          checkIDs().then((value) {
+                          checkIDs().then((value) async {
                             if (value) {
                               errorToast("رقم الهوية مسجل من قبل");
                             } else {
                               setState(() {
                                 isloading = true;
                               });
+
+                              Uuid uid = Uuid();
+                              codeID = uid.v1();
+                              List<String> list = codeID.split('');
+
+                              int four = 0;
+                              codeID = '';
+                              for (var i = 0; i < list.length; i++) {
+                                if (list[i].startsWith(RegExp(r'[0-9]'))) {
+                                  if (four < 4) {
+                                    codeID += list[i];
+                                    four++;
+                                  }
+                                }
+                              }
+                              signCode = await SmsAutoFill().getAppSignature;
+                              formatPhoneNumber();
+
                               uploadids();
+
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    StatefulBuilder(
+                                  builder: (BuildContext context,
+                                      StateSetter setState) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      child: Container(
+                                        height: 350.0,
+                                        width: 300.0,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 16.0),
+                                              child: Center(
+                                                child: Text(
+                                                  "أكتب رمز التحقق",
+                                                  style:
+                                                      TextStyle(fontSize: 15),
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 50),
+                                              child: PinFieldAutoFill(
+                                                decoration: UnderlineDecoration(
+                                                  textStyle: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                onCodeChanged: (v) {
+                                                  codeInput = v;
+                                                },
+                                                codeLength: 4,
+                                              ),
+                                            ),
+                                            FlatButton(
+                                              onPressed: () async {
+                                                if (codeInput == codeID) {
+                                                  Navigator.pop(context);
+                                                } else {
+                                                  errorToast("رمز التحقق خطأ");
+                                                }
+                                              },
+                                              child: Text(
+                                                "تحقق",
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .unselectedWidgetColor,
+                                                    fontSize: 18.0),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
                             }
                           });
                         }
@@ -211,6 +325,28 @@ class _AddNewEmployeeState extends State<AddNewEmployee> {
               ),
             ),
     );
+  }
+
+  String codeInput;
+  String codeID;
+  String signCode;
+  formatPhoneNumber() {
+    String phoneSMS = '';
+    setState(() {
+      if (phone.text.substring(0, 2) == "05") {
+        phoneSMS = phone.text.substring(1);
+
+        phoneSMS = "+966$phoneSMS";
+      } else {
+        phoneSMS = "+1${phone.text}";
+      }
+    });
+
+    print("Controller ----> ${phone.text}");
+    print('PhoneSms ------>> $phoneSMS');
+    twilioFlutter.sendSMS(
+        toNumber: phoneSMS,
+        messageBody: ' ألوان ولمسات \n الكود هو $codeID \n $signCode');
   }
 
   Future<bool> checkIDs() async {
