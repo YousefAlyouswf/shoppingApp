@@ -65,7 +65,34 @@ class _MainPageState extends State<MainPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         actions: [
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                _tabController.index = 2;
+//  Padding(
+//         padding: const EdgeInsets.all(8.0),
+//         child: Container(
+//             child: TextField(
+//           autocorrect: false,
+//           decoration: InputDecoration(
+//             hintText: "رقم الطلب",
+//             suffixIcon: IconButton(
+//               icon: Icon(Icons.cancel),
+//               onPressed: () {
+//                 search.clear();
+//                 searchOrder("");
+//               },
+//             ),
+//           ),
+//           controller: search,
+//           textInputAction: TextInputAction.search,
+//           style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+//           onSubmitted: searchOrder,
+//         )),
+//       ),
+              }),
           PopupMenuButton(itemBuilder: (context) {
             return [
               PopupMenuItem(
