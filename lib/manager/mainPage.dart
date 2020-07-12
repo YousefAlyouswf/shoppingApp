@@ -11,6 +11,9 @@ import 'manager/employeeWidget.dart';
 import 'manager/order.dart';
 
 class MainPage extends StatefulWidget {
+  final int pageIndex;
+
+  const MainPage({Key key, this.pageIndex}) : super(key: key);
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -45,6 +48,9 @@ class _MainPageState extends State<MainPage>
     showItemFileds = false;
     showBtnPost = false;
     newCategory = false;
+    if (widget.pageIndex != null) {
+      _tabController.index = widget.pageIndex;
+    }
   }
 
   @override

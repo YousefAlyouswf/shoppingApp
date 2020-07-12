@@ -117,12 +117,14 @@ Widget orders(BuildContext context, Function searchOrder) {
                               mapNavgation = true;
                             }
                           }
-
+                          double height = MediaQuery.of(context).size.height;
+                          double width = MediaQuery.of(context).size.width;
                           return Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Container(
-                                height: 300,
+                                height:
+                                    height < 700 ? height * 0.4 : height * 0.3,
                                 color: Colors.grey,
                                 child: InkWell(
                                   onTap: () {
@@ -136,6 +138,164 @@ Widget orders(BuildContext context, Function searchOrder) {
                                           padding: const EdgeInsets.all(8.0),
                                           child: Column(
                                             children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  FlatButton(
+                                                    onPressed: () {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              Dialog(
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12.0),
+                                                                ),
+                                                                child:
+                                                                    Container(
+                                                                  height: 300.0,
+                                                                  width: 300.0,
+                                                                  child: Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceAround,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Center(
+                                                                        child:
+                                                                            Text(
+                                                                          "إلغاء الطلب",
+                                                                          style:
+                                                                              TextStyle(fontSize: 20),
+                                                                        ),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.symmetric(horizontal: 16.0),
+                                                                        child: Container(
+                                                                            child:
+                                                                                Text("سوف يتم الغاء طلبك")),
+                                                                      ),
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceAround,
+                                                                        children: [
+                                                                          FlatButton(
+                                                                            onPressed:
+                                                                                () {
+                                                                              Firestore.instance.collection('order').where('orderID', isEqualTo: ds['orderID']).where('userID', isEqualTo: ds['userID']).getDocuments().then((value) {
+                                                                                value.documents.forEach((element) {
+                                                                                  Firestore.instance.collection('order').document(element.documentID).delete();
+                                                                                });
+                                                                              });
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                            child:
+                                                                                Text(
+                                                                              'تأكيد',
+                                                                              style: TextStyle(color: Colors.purple, fontSize: 18.0),
+                                                                            ),
+                                                                          ),
+                                                                          FlatButton(
+                                                                            onPressed:
+                                                                                () {
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                            child:
+                                                                                Text(
+                                                                              'خروج',
+                                                                              style: TextStyle(color: Colors.purple, fontSize: 18.0),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ));
+                                                    },
+                                                    child: Text(
+                                                      "الغاء الطلب",
+                                                      style: TextStyle(
+                                                          fontSize:
+                                                              width * 0.03),
+                                                    ),
+                                                  ),
+                                                  FlatButton(
+                                                    onPressed: () => launch(
+                                                        "tel://${ds['phone']}"),
+                                                    child: Text(
+                                                      ds['phone'],
+                                                      style: TextStyle(
+                                                          fontSize:
+                                                              width * 0.03),
+                                                    ),
+                                                  ),
+                                                  FlatButton(
+                                                    onPressed: () {
+                                                      if (mapNavgation) {
+                                                        MapsLauncher
+                                                            .launchCoordinates(
+                                                                double.parse(
+                                                                    ds['lat']),
+                                                                double.parse(ds[
+                                                                    'long']));
+                                                      } else {
+                                                        showModalBottomSheet(
+                                                          context: context,
+                                                          builder: (context) =>
+                                                              Container(
+                                                            color: Colors
+                                                                .grey[100],
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        8.0),
+                                                                child:
+                                                                    Container(
+                                                                  height: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .height /
+                                                                      2,
+                                                                  child: Text(
+                                                                    ds['address'],
+                                                                    textDirection:
+                                                                        TextDirection
+                                                                            .rtl,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .end,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            22),
+                                                                  ),
+                                                                )),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                    child: Text(
+                                                      "موقع التوصيل",
+                                                      style: TextStyle(
+                                                          fontSize:
+                                                              width * 0.03),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                               Table(
                                                 columnWidths: {
                                                   0: FractionColumnWidth(0.5)
@@ -573,81 +733,7 @@ Widget orders(BuildContext context, Function searchOrder) {
                                                           MainAxisAlignment
                                                               .spaceAround,
                                                       children: [
-                                                        FlatButton.icon(
-                                                          icon: Icon(
-                                                            Icons.delete,
-                                                            color:
-                                                                Colors.red[300],
-                                                          ),
-                                                          onPressed: () {
-                                                            showDialog(
-                                                                context:
-                                                                    context,
-                                                                builder:
-                                                                    (BuildContext
-                                                                            context) =>
-                                                                        Dialog(
-                                                                          shape:
-                                                                              RoundedRectangleBorder(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(12.0),
-                                                                          ),
-                                                                          child:
-                                                                              Container(
-                                                                            height:
-                                                                                300.0,
-                                                                            width:
-                                                                                300.0,
-                                                                            child:
-                                                                                Column(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                              children: <Widget>[
-                                                                                Center(
-                                                                                  child: Text(
-                                                                                    "إلغاء الطلب",
-                                                                                    style: TextStyle(fontSize: 20),
-                                                                                  ),
-                                                                                ),
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                                                                  child: Container(child: Text("سوف يتم الغاء طلبك")),
-                                                                                ),
-                                                                                Row(
-                                                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                                  children: [
-                                                                                    FlatButton(
-                                                                                      onPressed: () {
-                                                                                        Firestore.instance.collection('order').where('orderID', isEqualTo: ds['orderID']).where('userID', isEqualTo: ds['userID']).getDocuments().then((value) {
-                                                                                          value.documents.forEach((element) {
-                                                                                            Firestore.instance.collection('order').document(element.documentID).delete();
-                                                                                          });
-                                                                                        });
-                                                                                        Navigator.pop(context);
-                                                                                      },
-                                                                                      child: Text(
-                                                                                        'تأكيد',
-                                                                                        style: TextStyle(color: Colors.purple, fontSize: 18.0),
-                                                                                      ),
-                                                                                    ),
-                                                                                    FlatButton(
-                                                                                      onPressed: () {
-                                                                                        Navigator.pop(context);
-                                                                                      },
-                                                                                      child: Text(
-                                                                                        'خروج',
-                                                                                        style: TextStyle(color: Colors.purple, fontSize: 18.0),
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                        ));
-                                                          },
-                                                          label: Text(
-                                                              "الغاء الطلب"),
-                                                        ),
+                                                        Text(ds['firstName']),
                                                         Text(
                                                           '${ds['total']} ر.س',
                                                           textDirection:
@@ -655,71 +741,6 @@ Widget orders(BuildContext context, Function searchOrder) {
                                                           style: TextStyle(
                                                               fontSize: 22),
                                                         ),
-                                                      ],
-                                                    ),
-                                                    Container(
-                                                      width: double.infinity,
-                                                      alignment:
-                                                          Alignment.centerRight,
-                                                      child: noDelvier
-                                                          ? Text(
-                                                              "السعر شامل الضريبة")
-                                                          : Text(
-                                                              "السعر شامل الضريبة والتوصيل"),
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        Text(ds['firstName']),
-                                                        FlatButton(
-                                                            onPressed: () => launch(
-                                                                "tel://${ds['phone']}"),
-                                                            child: Text(
-                                                                ds['phone'])),
-                                                        noDelvier
-                                                            ? Container()
-                                                            : FlatButton.icon(
-                                                                onPressed: () {
-                                                                  if (mapNavgation) {
-                                                                    MapsLauncher.launchCoordinates(
-                                                                        double.parse(ds[
-                                                                            'lat']),
-                                                                        double.parse(
-                                                                            ds['long']));
-                                                                  } else {
-                                                                    showModalBottomSheet(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (context) =>
-                                                                              Container(
-                                                                        color: Colors
-                                                                            .grey[100],
-                                                                        width: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width,
-                                                                        child: Padding(
-                                                                            padding: const EdgeInsets.all(8.0),
-                                                                            child: Container(
-                                                                              height: MediaQuery.of(context).size.height / 2,
-                                                                              child: Text(
-                                                                                ds['address'],
-                                                                                textDirection: TextDirection.rtl,
-                                                                                textAlign: TextAlign.end,
-                                                                                style: TextStyle(fontSize: 22),
-                                                                              ),
-                                                                            )),
-                                                                      ),
-                                                                    );
-                                                                  }
-                                                                },
-                                                                icon: Icon(
-                                                                    Icons.map),
-                                                                label: Text(
-                                                                    "موقع التوصيل"),
-                                                              ),
                                                       ],
                                                     ),
                                                     Text(

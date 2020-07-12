@@ -106,7 +106,10 @@ class _HomePageState extends State<HomePage>
         if (message['data']['title'] == "manager") {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MainPage()),
+            MaterialPageRoute(
+                builder: (context) => MainPage(
+                      pageIndex: 2,
+                    )),
           );
         } else {
           navIndex = 1;
