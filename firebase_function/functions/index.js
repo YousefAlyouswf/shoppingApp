@@ -1,11 +1,4 @@
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
@@ -15,8 +8,8 @@ var msgData;
 
 exports.customerMsg = functions.firestore.document(
     'message/{messageId}'
-).onCreate((snapshot, context) => {
-    msgData = snapshot.data();
+).onUpdate((snapshot, context) => {
+    msgData = snapshot.after.data();
     var payLoad = {
         notification: {
             title: msgData.title,
@@ -27,7 +20,7 @@ exports.customerMsg = functions.firestore.document(
         },
         data: {
             click_action: "FLUTTER_NOTIFICATION_CLICK",
-            //"icond": "app_icon.jpg",
+            title: "costumer"
 
         }
     }
@@ -65,7 +58,7 @@ exports.employeeOrder = functions.firestore.document(
                 },
                 data: {
                     click_action: "FLUTTER_NOTIFICATION_CLICK",
-
+                    title: "manager"
 
                 }
             }
@@ -79,9 +72,52 @@ exports.employeeOrder = functions.firestore.document(
                 },
                 data: {
                     click_action: "FLUTTER_NOTIFICATION_CLICK",
-
+                    title: "manager"
 
                 }
+            }
+        }
+
+
+        return admin.messaging().sendToDevice(tokens, payLoad).then((responce) => {
+            return console.log('pushed them all' + responce);
+
+        }).catch((err) => {
+            return console.log("Yousef There is error->>>" + err);
+
+        })
+
+    })
+
+})
+
+
+//-------- Send notification when set an order
+
+var order;
+exports.customerOrder = functions.firestore.document(
+    'order/{orderId}'
+).onCreate((snapshot, context) => {
+    order = snapshot.after.data();
+    return admin.firestore().collection('token').get().then(snapshots => {
+        var tokens = [];
+        for (var token of snapshots.docs) {
+            tokens.push(token.data().token_user)
+        }
+
+        var payLoad;
+
+        payLoad = {
+            notification: {
+                title: "فاتورة شراء",
+                body: "تم شراء بمبلغ " + order.total + " فاتورة رقم " + order.orderID,
+
+
+            },
+            data: {
+                click_action: "FLUTTER_NOTIFICATION_CLICK",
+
+
             }
         }
 

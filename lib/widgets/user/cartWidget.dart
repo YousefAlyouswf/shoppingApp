@@ -127,14 +127,14 @@ class _CartWidgetState extends State<CartWidget> {
   }
 
   getTaxAndDeliveryPrice() async {
-    await Firestore.instance.collection('app').getDocuments().then((value) {
-      value.documents.forEach((element) {
-        setState(() {
-          tax = element['tax'];
-        });
-      });
-    });
-    fetchToMyCart();
+    // await Firestore.instance.collection('app').getDocuments().then((value) {
+    //   value.documents.forEach((element) {
+    //     setState(() {
+    //       tax = element['tax'];
+    //     });
+    //   });
+    // });
+    // fetchToMyCart();
   }
 
   @override

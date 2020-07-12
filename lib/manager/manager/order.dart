@@ -106,9 +106,8 @@ Widget orders(BuildContext context, Function searchOrder) {
                             String formatDate = formatter.format(orderDate);
                             String formatTime = timeFormat.format(orderDate);
 
-                            ;
                             formatted = "تاريخ الطلب $formatDate  $formatTime";
-                            ;
+
                             if (ds['lat'] == '' ||
                                 ds['long'] == '' ||
                                 ds['lat'] == null ||

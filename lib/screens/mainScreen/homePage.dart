@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
+import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/widgets/drawerScreen.dart';
 import 'package:shop_app/widgets/lang/appLocale.dart';
@@ -74,6 +75,7 @@ class _HomePageState extends State<HomePage>
 
   FirebaseMessaging _fcm = FirebaseMessaging();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
   @override
   void initState() {
     super.initState();
@@ -101,29 +103,46 @@ class _HomePageState extends State<HomePage>
       },
       onResume: (Map<String, dynamic> message) async {
         print("onMessage:-----> $message");
+        if (message['data']['title'] == "manager") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MainPage()),
+          );
+        } else {
+          navIndex = 1;
+        }
+
         // showNotification(
         //     message['notification']['title'], message['notification']['body']);
       },
     );
   }
 
+  void onResumeNavgation(Map<String, dynamic> message) {}
   void initialzation() async {
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
     var android = new AndroidInitializationSettings('logo');
     var ios = new IOSInitializationSettings();
     var initSettings = new InitializationSettings(android, ios);
-    await flutterLocalNotificationsPlugin.initialize(initSettings,
-        onSelectNotification: (payload) => null);
+    await flutterLocalNotificationsPlugin.initialize(initSettings);
   }
 
   showNotification(String title, String body) async {
     var android = AndroidNotificationDetails(
         'channel_ID', 'channel name', 'channel description',
-        importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+        importance: Importance.Max,
+        priority: Priority.Max,
+        ticker: 'ticker',
+        enableLights: true,
+        color: Colors.orange,
+        ledColor: const Color.fromARGB(255, 255, 0, 0),
+        ledOnMs: 1000,
+        ledOffMs: 500);
     var ios = IOSNotificationDetails();
     var platform = NotificationDetails(android, ios);
-    await flutterLocalNotificationsPlugin.show(0, title, body, platform,
-        payload: 'item x');
+    DateTime now = DateTime.now();
+    await flutterLocalNotificationsPlugin
+        .schedule(0, title, body, now, platform, payload: 'item x');
   }
 
   @override

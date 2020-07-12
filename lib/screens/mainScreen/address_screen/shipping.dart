@@ -68,7 +68,7 @@ Widget storedAddress(
                               lat: addressList[index].lat,
                               long: addressList[index].long,
                               delvierCost: addressList[index].deliverCost,
-                              discount: discount,
+                              discount: discount == "" ? 0 : discount,
                               city: addressList[index].city,
                               postCose: addressList[index].postCode,
                             ),
@@ -415,7 +415,8 @@ Widget buttonsBoth(
                                             long: customerLocation.longitude
                                                 .toString(),
                                             delvierCost: cost.toString(),
-                                            discount: discount,
+                                            discount:
+                                                discount == "" ? 0 : discount,
                                             address: addressLineFromSa,
                                             city: cityFromSa,
                                             postCose: postCodeFromSa,

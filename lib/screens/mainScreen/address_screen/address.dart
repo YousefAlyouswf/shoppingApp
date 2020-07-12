@@ -63,9 +63,8 @@ class _AddressState extends State<Address> {
     for (var i = 0; i < addressList.length; i++) {
       final coordinates = new Coordinates(
           double.parse(addressList[i].lat), double.parse(addressList[i].long));
-      var addresses =
-          await Geocoder.local.findAddressesFromCoordinates(coordinates);
-      var first = addresses.first;
+      // var addresses =
+      //     await Geocoder.local.findAddressesFromCoordinates(coordinates);
     }
     if (addressList.length > 0) {
       setState(() {

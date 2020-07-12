@@ -516,18 +516,12 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             } else if (asyncSnapshot.hasError) {
               return Text('There was an error...');
             } else if (!asyncSnapshot.hasData) {
-              return Container(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
+              return Center(
+                child: Container(),
               );
             } else {
               return Center(
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  child: CircularProgressIndicator(),
-                ),
+                child: Container(),
               );
             }
           },

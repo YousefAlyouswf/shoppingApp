@@ -16,7 +16,6 @@ class AllOrder extends StatefulWidget {
 class _AllOrderState extends State<AllOrder> {
   @override
   Widget build(BuildContext context) {
-    double heigh = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Container(
       color: Colors.grey[700],
