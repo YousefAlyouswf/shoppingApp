@@ -422,7 +422,10 @@ Widget subCatgory(
                                                       'size': sizingMap,
                                                       'totalQuantity':
                                                           listImages[index]
-                                                              .totalQuantity
+                                                              .totalQuantity,
+                                                      'priceOld':
+                                                          listImages[index]
+                                                              .priceOld,
                                                     };
                                                     Map<String, dynamic>
                                                         itemMapAdd = {
@@ -448,7 +451,10 @@ Widget subCatgory(
                                                       'size': sizingMap,
                                                       'totalQuantity':
                                                           listImages[index]
-                                                              .totalQuantity
+                                                              .totalQuantity,
+                                                      'priceOld':
+                                                          listImages[index]
+                                                              .priceOld,
                                                     };
                                                     if (listImages[index]
                                                         .show) {
@@ -537,6 +543,7 @@ Widget subCatgory(
                                 "image": listImages[index].image,
                                 'show': listImages[index].show,
                                 'imageID': listImages[index].imageID,
+                                'priceOld': listImages[index].priceOld,
                                 'size': sizingMap,
                                 'totalQuantity': listImages[index].totalQuantity
                               };
