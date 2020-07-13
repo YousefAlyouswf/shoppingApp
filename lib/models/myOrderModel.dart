@@ -1,6 +1,5 @@
 class MyOrderModel {
   final List<ItemModel> items;
-
   final String city;
   final String date;
   final String driverID;
