@@ -353,7 +353,7 @@ class _PaymentState extends State<Payment> {
                         onTap: () async {
                           double total = double.parse(widget.totalAfterTax) +
                               double.parse(widget.delvierCost);
-                          Firestore.instance.collection('order').add({
+                          await Firestore.instance.collection('order').add({
                             'payment': 'cash',
                             'driverID': '',
                             'driverName': '',

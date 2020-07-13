@@ -28,6 +28,9 @@ class _MyAccountState extends State<MyAccount> {
     String id = await HelperFunction.getEmployeeLogin();
     String name = await HelperFunction.getEmployeeName();
     if (id == "" || id == null) {
+      setState(() {
+        loading = false;
+      });
       return null;
     } else {
       await Firestore.instance
