@@ -88,77 +88,84 @@ class _HomePageState extends State<HomePage>
     //CLOUD MESSAGING
     initialzation();
     _fcm.subscribeToTopic("News");
-    //PushNotificationsManager().init();
-    _fcm.requestNotificationPermissions(IosNotificationSettings());
+
+    _fcm.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true));
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage:-----> $message");
 
         showNotification(
             message['notification']['title'], message['notification']['body']);
-        if (message['data']['title'] == "manager") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MainPage(
-                      pageIndex: 2,
-                    )),
-          );
-        } else if (message['data']['title'] == "employee") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MyAccount(),
-            ),
-          );
-        }
+        // if (message['data']['title'] == "manager") {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => MainPage(
+        //               pageIndex: 2,
+        //             )),
+        //   );
+        // } else if (message['data']['title'] == "employee") {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => MyAccount(),
+        //     ),
+        //   );
+        // }
       },
       onLaunch: (Map<String, dynamic> message) async {
-        print("onMessage:-----> $message");
-        String titleData = message['data']['title'];
-        print("-------- - - - - >> $titleData");
-        if (message['data']['title'] == "manager") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MainPage(
-                pageIndex: 2,
-              ),
-            ),
-          );
-        } else if (message['data']['title'] == "employee") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MyAccount(),
-            ),
-          );
-        }
+        print("onLaunch:-----> $message");
+
+        // if (message['data']['title'] == "manager") {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => MainPage(
+        //         pageIndex: 2,
+        //       ),
+        //     ),
+        //   );
+        // } else if (message['data']['title'] == "employee") {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => MyAccount(),
+        //     ),
+        //   );
+        // }
       },
       onResume: (Map<String, dynamic> message) async {
-        print("onMessage:-----> $message");
+        print("onResume:-----> $message");
         String title = message['notification']['title'];
         String titleData = message['data']['title'];
         print("-------- - - - - >> $titleData");
-        if (message['data']['title'] == "manager") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MainPage(
-                pageIndex: 2,
-              ),
-            ),
-          );
-        } else if (message['data']['title'] == "employee") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MyAccount(),
-            ),
-          );
-        }
+        // if (message['data']['title'] == "manager") {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => MainPage(
+        //         pageIndex: 2,
+        //       ),
+        //     ),
+        //   );
+        // } else if (message['data']['title'] == "employee") {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => MyAccount(),
+        //     ),
+        //   );
+        // }
       },
     );
+  }
+
+// TOP-LEVEL or STATIC function to handle background messages
+  static Future<dynamic> myBackgroundMessageHandler(
+      Map<String, dynamic> message) {
+    print('AppPushs myBackgroundMessageHandler : $message');
+    return Future<void>.value();
   }
 
   void initialzation() async {

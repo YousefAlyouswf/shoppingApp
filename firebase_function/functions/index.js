@@ -23,7 +23,8 @@ exports.customerMsg = functions.firestore.document(
             title: "costumer"
 
         }
-    }
+    };
+
     return admin.messaging().sendToTopic("News", payLoad).then((response) => {
         return console.log('Notification sent successfully:', response);
 
@@ -171,7 +172,7 @@ exports.employeeNotification = functions.firestore.document(
             return null;
         } else {
             try {
-                console.log("Status is: ----> " +employeeNotification.status +" and ID --->"+employeeNotification.driverID);
+                console.log("Status is: ----> " + employeeNotification.status + " and ID --->" + employeeNotification.driverID);
                 return admin.messaging().sendToDevice(tokens, payLoad);
             } catch (e) {
                 return console.log("Yousef There is error->>>" + e);

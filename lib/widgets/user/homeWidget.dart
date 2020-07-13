@@ -232,37 +232,48 @@ class _HomeWidgetState extends State<HomeWidget> {
                   scrollDirection: Axis.horizontal,
                   itemCount: discountOffer.length,
                   itemBuilder: (context, i) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ShowItem(
-                              image: discountOffer[i].image,
-                              name: discountOffer[i].name,
-                              nameEn: discountOffer[i].nameEn,
-                              des: discountOffer[i].description,
-                              price: discountOffer[i].price,
-                              priceOld: discountOffer[i].priceOld,
-                              imageID: discountOffer[i].imageID,
-                              buyPrice: discountOffer[i].buyPrice,
-                              size: discountOffer[i].size,
-                              totalQuantity: discountOffer[i].totalQuantity,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            new BoxShadow(
+                              color: Colors.black,
+                              offset: new Offset(5.0, 5.0),
+                              blurRadius: 5.0,
+                            )
+                          ],
+                        ),
+                        width: 130,
                         child: Stack(
                           children: [
-                            Container(
-                              width: 120,
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ShowItem(
+                                      image: discountOffer[i].image,
+                                      name: discountOffer[i].name,
+                                      nameEn: discountOffer[i].nameEn,
+                                      des: discountOffer[i].description,
+                                      price: discountOffer[i].price,
+                                      priceOld: discountOffer[i].priceOld,
+                                      imageID: discountOffer[i].imageID,
+                                      buyPrice: discountOffer[i].buyPrice,
+                                      size: discountOffer[i].size,
+                                      totalQuantity:
+                                          discountOffer[i].totalQuantity,
+                                    ),
+                                  ),
+                                );
+                              },
                               child: Column(
                                 children: [
                                   Container(
                                     height: 120,
-                                    width: 150,
+                                    width: 130,
                                     child: Image.network(
                                       discountOffer[i].image,
                                       fit: BoxFit.fill,
@@ -294,22 +305,25 @@ class _HomeWidgetState extends State<HomeWidget> {
                                 ],
                               ),
                             ),
-                            Container(
-                              decoration: BoxDecoration(
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
                                   color:
                                       Theme.of(context).unselectedWidgetColor,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: isEnglish
-                                        ? Radius.circular(0)
-                                        : Radius.circular(10),
-                                    bottomRight: isEnglish
-                                        ? Radius.circular(10)
-                                        : Radius.circular(0),
-                                  )),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                  // borderRadius: BorderRadius.only(
+                                  //   bottomLeft: isEnglish
+                                  //       ? Radius.circular(0)
+                                  //       : Radius.circular(10),
+                                  //   bottomRight: isEnglish
+                                  //       ? Radius.circular(10)
+                                  //       : Radius.circular(0),
+                                  // ),
+                                ),
                                 child: Text(
                                   "${word("off", context)} %${discountOffer[i].percentage}",
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.white,
