@@ -68,11 +68,12 @@ class _GmapState extends State<Gmap> {
     super.initState();
 
     location = new Location();
-    serveiceRequest();
-
+    //serveiceRequest();
+    getLocation();
     changeMapType();
   }
 
+  bool located = false;
   getLocation() async {
     try {
       _locationData = await location.getLocation();
@@ -80,9 +81,17 @@ class _GmapState extends State<Gmap> {
       setState(() {
         long = _locationData.longitude;
         lat = _locationData.latitude;
+        located = true;
       });
     } catch (e) {
       print("PERMISSION_DENIED");
+      errorToast(
+          "تطبيق ألوان ولمسات يريد منك السماح بتحديد موقعك من إعدادات جهازك");
+      setState(() {
+        long = 46.674976;
+        lat = 24.711906;
+        located = false;
+      });
     }
   }
 
@@ -169,6 +178,34 @@ class _GmapState extends State<Gmap> {
               ),
             ),
           ),
+          located && lat != 24.711906
+              ? Container()
+              : Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: getLocation,
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: !isNormalType ? Colors.orange : Colors.black,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        width: 100,
+                        child: Text(
+                          "حدد موقعي",
+                          style: TextStyle(
+                            color: isNormalType ? Colors.orange : Colors.black,
+                            fontSize: 15,
+                            fontFamily: "MainFont",
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
           customerLocation == null
               ? Align(
                   alignment: Alignment.bottomCenter,
