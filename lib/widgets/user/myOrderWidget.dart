@@ -53,7 +53,7 @@ Widget orderScreen(BuildContext context, String userID) {
         stream: Firestore.instance
             .collection('order')
             .where("userID", isEqualTo: userID)
-            .orderBy('date', descending: true)
+            // .orderBy('date', descending: true)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -62,37 +62,42 @@ Widget orderScreen(BuildContext context, String userID) {
             );
           } else {
             List<MyOrderModel> myOrderList = [];
-
+            List<ItemModel> itemsList = [];
             for (var i = 0; i < snapshot.data.documents.length; i++) {
               DocumentSnapshot ds = snapshot.data.documents[i];
-
-              for (var j = 0; j < ds['items'].length; j++) {
-                if (ds['userID'] == userID) {
-                  myOrderList.add(
-                    MyOrderModel(
-                      name: ds['items'][j]['name'],
-                      price: ds['items'][j]['sellPrice'],
-                      quatity: ds['items'][j]['quantity'],
-                      productID: ds['items'][j]['productID'],
-                      city: ds['city'],
-                      date: ds['date'],
-                      driverID: ds['driverID'],
-                      driverName: ds['driverName'],
-                      lat: ds['lat'],
-                      long: ds['long'],
-                      orderID: ds['orderID'],
-                      payment: ds['payment'],
-                      phone: ds['phone'],
-                      status: ds['status'],
-                      total: ds['total'].toString(),
-                      docID: ds.documentID,
-                      address: ds['address'],
-                      postal: ds['postCode'],
-                    ),
-                  );
+              itemsList = [];
+              if (ds['userID'] == userID) {
+                for (var j = 0; j < ds['items'].length; j++) {
+                  itemsList.add(ItemModel(
+                    price: ds['items'][j]['sellPrice'],
+                    name: ds['items'][j]['name'],
+                    quatity: ds['items'][j]['quantity'],
+                    productID: ds['items'][j]['productID'],
+                  ));
                 }
+                myOrderList.add(
+                  MyOrderModel(
+                    items: itemsList,
+                    city: ds['city'],
+                    date: ds['date'],
+                    driverID: ds['driverID'],
+                    driverName: ds['driverName'],
+                    lat: ds['lat'],
+                    long: ds['long'],
+                    orderID: ds['orderID'],
+                    payment: ds['payment'],
+                    phone: ds['phone'],
+                    status: ds['status'],
+                    total: ds['total'].toString(),
+                    docID: ds.documentID,
+                    customerName: ds['firstName'],
+                    address: ds['address'],
+                    postal: ds['postCode'],
+                  ),
+                );
               }
             }
+
             return Container(
               width: double.infinity,
               child: ListView.builder(
@@ -191,8 +196,11 @@ Widget orderScreen(BuildContext context, String userID) {
 
                                       Expanded(
                                         child: ListView.builder(
-                                            itemCount: myOrderList.length,
+                                            itemCount:
+                                                myOrderList[i].items.length,
                                             itemBuilder: (context, index) {
+                                              print(
+                                                  myOrderList[i].items.length);
                                               return Container(
                                                   child: Table(
                                                 columnWidths: {
@@ -209,7 +217,8 @@ Widget orderScreen(BuildContext context, String userID) {
                                                         alignment:
                                                             Alignment.center,
                                                         child: Text(
-                                                            myOrderList[index]
+                                                            myOrderList[i]
+                                                                .items[index]
                                                                 .name),
                                                       ),
                                                     ),
@@ -219,7 +228,8 @@ Widget orderScreen(BuildContext context, String userID) {
                                                               8.0),
                                                       child: Center(
                                                         child: Text(
-                                                            myOrderList[index]
+                                                            myOrderList[i]
+                                                                .items[index]
                                                                 .quatity),
                                                       ),
                                                     ),
@@ -229,7 +239,8 @@ Widget orderScreen(BuildContext context, String userID) {
                                                               8.0),
                                                       child: Center(
                                                         child: Text(
-                                                            myOrderList[index]
+                                                            myOrderList[i]
+                                                                .items[index]
                                                                 .price),
                                                       ),
                                                     ),

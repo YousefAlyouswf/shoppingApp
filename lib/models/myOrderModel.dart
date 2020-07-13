@@ -1,8 +1,6 @@
 class MyOrderModel {
-  final String price;
-  final String name;
-  final String quatity;
-  final String productID;
+  final List<ItemModel> items;
+
   final String city;
   final String date;
   final String driverID;
@@ -17,6 +15,7 @@ class MyOrderModel {
   final String docID;
   final String address;
   final String postal;
+  final String customerName;
   MyOrderModel({
     this.address,
     this.postal,
@@ -30,11 +29,18 @@ class MyOrderModel {
     this.phone,
     this.status,
     this.total,
-    this.price,
-    this.name,
-    this.quatity,
-    this.productID,
+    this.items,
     this.city,
+    this.customerName,
     this.docID,
   });
+}
+
+class ItemModel {
+  final String price;
+  final String name;
+  final String quatity;
+  final String productID;
+
+  ItemModel({this.price, this.name, this.quatity, this.productID});
 }

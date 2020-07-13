@@ -350,48 +350,62 @@ class _PaymentState extends State<Payment> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
+                        onLongPress: () {
+                          print("Yousef");
+                        },
                         onTap: () async {
-                          double total = double.parse(widget.totalAfterTax) +
-                              double.parse(widget.delvierCost);
-                          await Firestore.instance.collection('order').add({
-                            'payment': 'cash',
-                            'driverID': '',
-                            'driverName': '',
-                            'orderID': orderID,
-                            'date': DateTime.now().toString(),
-                            'status': '0',
-                            'address': widget.address,
-                            'city': widget.city,
-                            'postCode': zipCode,
-                            'discount': widget.discount,
-                            'total': total,
-                            'lat': widget.lat,
-                            'long': widget.long,
-                            'firstName': widget.firstName,
-                            'lastName': widget.lastName,
-                            'phone': widget.phone,
-                            'deliverCost': widget.delvierCost,
-                            'email': widget.email,
-                            'priceForSell': widget.price,
-                            'priceForBuy': widget.buyPrice,
-                            'items': FieldValue.arrayUnion(mapItems),
-                            'userID': androidInfo.androidId == null
-                                ? iosDeviceInfo.identifierForVendor
-                                : androidInfo.androidId,
-                          }).then((value) {
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            twilioFlutter.sendSMS(
-                                toNumber: phone,
-                                messageBody:
-                                    'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
-                            sendEmailToCustomer();
-                            addCartToast(
-                                "تمت علمية الشراء يمكنك متابعه طلبك من هنا");
-                            navIndex = 3;
-                            DBHelper.deleteAllItem("cart");
-                            Navigator.popUntil(
-                                context, (route) => route.isFirst);
-                          });
+                          try {
+                            double total = double.parse(widget.totalAfterTax) +
+                                double.parse(widget.delvierCost);
+
+                            String userIDPhone;
+                            if (androidInfo == null) {
+                              userIDPhone = iosDeviceInfo.identifierForVendor;
+                            } else {
+                              userIDPhone = androidInfo.androidId;
+                            }
+                            await Firestore.instance.collection('order').add({
+                              'payment': 'cash',
+                              'driverID': '',
+                              'driverName': '',
+                              'orderID': orderID,
+                              'date': DateTime.now().toString(),
+                              'status': '0',
+                              'address': widget.address,
+                              'city': widget.city,
+                              'postCode': zipCode,
+                              'discount': widget.discount,
+                              'total': total,
+                              'lat': widget.lat,
+                              'long': widget.long,
+                              'firstName': widget.firstName,
+                              'lastName': widget.lastName,
+                              'phone': widget.phone,
+                              'deliverCost': widget.delvierCost,
+                              'email': widget.email,
+                              'priceForSell': widget.price,
+                              'priceForBuy': widget.buyPrice,
+                              'items': FieldValue.arrayUnion(mapItems),
+                              'userID': userIDPhone,
+                            }).then((value) {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              twilioFlutter.sendSMS(
+                                  toNumber: phone,
+                                  messageBody:
+                                      'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
+                              sendEmailToCustomer();
+                              addCartToast(
+                                  "تمت علمية الشراء يمكنك متابعه طلبك من هنا");
+                              navIndex = 3;
+                              DBHelper.deleteAllItem("cart");
+                              Navigator.popUntil(
+                                  context, (route) => route.isFirst);
+                            });
+                          } catch (e) {
+                            print(e);
+                            print(
+                                "IOS ID--->> ${iosDeviceInfo.identifierForVendor}");
+                          }
                         },
                         child: Container(
                           height: 50,

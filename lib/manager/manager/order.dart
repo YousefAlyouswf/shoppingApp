@@ -110,10 +110,6 @@ Widget orders(BuildContext context, Function searchOrder, bool withDelegate,
                   if (ds['city'] != "RIYADH,الرياض") {
                     myOrderList.add(
                       MyOrderModel(
-                        name: ds['items'][j]['name'],
-                        price: ds['items'][j]['sellPrice'],
-                        quatity: ds['items'][j]['quantity'],
-                        productID: ds['items'][j]['productID'],
                         city: ds['city'],
                         date: ds['date'],
                         driverID: ds['driverID'],
@@ -126,6 +122,7 @@ Widget orders(BuildContext context, Function searchOrder, bool withDelegate,
                         status: ds['status'],
                         total: ds['total'].toString(),
                         docID: ds.documentID,
+                        customerName: ds['firstName'],
                         address: ds['address'],
                         postal: ds['postCode'],
                       ),
@@ -136,10 +133,6 @@ Widget orders(BuildContext context, Function searchOrder, bool withDelegate,
                     if (ds['driverID'] != "") {
                       myOrderList.add(
                         MyOrderModel(
-                          name: ds['items'][j]['name'],
-                          price: ds['items'][j]['sellPrice'],
-                          quatity: ds['items'][j]['quantity'],
-                          productID: ds['items'][j]['productID'],
                           city: ds['city'],
                           date: ds['date'],
                           driverID: ds['driverID'],
@@ -161,10 +154,6 @@ Widget orders(BuildContext context, Function searchOrder, bool withDelegate,
                     if (ds['driverID'] == "") {
                       myOrderList.add(
                         MyOrderModel(
-                          name: ds['items'][j]['name'],
-                          price: ds['items'][j]['sellPrice'],
-                          quatity: ds['items'][j]['quantity'],
-                          productID: ds['items'][j]['productID'],
                           city: ds['city'],
                           date: ds['date'],
                           driverID: ds['driverID'],
@@ -377,66 +366,66 @@ Widget orders(BuildContext context, Function searchOrder, bool withDelegate,
                                             ])
                                           ],
                                         ),
-                                        Expanded(
-                                          child: ListView.builder(
-                                              itemCount: myOrderList.length,
-                                              itemBuilder: (context, index) {
-                                                return Container(
-                                                    child: Table(
-                                                  columnWidths: {
-                                                    0: FractionColumnWidth(0.5)
-                                                  },
-                                                  border: TableBorder.all(),
-                                                  textDirection:
-                                                      TextDirection.rtl,
-                                                  children: [
-                                                    TableRow(children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Align(
-                                                          alignment: Alignment
-                                                              .centerRight,
-                                                          child: Column(
-                                                            children: [
-                                                              Text(myOrderList[
-                                                                      index]
-                                                                  .name),
-                                                              Text(
-                                                                myOrderList[
-                                                                        index]
-                                                                    .productID,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Center(
-                                                          child: Text(
-                                                              myOrderList[index]
-                                                                  .quatity),
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Center(
-                                                          child: Text(
-                                                              myOrderList[index]
-                                                                  .price),
-                                                        ),
-                                                      ),
-                                                    ])
-                                                  ],
-                                                ));
-                                              }),
-                                        ),
+                                        // Expanded(
+                                        //   child: ListView.builder(
+                                        //     itemCount: myOrderList.length,
+                                        //     itemBuilder: (context, index) {
+                                        //       return Container(
+                                        //           child: Table(
+                                        //         columnWidths: {
+                                        //           0: FractionColumnWidth(0.5)
+                                        //         },
+                                        //         border: TableBorder.all(),
+                                        //         textDirection:
+                                        //             TextDirection.rtl,
+                                        //         children: [
+                                        //           TableRow(children: [
+                                        //             Padding(
+                                        //               padding:
+                                        //                   const EdgeInsets.all(
+                                        //                       8.0),
+                                        //               child: Align(
+                                        //                 alignment: Alignment
+                                        //                     .centerRight,
+                                        //                 child: Column(
+                                        //                   children: [
+                                        //                     Text(myOrderList[
+                                        //                             index]
+                                        //                         .name),
+                                        //                     Text(
+                                        //                       myOrderList[index]
+                                        //                           .productID,
+                                        //                     ),
+                                        //                   ],
+                                        //                 ),
+                                        //               ),
+                                        //             ),
+                                        //             Padding(
+                                        //               padding:
+                                        //                   const EdgeInsets.all(
+                                        //                       8.0),
+                                        //               child: Center(
+                                        //                 child: Text(
+                                        //                     myOrderList[index]
+                                        //                         .quatity),
+                                        //               ),
+                                        //             ),
+                                        //             Padding(
+                                        //               padding:
+                                        //                   const EdgeInsets.all(
+                                        //                       8.0),
+                                        //               child: Center(
+                                        //                 child: Text(
+                                        //                     myOrderList[index]
+                                        //                         .price),
+                                        //               ),
+                                        //             ),
+                                        //           ])
+                                        //         ],
+                                        //       ));
+                                        //     },
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
                                   ),
@@ -746,7 +735,8 @@ Widget orders(BuildContext context, Function searchOrder, bool withDelegate,
                                                     MainAxisAlignment
                                                         .spaceAround,
                                                 children: [
-                                                  Text(myOrderList[i].name),
+                                                  Text(myOrderList[i]
+                                                      .customerName),
                                                   Text(
                                                     '${myOrderList[i].total} ر.س',
                                                     textDirection:
