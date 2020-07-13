@@ -6,6 +6,7 @@ import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/itemShow.dart';
+import 'package:shop_app/screens/employeeScreen/myAccount.dart';
 import 'package:shop_app/widgets/drawerScreen.dart';
 import 'package:shop_app/widgets/lang/appLocale.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
@@ -95,14 +96,6 @@ class _HomePageState extends State<HomePage>
 
         showNotification(
             message['notification']['title'], message['notification']['body']);
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onMessage:-----> $message");
-        // showNotification(
-        //     message['notification']['title'], message['notification']['body']);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onMessage:-----> $message");
         if (message['data']['title'] == "manager") {
           Navigator.push(
             context,
@@ -111,17 +104,63 @@ class _HomePageState extends State<HomePage>
                       pageIndex: 2,
                     )),
           );
-        } else {
-          navIndex = 1;
+        } else if (message['data']['title'] == "employee") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyAccount(),
+            ),
+          );
         }
-
-        // showNotification(
-        //     message['notification']['title'], message['notification']['body']);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onMessage:-----> $message");
+        String titleData = message['data']['title'];
+        print("-------- - - - - >> $titleData");
+        if (message['data']['title'] == "manager") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MainPage(
+                pageIndex: 2,
+              ),
+            ),
+          );
+        } else if (message['data']['title'] == "employee") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyAccount(),
+            ),
+          );
+        }
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onMessage:-----> $message");
+        String title = message['notification']['title'];
+        String titleData = message['data']['title'];
+        print("-------- - - - - >> $titleData");
+        if (message['data']['title'] == "manager") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MainPage(
+                pageIndex: 2,
+              ),
+            ),
+          );
+        } else if (message['data']['title'] == "employee") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyAccount(),
+            ),
+          );
+        }
       },
     );
   }
 
-  void onResumeNavgation(Map<String, dynamic> message) {}
   void initialzation() async {
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
     var android = new AndroidInitializationSettings('logo');
@@ -132,15 +171,18 @@ class _HomePageState extends State<HomePage>
 
   showNotification(String title, String body) async {
     var android = AndroidNotificationDetails(
-        'channel_ID', 'channel name', 'channel description',
-        importance: Importance.Max,
-        priority: Priority.Max,
-        ticker: 'ticker',
-        enableLights: true,
-        color: Colors.orange,
-        ledColor: const Color.fromARGB(255, 255, 0, 0),
-        ledOnMs: 1000,
-        ledOffMs: 500);
+      'channel_ID',
+      'channel name',
+      'channel description',
+      importance: Importance.Max,
+      priority: Priority.Max,
+      ticker: 'ticker',
+      enableLights: true,
+      color: Colors.orange,
+      ledColor: const Color.fromARGB(255, 255, 0, 0),
+      ledOnMs: 1000,
+      ledOffMs: 500,
+    );
     var ios = IOSNotificationDetails();
     var platform = NotificationDetails(android, ios);
     DateTime now = DateTime.now();

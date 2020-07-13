@@ -38,4 +38,31 @@ class PushNotificationsManager {
       _initialized = true;
     }
   }
+
+  Future<void> initEmployee() async {
+    if (!_initialized) {
+      // For iOS request permission first.
+      _firebaseMessaging.requestNotificationPermissions();
+      _firebaseMessaging.configure();
+
+      // For testing purposes print the Firebase Messaging token
+      String token = await _firebaseMessaging.getToken();
+
+      bool exist = false;
+      await Firestore.instance
+          .collection('tokenEmp')
+          .where('token_user', isEqualTo: token)
+          .getDocuments()
+          .then((value) => value.documents.forEach((e) {
+                exist = true;
+              }));
+      if (!exist) {
+        await Firestore.instance.collection("tokenEmp").add({
+          'token_user': token,
+        });
+      }
+
+      _initialized = true;
+    }
+  }
 }

@@ -17,12 +17,12 @@ class _OrderManagerState extends State<OrderManager>
   TabController _tabController;
   List<TabModels> pages = [
     TabModels(
-      "قبول",
-      Icon(Icons.dashboard),
-    ),
-    TabModels(
       "إنتظار",
       Icon(Icons.add),
+    ),
+    TabModels(
+      "قبول",
+      Icon(Icons.dashboard),
     ),
     TabModels(
       "بريد",
@@ -67,8 +67,8 @@ class _OrderManagerState extends State<OrderManager>
       body: TabBarView(
         controller: _tabController,
         children: [
-          orders(context, searchOrder, true, false),
           orders(context, searchOrder, false, false),
+          orders(context, searchOrder, true, false),
           orders(context, searchOrder, false, true),
         ],
       ),

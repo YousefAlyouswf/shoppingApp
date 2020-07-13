@@ -134,7 +134,7 @@ class _CartWidgetState extends State<CartWidget> {
     //     });
     //   });
     // });
-    // fetchToMyCart();
+    fetchToMyCart();
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:shop_app/manager/manager/addItem.dart';
 
 import 'package:shop_app/widgets/widgets.dart';
 
+import '../../push_nofitications.dart';
 import 'add_new_empolyee.dart';
 import 'employeeScreen.dart';
 
@@ -16,7 +17,7 @@ class MyAccount extends StatefulWidget {
 class _MyAccountState extends State<MyAccount> {
   TextEditingController id = TextEditingController();
   TextEditingController pass = TextEditingController();
-
+  bool loading = true;
   @override
   void initState() {
     super.initState();
@@ -29,13 +30,14 @@ class _MyAccountState extends State<MyAccount> {
     if (id == "" || id == null) {
       return null;
     } else {
-      Firestore.instance
+      await Firestore.instance
           .collection('employee')
           .where('id', isEqualTo: id)
           .getDocuments()
           .then((value) {
         value.documents.forEach((e) {
           if (e['accept'] == '1') {
+            PushNotificationsManager().initEmployee();
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -48,6 +50,9 @@ class _MyAccountState extends State<MyAccount> {
           } else {
             errorToast("تم إلغاء عضويتك وشكرا على تعاونك");
           }
+          setState(() {
+            loading = false;
+          });
         });
       });
     }
@@ -56,136 +61,142 @@ class _MyAccountState extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //  appBar: appBar(text: "حسابي"),
-      body: Container(
-        height: MediaQuery.of(context).size.height / 2,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text("تسجيل دخول المندوب"),
-            Row(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width / 2,
-                  child: MyTextFormFieldAccount(
-                    editingController: pass,
-                    hintText: "كلمة المرور",
-                    isPassword: true,
+      appBar: AppBar(
+        title: Text("بوابة المندوب"),
+      ),
+      body: loading
+          ? Container()
+          : Container(
+              height: MediaQuery.of(context).size.height / 2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text("تسجيل دخول المندوب"),
+                  Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: MyTextFormFieldAccount(
+                          editingController: pass,
+                          hintText: "كلمة المرور",
+                          isPassword: true,
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: MyTextFormField(
+                          editingController: id,
+                          hintText: "رقم الهوية",
+                          isNumber: true,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2,
-                  child: MyTextFormField(
-                    editingController: id,
-                    hintText: "رقم الهوية",
-                    isNumber: true,
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width / 2,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: InkWell(
-                onTap: () async {
-                  if (id.text.length < 10 || id.text.length > 10) {
-                    errorToast("خطأ في عدد خانات الهوية");
-                  } else {
-                    login().then((value) {
-                      if (value) {
-                        Firestore.instance
-                            .collection('employee')
-                            .where('id', isEqualTo: id.text)
-                            .where('pass', isEqualTo: pass.text)
-                            .getDocuments()
-                            .then((value) {
-                          value.documents.forEach((e) {
-                            if (e['accept'] == '0') {
-                              infoToast("طلبك قيد الدراسة");
-                            } else if (e['accept'] == '2') {
-                              infoToast("تم رفض طلبك");
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: InkWell(
+                      onTap: () async {
+                        if (id.text.length < 10 || id.text.length > 10) {
+                          errorToast("خطأ في عدد خانات الهوية");
+                        } else {
+                          login().then((value) async {
+                            if (value) {
+                              Firestore.instance
+                                  .collection('employee')
+                                  .where('id', isEqualTo: id.text)
+                                  .where('pass', isEqualTo: pass.text)
+                                  .getDocuments()
+                                  .then((value) {
+                                value.documents.forEach((e) {
+                                  if (e['accept'] == '0') {
+                                    infoToast("طلبك قيد الدراسة");
+                                  } else if (e['accept'] == '2') {
+                                    infoToast("تم رفض طلبك");
+                                  } else {
+                                    PushNotificationsManager().initEmployee();
+                                    HelperFunction.emplyeeLogin(e['id']);
+                                    HelperFunction.setEmplyeeName(e['name']);
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => EmployeeScreen(
+                                                name: e['name'],
+                                                phone: e['phone'],
+                                                city: e['city'],
+                                                accept: e['accept'],
+                                                id: e['id'],
+                                              )),
+                                    );
+                                  }
+                                });
+                              });
                             } else {
-                              HelperFunction.emplyeeLogin(e['id']);
-                              HelperFunction.setEmplyeeName(e['name']);
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EmployeeScreen(
-                                          name: e['name'],
-                                          phone: e['phone'],
-                                          city: e['city'],
-                                          accept: e['accept'],
-                                          id: e['id'],
-                                        )),
-                              );
+                              errorToast(
+                                  "البيانات خاطئة يرجى التواصل مع الدعم الفني");
                             }
                           });
-                        });
-                      } else {
-                        errorToast(
-                            "البيانات خاطئة يرجى التواصل مع الدعم الفني");
-                      }
-                    });
-                  }
-                },
-                splashColor: Colors.transparent,
-                child: Center(
-                  child: Text(
-                    "دخـــول",
-                    style: TextStyle(color: Colors.white, fontSize: 22),
+                        }
+                      },
+                      splashColor: Colors.transparent,
+                      child: Center(
+                        child: Text(
+                          "دخـــول",
+                          style: TextStyle(color: Colors.white, fontSize: 22),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                  height: 1,
-                  color: Colors.grey,
-                  width: MediaQuery.of(context).size.width / 3,
-                ),
-                Text("أو", style: TextStyle(fontSize: 22)),
-                Container(
-                  height: 1,
-                  color: Colors.grey,
-                  width: MediaQuery.of(context).size.width / 3,
-                ),
-              ],
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width / 2,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddNewEmployee()),
-                  );
-                },
-                child: Center(
-                  child: Text(
-                    "انضم الينا",
-                    style: TextStyle(color: Colors.white, fontSize: 22),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        height: 1,
+                        color: Colors.grey,
+                        width: MediaQuery.of(context).size.width / 3,
+                      ),
+                      Text("أو", style: TextStyle(fontSize: 22)),
+                      Container(
+                        height: 1,
+                        color: Colors.grey,
+                        width: MediaQuery.of(context).size.width / 3,
+                      ),
+                    ],
                   ),
-                ),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddNewEmployee()),
+                        );
+                      },
+                      child: Center(
+                        child: Text(
+                          "انضم الينا",
+                          style: TextStyle(color: Colors.white, fontSize: 22),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 
