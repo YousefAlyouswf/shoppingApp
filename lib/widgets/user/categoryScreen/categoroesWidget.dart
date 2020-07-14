@@ -310,8 +310,6 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                               buyPrice:
                                                   listImages[index].buyPrice,
                                               size: listImages[index].size,
-                                              // totalQuantity: listImages[index]
-                                              //     .totalQuantity,
                                               priceOld:
                                                   listImages[index].priceOld,
                                             ),
@@ -347,36 +345,76 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                         color: Colors.teal[600],
                                                       ),
                                                       onPressed: () async {
-                                                        await addToMyCartFromCategory(
+                                                        Navigator.push(
                                                           context,
-                                                          listImages[index]
-                                                              .size,
-                                                          listImages[index]
-                                                              .name,
-                                                          listImages[index]
-                                                              .price,
-                                                          listImages[index]
-                                                              .description,
-                                                          listImages[index]
-                                                              .image,
-                                                          listImages[index]
-                                                              .imageID,
-                                                          listImages[index]
-                                                              .buyPrice,
-                                                          listImages[index]
-                                                              .nameEn,
-                                                          // listImages[index]
-                                                          //     .totalQuantity,
-                                                          listImages[index]
-                                                              .priceOld,
+                                                          MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    ShowItem(
+                                                              image: listImages[
+                                                                      index]
+                                                                  .image,
+                                                              name: listImages[
+                                                                      index]
+                                                                  .name,
+                                                              nameEn:
+                                                                  listImages[
+                                                                          index]
+                                                                      .nameEn,
+                                                              des: listImages[
+                                                                      index]
+                                                                  .description,
+                                                              price: listImages[
+                                                                      index]
+                                                                  .price,
+                                                              imageID:
+                                                                  listImages[
+                                                                          index]
+                                                                      .imageID,
+                                                              buyPrice:
+                                                                  listImages[
+                                                                          index]
+                                                                      .buyPrice,
+                                                              size: listImages[
+                                                                      index]
+                                                                  .size,
+                                                              priceOld:
+                                                                  listImages[
+                                                                          index]
+                                                                      .priceOld,
+                                                            ),
+                                                          ),
                                                         );
-                                                        fetchToMyCart()
-                                                            .then((value) {
-                                                          setState(() {
-                                                            print(value);
-                                                            cartCount = value;
-                                                          });
-                                                        });
+                                                        // await addToMyCartFromCategory(
+                                                        //   context,
+                                                        //   listImages[index]
+                                                        //       .size,
+                                                        //   listImages[index]
+                                                        //       .name,
+                                                        //   listImages[index]
+                                                        //       .price,
+                                                        //   listImages[index]
+                                                        //       .description,
+                                                        //   listImages[index]
+                                                        //       .image,
+                                                        //   listImages[index]
+                                                        //       .imageID,
+                                                        //   listImages[index]
+                                                        //       .buyPrice,
+                                                        //   listImages[index]
+                                                        //       .nameEn,
+                                                        //   // listImages[index]
+                                                        //   //     .totalQuantity,
+                                                        //   listImages[index]
+                                                        //       .priceOld,
+                                                        // );
+                                                        // fetchToMyCart()
+                                                        //     .then((value) {
+                                                        //   setState(() {
+                                                        //     print(value);
+                                                        //     cartCount = value;
+                                                        //   });
+                                                        // });
                                                       }),
                                                 ),
                                                 Expanded(

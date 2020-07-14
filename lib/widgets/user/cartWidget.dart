@@ -45,7 +45,7 @@ class _CartWidgetState extends State<CartWidget> {
               sizeChose: item['size'],
               productID: item['productID'],
               nameEn: item['nameEn'],
-              // totalQuantity: item['totalQ'],
+              totalQuantity: item['totalQ'],
               preiceOld: item['priceOld'],
             ),
           )
@@ -159,7 +159,6 @@ class _CartWidgetState extends State<CartWidget> {
       String productID,
       String buyPrice,
       List<String> size,
-      //String totalQuantity,
       String preiceOld) async {
     final cart = await Navigator.push(
       context,
@@ -173,7 +172,6 @@ class _CartWidgetState extends State<CartWidget> {
           imageID: productID,
           buyPrice: buyPrice,
           size: size,
-          // totalQuantity: totalQuantity,
           priceOld: preiceOld,
         ),
       ),
@@ -311,7 +309,6 @@ class _CartWidgetState extends State<CartWidget> {
                                         cart[i].productID,
                                         cart[i].buyPrice,
                                         [],
-                                        // cart[i].totalQuantity,
                                         cart[i].preiceOld,
                                       );
                                     } else {
@@ -344,7 +341,6 @@ class _CartWidgetState extends State<CartWidget> {
                                         cart[i].productID,
                                         cart[i].buyPrice,
                                         sizing,
-                                        //cart[i].totalQuantity,
                                         cart[i].preiceOld,
                                       );
                                     }
@@ -379,7 +375,6 @@ class _CartWidgetState extends State<CartWidget> {
                                         cart[i].productID,
                                         cart[i].buyPrice,
                                         [],
-                                        // cart[i].totalQuantity,
                                         cart[i].preiceOld,
                                       );
                                     } else {
@@ -412,7 +407,6 @@ class _CartWidgetState extends State<CartWidget> {
                                         cart[i].productID,
                                         cart[i].buyPrice,
                                         sizing,
-                                        //cart[i].totalQuantity,
                                         cart[i].preiceOld,
                                       );
                                     }
@@ -528,10 +522,9 @@ class _CartWidgetState extends State<CartWidget> {
                                                   onTap: () {
                                                     int q = int.parse(
                                                         cart[i].quantity);
-                                                    int totalQ = 45;
-                                                    //  int.parse(
-                                                    //   cart[i].totalQuantity,
-                                                    // );
+                                                    int totalQ = int.parse(
+                                                      cart[i].totalQuantity,
+                                                    );
                                                     if (q >= totalQ) {
                                                       errorToast(word(
                                                           "outOfStock",

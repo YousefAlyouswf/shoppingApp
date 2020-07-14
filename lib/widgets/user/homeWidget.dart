@@ -57,7 +57,6 @@ class _HomeWidgetState extends State<HomeWidget> {
           imageID: itemShow[i].imageID,
           buyPrice: itemShow[i].buyPrice,
           size: itemShow[i].size,
-          // totalQuantity: itemShow[i].totalQuantity,
         ),
       ),
     );

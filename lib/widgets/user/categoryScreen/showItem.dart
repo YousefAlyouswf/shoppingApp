@@ -19,7 +19,7 @@ class ShowItem extends StatefulWidget {
   final String imageID;
   final String buyPrice;
   final List size;
-  final String totalQuantity;
+
   final String priceOld;
   const ShowItem({
     Key key,
@@ -33,7 +33,6 @@ class ShowItem extends StatefulWidget {
     this.imageID,
     this.buyPrice,
     this.size,
-    this.totalQuantity,
     this.priceOld,
   }) : super(key: key);
   @override
@@ -50,282 +49,300 @@ class _ShowItemState extends State<ShowItem>
   void initState() {
     getImagesToShowItems();
     super.initState();
-    print(widget.totalQuantity);
+
     fetchToMyCart();
-    setState(() {
-      quantity = int.parse(widget.totalQuantity);
-    });
+    getQuantityForThis();
+  }
+
+  getQuantityForThis() async {
+    await Firestore.instance
+        .collection('quantityItem')
+        .where('id', isEqualTo: widget.imageID)
+        .getDocuments()
+        .then(
+          (value) => value.documents.forEach(
+            (e) {
+              setState(() {
+                quantity = int.parse(e['number']);
+              });
+            },
+          ),
+        );
+    print(quantity);
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            Expanded(
-              child: CustomScrollView(
-                controller: controller,
-                slivers: <Widget>[
-                  SliverAppBar(
-                    expandedHeight: MediaQuery.of(context).size.height / 2,
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: networkImage2 == null
-                          ? Center(
-                              child: Container(
-                                height: 100,
-                                width: 100,
-                                child: CircularProgressIndicator(),
-                              ),
-                            )
-                          : imageCarouselItemShow(
-                              MediaQuery.of(context).size.height / 2, null),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(40),
-                          topLeft: Radius.circular(40),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: 16.0),
+    return Container(
+      color: Theme.of(context).unselectedWidgetColor,
+      child: SafeArea(
+        child: Scaffold(
+          body: quantity == null
+              ? Container()
+              : Column(
+                  children: [
+                    Expanded(
+                      child: CustomScrollView(
+                        controller: controller,
+                        slivers: <Widget>[
+                          SliverAppBar(
+                            expandedHeight:
+                                MediaQuery.of(context).size.height / 2,
+                            flexibleSpace: FlexibleSpaceBar(
+                              background: networkImage2 == null
+                                  ? Center(
+                                      child: Container(
+                                        height: 100,
+                                        width: 100,
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    )
+                                  : imageCarouselItemShow(
+                                      MediaQuery.of(context).size.height / 2,
+                                      null),
+                            ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: Container(
                               width: double.infinity,
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                isEnglish ? widget.nameEn : widget.name,
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "MainFont",
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(40),
+                                  topLeft: Radius.circular(40),
                                 ),
                               ),
-                            ),
-                            quantity < 5
-                                ? Container(
-                                    child: Text(
-                                      quantity == 1
-                                          ? word("lastOne", context)
-                                          : quantity == 2
-                                              ? word("lastTwo", context)
-                                              : word(
-                                                  "almostOutOfStock", context),
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(color: Colors.red),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      width: double.infinity,
+                                      alignment: Alignment.centerRight,
+                                      child: Text(
+                                        isEnglish ? widget.nameEn : widget.name,
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "MainFont",
+                                        ),
+                                      ),
                                     ),
-                                  )
-                                : Container(),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            widget.priceOld != ""
-                                ? Container(
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 16.0),
-                                    alignment: Alignment.centerRight,
-                                    child: Text.rich(
-                                      TextSpan(
-                                        children: <TextSpan>[
-                                          new TextSpan(
-                                            text:
-                                                '${widget.priceOld} ${word("currancy", context)}',
-                                            style: new TextStyle(
-                                              color: Colors.grey,
-                                              decoration:
-                                                  TextDecoration.lineThrough,
+                                    quantity < 5
+                                        ? Container(
+                                            child: Text(
+                                              quantity == 1
+                                                  ? word("lastOne", context)
+                                                  : quantity == 2
+                                                      ? word("lastTwo", context)
+                                                      : word("almostOutOfStock",
+                                                          context),
+                                              textDirection: TextDirection.rtl,
+                                              style:
+                                                  TextStyle(color: Colors.red),
                                             ),
-                                          ),
-                                        ],
-                                      ),
+                                          )
+                                        : Container(),
+                                    SizedBox(
+                                      height: 10,
                                     ),
-                                  )
-                                : Container(),
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: 16.0),
-                              width: double.infinity,
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                "${widget.price} ${word("currancy", context)}",
-                                style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.teal,
-                                ),
-                              ),
-                            ),
-                            widget.size.length == 0
-                                ? Container()
-                                : Column(
-                                    children: [
-                                      Text(
-                                        word("size", context),
-                                        style: TextStyle(fontSize: 22),
-                                      ),
-                                      Container(
-                                        height: 75,
-                                        alignment: Alignment.center,
-                                        margin: EdgeInsets.all(8.0),
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 8.0),
-                                        decoration: BoxDecoration(
-                                            border: Border.all(),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10))),
-                                        child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: widget.size.length,
-                                            itemBuilder: (context, i) {
-                                              return Container(
-                                                margin: EdgeInsets.symmetric(
-                                                    horizontal: 8.0),
-                                                decoration: BoxDecoration(
-                                                  color: sizeChose ==
-                                                          widget.size[i]
-                                                      ? Color(0xFFFF834F)
-                                                      : null,
-                                                  border: Border.all(),
-                                                ),
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      sizeChose =
-                                                          widget.size[i];
-                                                    });
-                                                  },
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 16.0),
-                                                    child: Center(
-                                                      child: Text(
-                                                        widget.size[i],
-                                                        style: TextStyle(
-                                                            color: sizeChose ==
-                                                                    widget
-                                                                        .size[i]
-                                                                ? Colors.white
-                                                                : null),
-                                                      ),
+                                    widget.priceOld != ""
+                                        ? Container(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 16.0),
+                                            alignment: Alignment.centerRight,
+                                            child: Text.rich(
+                                              TextSpan(
+                                                children: <TextSpan>[
+                                                  new TextSpan(
+                                                    text:
+                                                        '${widget.priceOld} ${word("currancy", context)}',
+                                                    style: new TextStyle(
+                                                      color: Colors.grey,
+                                                      decoration: TextDecoration
+                                                          .lineThrough,
                                                     ),
                                                   ),
-                                                ),
-                                              );
-                                            }),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        : Container(),
+                                    Container(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      width: double.infinity,
+                                      alignment: Alignment.centerRight,
+                                      child: Text(
+                                        "${widget.price} ${word("currancy", context)}",
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.teal,
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                            Divider(
-                              thickness: 3,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Container(
-                                width: double.infinity,
-                                height: MediaQuery.of(context).size.height / 3,
-                                child: SingleChildScrollView(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Center(
-                                          child: Text(
-                                            word("itemDes", context),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 20,
-                                                fontFamily: "MainFont"),
+                                    ),
+                                    widget.size.length == 0
+                                        ? Container()
+                                        : Column(
+                                            children: [
+                                              Text(
+                                                word("size", context),
+                                                style: TextStyle(fontSize: 22),
+                                              ),
+                                              Container(
+                                                height: 75,
+                                                alignment: Alignment.center,
+                                                margin: EdgeInsets.all(8.0),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 8.0),
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10))),
+                                                child: ListView.builder(
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    itemCount:
+                                                        widget.size.length,
+                                                    itemBuilder: (context, i) {
+                                                      return Container(
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    8.0),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: sizeChose ==
+                                                                  widget.size[i]
+                                                              ? Color(
+                                                                  0xFFFF834F)
+                                                              : null,
+                                                          border: Border.all(),
+                                                        ),
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              sizeChose = widget
+                                                                  .size[i];
+                                                            });
+                                                          },
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        16.0),
+                                                            child: Center(
+                                                              child: Text(
+                                                                widget.size[i],
+                                                                style: TextStyle(
+                                                                    color: sizeChose ==
+                                                                            widget.size[
+                                                                                i]
+                                                                        ? Colors
+                                                                            .white
+                                                                        : null),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }),
+                                              ),
+                                            ],
+                                          ),
+                                    Divider(
+                                      thickness: 3,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                3,
+                                        child: SingleChildScrollView(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Center(
+                                                  child: Text(
+                                                    word("itemDes", context),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        fontSize: 20,
+                                                        fontFamily: "MainFont"),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                Text(
+                                                  widget.des,
+                                                  textDirection:
+                                                      TextDirection.rtl,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Text(
-                                          widget.des,
-                                          textDirection: TextDirection.rtl,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).unselectedWidgetColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-                height: 50,
-                width: double.infinity,
-                child: FlatButton(
-                  child: Text(
-                    word("addToCart", context),
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: () async {
-                    await fetchToMyCart();
-                    if (widget.size.length == 0) {
-                      int q = 0;
-                      int id;
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).unselectedWidgetColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                        height: 50,
+                        width: double.infinity,
+                        child: FlatButton(
+                          child: Text(
+                            word("addToCart", context),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          onPressed: () async {
+                            await fetchToMyCart();
+                            if (widget.size.length == 0) {
+                              int q = 0;
+                              int id;
 
-                      for (var i = 0; i < cart.length; i++) {
-                        if (cart[i].itemName == widget.name &&
-                            cart[i].itemPrice == widget.price &&
-                            cart[i].itemDes == widget.des) {
-                          id = cart[i].id;
-                          q = int.parse(cart[i].quantity);
-                        }
-                      }
-                      q++;
-                      if (q == 1) {
-                        await DBHelper.insert(
-                          'cart',
-                          {
-                            'name': widget.name,
-                            'price': widget.price,
-                            'image': widget.image,
-                            'des': widget.des,
-                            'q': q.toString(),
-                            'buyPrice': widget.buyPrice,
-                            'size': '',
-                            'productID': widget.imageID,
-                            'nameEn': widget.nameEn,
-                            'totalQ': widget.totalQuantity,
-                            'priceOld': widget.priceOld,
-                          },
-                        ).whenComplete(() => addCartToast("تم وضعها في سلتك"));
-                      } else {
-                        int totalQint = int.parse(widget.totalQuantity);
-
-                        if (q > totalQint) {
-                          errorToast(word("outOfStock", context));
-                        } else {
-                          await DBHelper.updateData(
+                              for (var i = 0; i < cart.length; i++) {
+                                if (cart[i].itemName == widget.name &&
+                                    cart[i].itemPrice == widget.price &&
+                                    cart[i].itemDes == widget.des) {
+                                  id = cart[i].id;
+                                  q = int.parse(cart[i].quantity);
+                                }
+                              }
+                              q++;
+                              if (q == 1) {
+                                await DBHelper.insert(
                                   'cart',
                                   {
                                     'name': widget.name,
@@ -337,56 +354,56 @@ class _ShowItemState extends State<ShowItem>
                                     'size': '',
                                     'productID': widget.imageID,
                                     'nameEn': widget.nameEn,
-                                    'totalQ': widget.totalQuantity,
+                                    'totalQ': quantity.toString(),
                                     'priceOld': widget.priceOld,
                                   },
-                                  id)
-                              .whenComplete(
-                                  () => addCartToast("تم وضعها في سلتك"));
-                        }
-                      }
-                      Navigator.pop(context);
-                    } else {
-                      if (sizeChose == '') {
-                        errorToast("أختر المقاس");
-                      } else {
-                        int q = 0;
-                        int id;
-                        for (var i = 0; i < cart.length; i++) {
-                          if (cart[i].itemName == widget.name &&
-                              cart[i].itemPrice == widget.price &&
-                              cart[i].itemDes == widget.des &&
-                              cart[i].sizeChose == sizeChose) {
-                            id = cart[i].id;
-                            q = int.parse(cart[i].quantity);
-                          }
-                        }
-                        q++;
-                        if (q == 1) {
-                          await DBHelper.insert(
-                            'cart',
-                            {
-                              'name': widget.name,
-                              'price': widget.price,
-                              'image': widget.image,
-                              'des': widget.des,
-                              'q': q.toString(),
-                              'buyPrice': widget.buyPrice,
-                              'size': sizeChose,
-                              'productID': widget.imageID,
-                              'nameEn': widget.nameEn,
-                              'totalQ': widget.totalQuantity,
-                              'priceOld': widget.priceOld,
-                            },
-                          ).whenComplete(
-                              () => addCartToast("تم وضعها في سلتك"));
-                        } else {
-                          int totalQint = int.parse(widget.totalQuantity);
+                                ).whenComplete(
+                                    () => addCartToast("تم وضعها في سلتك"));
+                              } else {
+                                int totalQint = quantity;
 
-                          if (q > totalQint) {
-                            errorToast(word("outOfStock", context));
-                          } else {
-                            await DBHelper.updateData(
+                                if (q > totalQint) {
+                                  errorToast(word("outOfStock", context));
+                                } else {
+                                  await DBHelper.updateData(
+                                          'cart',
+                                          {
+                                            'name': widget.name,
+                                            'price': widget.price,
+                                            'image': widget.image,
+                                            'des': widget.des,
+                                            'q': q.toString(),
+                                            'buyPrice': widget.buyPrice,
+                                            'size': '',
+                                            'productID': widget.imageID,
+                                            'nameEn': widget.nameEn,
+                                            'totalQ': quantity.toString(),
+                                            'priceOld': widget.priceOld,
+                                          },
+                                          id)
+                                      .whenComplete(() =>
+                                          addCartToast("تم وضعها في سلتك"));
+                                }
+                              }
+                              Navigator.pop(context);
+                            } else {
+                              if (sizeChose == '') {
+                                errorToast("أختر المقاس");
+                              } else {
+                                int q = 0;
+                                int id;
+                                for (var i = 0; i < cart.length; i++) {
+                                  if (cart[i].itemName == widget.name &&
+                                      cart[i].itemPrice == widget.price &&
+                                      cart[i].itemDes == widget.des &&
+                                      cart[i].sizeChose == sizeChose) {
+                                    id = cart[i].id;
+                                    q = int.parse(cart[i].quantity);
+                                  }
+                                }
+                                q++;
+                                if (q == 1) {
+                                  await DBHelper.insert(
                                     'cart',
                                     {
                                       'name': widget.name,
@@ -398,22 +415,46 @@ class _ShowItemState extends State<ShowItem>
                                       'size': sizeChose,
                                       'productID': widget.imageID,
                                       'nameEn': widget.nameEn,
-                                      'totalQ': widget.totalQuantity,
+                                      'totalQ': quantity.toString(),
                                       'priceOld': widget.priceOld,
                                     },
-                                    id)
-                                .whenComplete(
-                                    () => addCartToast("تم وضعها في سلتك"));
-                          }
-                        }
-                        Navigator.pop(context);
-                      }
-                    }
-                  },
+                                  ).whenComplete(
+                                      () => addCartToast("تم وضعها في سلتك"));
+                                } else {
+                                  int totalQint = quantity;
+
+                                  if (q > totalQint) {
+                                    errorToast(word("outOfStock", context));
+                                  } else {
+                                    await DBHelper.updateData(
+                                            'cart',
+                                            {
+                                              'name': widget.name,
+                                              'price': widget.price,
+                                              'image': widget.image,
+                                              'des': widget.des,
+                                              'q': q.toString(),
+                                              'buyPrice': widget.buyPrice,
+                                              'size': sizeChose,
+                                              'productID': widget.imageID,
+                                              'nameEn': widget.nameEn,
+                                              'totalQ': quantity.toString(),
+                                              'priceOld': widget.priceOld,
+                                            },
+                                            id)
+                                        .whenComplete(() =>
+                                            addCartToast("تم وضعها في سلتك"));
+                                  }
+                                }
+                                Navigator.pop(context);
+                              }
+                            }
+                          },
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              ),
-            )
-          ],
         ),
       ),
     );
