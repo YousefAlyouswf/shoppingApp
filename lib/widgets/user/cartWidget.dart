@@ -299,51 +299,70 @@ class _CartWidgetState extends State<CartWidget> {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    if (cart[i].sizeChose == "") {
-                                      goToShowItem(
-                                        cart[i].image,
-                                        cart[i].itemName,
-                                        cart[i].nameEn,
-                                        cart[i].itemDes,
-                                        cart[i].itemPrice,
-                                        cart[i].productID,
-                                        cart[i].buyPrice,
-                                        [],
-                                        cart[i].preiceOld,
-                                      );
-                                    } else {
-                                      List<String> sizing = [];
-                                      String compare = cart[i].sizeChose;
-                                      if (compare == "XS" ||
-                                          compare == "S" ||
-                                          compare == "M" ||
-                                          compare == "L" ||
-                                          compare == "XL") {
-                                        sizing = ['XS', 'S', 'M', 'L', 'XL'];
-                                      } else {
-                                        sizing = [
-                                          '35',
-                                          '36',
-                                          '37',
-                                          '38',
-                                          '39',
-                                          '40',
-                                          '41',
-                                          '42'
-                                        ];
-                                      }
-                                      goToShowItem(
-                                        cart[i].image,
-                                        cart[i].itemName,
-                                        cart[i].nameEn,
-                                        cart[i].itemDes,
-                                        cart[i].itemPrice,
-                                        cart[i].productID,
-                                        cart[i].buyPrice,
-                                        sizing,
-                                        cart[i].preiceOld,
-                                      );
-                                    }
+                                    // if (cart[i].sizeChose == "") {
+                                    //   goToShowItem(
+                                    //     cart[i].image,
+                                    //     cart[i].itemName,
+                                    //     cart[i].nameEn,
+                                    //     cart[i].itemDes,
+                                    //     cart[i].itemPrice,
+                                    //     cart[i].productID,
+                                    //     cart[i].buyPrice,
+                                    //     [],
+                                    //     cart[i].preiceOld,
+                                    //   );
+                                    // } else {
+                                    //   List<String> sizing = [];
+                                    //   String compare = cart[i].sizeChose;
+                                    //   if (compare == "XS" ||
+                                    //       compare == "S" ||
+                                    //       compare == "M" ||
+                                    //       compare == "L" ||
+                                    //       compare == "XL") {
+                                    //     sizing = ['XS', 'S', 'M', 'L', 'XL'];
+                                    //   } else {
+                                    //     sizing = [
+                                    //       '35',
+                                    //       '36',
+                                    //       '37',
+                                    //       '38',
+                                    //       '39',
+                                    //       '40',
+                                    //       '41',
+                                    //       '42'
+                                    //     ];
+                                    //   }
+                                    //   Firestore.instance
+                                    //       .collection("subCategory")
+                                    //       .getDocuments()
+                                    //       .then(
+                                    //         (value) => value.documents.forEach(
+                                    //           (e) {
+                                    //             for (var j = 0;
+                                    //                 j < e['items'].length;
+                                    //                 j++) {
+                                    //               if (e['items'][j]
+                                    //                       ['productID'] ==
+                                    //                   cart[i].productID) {
+                                    //                 print(
+                                    //                     e['items'][j]['size']);
+                                    //               }
+                                    //             }
+                                    //           },
+                                    //         ),
+                                    //       );
+                                    //   // goToShowItem(
+                                    //   //   cart[i].image,
+                                    //   //   cart[i].itemName,
+                                    //   //   cart[i].nameEn,
+                                    //   //   cart[i].itemDes,
+                                    //   //   cart[i].itemPrice,
+                                    //   //   cart[i].productID,
+                                    //   //   cart[i].buyPrice,
+                                    //   //   sizing,
+                                    //   //   cart[i].preiceOld,
+                                    //   // );
+                                    // }
                                   },
                                   child: Container(
                                     width:
@@ -364,7 +383,7 @@ class _CartWidgetState extends State<CartWidget> {
                                       MediaQuery.of(context).size.width * 0.05,
                                 ),
                                 InkWell(
-                                  onTap: () {
+                                  onTap: () async {
                                     if (cart[i].sizeChose == "") {
                                       goToShowItem(
                                         cart[i].image,
@@ -385,19 +404,76 @@ class _CartWidgetState extends State<CartWidget> {
                                           compare == "M" ||
                                           compare == "L" ||
                                           compare == "XL") {
-                                        sizing = ['XS', 'S', 'M', 'L', 'XL'];
+                                        await Firestore.instance
+                                            .collection("subCategory")
+                                            .getDocuments()
+                                            .then(
+                                              (value) =>
+                                                  value.documents.forEach(
+                                                (e) {
+                                                  for (var j = 0;
+                                                      j < e['items'].length;
+                                                      j++) {
+                                                    if (e['items'][j]
+                                                            ['productID'] ==
+                                                        cart[i].productID) {
+                                                      print(e['items'][j]
+                                                          ['size']['35']);
+                                                      List<String> sizeAlpha = [
+                                                        'XS',
+                                                        'S',
+                                                        'M',
+                                                        'L',
+                                                        'XL'
+                                                      ];
+                                                      for (var i = 0;
+                                                          i < sizeAlpha.length;
+                                                          i++) {
+                                                        if (e['items'][j]
+                                                                ['size']
+                                                            [sizeAlpha[i]]) {
+                                                          sizing.add(
+                                                              sizeAlpha[i]);
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                              ),
+                                            );
                                       } else {
-                                        sizing = [
-                                          '35',
-                                          '36',
-                                          '37',
-                                          '38',
-                                          '39',
-                                          '40',
-                                          '41',
-                                          '42'
-                                        ];
+                                        await Firestore.instance
+                                            .collection("subCategory")
+                                            .getDocuments()
+                                            .then(
+                                              (value) =>
+                                                  value.documents.forEach(
+                                                (e) {
+                                                  for (var j = 0;
+                                                      j < e['items'].length;
+                                                      j++) {
+                                                    if (e['items'][j]
+                                                            ['productID'] ==
+                                                        cart[i].productID) {
+                                                      print(e['items'][j]
+                                                          ['size']['35']);
+                                                      for (var i = 35;
+                                                          i <= 42;
+                                                          i++) {
+                                                        if (e['items'][j]
+                                                                ['size']
+                                                            [i.toString()]) {
+                                                          sizing.add(
+                                                              i.toString());
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                              ),
+                                            );
                                       }
+
                                       goToShowItem(
                                         cart[i].image,
                                         cart[i].itemName,

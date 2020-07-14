@@ -78,7 +78,12 @@ class _ShowItemState extends State<ShowItem>
       child: SafeArea(
         child: Scaffold(
           body: quantity == null
-              ? Container()
+              ? Container(
+                  child: Image.network(
+                    "https://i.ya-webdesign.com/images/shopping-transparent-animated-gif.gif",
+                    fit: BoxFit.fill,
+                  ),
+                )
               : Column(
                   children: [
                     Expanded(
@@ -186,10 +191,19 @@ class _ShowItemState extends State<ShowItem>
                                     widget.size.length == 0
                                         ? Container()
                                         : Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                word("size", context),
-                                                style: TextStyle(fontSize: 22),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8.0),
+                                                child: Text(
+                                                  word("size", context),
+                                                  style: TextStyle(
+                                                      fontSize: 22,
+                                                      fontFamily: "MainFont"),
+                                                ),
                                               ),
                                               Container(
                                                 height: 75,
@@ -198,11 +212,11 @@ class _ShowItemState extends State<ShowItem>
                                                 padding: EdgeInsets.symmetric(
                                                     vertical: 8.0),
                                                 decoration: BoxDecoration(
-                                                    border: Border.all(),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10))),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10),
+                                                  ),
+                                                ),
                                                 child: ListView.builder(
                                                     scrollDirection:
                                                         Axis.horizontal,
@@ -210,6 +224,11 @@ class _ShowItemState extends State<ShowItem>
                                                         widget.size.length,
                                                     itemBuilder: (context, i) {
                                                       return Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            .2,
                                                         margin: EdgeInsets
                                                             .symmetric(
                                                                 horizontal:
@@ -221,7 +240,9 @@ class _ShowItemState extends State<ShowItem>
                                                               ? Color(
                                                                   0xFFFF834F)
                                                               : null,
-                                                          border: Border.all(),
+                                                          border: Border.all(
+                                                              color: Colors
+                                                                  .grey[300]),
                                                         ),
                                                         child: InkWell(
                                                           onTap: () {
