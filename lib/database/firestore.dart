@@ -172,11 +172,10 @@ class FirestoreFunctions {
                   itemPrice: element.data['items'][i]['price'],
                   itemDes: element.data['items'][i]['description'],
                   image: element.data['items'][i]['image'],
-                  imageID: element.data['items'][i]['imageID'],
-                  productID: element.data['items'][i]['imageID'],
+                  imageID: element.data['items'][i]['productID'],
+                  productID: element.data['items'][i]['productID'],
                   buyPrice: element.data['items'][i]['buyPrice'],
                   preiceOld: element.data['items'][i]['priceOld'],
-                  totalQuantity: element.data['items'][i]['totalQuantity'],
                   size: sizes,
                 ),
               );

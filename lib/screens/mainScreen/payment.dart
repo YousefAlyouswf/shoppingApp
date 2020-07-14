@@ -13,7 +13,6 @@ import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
-import 'dart:math' show cos, sqrt, asin;
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';
@@ -388,6 +387,7 @@ class _PaymentState extends State<Payment> {
                               'items': FieldValue.arrayUnion(mapItems),
                               'userID': userIDPhone,
                             }).then((value) {
+                              takeOffFromSubcatgory();
                               FocusScope.of(context).requestFocus(FocusNode());
                               twilioFlutter.sendSMS(
                                   toNumber: phone,
@@ -449,7 +449,7 @@ class _PaymentState extends State<Payment> {
                   onPageFinished: (url) async {
                     if (url == "http://geniusloop.co/payment/succed.php") {
                       if (!addFirestore) {
-                        addThisOrderToFirestore().then((value) {
+                        await addThisOrderToFirestore().then((value) {
                           FocusScope.of(context).requestFocus(FocusNode());
                           twilioFlutter.sendSMS(
                               toNumber: phone,
@@ -490,6 +490,28 @@ class _PaymentState extends State<Payment> {
                   },
                 ),
     );
+  }
+
+  takeOffFromSubcatgory() async {
+    await Firestore.instance
+        .collection('quantityItem')
+        .getDocuments()
+        .then((v) {
+      v.documents.forEach((e) async {
+        for (var i = 0; i < cart.length; i++) {
+          if (cart[i].productID == e['id']) {
+            int oldQ = int.parse(e['number']);
+            int result = oldQ - int.parse(cart[i].quantity);
+            await Firestore.instance
+                .collection("quantityItem")
+                .document(e.documentID)
+                .updateData({
+              'number': result.toString(),
+            });
+          }
+        }
+      });
+    });
   }
 
   void sendEmailToCustomer() async {

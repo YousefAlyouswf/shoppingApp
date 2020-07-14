@@ -235,19 +235,17 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                       price: asyncSnapshot.data.documents[0].data['items'][i]
                           ['price'],
                       imageID: asyncSnapshot.data.documents[0].data['items'][i]
-                          ['imageID'],
+                          ['productID'],
                       buyPrice: asyncSnapshot.data.documents[0].data['items'][i]
                           ['buyPrice'],
                       size: sizes,
-                      totalQuantity: asyncSnapshot
-                          .data.documents[0].data['items'][i]['totalQuantity'],
                       priceOld: asyncSnapshot.data.documents[0].data['items'][i]
                           ['priceOld'],
                     ),
                   );
                 }
-                listImages
-                    .sort((b, a) => a.totalQuantity.compareTo(b.totalQuantity));
+                // listImages
+                //     .sort((b, a) => a.totalQuantity.compareTo(b.totalQuantity));
               } catch (e) {
                 setFirstElemntInSubCollection();
                 return Center(
@@ -280,8 +278,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           ),
                           itemCount: listImages.length,
                           itemBuilder: (BuildContext context, int index) {
-                            int totalQuantity =
-                                int.parse(listImages[index].totalQuantity);
+                            // int totalQuantity =
+                            //     int.parse(listImages[index].totalQuantity);
                             return Stack(
                               children: [
                                 Padding(
@@ -312,8 +310,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                               buyPrice:
                                                   listImages[index].buyPrice,
                                               size: listImages[index].size,
-                                              totalQuantity: listImages[index]
-                                                  .totalQuantity,
+                                              // totalQuantity: listImages[index]
+                                              //     .totalQuantity,
                                               priceOld:
                                                   listImages[index].priceOld,
                                             ),
@@ -367,8 +365,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                               .buyPrice,
                                                           listImages[index]
                                                               .nameEn,
-                                                          listImages[index]
-                                                              .totalQuantity,
+                                                          // listImages[index]
+                                                          //     .totalQuantity,
                                                           listImages[index]
                                                               .priceOld,
                                                         );
@@ -469,43 +467,43 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                     ),
                                   ),
                                 ),
-                                totalQuantity <= 1
-                                    ? Align(
-                                        alignment: Alignment.center,
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white70,
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(8),
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              width: double.infinity,
-                                              color: Colors.black38,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Text(
-                                                  "Out Of Stock",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : Container(),
+                                // totalQuantity <= 1
+                                //     ? Align(
+                                //         alignment: Alignment.center,
+                                //         child: Container(
+                                //           alignment: Alignment.center,
+                                //           height: MediaQuery.of(context)
+                                //               .size
+                                //               .height,
+                                //           width: double.infinity,
+                                //           decoration: BoxDecoration(
+                                //             color: Colors.white70,
+                                //             borderRadius: BorderRadius.all(
+                                //               Radius.circular(8),
+                                //             ),
+                                //           ),
+                                //           child: Padding(
+                                //             padding: const EdgeInsets.all(8.0),
+                                //             child: Container(
+                                //               width: double.infinity,
+                                //               color: Colors.black38,
+                                //               child: Padding(
+                                //                 padding:
+                                //                     const EdgeInsets.all(8.0),
+                                //                 child: Text(
+                                //                   "Out Of Stock",
+                                //                   textAlign: TextAlign.center,
+                                //                   style: TextStyle(
+                                //                     color: Colors.white,
+                                //                     fontWeight: FontWeight.bold,
+                                //                   ),
+                                //                 ),
+                                //               ),
+                                //             ),
+                                //           ),
+                                //         ),
+                                //       )
+                                //     : Container(),
                               ],
                             );
                           }),
@@ -548,7 +546,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
     String imageID,
     String buyPrice,
     String nameEn,
-    String totalQ,
+    // String totalQ,
     String priceOld,
   ) async {
     int q = 0;
@@ -578,12 +576,13 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             'size': '',
             'productID': imageID,
             'nameEn': nameEn,
-            'totalQ': totalQ,
+            // 'totalQ': totalQ,
             'priceOld': priceOld,
           },
         ).whenComplete(() => addCartToast("تم وضعها في سلتك"));
       } else {
-        int totalQint = int.parse(totalQ);
+        int totalQint = 45;
+        //int.parse(totalQ);
 
         if (q > totalQint) {
           errorToast(word("outOfStock", context));
@@ -600,7 +599,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                     'size': '',
                     'productID': imageID,
                     'nameEn': nameEn,
-                    'totalQ': totalQ,
+                    // 'totalQ': totalQ,
                     'priceOld': priceOld,
                   },
                   id)
@@ -736,13 +735,14 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                   'size': sizeChoseCatgetory,
                                   'productID': imageID,
                                   'nameEn': nameEn,
-                                  'totalQ': totalQ,
+                                  //'totalQ': totalQ,
                                   'priceOld': priceOld,
                                 },
                               ).whenComplete(
                                   () => addCartToast("تم وضعها في سلتك"));
                             } else {
-                              int totalQint = int.parse(totalQ);
+                              int totalQint = 45;
+                              //int.parse(totalQ);
 
                               if (q >= totalQint) {
                                 errorToast(word("outOfStock", context));
@@ -759,7 +759,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                           'size': sizeChoseCatgetory,
                                           'productID': imageID,
                                           'nameEn': nameEn,
-                                          'totalQ': totalQ,
+                                          // 'totalQ': totalQ,
                                           'priceOld': priceOld,
                                         },
                                         id)

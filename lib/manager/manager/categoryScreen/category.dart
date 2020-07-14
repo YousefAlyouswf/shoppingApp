@@ -137,12 +137,12 @@ Widget subCatgory(
                     ['price'],
                 show: asyncSnapshot.data.documents[0].data['items'][i]['show'],
                 imageID: asyncSnapshot.data.documents[0].data['items'][i]
-                    ['imageID'],
+                    ['productID'],
                 buyPrice: asyncSnapshot.data.documents[0].data['items'][i]
                     ['buyPrice'],
                 sizeModel: sizes,
-                totalQuantity: asyncSnapshot.data.documents[0].data['items'][i]
-                    ['totalQuantity'],
+                // totalQuantity: asyncSnapshot.data.documents[0].data['items'][i]
+                //     ['totalQuantity'],
                 priceOld: asyncSnapshot.data.documents[0].data['items'][i]
                     ['priceOld'],
               ));
@@ -287,13 +287,14 @@ Widget subCatgory(
                                                 ),
                                                 onPressed: () async {
                                                   await getImageForCatgory(
-                                                      takeImageCameraForList(
-                                                          listImages[index]
-                                                              .imageID),
-                                                      takeImageGalaryForList(
-                                                          listImages[index]
-                                                              .imageID),
-                                                      context);
+                                                    takeImageCameraForList(
+                                                        listImages[index]
+                                                            .imageID),
+                                                    takeImageGalaryForList(
+                                                        listImages[index]
+                                                            .imageID),
+                                                    context,
+                                                  );
                                                 }),
                                             Row(
                                               mainAxisAlignment:
@@ -327,8 +328,7 @@ Widget subCatgory(
                                                                 .buyPrice,
                                                             listImages[index]
                                                                 .sizeModel,
-                                                            listImages[index]
-                                                                .totalQuantity,
+                                                            "5",
                                                             listImages[index]
                                                                 .priceOld,
                                                           ),
@@ -416,13 +416,10 @@ Widget subCatgory(
                                                       "image": listImages[index]
                                                           .image,
                                                       "show": false,
-                                                      "imageID":
+                                                      "productID":
                                                           listImages[index]
                                                               .imageID,
                                                       'size': sizingMap,
-                                                      'totalQuantity':
-                                                          listImages[index]
-                                                              .totalQuantity,
                                                       'priceOld':
                                                           listImages[index]
                                                               .priceOld,
@@ -445,13 +442,10 @@ Widget subCatgory(
                                                       "image": listImages[index]
                                                           .image,
                                                       "show": true,
-                                                      "imageID":
+                                                      "productID":
                                                           listImages[index]
                                                               .imageID,
                                                       'size': sizingMap,
-                                                      'totalQuantity':
-                                                          listImages[index]
-                                                              .totalQuantity,
                                                       'priceOld':
                                                           listImages[index]
                                                               .priceOld,
@@ -545,7 +539,7 @@ Widget subCatgory(
                                 'imageID': listImages[index].imageID,
                                 'priceOld': listImages[index].priceOld,
                                 'size': sizingMap,
-                                'totalQuantity': listImages[index].totalQuantity
+                                //'totalQuantity': listImages[index].totalQuantity
                               };
                               deleteItemDialog(
                                 context,

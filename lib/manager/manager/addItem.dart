@@ -501,7 +501,7 @@ Widget addItem(
                 ),
                 RaisedButton(
                   color: Colors.blueAccent,
-                  onPressed: () {
+                  onPressed: () async {
                     if (itemName.text.isEmpty ||
                         itemPrice.text.isEmpty ||
                         itemDis.text.isEmpty ||
@@ -549,6 +549,12 @@ Widget addItem(
                     } else {
                       String uui = uuid.v1();
                       uui = uui.substring(0, 8);
+
+                      await Firestore.instance.collection("quantityItem").add({
+                        'id': uui,
+                        'number': totalQuantity.text,
+                        'name': itemName.text,
+                      });
                       Map<String, dynamic> sizeWordMap = {
                         'XS': xs,
                         'S': s,
@@ -567,14 +573,13 @@ Widget addItem(
                         '42': s42,
                       };
                       Map<String, dynamic> itemMap = {
-                        'totalQuantity': totalQuantity.text,
                         "name": itemName.text,
                         "name_en": nameEn.text,
                         "description": itemDis.text,
                         "price": itemPrice.text,
                         "image": urlImageItems,
                         "show": false,
-                        "imageID": uui,
+                        "productID": uui,
                         'buyPrice': itemBuyPrice.text,
                         'size': checkedSize
                             ? sizeNum ? sizeNumMap : sizeWordMap
@@ -598,13 +603,13 @@ Widget addItem(
                             errorToast("Enter Category name");
                           }
                         } else {
-                          FirestoreFunctions().addNewItemToNewCategory(
+                          await FirestoreFunctions().addNewItemToNewCategory(
                               catgoryMap, itemMapForNew, uui, urlImageItems);
                           showItemTextFileds();
                           switchToCategoryPage();
                         }
                       } else {
-                        FirestoreFunctions().addNewItemRoExistCategory(
+                        await FirestoreFunctions().addNewItemRoExistCategory(
                             itemMap, selectedCurrency, uui, urlImageItems);
                         showItemTextFileds();
                         switchToCategoryPage();

@@ -57,7 +57,7 @@ class _HomeWidgetState extends State<HomeWidget> {
           imageID: itemShow[i].imageID,
           buyPrice: itemShow[i].buyPrice,
           size: itemShow[i].size,
-          totalQuantity: itemShow[i].totalQuantity,
+          // totalQuantity: itemShow[i].totalQuantity,
         ),
       ),
     );
@@ -211,7 +211,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                         image: snapshot.data.documents[i].data['items'][j]
                             ['image'],
                         imageID: snapshot.data.documents[i].data['items'][j]
-                            ['imageID'],
+                            ['productID'],
                         name: snapshot.data.documents[i].data['items'][j]
                             ['name'],
                         nameEn: snapshot.data.documents[i].data['items'][j]
@@ -219,8 +219,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                         price: price,
                         priceOld: priceOld,
                         size: sizes,
-                        totalQuantity: snapshot.data.documents[i].data['items']
-                            [j]['totalQuantity'],
+                        // totalQuantity: snapshot.data.documents[i].data['items']
+                        //     [j]['totalQuantity'],
                         percentage: percentage,
                       ));
                     }
@@ -263,8 +263,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                                       imageID: discountOffer[i].imageID,
                                       buyPrice: discountOffer[i].buyPrice,
                                       size: discountOffer[i].size,
-                                      totalQuantity:
-                                          discountOffer[i].totalQuantity,
+                                      // totalQuantity:
+                                      //     discountOffer[i].totalQuantity,
                                     ),
                                   ),
                                 );
@@ -387,8 +387,12 @@ class _HomeWidgetState extends State<HomeWidget> {
                     child: CircularProgressIndicator(),
                   ),
                 )
-              : imageCarousel(imageShowSize, imageOnTap, darwerPressdAnimation,
-                  widget.toogel),
+              : imageCarousel(
+                  imageShowSize,
+                  imageOnTap,
+                  darwerPressdAnimation,
+                  widget.toogel,
+                ),
         ],
       ),
     );
