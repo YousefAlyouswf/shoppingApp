@@ -13,6 +13,7 @@ import 'package:shop_app/widgets/user/cartWidget.dart';
 import 'package:shop_app/widgets/user/categoryScreen/categoroesWidget.dart';
 import 'package:shop_app/widgets/user/homeWidget.dart';
 import 'package:shop_app/widgets/user/myOrderWidget.dart';
+import 'package:shop_app/widgets/user/offer.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
 import '../../push_nofitications.dart';
@@ -287,10 +288,12 @@ class _HomePageState extends State<HomePage>
                 darwerPressdAnimation: darwerPressdAnimation,
                 toogel: toogel)
             : navIndex == 1
-                ? CategoryWidget()
+                ? Offer()
                 : navIndex == 2
-                    ? CartWidget()
-                    : navIndex == 3 ? OrderWidget() : Container(),
+                    ? CategoryWidget()
+                    : navIndex == 3
+                        ? CartWidget()
+                        : navIndex == 4 ? OrderWidget() : Container(),
       ),
     );
   }
@@ -346,6 +349,8 @@ class _HomePageState extends State<HomePage>
     List<Destination> allDestinations = <Destination>[
       Destination(
           word('HOME', context), FaIcon(FontAwesomeIcons.home), Colors.teal),
+      Destination(word('offer', context), FaIcon(FontAwesomeIcons.percentage),
+          Colors.teal),
       Destination(word('category', context), FaIcon(FontAwesomeIcons.delicious),
           Colors.cyan),
       Destination(word('cart', context),

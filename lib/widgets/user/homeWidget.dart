@@ -227,6 +227,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                 }
                 discountOffer
                     .sort((b, a) => a.percentage.compareTo(b.percentage));
+
                 return ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: discountOffer.length,
@@ -244,7 +245,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                             )
                           ],
                         ),
-                        width: 130,
+                        width: width < 351 ? 130 : 175,
                         child: Stack(
                           children: [
                             InkWell(
@@ -271,8 +272,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                               child: Column(
                                 children: [
                                   Container(
-                                    height: 120,
-                                    width: 130,
+                                    height: heigh < 700 ? 120 : 140,
+                                    width: 175,
                                     child: Image.network(
                                       discountOffer[i].image,
                                       fit: BoxFit.fill,

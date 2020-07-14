@@ -74,5 +74,6 @@
     "deliverCost": "Delivery cost",
     "total": "Total",
     "city": "City",
-    "post": "Postal code"
+    "post": "Postal code",
+    "offer": "OFFER"
 }
