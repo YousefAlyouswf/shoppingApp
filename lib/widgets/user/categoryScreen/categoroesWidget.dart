@@ -271,9 +271,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            childAspectRatio: height < 690
-                                ? height * 0.0012
-                                : height * 0.0009,
+                            childAspectRatio: 0.75,
                             mainAxisSpacing: 2.0,
                           ),
                           itemCount: listImages.length,
@@ -474,7 +472,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                                     new TextStyle(
                                                                   fontSize:
                                                                       width *
-                                                                          0.03,
+                                                                          0.025,
                                                                   color: Colors
                                                                       .grey,
                                                                   decoration:

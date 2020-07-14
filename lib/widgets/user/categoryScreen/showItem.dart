@@ -329,7 +329,8 @@ class _ShowItemState extends State<ShowItem>
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.only(
+                          left: 16.0, right: 16.0, bottom: 16.0),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Theme.of(context).unselectedWidgetColor,

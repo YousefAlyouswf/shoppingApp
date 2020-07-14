@@ -158,7 +158,7 @@ class _OfferState extends State<Offer> {
                               ),
                             ),
                             Text(
-                              "${discountOffer[i].price} ${word("currancy", context)}",
+                              "${discountOffer[i].price} ${word("currancy", context)} ${discountOffer[i].percentage > 19 ? '🔥' : ''}",
                               style: TextStyle(
                                 color: Colors.teal,
                                 fontWeight: FontWeight.bold,
