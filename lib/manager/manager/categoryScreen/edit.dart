@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,7 +19,6 @@ class EditItem extends StatefulWidget {
   final bool show;
   final String category;
   final String buyPrice;
-  final String totalQuantity;
   final List<SizeListModel> size;
   final String priceOld;
 
@@ -33,7 +33,6 @@ class EditItem extends StatefulWidget {
     this.category,
     this.buyPrice,
     this.size,
-    this.totalQuantity,
     this.priceOld,
   );
   @override
@@ -56,7 +55,7 @@ class _EditItemState extends State<EditItem> {
     price.text = widget.price;
     des.text = widget.des;
     buyPrice.text = widget.buyPrice;
-    totalQuantity.text = widget.totalQuantity;
+    getQuantityNumber();
     priceOld.text = widget.priceOld;
     if (widget.size.length > 0) {
       checkedSize = true;
@@ -107,299 +106,336 @@ class _EditItemState extends State<EditItem> {
     }
   }
 
+  void getQuantityNumber() async {
+    await Firestore.instance
+        .collection('quantityItem')
+        .where('id', isEqualTo: widget.imageID)
+        .getDocuments()
+        .then(
+          (value) => value.documents.forEach(
+            (e) async {
+              totalQuantity.text = e['number'];
+            },
+          ),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.name),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
+      body: totalQuantity.text == null
+          ? Center(
               child: Container(
-                child: Column(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        getImageForCatgory(
-                            _takePictureForItems, _takeFromGalaryForItems);
-                      },
-                      child: Center(
-                        child: Container(
-                          height: 150,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: imageStoredItems == null
-                                    ? NetworkImage(widget.image)
-                                    : FileImage(imageStoredItems),
-                                fit: BoxFit.fill),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: MyTextFormField(
-                            hintText: "أسم المنتج",
-                            editingController: name,
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: MyTextFormField(
-                            hintText: "أسم المنتج انقلش",
-                            editingController: nameEn,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: MyTextFormField(
-                            hintText: "سعر البيع",
-                            editingController: price,
-                            isNumber: true,
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: MyTextFormField(
-                            hintText: "سعر الشراء",
-                            editingController: buyPrice,
-                            isNumber: true,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: MyTextFormField(
-                            hintText: "سعر قبل الخصم",
-                            editingController: priceOld,
-                            isNumber: true,
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: MyTextFormField(
-                            hintText: "الكمية",
-                            editingController: totalQuantity,
-                            isNumber: true,
-                          ),
-                        ),
-                      ],
-                    ),
-                    MyTextFormField(
-                      editingController: des,
-                      isMultiLine: true,
-                    ),
-                    CheckboxListTile(
-                      title: Text("يوجد مقاسات؟"),
-                      value: checkedSize,
-                      onChanged: checkBoxFuncation,
-                      controlAffinity: ListTileControlAffinity
-                          .leading, //  <-- leading Checkbox
-                    ),
-                    Visibility(
-                      visible: checkedSize,
+                height: 100,
+                width: 100,
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Container(
                       child: Column(
                         children: [
+                          InkWell(
+                            onTap: () {
+                              getImageForCatgory(_takePictureForItems,
+                                  _takeFromGalaryForItems);
+                            },
+                            child: Center(
+                              child: Container(
+                                height: 150,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: imageStoredItems == null
+                                          ? NetworkImage(widget.image)
+                                          : FileImage(imageStoredItems),
+                                      fit: BoxFit.fill),
+                                ),
+                              ),
+                            ),
+                          ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.amber[100],
-                                    border: Border.all()),
-                                child: InkWell(
-                                    onTap: chooseNumSized,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text("مقاس أرقام"),
-                                    )),
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: MyTextFormField(
+                                  hintText: "أسم المنتج",
+                                  editingController: name,
+                                ),
                               ),
                               Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.amber[100],
-                                    border: Border.all()),
-                                child: InkWell(
-                                    onTap: chooseWordSized,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text("مقاس حجم"),
-                                    )),
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: MyTextFormField(
+                                  hintText: "أسم المنتج انقلش",
+                                  editingController: nameEn,
+                                ),
                               ),
                             ],
                           ),
-                          Visibility(
-                            visible: sizeWord,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  buttonSize("XS", changeXS, xs),
-                                  buttonSize("S", changeS, s),
-                                  buttonSize("M", changeM, m),
-                                  buttonSize("L", changeL, l),
-                                  buttonSize("XL", changeXL, xl),
-                                ],
+                          Row(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: MyTextFormField(
+                                  hintText: "سعر البيع",
+                                  editingController: price,
+                                  isNumber: true,
+                                ),
                               ),
-                            ),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: MyTextFormField(
+                                  hintText: "سعر الشراء",
+                                  editingController: buyPrice,
+                                  isNumber: true,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: MyTextFormField(
+                                  hintText: "سعر قبل الخصم",
+                                  editingController: priceOld,
+                                  isNumber: true,
+                                ),
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: MyTextFormField(
+                                  hintText: "الكمية",
+                                  editingController: totalQuantity,
+                                  isNumber: true,
+                                ),
+                              ),
+                            ],
+                          ),
+                          MyTextFormField(
+                            editingController: des,
+                            isMultiLine: true,
+                          ),
+                          CheckboxListTile(
+                            title: Text("يوجد مقاسات؟"),
+                            value: checkedSize,
+                            onChanged: checkBoxFuncation,
+                            controlAffinity: ListTileControlAffinity
+                                .leading, //  <-- leading Checkbox
                           ),
                           Visibility(
-                            visible: sizeNum,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  buttonSize("35", change35, s35),
-                                  buttonSize("36", change36, s36),
-                                  buttonSize("37", change37, s37),
-                                  buttonSize("38", change38, s38),
-                                  buttonSize("39", change39, s39),
-                                  buttonSize("40", change40, s40),
-                                  buttonSize("41", change41, s41),
-                                  buttonSize("42", change42, s42),
-                                ],
-                              ),
+                            visible: checkedSize,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.amber[100],
+                                          border: Border.all()),
+                                      child: InkWell(
+                                          onTap: chooseNumSized,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("مقاس أرقام"),
+                                          )),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.amber[100],
+                                          border: Border.all()),
+                                      child: InkWell(
+                                          onTap: chooseWordSized,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("مقاس حجم"),
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                                Visibility(
+                                  visible: sizeWord,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        buttonSize("XS", changeXS, xs),
+                                        buttonSize("S", changeS, s),
+                                        buttonSize("M", changeM, m),
+                                        buttonSize("L", changeL, l),
+                                        buttonSize("XL", changeXL, xl),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: sizeNum,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        buttonSize("35", change35, s35),
+                                        buttonSize("36", change36, s36),
+                                        buttonSize("37", change37, s37),
+                                        buttonSize("38", change38, s38),
+                                        buttonSize("39", change39, s39),
+                                        buttonSize("40", change40, s40),
+                                        buttonSize("41", change41, s41),
+                                        buttonSize("42", change42, s42),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                          )
+                          ),
+                          SizedBox(
+                            height: 70,
+                          ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 70,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: InkWell(
-              onTap: () async {
-                if (checkedSize) {
-                  Map<String, dynamic> sizeWordMap = {
-                    'XS': xs,
-                    'S': s,
-                    'M': m,
-                    'L': l,
-                    'XL': xl,
-                  };
-                  Map<String, dynamic> sizeNumMap = {
-                    '35': s35,
-                    '36': s36,
-                    '37': s37,
-                    '38': s38,
-                    '39': s39,
-                    '40': s40,
-                    '41': s41,
-                    '42': s42,
-                  };
-                  Map<String, dynamic> sizingMap = Map.fromIterable(widget.size,
-                      key: (e) => e.sizeName, value: (e) => e.value);
-                  Map<String, dynamic> itemMapRemove = {
-                    'buyPrice': widget.buyPrice,
-                    'description': widget.des,
-                    'image': widget.image,
-                    'imageID': widget.imageID,
-                    'name': widget.name,
-                    'name_en': widget.nameEn,
-                    'price': widget.price,
-                    'show': widget.show,
-                    'size': sizingMap,
-                    'totalQuantity': widget.totalQuantity,
-                    'priceOld': widget.priceOld,
-                  };
-                  Map<String, dynamic> itemMapAdd = {
-                    'buyPrice': buyPrice.text,
-                    'description': des.text,
-                    'image': url == null ? widget.image : url,
-                    'imageID': widget.imageID,
-                    'name': name.text,
-                    'name_en': nameEn.text,
-                    'price': price.text,
-                    'show': widget.show,
-                    'size':
-                        checkedSize ? sizeNum ? sizeNumMap : sizeWordMap : {},
-                    'totalQuantity': totalQuantity.text,
-                    'priceOld': priceOld.text,
-                  };
-                  FirestoreFunctions()
-                      .upDateItems(widget.category, itemMapRemove, itemMapAdd)
-                      .then((e) {
-                    if (url != null)
-                      FirestoreFunctions().deleteFirstImagesFormList(
-                          widget.imageID, widget.image, url);
-                  }).then((value) => Navigator.pop(context));
-                } else {
-                  Map<String, dynamic> itemMapRemove = {
-                    'buyPrice': widget.buyPrice,
-                    'description': widget.des,
-                    'image': widget.image,
-                    'imageID': widget.imageID,
-                    'name': widget.name,
-                    'name_en': widget.nameEn,
-                    'price': widget.price,
-                    'show': widget.show,
-                    'size': {},
-                    'totalQuantity': widget.totalQuantity,
-                    'priceOld': widget.priceOld,
-                  };
-                  Map<String, dynamic> itemMapAdd = {
-                    'buyPrice': buyPrice.text,
-                    'description': des.text,
-                    'image': url == null ? widget.image : url,
-                    'imageID': widget.imageID,
-                    'name': name.text,
-                    'name_en': nameEn.text,
-                    'price': price.text,
-                    'show': widget.show,
-                    'size': {},
-                    'totalQuantity': totalQuantity.text,
-                    'priceOld': priceOld.text,
-                  };
-                  FirestoreFunctions()
-                      .upDateItems(widget.category, itemMapRemove, itemMapAdd)
-                      .then((e) {
-                    if (url != null)
-                      FirestoreFunctions().deleteFirstImagesFormList(
-                          widget.imageID, widget.image, url);
-                  }).then((value) => Navigator.pop(context));
-                }
-              },
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.all(Radius.circular(25))),
-                child: Center(
-                  child: Text(
-                    "تــم",
-                    style: TextStyle(fontSize: 27, color: Colors.white),
                   ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                    onTap: () async {
+                      if (checkedSize) {
+                        Map<String, dynamic> sizeWordMap = {
+                          'XS': xs,
+                          'S': s,
+                          'M': m,
+                          'L': l,
+                          'XL': xl,
+                        };
+                        Map<String, dynamic> sizeNumMap = {
+                          '35': s35,
+                          '36': s36,
+                          '37': s37,
+                          '38': s38,
+                          '39': s39,
+                          '40': s40,
+                          '41': s41,
+                          '42': s42,
+                        };
+                        Map<String, dynamic> sizingMap = Map.fromIterable(
+                            widget.size,
+                            key: (e) => e.sizeName,
+                            value: (e) => e.value);
+                        Map<String, dynamic> itemMapRemove = {
+                          'buyPrice': widget.buyPrice,
+                          'description': widget.des,
+                          'image': widget.image,
+                          'productID': widget.imageID,
+                          'name': widget.name,
+                          'name_en': widget.nameEn,
+                          'price': widget.price,
+                          'show': widget.show,
+                          'size': sizingMap,
+                          'priceOld': widget.priceOld,
+                        };
+                        Map<String, dynamic> itemMapAdd = {
+                          'buyPrice': buyPrice.text,
+                          'description': des.text,
+                          'image': url == null ? widget.image : url,
+                          'productID': widget.imageID,
+                          'name': name.text,
+                          'name_en': nameEn.text,
+                          'price': price.text,
+                          'show': widget.show,
+                          'size': checkedSize
+                              ? sizeNum ? sizeNumMap : sizeWordMap
+                              : {},
+                          'priceOld': priceOld.text,
+                        };
+                        FirestoreFunctions()
+                            .upDateItems(
+                                widget.category, itemMapRemove, itemMapAdd)
+                            .then((e) async {
+                          if (url != null)
+                            await FirestoreFunctions()
+                                .deleteFirstImagesFormList(
+                                    widget.imageID, widget.image, url);
+                        }).then((value) => Navigator.pop(context));
+                      } else {
+                        Map<String, dynamic> itemMapRemove = {
+                          'buyPrice': widget.buyPrice,
+                          'description': widget.des,
+                          'image': widget.image,
+                          'productID': widget.imageID,
+                          'name': widget.name,
+                          'name_en': widget.nameEn,
+                          'price': widget.price,
+                          'show': widget.show,
+                          'size': {},
+                          'priceOld': widget.priceOld,
+                        };
+                        Map<String, dynamic> itemMapAdd = {
+                          'buyPrice': buyPrice.text,
+                          'description': des.text,
+                          'image': url == null ? widget.image : url,
+                          'productID': widget.imageID,
+                          'name': name.text,
+                          'name_en': nameEn.text,
+                          'price': price.text,
+                          'show': widget.show,
+                          'size': {},
+                          'priceOld': priceOld.text,
+                        };
+                        await FirestoreFunctions()
+                            .upDateItems(
+                                widget.category, itemMapRemove, itemMapAdd)
+                            .then((e) {
+                          if (url != null)
+                            FirestoreFunctions().deleteFirstImagesFormList(
+                                widget.imageID, widget.image, url);
+                        }).then((value) => Navigator.pop(context));
+                      }
+                      await Firestore.instance
+                          .collection('quantityItem')
+                          .where('id', isEqualTo: widget.imageID)
+                          .getDocuments()
+                          .then((value) => value.documents.forEach((e) async {
+                                await Firestore.instance
+                                    .collection('quantityItem')
+                                    .document(e.documentID)
+                                    .updateData({
+                                  'number': totalQuantity.text,
+                                });
+                              }));
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.all(Radius.circular(25))),
+                      child: Center(
+                        child: Text(
+                          "تــم",
+                          style: TextStyle(fontSize: 27, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                )
+              ],
             ),
-          ),
-          SizedBox(
-            height: 30,
-          )
-        ],
-      ),
     );
   }
 

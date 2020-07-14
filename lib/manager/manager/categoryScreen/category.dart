@@ -328,7 +328,6 @@ Widget subCatgory(
                                                                 .buyPrice,
                                                             listImages[index]
                                                                 .sizeModel,
-                                                            "5",
                                                             listImages[index]
                                                                 .priceOld,
                                                           ),
