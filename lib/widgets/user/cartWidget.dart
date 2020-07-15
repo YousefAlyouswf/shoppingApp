@@ -7,6 +7,7 @@ import 'package:shop_app/manager/manager/addItem.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/address_screen/address.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
+import 'package:shop_app/widgets/user/categoryScreen/categoroesWidget.dart';
 import '../widgets.dart';
 import 'categoryScreen/showItem.dart';
 
@@ -694,18 +695,235 @@ class _CartWidgetState extends State<CartWidget> {
                           color: Theme.of(context).unselectedWidgetColor,
                           borderRadius: BorderRadius.all(Radius.circular(5))),
                       child: FlatButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Address(
-                                  totalAfterTax: totalAfterTax.toString(),
-                                  buyPrice: sumBuyPrice.toString(),
-                                  price: sumPrice.toString(),
-                                  discount: discount.toString(),
+                          onPressed: () async {
+                            bool changed = false;
+                            List<PriceChange> itemChanged = [];
+
+                            await Firestore.instance
+                                .collection("subCategory")
+                                .getDocuments()
+                                .then((value) {
+                              value.documents.forEach((e) async {
+                                for (var j = 0; j < e['items'].length; j++) {
+                                  for (var i = 0; i < cart.length; i++) {
+                                    if (e['items'][j]['productID'] ==
+                                            cart[i].productID &&
+                                        e['items'][j]['price'] !=
+                                            cart[i].itemPrice) {
+                                      itemChanged.add(PriceChange(
+                                        itemName: cart[i].itemName,
+                                        itemPrice: cart[i].itemPrice,
+                                        itemNewPrice: e['items'][j]['price'],
+                                        itemid: cart[i].id,
+                                      ));
+
+                                      DBHelper.updateData(
+                                        'cart',
+                                        {'price': e['items'][j]['price']},
+                                        cart[i].id,
+                                      );
+
+                                      setState(() {
+                                        changed = true;
+                                      });
+                                    }
+                                  }
+                                }
+                              });
+                            });
+                            await fetchToMyCart();
+                            if (changed) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      StatefulBuilder(
+                                          builder: (context, setState) {
+                                        return Dialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          child: Container(
+                                            height: 400,
+                                            width: double.infinity,
+                                            child: Column(
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 16.0,
+                                                          top: 8.0),
+                                                  child: Row(
+                                                    children: [
+                                                      FaIcon(
+                                                        FontAwesomeIcons.edit,
+                                                        size: 25,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text(
+                                                        "تعديل في الأسعار",
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontFamily:
+                                                              "MainFont",
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Divider(
+                                                  thickness: 2,
+                                                  color: Colors.grey[200],
+                                                ),
+                                                Expanded(
+                                                  child: ListView.builder(
+                                                    itemCount:
+                                                        itemChanged.length,
+                                                    itemBuilder: (context, i) {
+                                                      return Container(
+                                                        margin:
+                                                            EdgeInsets.all(8.0),
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10)),
+                                                            border:
+                                                                Border.all()),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                          children: [
+                                                            Text(itemChanged[i]
+                                                                .itemName),
+                                                            Text(
+                                                              '${itemChanged[i].itemNewPrice} ${word("currancy", context)}',
+                                                            ),
+                                                            Text.rich(
+                                                              TextSpan(
+                                                                children: <
+                                                                    TextSpan>[
+                                                                  new TextSpan(
+                                                                    text:
+                                                                        '${itemChanged[i].itemPrice} ${word("currancy", context)}',
+                                                                    style:
+                                                                        new TextStyle(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      decoration:
+                                                                          TextDecoration
+                                                                              .lineThrough,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () async {
+                                                                setState(() {
+                                                                  DBHelper.deleteItem(
+                                                                          'cart',
+                                                                          itemChanged[i]
+                                                                              .itemid)
+                                                                      .then(
+                                                                          (value) async {
+                                                                    itemChanged
+                                                                        .removeAt(
+                                                                            i);
+                                                                    await fetchToMyCart();
+                                                                  });
+                                                                });
+                                                              },
+                                                              child: FaIcon(
+                                                                FontAwesomeIcons
+                                                                    .trashAlt,
+                                                                size: 20,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      // Navigator.push(
+                                                      //   context,
+                                                      //   MaterialPageRoute(
+                                                      //     builder: (context) =>
+                                                      //         Address(
+                                                      //       totalAfterTax:
+                                                      //           totalAfterTax
+                                                      //               .toString(),
+                                                      //       buyPrice:
+                                                      //           sumBuyPrice
+                                                      //               .toString(),
+                                                      //       price: sumPrice
+                                                      //           .toString(),
+                                                      //       discount: discount
+                                                      //           .toString(),
+                                                      //     ),
+                                                      //   ),
+                                                      // );
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      height: 50,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    5)),
+                                                        color: Theme.of(context)
+                                                            .unselectedWidgetColor,
+                                                      ),
+                                                      child: Text(
+                                                        "إستمرار",
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontFamily:
+                                                                "MainFont",
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }));
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Address(
+                                    totalAfterTax: totalAfterTax.toString(),
+                                    buyPrice: sumBuyPrice.toString(),
+                                    price: sumPrice.toString(),
+                                    discount: discount.toString(),
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
+                            }
                           },
                           child: Text(
                             "$totalAfterTax ${word('currancy', context)}",
@@ -935,4 +1153,17 @@ class MyBehavior extends ScrollBehavior {
       BuildContext context, Widget child, AxisDirection axisDirection) {
     return child;
   }
+}
+
+class PriceChange {
+  final String itemName;
+  final String itemPrice;
+  final String itemNewPrice;
+  final int itemid;
+  PriceChange({
+    this.itemName,
+    this.itemPrice,
+    this.itemNewPrice,
+    this.itemid,
+  });
 }
