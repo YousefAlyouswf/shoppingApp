@@ -60,7 +60,6 @@ dependencies:
   mailer: ^3.0.4
   flutter_local_notifications: ^1.4.4+2
   flutter_keyboard_visibility: ^3.2.1
-
   
 dev_dependencies:
   flutter_test:

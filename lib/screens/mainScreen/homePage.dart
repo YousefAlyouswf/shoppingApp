@@ -377,7 +377,7 @@ class _HomePageState extends State<HomePage>
           backgroundColor: destination.color,
           title: Text(
             destination.title,
-            style: TextStyle(fontFamily: "MainFont"),
+            style: TextStyle(fontFamily: "MainFont", fontSize: 12),
           ),
         );
       }).toList(),

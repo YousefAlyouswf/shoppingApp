@@ -271,7 +271,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                         primary: false,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: 0.70,
+                          childAspectRatio: 0.5,
                           mainAxisSpacing: 2.0,
                         ),
                         itemCount: listImages.length,
@@ -317,12 +317,14 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                       child: Column(
                                         children: <Widget>[
                                           new Container(
-                                            height: height * 0.19,
+                                            height: height < 700
+                                                ? height * 0.35
+                                                : height * 0.33,
                                             decoration: new BoxDecoration(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(8)),
                                               image: new DecorationImage(
-                                                fit: BoxFit.fill,
+                                                fit: BoxFit.fitWidth,
                                                 image: new NetworkImage(
                                                     listImages[index].image),
                                               ),

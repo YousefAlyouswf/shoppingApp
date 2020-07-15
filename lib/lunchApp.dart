@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
+import 'package:shop_app/widgets/user/homeWidget.dart';
+import 'database/firestore.dart';
 import 'helper/HelperFunction.dart';
+import 'models/itemShow.dart';
 
 class LunchApp extends StatefulWidget {
   final Function onThemeChanged;
@@ -30,19 +33,37 @@ class _LunchAppState extends State<LunchApp> {
     );
   }
 
+  Future<void> getAllimagesFromFireStore() async {
+    try {
+      itemShow = new List();
+      networkImage = new List();
+      await FirestoreFunctions().getAllImages().then((value) {
+        int listLength = value.length;
+        for (var i = 0; i < listLength; i++) {
+          networkImage.add(NetworkImage(value[i].image));
+          itemShow.add(value[i]);
+        }
+
+        setState(() {});
+        networkImage2 = networkImage;
+      });
+    } catch (e) {}
+  }
+
   @override
   void initState() {
     super.initState();
-
-    areYouFristTimeOpenApp().then((v) {
-      print(v);
-      if (!v) {
-        mock().then((value) {
-          if (value) {
-            navgateToHome();
-          }
-        });
-      }
+    getAllimagesFromFireStore().whenComplete(() {
+      areYouFristTimeOpenApp().then((v) {
+        print(v);
+        if (!v) {
+          mock().then((value) {
+            if (value) {
+              navgateToHome();
+            }
+          });
+        }
+      });
     });
   }
 

@@ -24,25 +24,9 @@ class HomeWidget extends StatefulWidget {
   _HomeWidgetState createState() => _HomeWidgetState();
 }
 
+List<ItemShow> itemShow = new List();
+
 class _HomeWidgetState extends State<HomeWidget> {
-  List<ItemShow> itemShow = new List();
-  getAllimagesFromFireStore() async {
-    try {
-      itemShow = new List();
-      networkImage = new List();
-      await FirestoreFunctions().getAllImages().then((value) {
-        int listLength = value.length;
-        for (var i = 0; i < listLength; i++) {
-          networkImage.add(NetworkImage(value[i].image));
-          itemShow.add(value[i]);
-        }
-
-        setState(() {});
-        networkImage2 = networkImage;
-      });
-    } catch (e) {}
-  }
-
   imageOnTap(int i) {
     Navigator.push(
       context,
@@ -68,7 +52,7 @@ class _HomeWidgetState extends State<HomeWidget> {
     _controllerGridViewCatgories = ScrollController();
     _controllerGridViewCatgories.addListener(_scrollListener);
     super.initState();
-    getAllimagesFromFireStore();
+    //getAllimagesFromFireStore();
     scrollController = ScrollController();
   }
 
@@ -528,29 +512,25 @@ class _HomeWidgetState extends State<HomeWidget> {
               ),
             ),
           )
-        : StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Container(
-                height: height,
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Carousel(
-                  boxFit: BoxFit.fill,
-                  images: networkImage2,
-                  animationCurve: Curves.easeInExpo,
-                  animationDuration: Duration(seconds: 1),
-                  autoplay: true,
-                  autoplayDuration: Duration(seconds: 5),
-                  onImageTap: (i) {
-                    if (toogel) {
-                      darwerPressdAnimation();
-                    } else {
-                      imageOnTap(i);
-                    }
-                  },
-                  showIndicator: false,
-                ),
-              );
-            },
+        : Container(
+            height: height,
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: Carousel(
+              boxFit: BoxFit.fill,
+              images: networkImage2,
+              animationCurve: Curves.easeInExpo,
+              animationDuration: Duration(seconds: 1),
+              autoplay: true,
+              autoplayDuration: Duration(seconds: 5),
+              onImageTap: (i) {
+                if (toogel) {
+                  darwerPressdAnimation();
+                } else {
+                  imageOnTap(i);
+                }
+              },
+              showIndicator: false,
+            ),
           );
   }
 }
