@@ -38,6 +38,12 @@ AppBar appBar(int countCart, darwerPressdAnimation, toogel,
       onPressed: darwerPressdAnimation,
     ),
     actions: <Widget>[
+      IconButton(
+          icon: FaIcon(
+            FontAwesomeIcons.solidHeart,
+            color: Theme.of(context).unselectedWidgetColor,
+          ),
+          onPressed: () {}),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Stack(

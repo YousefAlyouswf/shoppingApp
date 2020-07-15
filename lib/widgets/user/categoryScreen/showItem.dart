@@ -68,7 +68,6 @@ class _ShowItemState extends State<ShowItem>
             },
           ),
         );
-    print(quantity);
   }
 
   @override
@@ -103,8 +102,7 @@ class _ShowItemState extends State<ShowItem>
                                       ),
                                     )
                                   : imageCarouselItemShow(
-                                      MediaQuery.of(context).size.height / 2,
-                                      null),
+                                      MediaQuery.of(context).size.height / 2),
                             ),
                           ),
                           SliverToBoxAdapter(
@@ -482,7 +480,7 @@ class _ShowItemState extends State<ShowItem>
     );
   }
 
-  Widget imageCarouselItemShow(double height, Function imageOnTap) {
+  Widget imageCarouselItemShow(double height) {
     return networkItemShow.length == 0
         ? Container(
             height: 100,
@@ -502,7 +500,6 @@ class _ShowItemState extends State<ShowItem>
               animationDuration: Duration(seconds: 1),
               autoplay: true,
               autoplayDuration: Duration(seconds: 5),
-              onImageTap: imageOnTap,
               indicatorBgPadding: 10,
               dotBgColor: Colors.transparent,
               dotColor: Colors.white,

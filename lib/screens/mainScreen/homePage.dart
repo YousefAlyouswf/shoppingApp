@@ -245,11 +245,11 @@ class _HomePageState extends State<HomePage>
       } else {
         xOffest = isEnglish
             ? MediaQuery.of(context).size.width / 1.5
-            : MediaQuery.of(context).size.width / -3;
-        yOffest = 150;
-        scaleFactor = 0.6;
-        radius = 20;
-        borderWidth = 5;
+            : MediaQuery.of(context).size.width / -1.5;
+        yOffest = 0;
+        scaleFactor = 1;
+        radius = 0;
+        borderWidth = 0;
       }
       toogel = !toogel;
     });
@@ -270,6 +270,12 @@ class _HomePageState extends State<HomePage>
       },
       onHorizontalDragStart: (d) {
         darwerPressdAnimation();
+        print(d.globalPosition);
+      },
+      onHorizontalDragUpdate: (d) {
+        // darwerPressdAnimation();
+        //print(d.globalPosition);
+        print(d.globalPosition);
       },
       child: AnimatedContainer(
         transform: Matrix4.translationValues(xOffest, yOffest, 0)
@@ -363,7 +369,8 @@ class _HomePageState extends State<HomePage>
       onTap: bottomNavIndex,
       type: BottomNavigationBarType.fixed,
       fixedColor: Color(0xFFFF834F),
-      iconSize: 35,
+      unselectedItemColor: Colors.grey[400],
+      iconSize: 25,
       items: allDestinations.map((Destination destination) {
         return BottomNavigationBarItem(
           icon: destination.icon,

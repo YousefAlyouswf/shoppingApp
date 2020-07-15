@@ -32,7 +32,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).primaryColor,
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+        colors: [
+          Colors.orange[100],
+          Colors.orange,
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      )),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
