@@ -324,7 +324,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(8)),
                                               image: new DecorationImage(
-                                                fit: BoxFit.fitWidth,
+                                                fit: BoxFit.fitHeight,
                                                 image: new NetworkImage(
                                                     listImages[index].image),
                                               ),
@@ -415,208 +415,455 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                         RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                        12.0,
+                                                        10.0,
                                                       ),
                                                     ),
                                                     child: Container(
-                                                      height: height * 0.8,
+                                                      height: listImages[index]
+                                                                  .size
+                                                                  .length ==
+                                                              0
+                                                          ? height * 0.6
+                                                          : height * 0.7,
                                                       width: width,
-                                                      child: Column(
+                                                      child: Stack(
                                                         children: [
-                                                          Expanded(
-                                                            child:
-                                                                SingleChildScrollView(
-                                                              child: Container(
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: <
-                                                                      Widget>[
-                                                                    Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
-                                                                      child:
-                                                                          imageCarouselItemShow(
-                                                                        MediaQuery.of(context).size.height /
-                                                                            3,
-                                                                      ),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
-                                                                      child:
-                                                                          Text(
-                                                                        isEnglish
-                                                                            ? listImages[index].nameEn
-                                                                            : listImages[index].name,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              15,
-                                                                          fontFamily:
-                                                                              "MainFont",
+                                                          Column(
+                                                            children: [
+                                                              Expanded(
+                                                                child:
+                                                                    SingleChildScrollView(
+                                                                  child:
+                                                                      Container(
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        imageCarouselItemShow(
+                                                                          MediaQuery.of(context).size.height /
+                                                                              3,
                                                                         ),
-                                                                      ),
-                                                                    ),
-                                                                    quantity < 5
-                                                                        ? Container(
-                                                                            margin:
-                                                                                EdgeInsets.symmetric(horizontal: 16.0),
-                                                                            child:
-                                                                                Text(
-                                                                              quantity == 1 ? word("lastOne", context) : quantity == 2 ? word("lastTwo", context) : word("almostOutOfStock", context),
-                                                                              textDirection: TextDirection.rtl,
-                                                                              style: TextStyle(color: Colors.red),
-                                                                            ),
-                                                                          )
-                                                                        : Container(),
-                                                                    Container(
-                                                                      margin: EdgeInsets
-                                                                          .symmetric(
-                                                                        horizontal:
-                                                                            8.0,
-                                                                      ),
-                                                                      width: double
-                                                                          .infinity,
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .bottomRight,
-                                                                      child:
-                                                                          Row(
-                                                                        mainAxisAlignment: listImages[index].priceOld ==
-                                                                                ""
-                                                                            ? MainAxisAlignment.start
-                                                                            : MainAxisAlignment.spaceAround,
-                                                                        children: [
-                                                                          listImages[index].priceOld == ""
-                                                                              ? Container()
-                                                                              : AutoSizeText.rich(
-                                                                                  TextSpan(
-                                                                                    children: <TextSpan>[
-                                                                                      new TextSpan(
-                                                                                        text: '${listImages[index].priceOld} ${word("currancy", context)}',
-                                                                                        style: new TextStyle(
-                                                                                          fontSize: width * 0.025,
-                                                                                          color: Colors.grey,
-                                                                                          decoration: TextDecoration.lineThrough,
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                                  maxLines: 1,
-                                                                                ),
-                                                                          AutoSizeText(
-                                                                            "${listImages[index].price} ${word("currancy", context)}",
+                                                                        Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child:
+                                                                              Text(
+                                                                            isEnglish
+                                                                                ? listImages[index].nameEn
+                                                                                : listImages[index].name,
                                                                             style:
                                                                                 TextStyle(
-                                                                              color: Colors.teal,
-                                                                              fontWeight: FontWeight.bold,
-                                                                              fontSize: width * 0.05,
+                                                                              fontSize: 15,
+                                                                              fontFamily: "MainFont",
                                                                             ),
-                                                                            maxLines:
-                                                                                1,
                                                                           ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                    listImages[index].size.length ==
-                                                                            0
-                                                                        ? Container()
-                                                                        : Column(
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.start,
-                                                                            children: [
-                                                                              Padding(
-                                                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                                                                child: Container(
-                                                                                  width: double.infinity,
-                                                                                  child: Text(
-                                                                                    word("size", context),
-                                                                                    textAlign: TextAlign.center,
-                                                                                    style: TextStyle(fontSize: width * 0.04, fontFamily: "MainFont"),
-                                                                                  ),
+                                                                        ),
+                                                                        quantity <
+                                                                                5
+                                                                            ? Container(
+                                                                                margin: EdgeInsets.symmetric(horizontal: 16.0),
+                                                                                child: Text(
+                                                                                  quantity == 1 ? word("lastOne", context) : quantity == 2 ? word("lastTwo", context) : word("almostOutOfStock", context),
+                                                                                  textDirection: TextDirection.rtl,
+                                                                                  style: TextStyle(color: Colors.red),
                                                                                 ),
-                                                                              ),
-                                                                              Container(
-                                                                                height: 75,
-                                                                                alignment: Alignment.center,
-                                                                                margin: EdgeInsets.all(0.0),
-                                                                                padding: EdgeInsets.symmetric(vertical: 16.0),
-                                                                                child: ListView.builder(
-                                                                                    scrollDirection: Axis.horizontal,
-                                                                                    itemCount: listImages[index].size.length,
-                                                                                    itemBuilder: (context, i) {
-                                                                                      return Container(
-                                                                                        width: MediaQuery.of(context).size.width * .18,
-                                                                                        margin: EdgeInsets.symmetric(horizontal: 0.0),
-                                                                                        decoration: BoxDecoration(
-                                                                                          shape: BoxShape.circle,
-                                                                                          color: sizeChose == listImages[index].size[i] ? Color(0xFFFF834F) : null,
-                                                                                          border: Border.all(color: Colors.grey[300]),
-                                                                                        ),
-                                                                                        child: InkWell(
-                                                                                          splashColor: Colors.transparent,
-                                                                                          highlightColor: Colors.transparent,
-                                                                                          onTap: () {
-                                                                                            setState(() {
-                                                                                              sizeChose = listImages[index].size[i];
-                                                                                            });
-                                                                                          },
-                                                                                          child: Padding(
-                                                                                            padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                                                                            child: Center(
-                                                                                              child: Text(
-                                                                                                listImages[index].size[i],
-                                                                                                style: TextStyle(color: sizeChose == listImages[index].size[i] ? Colors.white : null),
-                                                                                              ),
+                                                                              )
+                                                                            : Container(),
+                                                                        Container(
+                                                                          margin:
+                                                                              EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                8.0,
+                                                                          ),
+                                                                          width:
+                                                                              double.infinity,
+                                                                          alignment:
+                                                                              Alignment.bottomRight,
+                                                                          child:
+                                                                              Row(
+                                                                            mainAxisAlignment: listImages[index].priceOld == ""
+                                                                                ? MainAxisAlignment.start
+                                                                                : MainAxisAlignment.spaceAround,
+                                                                            children: [
+                                                                              listImages[index].priceOld == ""
+                                                                                  ? Container()
+                                                                                  : AutoSizeText.rich(
+                                                                                      TextSpan(
+                                                                                        children: <TextSpan>[
+                                                                                          new TextSpan(
+                                                                                            text: '${listImages[index].priceOld} ${word("currancy", context)}',
+                                                                                            style: new TextStyle(
+                                                                                              fontSize: width * 0.025,
+                                                                                              color: Colors.grey,
+                                                                                              decoration: TextDecoration.lineThrough,
                                                                                             ),
                                                                                           ),
-                                                                                        ),
-                                                                                      );
-                                                                                    }),
+                                                                                        ],
+                                                                                      ),
+                                                                                      maxLines: 1,
+                                                                                    ),
+                                                                              AutoSizeText(
+                                                                                "${listImages[index].price} ${word("currancy", context)}",
+                                                                                style: TextStyle(
+                                                                                  color: Colors.teal,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  fontSize: width * 0.05,
+                                                                                ),
+                                                                                maxLines: 1,
                                                                               ),
                                                                             ],
                                                                           ),
-                                                                  ],
+                                                                        ),
+                                                                        listImages[index].size.length ==
+                                                                                0
+                                                                            ? Container()
+                                                                            : Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                                                    child: Container(
+                                                                                      width: double.infinity,
+                                                                                      child: Text(
+                                                                                        word("size", context),
+                                                                                        textAlign: TextAlign.center,
+                                                                                        style: TextStyle(fontSize: width * 0.04, fontFamily: "MainFont"),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                  Container(
+                                                                                    height: 75,
+                                                                                    alignment: Alignment.center,
+                                                                                    margin: EdgeInsets.all(0.0),
+                                                                                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                                                                                    child: ListView.builder(
+                                                                                        scrollDirection: Axis.horizontal,
+                                                                                        itemCount: listImages[index].size.length,
+                                                                                        itemBuilder: (context, i) {
+                                                                                          return Container(
+                                                                                            width: MediaQuery.of(context).size.width * .18,
+                                                                                            margin: EdgeInsets.symmetric(horizontal: 0.0),
+                                                                                            decoration: BoxDecoration(
+                                                                                              shape: BoxShape.circle,
+                                                                                              color: sizeChose == listImages[index].size[i] ? Color(0xFFFF834F) : null,
+                                                                                              border: Border.all(color: Colors.grey[300]),
+                                                                                            ),
+                                                                                            child: InkWell(
+                                                                                              splashColor: Colors.transparent,
+                                                                                              highlightColor: Colors.transparent,
+                                                                                              onTap: () {
+                                                                                                setState(() {
+                                                                                                  sizeChose = listImages[index].size[i];
+                                                                                                });
+                                                                                              },
+                                                                                              child: Padding(
+                                                                                                padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                                                                                child: Center(
+                                                                                                  child: Text(
+                                                                                                    listImages[index].size[i],
+                                                                                                    style: TextStyle(color: sizeChose == listImages[index].size[i] ? Colors.white : null),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          );
+                                                                                        }),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                          InkWell(
-                                                            onTap: () {},
-                                                            child: Container(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              width: double
-                                                                  .infinity,
-                                                              height:
-                                                                  height < 700
-                                                                      ? 40
-                                                                      : 50,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .unselectedWidgetColor,
+                                                              InkWell(
+                                                                onTap:
+                                                                    () async {
+                                                                  await fetchToMyCart();
+                                                                  if (listImages[
+                                                                              index]
+                                                                          .size
+                                                                          .length ==
+                                                                      0) {
+                                                                    int q = 0;
+                                                                    int id;
+
+                                                                    for (var i =
+                                                                            0;
+                                                                        i < cart.length;
+                                                                        i++) {
+                                                                      if (cart[i].itemName == listImages[index].name &&
+                                                                          cart[i].itemPrice ==
+                                                                              listImages[index]
+                                                                                  .price &&
+                                                                          cart[i].itemDes ==
+                                                                              listImages[index].description) {
+                                                                        id = cart[i]
+                                                                            .id;
+                                                                        q = int.parse(
+                                                                            cart[i].quantity);
+                                                                      }
+                                                                    }
+                                                                    q++;
+                                                                    if (q ==
+                                                                        1) {
+                                                                      await DBHelper
+                                                                          .insert(
+                                                                        'cart',
+                                                                        {
+                                                                          'name':
+                                                                              listImages[index].name,
+                                                                          'price':
+                                                                              listImages[index].price,
+                                                                          'image':
+                                                                              listImages[index].image,
+                                                                          'des':
+                                                                              listImages[index].description,
+                                                                          'q': q
+                                                                              .toString(),
+                                                                          'buyPrice':
+                                                                              listImages[index].buyPrice,
+                                                                          'size':
+                                                                              '',
+                                                                          'productID':
+                                                                              listImages[index].imageID,
+                                                                          'nameEn':
+                                                                              listImages[index].nameEn,
+                                                                          'totalQ':
+                                                                              quantity.toString(),
+                                                                          'priceOld':
+                                                                              listImages[index].priceOld,
+                                                                        },
+                                                                      ).whenComplete(() =>
+                                                                          addCartToast(
+                                                                              "تم وضعها في سلتك"));
+                                                                    } else {
+                                                                      int totalQint =
+                                                                          quantity;
+
+                                                                      if (q >
+                                                                          totalQint) {
+                                                                        errorToast(word(
+                                                                            "outOfStock",
+                                                                            context));
+                                                                      } else {
+                                                                        await DBHelper.updateData(
+                                                                                'cart',
+                                                                                {
+                                                                                  'name': listImages[index].name,
+                                                                                  'price': listImages[index].price,
+                                                                                  'image': listImages[index].image,
+                                                                                  'des': listImages[index].description,
+                                                                                  'q': q.toString(),
+                                                                                  'buyPrice': listImages[index].buyPrice,
+                                                                                  'size': '',
+                                                                                  'productID': listImages[index].imageID,
+                                                                                  'nameEn': listImages[index].nameEn,
+                                                                                  'totalQ': quantity.toString(),
+                                                                                  'priceOld': listImages[index].priceOld,
+                                                                                },
+                                                                                id)
+                                                                            .whenComplete(() => addCartToast("تم وضعها في سلتك"));
+                                                                      }
+                                                                    }
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  } else {
+                                                                    if (sizeChose ==
+                                                                        '') {
+                                                                      errorToast(
+                                                                          "أختر المقاس");
+                                                                    } else {
+                                                                      int q = 0;
+                                                                      int id;
+                                                                      for (var i =
+                                                                              0;
+                                                                          i < cart.length;
+                                                                          i++) {
+                                                                        if (cart[i].itemName == listImages[index].name &&
+                                                                            cart[i].itemPrice ==
+                                                                                listImages[index].price &&
+                                                                            cart[i].itemDes == listImages[index].description &&
+                                                                            cart[i].sizeChose == sizeChose) {
+                                                                          id = cart[i]
+                                                                              .id;
+                                                                          q = int.parse(
+                                                                              cart[i].quantity);
+                                                                        }
+                                                                      }
+                                                                      q++;
+                                                                      if (q ==
+                                                                          1) {
+                                                                        await DBHelper
+                                                                            .insert(
+                                                                          'cart',
+                                                                          {
+                                                                            'name':
+                                                                                listImages[index].name,
+                                                                            'price':
+                                                                                listImages[index].price,
+                                                                            'image':
+                                                                                listImages[index].image,
+                                                                            'des':
+                                                                                listImages[index].description,
+                                                                            'q':
+                                                                                q.toString(),
+                                                                            'buyPrice':
+                                                                                listImages[index].buyPrice,
+                                                                            'size':
+                                                                                sizeChose,
+                                                                            'productID':
+                                                                                listImages[index].imageID,
+                                                                            'nameEn':
+                                                                                listImages[index].nameEn,
+                                                                            'totalQ':
+                                                                                quantity.toString(),
+                                                                            'priceOld':
+                                                                                listImages[index].priceOld,
+                                                                          },
+                                                                        ).whenComplete(() =>
+                                                                            addCartToast("تم وضعها في سلتك"));
+                                                                      } else {
+                                                                        int totalQint =
+                                                                            quantity;
+
+                                                                        if (q >
+                                                                            totalQint) {
+                                                                          errorToast(word(
+                                                                              "outOfStock",
+                                                                              context));
+                                                                        } else {
+                                                                          await DBHelper.updateData(
+                                                                                  'cart',
+                                                                                  {
+                                                                                    'name': listImages[index].name,
+                                                                                    'price': listImages[index].price,
+                                                                                    'image': listImages[index].image,
+                                                                                    'des': listImages[index].description,
+                                                                                    'q': q.toString(),
+                                                                                    'buyPrice': listImages[index].buyPrice,
+                                                                                    'size': sizeChose,
+                                                                                    'productID': listImages[index].imageID,
+                                                                                    'nameEn': listImages[index].nameEn,
+                                                                                    'totalQ': quantity.toString(),
+                                                                                    'priceOld': listImages[index].priceOld,
+                                                                                  },
+                                                                                  id)
+                                                                              .whenComplete(() => addCartToast("تم وضعها في سلتك"));
+                                                                        }
+                                                                      }
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    }
+                                                                  }
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  width: double
+                                                                      .infinity,
+                                                                  height:
+                                                                      height <
+                                                                              700
+                                                                          ? 40
+                                                                          : 50,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .only(
+                                                                      bottomLeft:
+                                                                          Radius.circular(
+                                                                              10),
+                                                                      bottomRight:
+                                                                          Radius.circular(
+                                                                              10),
+                                                                    ),
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .unselectedWidgetColor,
+                                                                  ),
+                                                                  child: Text(
+                                                                    word(
+                                                                        "addToCart",
+                                                                        context),
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            15,
+                                                                        fontFamily:
+                                                                            "MainFont",
+                                                                        color: Colors
+                                                                            .white),
+                                                                  ),
+                                                                ),
                                                               ),
-                                                              child: Text(
-                                                                word(
-                                                                    "addToCart",
-                                                                    context),
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        15,
-                                                                    fontFamily:
-                                                                        "MainFont",
-                                                                    color: Colors
-                                                                        .white),
-                                                              ),
-                                                            ),
+                                                            ],
                                                           ),
+                                                          quantity <= 1
+                                                              ? Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  child:
+                                                                      Container(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height,
+                                                                    width: double
+                                                                        .infinity,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: Colors
+                                                                          .white70,
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .all(
+                                                                        Radius.circular(
+                                                                            8),
+                                                                      ),
+                                                                    ),
+                                                                    child:
+                                                                        Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(
+                                                                              8.0),
+                                                                      child:
+                                                                          Container(
+                                                                        width: double
+                                                                            .infinity,
+                                                                        color: Colors
+                                                                            .black38,
+                                                                        child:
+                                                                            Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child:
+                                                                              Text(
+                                                                            word("outOfStock",
+                                                                                context),
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : Container(),
                                                         ],
                                                       ),
                                                     ),
@@ -651,44 +898,6 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                   ),
                                 ),
                               ),
-                              // totalQuantity <= 1
-                              //     ? Align(
-                              //         alignment: Alignment.center,
-                              //         child: Container(
-                              //           alignment: Alignment.center,
-                              //           height: MediaQuery.of(context)
-                              //               .size
-                              //               .height,
-                              //           width: double.infinity,
-                              //           decoration: BoxDecoration(
-                              //             color: Colors.white70,
-                              //             borderRadius: BorderRadius.all(
-                              //               Radius.circular(8),
-                              //             ),
-                              //           ),
-                              //           child: Padding(
-                              //             padding: const EdgeInsets.all(8.0),
-                              //             child: Container(
-                              //               width: double.infinity,
-                              //               color: Colors.black38,
-                              //               child: Padding(
-                              //                 padding:
-                              //                     const EdgeInsets.all(8.0),
-                              //                 child: Text(
-                              //                   "Out Of Stock",
-                              //                   textAlign: TextAlign.center,
-                              //                   style: TextStyle(
-                              //                     color: Colors.white,
-                              //                     fontWeight: FontWeight.bold,
-                              //                   ),
-                              //                 ),
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       )
-                              //     : Container(),
-
                               IconButton(
                                   icon: FaIcon(
                                     FontAwesomeIcons.heart,
@@ -777,8 +986,13 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           )
         : Container(
             height: height,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            )),
             child: Carousel(
-              boxFit: BoxFit.fill,
+              boxFit: BoxFit.fitHeight,
               images: networkItemShow,
               animationCurve: Curves.easeInExpo,
               // animationDuration: Duration(seconds: 1),

@@ -12,7 +12,7 @@ class ListHirezontalImage {
   String imageID;
   List<String> size;
   List<SizeListModel> sizeModel;
-  String totalQuantity;
+  int totalQuantity;
   String priceOld;
   int percentage;
 

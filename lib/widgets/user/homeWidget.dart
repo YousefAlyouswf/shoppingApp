@@ -129,7 +129,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             ),
           ),
           Container(
-            height: heigh < 700 ? heigh * .38 : heigh * .3,
+            height: heigh < 700 ? heigh * .48 : heigh * .42,
             width: double.infinity,
             child: StreamBuilder(
               stream: Firestore.instance.collection('subCategory').snapshots(),
@@ -256,11 +256,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                               child: Column(
                                 children: [
                                   Container(
-                                    height: heigh < 700 ? 120 : 140,
+                                    height: heigh < 700 ? 180 : 240,
                                     width: 175,
                                     child: Image.network(
                                       discountOffer[i].image,
-                                      fit: BoxFit.fill,
+                                      fit: BoxFit.fitWidth,
                                     ),
                                   ),
                                   Text.rich(

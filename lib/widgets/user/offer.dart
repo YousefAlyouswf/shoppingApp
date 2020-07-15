@@ -94,7 +94,8 @@ class _OfferState extends State<Offer> {
           return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: heigh < 700 ? 0.65 : 0.75,
+              childAspectRatio: 0.5,
+              mainAxisSpacing: 2.0,
             ),
             itemCount: discountOffer.length,
             itemBuilder: (context, i) {
@@ -134,13 +135,14 @@ class _OfferState extends State<Offer> {
                           );
                         },
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Container(
-                              height: heigh < 700 ? 120 : 140,
+                              height: heigh < 700 ? 180 : 240,
                               width: 175,
                               child: Image.network(
                                 discountOffer[i].image,
-                                fit: BoxFit.fill,
+                                fit: BoxFit.fitHeight,
                               ),
                             ),
                             Text.rich(
@@ -165,6 +167,9 @@ class _OfferState extends State<Offer> {
                                 fontSize: 20,
                               ),
                             ),
+                            SizedBox(
+                              height: 20,
+                            )
                           ],
                         ),
                       ),
