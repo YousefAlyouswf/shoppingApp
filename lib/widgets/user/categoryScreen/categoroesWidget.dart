@@ -89,8 +89,8 @@ class _CategoryWidgetState extends State<CategoryWidget>
   @override
   void initState() {
     super.initState();
-    _controllerAnimation = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1000));
+    _controllerAnimation =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _animation = Tween(begin: 0.0, end: 2.0).animate(_controllerAnimation)
       ..addStatusListener((state) {
         if (state == AnimationStatus.completed) {
@@ -103,10 +103,7 @@ class _CategoryWidgetState extends State<CategoryWidget>
         setState(() {});
       });
     tickerFuture = _controllerAnimation.repeat(reverse: true);
-    // tickerFuture.timeout(Duration(seconds: 2), onTimeout: () {
-    //   _controllerAnimation.reset();
-    //   //_controllerAnimation.stop(canceled: true);
-    // });
+
     fetchToMyCart();
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
@@ -939,13 +936,24 @@ class _CategoryWidgetState extends State<CategoryWidget>
                                           : 1
                                       : 1,
                                   child: FaIcon(
-                                    FontAwesomeIcons.heart,
-                                    color: Colors.grey,
+                                    iLikeIt
+                                        ? productIDRotate ==
+                                                listImages[index].imageID
+                                            ? FontAwesomeIcons.solidHeart
+                                            : FontAwesomeIcons.heart
+                                        : FontAwesomeIcons.heart,
+                                    color: iLikeIt
+                                        ? productIDRotate ==
+                                                listImages[index].imageID
+                                            ? Colors.pink
+                                            : Colors.grey
+                                        : Colors.grey,
                                   ),
                                 ),
                                 onPressed: () {
-                                  tickerFuture.timeout(Duration(seconds: 1),
-                                      onTimeout: () {
+                                  tickerFuture
+                                      .timeout(Duration(milliseconds: 500),
+                                          onTimeout: () {
                                     print("Stop");
                                     setState(() {
                                       iLikeIt = false;

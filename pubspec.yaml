@@ -60,7 +60,7 @@ dependencies:
   mailer: ^3.0.4
   flutter_local_notifications: ^1.4.4+2
   flutter_keyboard_visibility: ^3.2.1
-  
+  neon: ^0.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -114,6 +114,12 @@ flutter:
     - family: typo
       fonts:
         - asset: assets/fonts/typo.otf
+    - family: old
+      fonts:
+        - asset: assets/fonts/old.ttf
+    - family: mussamim
+      fonts:
+        - asset: assets/fonts/mussamim.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

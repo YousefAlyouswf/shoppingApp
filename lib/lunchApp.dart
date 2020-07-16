@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:neon/neon.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/widgets/user/homeWidget.dart';
@@ -50,9 +53,11 @@ class _LunchAppState extends State<LunchApp> {
     } catch (e) {}
   }
 
+  int pickNum = 0;
   @override
   void initState() {
     super.initState();
+    pickNum = _random.nextInt(neonList.length);
     getAllimagesFromFireStore().whenComplete(() {
       areYouFristTimeOpenApp().then((v) {
         print(v);
@@ -78,100 +83,132 @@ class _LunchAppState extends State<LunchApp> {
   }
 
   bool ispressed = false;
+  double fontSize = 40;
+  NeonFont neonFont = NeonFont.Automania;
+  List<NeonFont> neonList = [
+    NeonFont.Automania,
+    NeonFont.Beon,
+    NeonFont.Cyberpunk,
+    NeonFont.Membra,
+    NeonFont.Monoton,
+  ];
+  final _random = new Random();
+  //var element = neonList[0];
+
   @override
   Widget build(BuildContext context) {
+    print(pickNum);
     return Scaffold(
-        body: Container(
-      width: double.infinity,
-      child: firstTime
-          ? ispressed
-              ? Center(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              : Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          widget.changeLangauge(chooseOne: 'ar');
-                          HelperFunction.firstTimeChooseLang(false);
-                          mock().then((value) {
-                            if (value) {
-                              navgateToHome();
-                            }
-                          });
-                          ispressed = true;
-                          setState(() {});
-                        },
-                        child: flagLanguage("عربي"),
+        body: Stack(
+      children: [
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/bg.jpg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: firstTime
+              ? ispressed
+                  ? Center(
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        child: CircularProgressIndicator(),
                       ),
-                      InkWell(
-                        onTap: () {
-                          widget.changeLangauge(chooseOne: 'en');
-                          HelperFunction.firstTimeChooseLang(false);
-                          mock().then((value) {
-                            if (value) {
-                              navgateToHome();
-                            }
-                          });
-                          ispressed = true;
-                          setState(() {});
-                        },
-                        child: flagLanguage("English"),
-                      ),
-                    ],
-                  ),
-                )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Shimmer.fromColors(
-                  baseColor: Color(0xFFFF834F),
-                  highlightColor: Colors.white,
-                  child: Container(
-                    width: 300,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 10),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15),
-                      ),
-                    ),
-                    child: Image.asset(
-                      "assets/images/logoBigTrans.png",
-                      fit: BoxFit.fill,
-                      filterQuality: FilterQuality.high,
-                    ),
-                  ),
-                ),
-                Shimmer.fromColors(
-                  baseColor: Color(0xFFFF834F),
-                  highlightColor: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: Text(
-                      "Colors & Touches",
-                      style: TextStyle(
-                        fontSize: 35,
-                        fontFamily: "EN",
-                        color: Color(0xFFFF834F),
-                        shadows: <Shadow>[
-                          Shadow(
-                              blurRadius: 18.0,
-                              color: Colors.teal,
-                              offset: Offset.fromDirection(120, 12)),
+                    )
+                  : Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              widget.changeLangauge(chooseOne: 'ar');
+                              HelperFunction.firstTimeChooseLang(false);
+                              mock().then((value) {
+                                if (value) {
+                                  navgateToHome();
+                                }
+                              });
+                              ispressed = true;
+                              setState(() {});
+                            },
+                            child: flagLanguage("عربي"),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              widget.changeLangauge(chooseOne: 'en');
+                              HelperFunction.firstTimeChooseLang(false);
+                              mock().then((value) {
+                                if (value) {
+                                  navgateToHome();
+                                }
+                              });
+                              ispressed = true;
+                              setState(() {});
+                            },
+                            child: flagLanguage("English"),
+                          ),
                         ],
                       ),
+                    )
+              : Container(
+                  color: Colors.black45,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(
+                          height: 100,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Neon(
+                              text: "sroloC",
+                              color: Colors.orange,
+                              fontSize: fontSize,
+                              blurRadius: 50,
+                              font: neonList[pickNum],
+                              flickeringText: true,
+                              flickeringLetters: [0, 1, 2, 3, 4, 5],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Neon(
+                              text: "sehcuoT",
+                              color: Colors.orange,
+                              fontSize: fontSize,
+                              blurRadius: 50,
+                              font: neonList[pickNum],
+                              flickeringText: true,
+                              flickeringLetters: [0, 1, 2, 3, 4, 5, 6],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 100,
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: Text(
+              "إصدار رقم: 0.0.21",
+              style: TextStyle(fontFamily: "MainFont", color: Colors.white),
             ),
+          ),
+        )
+      ],
     ));
   }
 
