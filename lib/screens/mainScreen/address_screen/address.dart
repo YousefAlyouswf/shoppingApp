@@ -216,48 +216,58 @@ class _AddressState extends State<Address> {
                   ),
                 ),
               )
-            : Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          storedAddress(
-                            context,
-                            widget.totalAfterTax,
-                            widget.price,
-                            widget.buyPrice,
-                            widget.onThemeChanged,
-                            widget.changeLangauge,
-                            fetchAddress,
-                            widget.discount,
-                          ),
-                          addAddress(context, moveToMapScreen,
-                              addressLineFromSa, postalCoseSa, cityFromSa),
-                        ],
+            : Container(
+                color: Colors.grey[200],
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            storedAddress(
+                              context,
+                              widget.totalAfterTax,
+                              widget.price,
+                              widget.buyPrice,
+                              widget.onThemeChanged,
+                              widget.changeLangauge,
+                              fetchAddress,
+                              widget.discount,
+                              costInRiyadh.toString(),
+                              costOutRiyadh.toString(),
+                            ),
+                            addAddress(
+                              context,
+                              moveToMapScreen,
+                              addressLineFromSa,
+                              postalCoseSa,
+                              cityFromSa,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  buttonsBoth(
-                    context,
-                    widget.totalAfterTax,
-                    widget.price,
-                    widget.buyPrice,
-                    widget.onThemeChanged,
-                    widget.changeLangauge,
-                    fetchAddress,
-                    toggelToAddAddress,
-                    formatPhoneNumber,
-                    spiltName,
-                    widget.discount,
-                    addressLineFromSa,
-                    cityFromSa,
-                    postalCoseSa,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  )
-                ],
+                    buttonsBoth(
+                      context,
+                      widget.totalAfterTax,
+                      widget.price,
+                      widget.buyPrice,
+                      widget.onThemeChanged,
+                      widget.changeLangauge,
+                      fetchAddress,
+                      toggelToAddAddress,
+                      formatPhoneNumber,
+                      spiltName,
+                      widget.discount,
+                      addressLineFromSa,
+                      cityFromSa,
+                      postalCoseSa,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    )
+                  ],
+                ),
               ));
   }
 

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -17,10 +19,37 @@ import 'lang/appLocale.dart';
 
 var uuid = Uuid();
 int cartCount = 0;
+bool startBeatBool = false;
 List<AppInfoModel> appInfo = [];
-AppBar appBar(int countCart, darwerPressdAnimation, toogel,
-    {Function goToCartScreen, BuildContext context}) {
+Widget heartsSmall(double x, double y, _animation) {
+  return Positioned.fill(
+    child: startBeatBool
+        ? Align(
+            alignment: Alignment(x, y),
+            child: Transform.scale(
+              scale: _animation,
+              child: FaIcon(
+                FontAwesomeIcons.solidHeart,
+                size: 10,
+                color: Colors.orange[300],
+              ),
+            ),
+          )
+        : Container(),
+  );
+}
+
+AppBar appBar(
+  int countCart,
+  darwerPressdAnimation,
+  toogel,
+  _animation,
+  heartBeat, {
+  Function goToCartScreen,
+  BuildContext context,
+}) {
   String appName = AppLocale.of(context).getTranslated('appName');
+
   return AppBar(
     backgroundColor: Theme.of(context).primaryColorLight,
     elevation: 0,
@@ -38,12 +67,30 @@ AppBar appBar(int countCart, darwerPressdAnimation, toogel,
       onPressed: darwerPressdAnimation,
     ),
     actions: <Widget>[
-      IconButton(
-          icon: FaIcon(
-            FontAwesomeIcons.solidHeart,
-            color: Theme.of(context).unselectedWidgetColor,
-          ),
-          onPressed: () {}),
+      Container(
+        child: Stack(
+          children: [
+            Transform.scale(
+              //_animation.value
+              scale: 1,
+              child: IconButton(
+                splashColor: Colors.transparent,
+                icon: FaIcon(
+                  FontAwesomeIcons.solidHeart,
+                  color: Theme.of(context).unselectedWidgetColor,
+                ),
+                onPressed: heartBeat,
+              ),
+            ),
+            heartsSmall(-0.5, 0.5, _animation.value),
+            heartsSmall(0.5, 0.5, _animation.value),
+            heartsSmall(-0.8, 0, _animation.value),
+            heartsSmall(0.8, 0, _animation.value),
+            heartsSmall(-0.5, -0.8, _animation.value),
+            heartsSmall(0.5, -0.8, _animation.value),
+          ],
+        ),
+      ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Stack(

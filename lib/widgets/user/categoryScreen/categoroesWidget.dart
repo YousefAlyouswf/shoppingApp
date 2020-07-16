@@ -12,6 +12,9 @@ import '../../widgets.dart';
 import 'showItem.dart';
 
 class CategoryWidget extends StatefulWidget {
+  final Function heartBeat;
+
+  const CategoryWidget({Key key, this.heartBeat}) : super(key: key);
   @override
   _CategoryWidgetState createState() => _CategoryWidgetState();
 }
@@ -20,7 +23,8 @@ String categoryNameSelected = '';
 double height;
 double width;
 
-class _CategoryWidgetState extends State<CategoryWidget> {
+class _CategoryWidgetState extends State<CategoryWidget>
+    with SingleTickerProviderStateMixin {
   switchBetweenCategory(String name, int i) {
     setState(() {
       categoryNameSelected = name;
@@ -79,9 +83,30 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   }
 
   ScrollController _controller;
+  AnimationController _controllerAnimation;
+  Animation _animation;
+  TickerFuture tickerFuture;
   @override
   void initState() {
     super.initState();
+    _controllerAnimation = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1000));
+    _animation = Tween(begin: 0.0, end: 2.0).animate(_controllerAnimation)
+      ..addStatusListener((state) {
+        if (state == AnimationStatus.completed) {
+          print("completed");
+        } else if (state == AnimationStatus.dismissed) {
+          print("dismissed");
+        }
+      })
+      ..addListener(() {
+        setState(() {});
+      });
+    tickerFuture = _controllerAnimation.repeat(reverse: true);
+    // tickerFuture.timeout(Duration(seconds: 2), onTimeout: () {
+    //   _controllerAnimation.reset();
+    //   //_controllerAnimation.stop(canceled: true);
+    // });
     fetchToMyCart();
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
@@ -98,6 +123,13 @@ class _CategoryWidgetState extends State<CategoryWidget> {
     }
   }
 
+  @override
+  void dispose() {
+    _controllerAnimation.dispose(); // you need this
+    super.dispose();
+  }
+
+  bool iLikeIt = false;
   @override
   Widget build(BuildContext context) {
 // Scroll to first selected item
@@ -899,11 +931,33 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                 ),
                               ),
                               IconButton(
-                                  icon: FaIcon(
+                                icon: Transform.scale(
+                                  scale: iLikeIt
+                                      ? productIDRotate ==
+                                              listImages[index].imageID
+                                          ? _animation.value
+                                          : 1
+                                      : 1,
+                                  child: FaIcon(
                                     FontAwesomeIcons.heart,
                                     color: Colors.grey,
                                   ),
-                                  onPressed: () {}),
+                                ),
+                                onPressed: () {
+                                  tickerFuture.timeout(Duration(seconds: 1),
+                                      onTimeout: () {
+                                    print("Stop");
+                                    setState(() {
+                                      iLikeIt = false;
+                                    });
+                                  });
+                                  setState(() {
+                                    productIDRotate = listImages[index].imageID;
+                                    iLikeIt = true;
+                                  });
+                                  //widget.heartBeat();
+                                },
+                              ),
                             ],
                           );
                         },
@@ -934,6 +988,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
     ///////-------------------------------------- UI END HERE
   }
 
+  double buttonSize = 40;
+  String productIDRotate = '';
   String sizeChose = '';
   int quantity;
   Future<void> getQuantityForThis(imageID) async {

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shop_app/models/myOrderModel.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 

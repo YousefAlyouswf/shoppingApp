@@ -28,7 +28,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>
-    with TickerProviderStateMixin<HomePage> {
+    with TickerProviderStateMixin<HomePage>, SingleTickerProviderStateMixin {
   ScrollController controller;
 
   double showFloatingBtn = 0.0;
@@ -78,9 +78,26 @@ class _HomePageState extends State<HomePage>
   FirebaseMessaging _fcm = FirebaseMessaging();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
+  AnimationController _controller;
+  Animation _animation;
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1000));
+    _animation = Tween(begin: 0.5, end: 2.0).animate(_controller)
+      ..addStatusListener((state) {
+        if (state == AnimationStatus.completed) {
+          print("completed");
+        } else if (state == AnimationStatus.dismissed) {
+          print("dismissed");
+        }
+      })
+      ..addListener(() {
+        setState(() {});
+      });
+    _controller.repeat(reverse: true);
+
     controller = ScrollController();
     getAppInfoFireBase();
     controller.addListener(_scrollListener);
@@ -208,8 +225,15 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     callCartCount();
     return Scaffold(
-      appBar: appBar(countCart, darwerPressdAnimation, toogel,
-          goToCartScreen: goToCartScreen, context: context),
+      appBar: appBar(
+        countCart,
+        darwerPressdAnimation,
+        toogel,
+        _animation,
+        heartBeat,
+        goToCartScreen: goToCartScreen,
+        context: context,
+      ),
       // drawer: drawer(
       //   context,
       //   widget.onThemeChanged,
@@ -231,6 +255,13 @@ class _HomePageState extends State<HomePage>
       ),
       bottomNavigationBar: bottomNavgation(bottomNavIndex, context),
     );
+  }
+
+  Future<void> heartBeat() async {
+    startBeatBool = true;
+    await Future.delayed(Duration(seconds: 1), () {});
+    startBeatBool = false;
+    setState(() {});
   }
 
   bool toogel = false;
@@ -296,7 +327,7 @@ class _HomePageState extends State<HomePage>
             : navIndex == 1
                 ? Offer()
                 : navIndex == 2
-                    ? CategoryWidget()
+                    ? CategoryWidget(heartBeat: heartBeat)
                     : navIndex == 3
                         ? CartWidget()
                         : navIndex == 4 ? OrderWidget() : Container(),

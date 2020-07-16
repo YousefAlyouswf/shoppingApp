@@ -29,23 +29,29 @@ Widget storedAddress(
   Function changeLangauge,
   Function fetchAddress,
   String discount,
+  String costInRiyadh,
+  String costOutRiyadh,
 ) {
   return Visibility(
     visible: preAddress,
     child: Container(
       height: MediaQuery.of(context).size.height,
+      color: Colors.grey[200],
       child: Column(
         children: [
           Text(
             word("choose_address", context),
-            textDirection: TextDirection.rtl,
-            style: TextStyle(
-              fontSize: 22,
-            ),
+            style: TextStyle(fontSize: 22, fontFamily: "MainFont"),
           ),
           Expanded(
             child: ListView.separated(
               itemBuilder: (context, index) {
+                String shippingCost;
+                if (addressList[index].city == "RIYADH,الرياض") {
+                  shippingCost = costInRiyadh;
+                } else {
+                  shippingCost = costOutRiyadh;
+                }
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
@@ -67,7 +73,7 @@ Widget storedAddress(
                               address: addressList[index].address,
                               lat: addressList[index].lat,
                               long: addressList[index].long,
-                              delvierCost: addressList[index].deliverCost,
+                              delvierCost: shippingCost,
                               discount: discount == "" ? 0 : discount,
                               city: addressList[index].city,
                               postCose: addressList[index].postCode,
@@ -94,7 +100,7 @@ Widget storedAddress(
                           ),
                           Text(addressList[index].address),
                           Text(
-                              "${word("deliverCost", context)} : ${addressList[index].deliverCost} ${word("currancy", context)}")
+                              "${word("deliverCost", context)} : $shippingCost ${word("currancy", context)}")
                         ],
                       ),
                     ),
