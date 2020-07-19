@@ -455,9 +455,9 @@ class _PaymentState extends State<Payment> {
                               toNumber: phone,
                               messageBody:
                                   'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
-                          sendEmailToCustomer();
+                          //sendEmailToCustomer();
                           addCartToast(word("Succssful", context));
-                          navIndex = 3;
+                          navIndex = 4;
                           DBHelper.deleteAllItem("cart");
                           Navigator.popUntil(context, (route) => route.isFirst);
                         });

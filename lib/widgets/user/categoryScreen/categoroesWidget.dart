@@ -266,8 +266,6 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                         ),
                         itemCount: listImages.length,
                         itemBuilder: (BuildContext context, int index) {
-                          // int totalQuantity =
-                          //     int.parse(listImages[index].totalQuantity);
                           return Stack(
                             children: [
                               Padding(
@@ -282,25 +280,35 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                     ),
                                   ),
                                   child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ShowItem(
-                                            image: listImages[index].image,
-                                            name: listImages[index].name,
-                                            nameEn: listImages[index].nameEn,
-                                            des: listImages[index].description,
-                                            price: listImages[index].price,
-                                            imageID: listImages[index].imageID,
-                                            buyPrice:
-                                                listImages[index].buyPrice,
-                                            size: listImages[index].size,
-                                            priceOld:
-                                                listImages[index].priceOld,
-                                          ),
-                                        ),
+                                    onTap: () async {
+                                      await getQuantityForThis(
+                                        listImages[index].imageID,
                                       );
+                                      print(quantity);
+                                      if (quantity <= 1) {
+                                        errorToast(word("outOfStock", context));
+                                      } else {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ShowItem(
+                                              image: listImages[index].image,
+                                              name: listImages[index].name,
+                                              nameEn: listImages[index].nameEn,
+                                              des:
+                                                  listImages[index].description,
+                                              price: listImages[index].price,
+                                              imageID:
+                                                  listImages[index].imageID,
+                                              buyPrice:
+                                                  listImages[index].buyPrice,
+                                              size: listImages[index].size,
+                                              priceOld:
+                                                  listImages[index].priceOld,
+                                            ),
+                                          ),
+                                        );
+                                      }
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -831,7 +839,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                                         width: double
                                                                             .infinity,
                                                                         color: Colors
-                                                                            .black38,
+                                                                            .black,
                                                                         child:
                                                                             Padding(
                                                                           padding:
@@ -922,7 +930,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   double buttonSize = 40;
   String productIDRotate = '';
   String sizeChose = '';
-  int quantity;
+  int quantity = 0;
   Future<void> getQuantityForThis(imageID) async {
     await Firestore.instance
         .collection('quantityItem')

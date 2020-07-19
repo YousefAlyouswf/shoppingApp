@@ -74,7 +74,7 @@ class _CartWidgetState extends State<CartWidget> {
   }
 
   emptyCartGoToCategory() {
-    navIndex = 1;
+    navIndex = 2;
     setState(() {});
   }
 
