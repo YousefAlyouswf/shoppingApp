@@ -43,8 +43,7 @@ Widget heartsSmall(double x, double y, _animation) {
 AppBar appBar(
   int countCart,
   darwerPressdAnimation,
-  toogel,
-  heartBeat, {
+  toogel, {
   Function goToCartScreen,
   BuildContext context,
 }) {
@@ -78,20 +77,6 @@ AppBar appBar(
     //   onPressed: darwerPressdAnimation,
     // ),
     actions: <Widget>[
-      Container(
-        child: Stack(
-          children: [
-            IconButton(
-              splashColor: Colors.transparent,
-              icon: FaIcon(
-                FontAwesomeIcons.solidHeart,
-                color: Theme.of(context).unselectedWidgetColor,
-              ),
-              onPressed: heartBeat,
-            ),
-          ],
-        ),
-      ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Stack(

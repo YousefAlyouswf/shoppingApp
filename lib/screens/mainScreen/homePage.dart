@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/firestore.dart';
@@ -213,7 +214,6 @@ class _HomePageState extends State<HomePage>
         countCart,
         darwerPressdAnimation,
         toogel,
-        heartBeat,
         goToCartScreen: goToCartScreen,
         context: context,
       ),
@@ -238,13 +238,6 @@ class _HomePageState extends State<HomePage>
       ),
       bottomNavigationBar: bottomNavgation(bottomNavIndex, context),
     );
-  }
-
-  Future<void> heartBeat() async {
-    startBeatBool = true;
-    await Future.delayed(Duration(seconds: 1), () {});
-    startBeatBool = false;
-    setState(() {});
   }
 
   bool toogel = false;
@@ -313,7 +306,7 @@ class _HomePageState extends State<HomePage>
                 : navIndex == 1
                     ? Offer()
                     : navIndex == 2
-                        ? CategoryWidget(heartBeat: heartBeat)
+                        ? CategoryWidget()
                         : navIndex == 3
                             ? CartWidget()
                             : navIndex == 4 ? OrderWidget() : Container(),

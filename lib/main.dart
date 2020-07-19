@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/lunchApp.dart';
 import 'package:shop_app/widgets/lang/appLocale.dart';
@@ -82,6 +83,10 @@ class _MyAppState extends State<MyApp> {
   Locale locale = Locale('ar', '');
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',

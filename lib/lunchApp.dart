@@ -182,7 +182,7 @@ class _LunchAppState extends State<LunchApp> {
           child: Align(
             alignment: Alignment.bottomLeft,
             child: Text(
-              "إصدار رقم: 0.0.21",
+              "إصدار رقم: 0.0.23",
               style: TextStyle(fontFamily: "MainFont", color: Colors.white),
             ),
           ),

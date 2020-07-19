@@ -3,7 +3,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/services.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
@@ -13,9 +13,6 @@ import '../../widgets.dart';
 import 'showItem.dart';
 
 class CategoryWidget extends StatefulWidget {
-  final Function heartBeat;
-
-  const CategoryWidget({Key key, this.heartBeat}) : super(key: key);
   @override
   _CategoryWidgetState createState() => _CategoryWidgetState();
 }
@@ -108,7 +105,6 @@ class _CategoryWidgetState extends State<CategoryWidget>
   bool iLikeIt = false;
   @override
   Widget build(BuildContext context) {
-// Scroll to first selected item
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Container(
@@ -904,25 +900,6 @@ class _CategoryWidgetState extends State<CategoryWidget>
                                         ],
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(16.0),
-                                height: 50,
-                                width: 50,
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      iLikeIt = !iLikeIt;
-                                    });
-                                  },
-                                  child: FlareActor(
-                                    'assets/like.flr',
-                                    alignment: Alignment.center,
-                                    fit: BoxFit.fitWidth,
-                                    animation:
-                                        iLikeIt ? "Favorite" : "Unfavorite",
                                   ),
                                 ),
                               ),

@@ -210,7 +210,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
               showAboutDialog(
                 context: context,
                 applicationName: "ألوان ولمسات",
-                applicationVersion: "0.0.22",
+                applicationVersion: "0.0.23",
                 applicationLegalese: "Developed by Yousef Al Yousef",
                 useRootNavigator: false,
                 children: [Icon(Icons.developer_board)],

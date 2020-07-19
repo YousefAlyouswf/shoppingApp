@@ -112,10 +112,17 @@ class _HomeWidgetState extends State<HomeWidget> {
                 SizedBox(
                   width: 20,
                 ),
-                Text(
-                  word('discount', context),
-                  style:
-                      TextStyle(fontSize: width * 0.07, fontFamily: "MainFont"),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      navIndex = 1;
+                    });
+                  },
+                  child: Text(
+                    word('discount', context),
+                    style: TextStyle(
+                        fontSize: width * 0.07, fontFamily: "MainFont"),
+                  ),
                 ),
                 SizedBox(
                   width: 10,
