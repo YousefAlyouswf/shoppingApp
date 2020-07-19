@@ -639,6 +639,7 @@ class MyTextFormField extends StatelessWidget {
   final Function isChanged;
   final bool isMultiLine;
   final bool isEmail;
+  final String labelText;
   final TextEditingController editingController;
   MyTextFormField({
     this.hintText,
@@ -648,6 +649,7 @@ class MyTextFormField extends StatelessWidget {
     this.isChanged,
     this.isMultiLine = false,
     this.isEmail = false,
+    this.labelText,
   });
   @override
   Widget build(BuildContext context) {
@@ -658,6 +660,7 @@ class MyTextFormField extends StatelessWidget {
         autocorrect: false,
         controller: editingController,
         decoration: InputDecoration(
+          labelText: labelText,
           hintText: hintText,
           contentPadding: EdgeInsets.all(15.0),
           border: InputBorder.none,

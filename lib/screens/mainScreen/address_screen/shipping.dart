@@ -1,5 +1,6 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/manager/manager/addItem.dart';
@@ -83,7 +84,7 @@ Widget storedAddress(
                         );
                       },
                       title: Text(
-                          "${addressList[index].firstName} ${addressList[index].lastName}"),
+                          "${addressList[index].address} - ${addressList[index].city}"),
                       trailing: IconButton(
                           icon: Icon(Icons.delete),
                           onPressed: () {
@@ -95,11 +96,9 @@ Widget storedAddress(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("${addressList[index].phone}"),
-                          Text("${addressList[index].email}"),
                           SizedBox(
                             height: 10,
                           ),
-                          Text(addressList[index].address),
                           Text(
                               "${word("deliverCost", context)} : $shippingCost ${word("currancy", context)}")
                         ],
@@ -137,11 +136,19 @@ Widget addAddress(
           SizedBox(
             height: 30,
           ),
-          Text(
-            word("personal_info_address", context),
-            textDirection: TextDirection.rtl,
-            style: TextStyle(
-              fontSize: 22,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                FaIcon(FontAwesomeIcons.solidAddressCard),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  word("personal_info_address", context),
+                  style: TextStyle(fontSize: 22, fontFamily: "MainFont"),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -149,36 +156,37 @@ Widget addAddress(
             child: Container(
               padding: EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
+                border: Border.all(),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2.2,
-                        child: MyTextFormField(
-                          editingController: name,
-                          hintText: word("full_name", context),
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2.2,
-                        child: MyTextFormField(
-                          editingController: phone,
-                          hintText: word("phone_number", context),
-                          isNumber: true,
-                        ),
-                      ),
-                    ],
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: MyTextFormField(
+                      editingController: name,
+                      hintText: "أسمك و أسم العائلة",
+                      labelText: word("full_name", context),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: MyTextFormField(
+                      editingController: phone,
+                      hintText: "05xxxxxxxx",
+                      labelText: word("phone_number", context),
+                      isNumber: true,
+                    ),
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width / 1.1,
                     child: MyTextFormField(
                       editingController: email,
                       isEmail: true,
-                      hintText: word("email", context),
+                      hintText: "xxx@xxx.com",
+                      labelText: word("email", context),
                     ),
                   ),
                 ],
@@ -188,99 +196,104 @@ Widget addAddress(
           SizedBox(
             height: 15,
           ),
-          Text(
-            word("address_info", context),
-            textDirection: TextDirection.rtl,
-            style: TextStyle(
-              fontSize: 22,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                FaIcon(FontAwesomeIcons.locationArrow),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  word("address_info", context),
+                  style: TextStyle(fontSize: 22, fontFamily: "MainFont"),
+                ),
+              ],
             ),
           ),
-          Container(
-            height: MediaQuery.of(context).size.height / 2,
-            child: Column(
-              children: [
-                InkWell(
-                  splashColor: Colors.transparent,
-                  onTap: () {
-                    moveToMapScreen(context);
-                  },
-                  child: Container(
-                    //  padding: EdgeInsets.all(8.0),
-                    // decoration: BoxDecoration(
-                    //   color: Colors.blueGrey,
-                    //   borderRadius: BorderRadius.all(
-                    //     Radius.circular(20),
-                    //   ),
-                    // ),
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: FlareActor(
-                      'assets/maps.flr',
-                      alignment: Alignment.center,
-                      fit: BoxFit.fitWidth,
-                      animation: "anim",
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              padding: EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              width: double.infinity,
+              child: Column(
+                children: [
+                  InkWell(
+                    splashColor: Colors.transparent,
+                    onTap: () {
+                      moveToMapScreen(context);
+                    },
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: FlareActor(
+                        'assets/maps.flr',
+                        alignment: Alignment.center,
+                        fit: BoxFit.fitWidth,
+                        animation: "anim",
+                      ),
                     ),
-
-                    // Text(
-                    //   word("open_map", context),
-                    //   textDirection: TextDirection.rtl,
-                    //   style: TextStyle(fontSize: 22, color: Colors.white),
-                    // ),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                addressLineFromSa == "" ||
-                        customerLocation == null ||
-                        cityFromSa == "" ||
-                        postalCoseSa == ""
-                    ? Container()
-                    : Column(
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Container(
-                              padding: EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(border: Border.all()),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  addressLineFromSa == "" ||
+                          customerLocation == null ||
+                          cityFromSa == "" ||
+                          postalCoseSa == ""
+                      ? Container()
+                      : Column(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Container(
+                                padding: EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(border: Border.all()),
+                                child: Text(
+                                  "${word("address_info", context)}: $addressLineFromSa\n${word('city', context)}: $cityFromSa \n${word('post', context)}: $postalCoseSa",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "${word("deliverCost", context)}: $deliverCost",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.all(16.0),
+                              padding: EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                  border: Border.all(),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
                               child: Text(
-                                "${word("address_info", context)}: $addressLineFromSa\n${word('city', context)}: $cityFromSa \n${word('post', context)}: $postalCoseSa",
+                                "${word("total", context)}: $total ${word("currancy", context)}",
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "${word("deliverCost", context)}: $deliverCost",
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.all(16.0),
-                            padding: EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                                border: Border.all(),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Text(
-                              "${word("total", context)}: $total ${word("currancy", context)}",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-              ],
+                          ],
+                        ),
+                ],
+              ),
             ),
           ),
         ],
@@ -318,7 +331,6 @@ Widget buttonsBoth(
             child: Center(
               child: Text(
                 word("new_address_botton", context),
-                textDirection: TextDirection.rtl,
                 style: TextStyle(
                     fontSize: 22,
                     color: Colors.white,

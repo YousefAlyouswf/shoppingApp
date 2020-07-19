@@ -326,6 +326,8 @@ class _HomePageState extends State<HomePage>
       navIndex = 2;
       categoryNameSelected = categoryName;
 
+      // switchBetweenCategory("", categoryIndex);
+
       for (var j = 0; j < 20; j++) {
         if (j == i) {
           selected[j] = true;

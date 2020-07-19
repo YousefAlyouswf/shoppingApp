@@ -194,14 +194,12 @@ class _AddressState extends State<Address> {
     return new Scaffold(
         backgroundColor: Colors.white,
         appBar: new AppBar(
-            backgroundColor: Colors.grey[200],
-            elevation: 0,
-            title: Text(total.toString() == "0.0"
-                ? widget.totalAfterTax
-                : total.toString())
-
-            // new Text(word("address_appBar", context)),
-            ),
+          backgroundColor: Colors.grey[200],
+          elevation: 0,
+          title: Text(
+            word("address_appBar", context),
+          ),
+        ),
         body: isLoading
             ? Center(
                 child: Container(
@@ -217,7 +215,7 @@ class _AddressState extends State<Address> {
                 ),
               )
             : Container(
-                color: Colors.grey[200],
+                color: Colors.transparent,
                 child: Column(
                   children: [
                     Expanded(

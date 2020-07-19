@@ -1,9 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
@@ -21,8 +20,7 @@ String categoryNameSelected = '';
 double height;
 double width;
 
-class _CategoryWidgetState extends State<CategoryWidget>
-    with SingleTickerProviderStateMixin {
+class _CategoryWidgetState extends State<CategoryWidget> {
   switchBetweenCategory(String name, int i) {
     setState(() {
       categoryNameSelected = name;
@@ -80,26 +78,11 @@ class _CategoryWidgetState extends State<CategoryWidget>
     return count;
   }
 
-  ScrollController _controller;
-
   @override
   void initState() {
     super.initState();
 
     fetchToMyCart();
-    _controller = ScrollController();
-    _controller.addListener(_scrollListener);
-  }
-
-  _scrollListener() {
-    if (_controller.offset >= _controller.position.maxScrollExtent &&
-        !_controller.position.outOfRange) {
-      print("TOP");
-    }
-    if (_controller.offset <= _controller.position.minScrollExtent &&
-        !_controller.position.outOfRange) {
-      print("BOTTPM");
-    }
   }
 
   bool iLikeIt = false;
@@ -121,6 +104,7 @@ class _CategoryWidgetState extends State<CategoryWidget>
     );
   }
 
+  Color headerSelected;
   Widget headerCatgory(Function switchBetweenCategory) {
     catgoryEnglish = [];
     return Container(
@@ -133,10 +117,11 @@ class _CategoryWidgetState extends State<CategoryWidget>
           if (!snapshot.hasData) return Text("Loading");
 
           return ListView.builder(
-            controller: _controller,
             scrollDirection: Axis.horizontal,
             itemCount: snapshot.data.documents[0].data['collection'].length,
             itemBuilder: (context, i) {
+              headerSelected =
+                  selected[i] ? Color(0xFFFF834F) : Colors.transparent;
               String categoryName = isEnglish
                   ? snapshot.data.documents[0].data['collection'][i]['en_name']
                   : snapshot.data.documents[0].data['collection'][i]['name'];
@@ -149,7 +134,7 @@ class _CategoryWidgetState extends State<CategoryWidget>
                   border: Border(
                       bottom: BorderSide(
                     width: 5,
-                    color: selected[i] ? Color(0xFFFF834F) : Colors.transparent,
+                    color: headerSelected,
                   )),
                 ),
                 child: InkWell(
@@ -160,8 +145,9 @@ class _CategoryWidgetState extends State<CategoryWidget>
                     child: Text(
                       categoryName,
                       style: TextStyle(
-                          color: selected[i] ? Colors.teal : Colors.grey[600],
-                          fontFamily: "MainFont"),
+                        color: selected[i] ? Colors.teal : Colors.grey[600],
+                        fontFamily: "MainFont",
+                      ),
                     ),
                   ),
                 ),
