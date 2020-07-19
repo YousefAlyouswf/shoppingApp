@@ -126,7 +126,12 @@ Widget addAddress(
   String addressLineFromSa,
   String postalCoseSa,
   String cityFromSa,
+  String mobileNumber,
 ) {
+  if (mobileNumber != null) {
+    phone.text = mobileNumber;
+  }
+
   return Visibility(
     visible: !preAddress,
     child: Container(

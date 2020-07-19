@@ -72,16 +72,7 @@ class _CartWidgetState extends State<CartWidget> {
     for (var i = 0; i < cart.length; i++) {
       quantity += int.parse(cart[i].quantity);
     }
-    totalAfterTax = sumPrice;
-    //* tax / 100 + sumPrice;
-    // if (isDeliver) {
-    //   totalAfterTax = sumPrice * tax / 100 + sumPrice + delivery;
-    // } else {
-    //   totalAfterTax = sumPrice * tax / 100 + sumPrice;
-    // }
-    // if (totalAfterTax == delivery) {
-    //   totalAfterTax = 0.0;
-    // }
+    totalAfterTax = sumPrice - discount;
   }
 
   emptyCartGoToCategory() {
@@ -112,7 +103,8 @@ class _CartWidgetState extends State<CartWidget> {
     } else {
       errorToast("لا يمكن أستخدام أكثر من كوبون في العملية الواحدة");
     }
-
+    print("After--->>>>$totalAfterTax");
+    print("Discount---------->>> $discount");
     if (isCorrect) {
       addCartToast("تم تفعيل الخصم");
       setState(() {
@@ -859,24 +851,6 @@ class _CartWidgetState extends State<CartWidget> {
                                                       const EdgeInsets.all(8.0),
                                                   child: InkWell(
                                                     onTap: () {
-                                                      // Navigator.push(
-                                                      //   context,
-                                                      //   MaterialPageRoute(
-                                                      //     builder: (context) =>
-                                                      //         Address(
-                                                      //       totalAfterTax:
-                                                      //           totalAfterTax
-                                                      //               .toString(),
-                                                      //       buyPrice:
-                                                      //           sumBuyPrice
-                                                      //               .toString(),
-                                                      //       price: sumPrice
-                                                      //           .toString(),
-                                                      //       discount: discount
-                                                      //           .toString(),
-                                                      //     ),
-                                                      //   ),
-                                                      // );
                                                       Navigator.pop(context);
                                                     },
                                                     child: Container(

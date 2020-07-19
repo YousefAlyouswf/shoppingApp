@@ -61,7 +61,7 @@ dependencies:
   flutter_keyboard_visibility: ^3.2.1
   meet_network_image: ^0.1.2
   flare_flutter: ^2.0.5
-
+  mobile_number: ^1.0.3
 
 dev_dependencies:
   flutter_test:

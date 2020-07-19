@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmap;
 import 'package:http/http.dart';
+import 'package:mobile_number/mobile_number.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/addressModel.dart';
 import 'package:shop_app/widgets/widgets.dart';
@@ -77,6 +79,45 @@ class _AddressState extends State<Address> {
   String authToken;
   String twilioNumber;
   tw.TwilioFlutter twilioFlutter;
+  String _mobileNumber = '';
+  List<SimCard> _simCard = <SimCard>[];
+  Future<void> initMobileNumberState() async {
+    if (!await MobileNumber.hasPhonePermission) {
+      await MobileNumber.requestPhonePermission;
+      return;
+    }
+    String mobileNumber = '';
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      mobileNumber = await MobileNumber.mobileNumber;
+      _simCard = await MobileNumber.getSimCards;
+    } on PlatformException catch (e) {
+      debugPrint("Failed to get mobile number because of '${e.message}'");
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _mobileNumber = mobileNumber;
+    });
+    List<String> numberList = _mobileNumber.split('');
+    bool getNum = false;
+    for (var i = 0; i < numberList.length; i++) {
+      if (numberList[i] == '5' && !getNum) {
+        setState(() {
+          getNum = true;
+          _mobileNumber = '0';
+        });
+      }
+      if (getNum) {
+        _mobileNumber += numberList[i];
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -85,6 +126,7 @@ class _AddressState extends State<Address> {
     twilioInfo();
     listenSMS();
     getDeliverPrice();
+    initMobileNumberState();
   }
 
   int costInRiyadh = 0;
@@ -235,12 +277,12 @@ class _AddressState extends State<Address> {
                               costOutRiyadh.toString(),
                             ),
                             addAddress(
-                              context,
-                              moveToMapScreen,
-                              addressLineFromSa,
-                              postalCoseSa,
-                              cityFromSa,
-                            ),
+                                context,
+                                moveToMapScreen,
+                                addressLineFromSa,
+                                postalCoseSa,
+                                cityFromSa,
+                                _mobileNumber),
                           ],
                         ),
                       ),
