@@ -1,13 +1,11 @@
 import 'dart:math';
-
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:neon/neon.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:meet_network_image/meet_network_image.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/widgets/user/homeWidget.dart';
 import 'database/firestore.dart';
 import 'helper/HelperFunction.dart';
-import 'models/itemShow.dart';
 
 class LunchApp extends StatefulWidget {
   final Function onThemeChanged;
@@ -43,24 +41,62 @@ class _LunchAppState extends State<LunchApp> {
       await FirestoreFunctions().getAllImages().then((value) {
         int listLength = value.length;
         for (var i = 0; i < listLength; i++) {
-          networkImage.add(NetworkImage(value[i].image));
+          networkImage.add(
+            MeetNetworkImage(
+              imageUrl: value[i].image,
+              loadingBuilder: (context) {
+                return Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          "https://flevix.com/wp-content/uploads/2019/07/Color-Loading-2.gif",
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              errorBuilder: (context, e) => Center(
+                child: Text('Error appear!'),
+              ),
+            ),
+          );
           itemShow.add(value[i]);
         }
-
-        setState(() {});
-        networkImage2 = networkImage;
+        if (mounted) {
+          setState(() {
+            networkImage2 = networkImage;
+          });
+        }
       });
     } catch (e) {}
   }
 
+  bool firstTime = false;
+  Future<bool> areYouFristTimeOpenApp() async {
+    firstTime = await HelperFunction.getFirstLangauge();
+    if (mounted) {
+      setState(() {
+        if (firstTime == null) {
+          firstTime = true;
+        }
+      });
+    }
+
+    return firstTime;
+  }
+
+  bool ispressed = false;
+
+  final _random = new Random();
   int pickNum = 0;
+
   @override
   void initState() {
     super.initState();
-    pickNum = _random.nextInt(neonList.length);
     getAllimagesFromFireStore().whenComplete(() {
       areYouFristTimeOpenApp().then((v) {
-        print(v);
         if (!v) {
           mock().then((value) {
             if (value) {
@@ -72,43 +108,18 @@ class _LunchAppState extends State<LunchApp> {
     });
   }
 
-  bool firstTime = false;
-  Future<bool> areYouFristTimeOpenApp() async {
-    firstTime = await HelperFunction.getFirstLangauge();
-    setState(() {});
-    if (firstTime == null) {
-      firstTime = true;
-    }
-    return firstTime;
+  @override
+  void dispose() {
+    super.dispose();
   }
-
-  bool ispressed = false;
-  double fontSize = 40;
-  NeonFont neonFont = NeonFont.Automania;
-  List<NeonFont> neonList = [
-    NeonFont.Automania,
-    NeonFont.Beon,
-    NeonFont.Cyberpunk,
-    NeonFont.Membra,
-    NeonFont.Monoton,
-  ];
-  final _random = new Random();
-  //var element = neonList[0];
 
   @override
   Widget build(BuildContext context) {
-    print(pickNum);
     return Scaffold(
         body: Stack(
       children: [
         Container(
           width: double.infinity,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/bg.jpg"),
-              fit: BoxFit.cover,
-            ),
-          ),
           child: firstTime
               ? ispressed
                   ? Center(
@@ -131,8 +142,11 @@ class _LunchAppState extends State<LunchApp> {
                                   navgateToHome();
                                 }
                               });
-                              ispressed = true;
-                              setState(() {});
+                              if (mounted) {
+                                setState(() {
+                                  ispressed = true;
+                                });
+                              }
                             },
                             child: flagLanguage("عربي"),
                           ),
@@ -145,57 +159,22 @@ class _LunchAppState extends State<LunchApp> {
                                   navgateToHome();
                                 }
                               });
-                              ispressed = true;
-                              setState(() {});
+
+                              if (mounted) {
+                                setState(() {
+                                  ispressed = true;
+                                });
+                              }
                             },
                             child: flagLanguage("English"),
                           ),
                         ],
                       ),
                     )
-              : Container(
-                  color: Colors.black45,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        SizedBox(
-                          height: 100,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Neon(
-                              text: "sroloC",
-                              color: Colors.orange,
-                              fontSize: fontSize,
-                              blurRadius: 50,
-                              font: neonList[pickNum],
-                              flickeringText: true,
-                              flickeringLetters: [0, 1, 2, 3, 4, 5],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Neon(
-                              text: "sehcuoT",
-                              color: Colors.orange,
-                              fontSize: fontSize,
-                              blurRadius: 50,
-                              font: neonList[pickNum],
-                              flickeringText: true,
-                              flickeringLetters: [0, 1, 2, 3, 4, 5, 6],
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 100,
-                        ),
-                      ],
-                    ),
-                  ),
+              : FlareActor(
+                  'assets/dokan.flr',
+                  fit: BoxFit.fill,
+                  animation: "splash",
                 ),
         ),
         Padding(

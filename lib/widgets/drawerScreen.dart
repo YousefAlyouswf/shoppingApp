@@ -28,19 +28,11 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
-  TextStyle bottomsSettings = TextStyle(color: Colors.white70);
+  TextStyle bottomsSettings = TextStyle(color: Colors.black26);
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-        colors: [
-          Colors.orange[100],
-          Colors.orange,
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      )),
+      color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -76,16 +68,17 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                     widget.darwerPressdAnimation();
                                   },
                                   leading: FaIcon(
-                                      isEnglish
-                                          ? FontAwesomeIcons.arrowAltCircleRight
-                                          : FontAwesomeIcons.arrowAltCircleLeft,
-                                      color: Colors.white),
+                                    isEnglish
+                                        ? FontAwesomeIcons.arrowAltCircleRight
+                                        : FontAwesomeIcons.arrowAltCircleLeft,
+                                    color: Colors.black45,
+                                  ),
                                   title: Text(
                                     categoryName,
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: Colors.black,
                                         fontFamily: "MainFont"),
                                     textAlign: TextAlign.start,
                                   ),
@@ -195,16 +188,16 @@ class _DrawerScreenState extends State<DrawerScreen> {
               );
             },
           ),
-          ListTile(
-            title: Text(
-              word("dark", context),
-              style: bottomsSettings,
-            ),
-            leading: Icon(
-              Icons.lightbulb_outline,
-            ),
-            onTap: widget.onThemeChanged,
-          ),
+          // ListTile(
+          //   title: Text(
+          //     word("dark", context),
+          //     style: bottomsSettings,
+          //   ),
+          //   leading: Icon(
+          //     Icons.lightbulb_outline,
+          //   ),
+          //   onTap: widget.onThemeChanged,
+          // ),
           ListTile(
             title: Text(
               word("info", context),
@@ -217,7 +210,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
               showAboutDialog(
                 context: context,
                 applicationName: "ألوان ولمسات",
-                applicationVersion: "0.0.21",
+                applicationVersion: "0.0.22",
                 applicationLegalese: "Developed by Yousef Al Yousef",
                 useRootNavigator: false,
                 children: [Icon(Icons.developer_board)],

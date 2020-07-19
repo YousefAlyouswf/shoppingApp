@@ -1,3 +1,4 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shop_app/database/local_db.dart';
@@ -204,15 +205,27 @@ Widget addAddress(
                     moveToMapScreen(context);
                   },
                   child: Container(
-                    padding: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                        color: Colors.blueGrey,
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                    child: Text(
-                      word("open_map", context),
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(fontSize: 22, color: Colors.white),
+                    //  padding: EdgeInsets.all(8.0),
+                    // decoration: BoxDecoration(
+                    //   color: Colors.blueGrey,
+                    //   borderRadius: BorderRadius.all(
+                    //     Radius.circular(20),
+                    //   ),
+                    // ),
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: FlareActor(
+                      'assets/maps.flr',
+                      alignment: Alignment.center,
+                      fit: BoxFit.fitWidth,
+                      animation: "anim",
                     ),
+
+                    // Text(
+                    //   word("open_map", context),
+                    //   textDirection: TextDirection.rtl,
+                    //   style: TextStyle(fontSize: 22, color: Colors.white),
+                    // ),
                   ),
                 ),
                 SizedBox(

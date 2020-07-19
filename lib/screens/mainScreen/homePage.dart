@@ -78,25 +78,9 @@ class _HomePageState extends State<HomePage>
   FirebaseMessaging _fcm = FirebaseMessaging();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  AnimationController _controller;
-  Animation _animation;
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1000));
-    _animation = Tween(begin: 0.5, end: 2.0).animate(_controller)
-      ..addStatusListener((state) {
-        if (state == AnimationStatus.completed) {
-          print("completed");
-        } else if (state == AnimationStatus.dismissed) {
-          print("dismissed");
-        }
-      })
-      ..addListener(() {
-        setState(() {});
-      });
-    _controller.repeat(reverse: true);
 
     controller = ScrollController();
     getAppInfoFireBase();
@@ -229,7 +213,6 @@ class _HomePageState extends State<HomePage>
         countCart,
         darwerPressdAnimation,
         toogel,
-        _animation,
         heartBeat,
         goToCartScreen: goToCartScreen,
         context: context,
@@ -299,15 +282,15 @@ class _HomePageState extends State<HomePage>
           darwerPressdAnimation();
         }
       },
-      onHorizontalDragStart: (d) {
-        darwerPressdAnimation();
-        print(d.globalPosition);
-      },
-      onHorizontalDragUpdate: (d) {
-        // darwerPressdAnimation();
-        //print(d.globalPosition);
-        print(d.globalPosition);
-      },
+      // onHorizontalDragStart: (d) {
+      //   darwerPressdAnimation();
+      //   print(d.globalPosition);
+      // },
+      // onHorizontalDragUpdate: (d) {
+      //   // darwerPressdAnimation();
+      //   //print(d.globalPosition);
+      //   print(d.globalPosition);
+      // },
       child: AnimatedContainer(
         transform: Matrix4.translationValues(xOffest, yOffest, 0)
           ..scale(scaleFactor),
@@ -319,25 +302,35 @@ class _HomePageState extends State<HomePage>
           ),
         ),
         duration: Duration(milliseconds: 250),
-        child: navIndex == 0
-            ? HomeWidget(
-                goToCategoryPage: goToCategoryPage,
-                darwerPressdAnimation: darwerPressdAnimation,
-                toogel: toogel)
-            : navIndex == 1
-                ? Offer()
-                : navIndex == 2
-                    ? CategoryWidget(heartBeat: heartBeat)
-                    : navIndex == 3
-                        ? CartWidget()
-                        : navIndex == 4 ? OrderWidget() : Container(),
+        child: Stack(
+          children: [
+            navIndex == 0
+                ? HomeWidget(
+                    goToCategoryPage: goToCategoryPage,
+                    darwerPressdAnimation: darwerPressdAnimation,
+                    toogel: toogel,
+                  )
+                : navIndex == 1
+                    ? Offer()
+                    : navIndex == 2
+                        ? CategoryWidget(heartBeat: heartBeat)
+                        : navIndex == 3
+                            ? CartWidget()
+                            : navIndex == 4 ? OrderWidget() : Container(),
+            toogel
+                ? Container(
+                    color: Colors.grey.withOpacity(0.5),
+                  )
+                : Container()
+          ],
+        ),
       ),
     );
   }
 
   goToCategoryPage(String categoryName, int i) {
     setState(() {
-      navIndex = 1;
+      navIndex = 2;
       categoryNameSelected = categoryName;
 
       for (var j = 0; j < 20; j++) {

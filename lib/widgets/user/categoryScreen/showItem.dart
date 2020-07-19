@@ -1,6 +1,7 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:meet_network_image/meet_network_image.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
@@ -516,7 +517,17 @@ class _ShowItemState extends State<ShowItem>
       await FirestoreFunctions().getAllImages().then((value) {
         int listLength = value.length;
         for (var i = 0; i < listLength; i++) {
-          networkImage.add(NetworkImage(value[i].image));
+          networkImage.add(
+            MeetNetworkImage(
+              imageUrl: value[i].image,
+              loadingBuilder: (context) => Center(
+                child: CircularProgressIndicator(),
+              ),
+              errorBuilder: (context, e) => Center(
+                child: Text('Error appear!'),
+              ),
+            ),
+          );
           itemShow.add(value[i]);
         }
 

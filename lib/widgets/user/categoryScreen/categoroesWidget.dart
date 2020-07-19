@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/local_db.dart';
@@ -83,26 +84,10 @@ class _CategoryWidgetState extends State<CategoryWidget>
   }
 
   ScrollController _controller;
-  AnimationController _controllerAnimation;
-  Animation _animation;
-  TickerFuture tickerFuture;
+
   @override
   void initState() {
     super.initState();
-    _controllerAnimation =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _animation = Tween(begin: 0.0, end: 2.0).animate(_controllerAnimation)
-      ..addStatusListener((state) {
-        if (state == AnimationStatus.completed) {
-          print("completed");
-        } else if (state == AnimationStatus.dismissed) {
-          print("dismissed");
-        }
-      })
-      ..addListener(() {
-        setState(() {});
-      });
-    tickerFuture = _controllerAnimation.repeat(reverse: true);
 
     fetchToMyCart();
     _controller = ScrollController();
@@ -118,12 +103,6 @@ class _CategoryWidgetState extends State<CategoryWidget>
         !_controller.position.outOfRange) {
       print("BOTTPM");
     }
-  }
-
-  @override
-  void dispose() {
-    _controllerAnimation.dispose(); // you need this
-    super.dispose();
   }
 
   bool iLikeIt = false;
@@ -915,8 +894,9 @@ class _CategoryWidgetState extends State<CategoryWidget>
                                                   "تسوق سريع",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
-                                                      fontSize: width * 0.03,
-                                                      fontFamily: "MainFont"),
+                                                    fontSize: width * 0.03,
+                                                    fontFamily: "MainFont",
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -927,44 +907,24 @@ class _CategoryWidgetState extends State<CategoryWidget>
                                   ),
                                 ),
                               ),
-                              IconButton(
-                                icon: Transform.scale(
-                                  scale: iLikeIt
-                                      ? productIDRotate ==
-                                              listImages[index].imageID
-                                          ? _animation.value
-                                          : 1
-                                      : 1,
-                                  child: FaIcon(
-                                    iLikeIt
-                                        ? productIDRotate ==
-                                                listImages[index].imageID
-                                            ? FontAwesomeIcons.solidHeart
-                                            : FontAwesomeIcons.heart
-                                        : FontAwesomeIcons.heart,
-                                    color: iLikeIt
-                                        ? productIDRotate ==
-                                                listImages[index].imageID
-                                            ? Colors.pink
-                                            : Colors.grey
-                                        : Colors.grey,
+                              Container(
+                                padding: EdgeInsets.all(16.0),
+                                height: 50,
+                                width: 50,
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      iLikeIt = !iLikeIt;
+                                    });
+                                  },
+                                  child: FlareActor(
+                                    'assets/like.flr',
+                                    alignment: Alignment.center,
+                                    fit: BoxFit.fitWidth,
+                                    animation:
+                                        iLikeIt ? "Favorite" : "Unfavorite",
                                   ),
                                 ),
-                                onPressed: () {
-                                  tickerFuture
-                                      .timeout(Duration(milliseconds: 500),
-                                          onTimeout: () {
-                                    print("Stop");
-                                    setState(() {
-                                      iLikeIt = false;
-                                    });
-                                  });
-                                  setState(() {
-                                    productIDRotate = listImages[index].imageID;
-                                    iLikeIt = true;
-                                  });
-                                  //widget.heartBeat();
-                                },
                               ),
                             ],
                           );

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -43,7 +44,6 @@ AppBar appBar(
   int countCart,
   darwerPressdAnimation,
   toogel,
-  _animation,
   heartBeat, {
   Function goToCartScreen,
   BuildContext context,
@@ -60,34 +60,35 @@ AppBar appBar(
       ),
     ),
     centerTitle: true,
-    leading: IconButton(
-      icon: toogel
-          ? FaIcon(FontAwesomeIcons.times)
-          : FaIcon(FontAwesomeIcons.stream),
-      onPressed: darwerPressdAnimation,
+    leading: InkWell(
+      child: FlareActor(
+        'assets/tabs.flr',
+        alignment: Alignment.center,
+        fit: BoxFit.fitWidth,
+        color: Colors.black,
+        animation: toogel ? "To Close" : "To Ham",
+      ),
+      onTap: darwerPressdAnimation,
     ),
+
+    //  IconButton(
+    //   icon: toogel
+    //       ? FaIcon(FontAwesomeIcons.times)
+    //       : FaIcon(FontAwesomeIcons.stream),
+    //   onPressed: darwerPressdAnimation,
+    // ),
     actions: <Widget>[
       Container(
         child: Stack(
           children: [
-            Transform.scale(
-              //_animation.value
-              scale: 1,
-              child: IconButton(
-                splashColor: Colors.transparent,
-                icon: FaIcon(
-                  FontAwesomeIcons.solidHeart,
-                  color: Theme.of(context).unselectedWidgetColor,
-                ),
-                onPressed: heartBeat,
+            IconButton(
+              splashColor: Colors.transparent,
+              icon: FaIcon(
+                FontAwesomeIcons.solidHeart,
+                color: Theme.of(context).unselectedWidgetColor,
               ),
+              onPressed: heartBeat,
             ),
-            heartsSmall(-0.5, 0.5, _animation.value),
-            heartsSmall(0.5, 0.5, _animation.value),
-            heartsSmall(-0.8, 0, _animation.value),
-            heartsSmall(0.8, 0, _animation.value),
-            heartsSmall(-0.5, -0.8, _animation.value),
-            heartsSmall(0.5, -0.8, _animation.value),
           ],
         ),
       ),

@@ -17,7 +17,6 @@ class _OfferState extends State<Offer> {
     double heigh = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Container(
-      color: Colors.white,
       child: StreamBuilder(
         stream: Firestore.instance.collection('subCategory').snapshots(),
         builder: (context, snapshot) {

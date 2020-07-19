@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/lunchApp.dart';
@@ -117,9 +118,7 @@ class _MyAppState extends State<MyApp> {
         return supportedLocale.first;
       },
       home: LunchApp(
-        onThemeChanged: onThemeChanged,
-        changeLangauge: changeLangauge,
-      ),
+          onThemeChanged: onThemeChanged, changeLangauge: changeLangauge),
     );
   }
 }
