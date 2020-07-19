@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:meet_network_image/meet_network_image.dart';
@@ -89,7 +88,6 @@ class _LunchAppState extends State<LunchApp> {
 
   bool ispressed = false;
 
-  final _random = new Random();
   int pickNum = 0;
 
   @override

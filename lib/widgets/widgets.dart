@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +7,8 @@ import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/signin_screen.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/appInfo.dart';
-import 'package:shop_app/push_nofitications.dart';
 import 'package:shop_app/screens/employeeScreen/myAccount.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart'; //For creating the SMTP Server
 import 'package:uuid/uuid.dart';
 
 import 'lang/appLocale.dart';

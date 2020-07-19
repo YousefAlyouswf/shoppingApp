@@ -3,11 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/local_db.dart';
-import 'package:shop_app/manager/manager/addItem.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/address_screen/address.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
-import 'package:shop_app/widgets/user/categoryScreen/categoroesWidget.dart';
 import '../widgets.dart';
 import 'categoryScreen/showItem.dart';
 

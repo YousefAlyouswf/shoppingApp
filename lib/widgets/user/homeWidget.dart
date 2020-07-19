@@ -1,11 +1,8 @@
-//Image in the Header
-
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meet_network_image/meet_network_image.dart';
-import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';

@@ -1,13 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
-import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/models/itemShow.dart';
-import 'package:shop_app/screens/employeeScreen/myAccount.dart';
 import 'package:shop_app/widgets/drawerScreen.dart';
 import 'package:shop_app/widgets/lang/appLocale.dart';
 import 'package:shop_app/widgets/user/cartWidget.dart';
@@ -16,8 +13,6 @@ import 'package:shop_app/widgets/user/homeWidget.dart';
 import 'package:shop_app/widgets/user/myOrderWidget.dart';
 import 'package:shop_app/widgets/user/offer.dart';
 import 'package:shop_app/widgets/widgets.dart';
-
-import '../../push_nofitications.dart';
 
 class HomePage extends StatefulWidget {
   final Function onThemeChanged;
@@ -140,7 +135,6 @@ class _HomePageState extends State<HomePage>
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume:-----> $message");
-        String title = message['notification']['title'];
         String titleData = message['data']['title'];
         print("-------- - - - - >> $titleData");
         // if (message['data']['title'] == "manager") {
@@ -162,13 +156,6 @@ class _HomePageState extends State<HomePage>
         // }
       },
     );
-  }
-
-// TOP-LEVEL or STATIC function to handle background messages
-  static Future<dynamic> myBackgroundMessageHandler(
-      Map<String, dynamic> message) {
-    print('AppPushs myBackgroundMessageHandler : $message');
-    return Future<void>.value();
   }
 
   void initialzation() async {

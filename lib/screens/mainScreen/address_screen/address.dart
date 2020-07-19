@@ -62,12 +62,6 @@ class _AddressState extends State<Address> {
           .toList();
     });
 
-    for (var i = 0; i < addressList.length; i++) {
-      final coordinates = new Coordinates(
-          double.parse(addressList[i].lat), double.parse(addressList[i].long));
-      // var addresses =
-      //     await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    }
     if (addressList.length > 0) {
       setState(() {
         preAddress = true;
@@ -80,7 +74,6 @@ class _AddressState extends State<Address> {
   String twilioNumber;
   tw.TwilioFlutter twilioFlutter;
   String _mobileNumber = '';
-  List<SimCard> _simCard = <SimCard>[];
   Future<void> initMobileNumberState() async {
     if (!await MobileNumber.hasPhonePermission) {
       await MobileNumber.requestPhonePermission;
@@ -90,7 +83,6 @@ class _AddressState extends State<Address> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       mobileNumber = await MobileNumber.mobileNumber;
-      _simCard = await MobileNumber.getSimCards;
     } on PlatformException catch (e) {
       debugPrint("Failed to get mobile number because of '${e.message}'");
     }
@@ -257,7 +249,7 @@ class _AddressState extends State<Address> {
                 ),
               )
             : Container(
-                color: Colors.transparent,
+                color: Colors.grey[200],
                 child: Column(
                   children: [
                     Expanded(
