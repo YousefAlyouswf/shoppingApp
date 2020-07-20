@@ -26,6 +26,19 @@ List<ItemShow> itemShow = new List();
 
 class _HomeWidgetState extends State<HomeWidget> {
   imageOnTap(int i) {
+    Map<String, dynamic> test = {
+      'image': itemShow[i].image,
+      'name': itemShow[i].itemName,
+      'nameEn': itemShow[i].nameEn,
+      'des': itemShow[i].itemDes,
+      'price': itemShow[i].itemPrice,
+      'priceOld': itemShow[i].preiceOld,
+      'imageID': itemShow[i].imageID,
+      'buyPrice': itemShow[i].buyPrice,
+      'size': itemShow[i].size,
+    };
+    print(test);
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -248,15 +261,29 @@ class _HomeWidgetState extends State<HomeWidget> {
                                       nameEn: discountOffer[i].nameEn,
                                       des: discountOffer[i].description,
                                       price: discountOffer[i].price,
-                                      priceOld: discountOffer[i].priceOld,
                                       imageID: discountOffer[i].imageID,
                                       buyPrice: discountOffer[i].buyPrice,
                                       size: discountOffer[i].size,
-                                      // totalQuantity:
-                                      //     discountOffer[i].totalQuantity,
+                                      priceOld: discountOffer[i].priceOld,
                                     ),
                                   ),
                                 );
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //     builder: (context) => ShowItem(
+                                //       image: discountOffer[i].image,
+                                //       name: discountOffer[i].name,
+                                //       nameEn: discountOffer[i].nameEn,
+                                //       des: discountOffer[i].description,
+                                //       price: discountOffer[i].price,
+                                //       priceOld: discountOffer[i].priceOld,
+                                //       imageID: discountOffer[i].imageID,
+                                //       buyPrice: discountOffer[i].buyPrice,
+                                //       size: discountOffer[i].size,
+                                //     ),
+                                //   ),
+                                // );
                               },
                               child: Column(
                                 children: [

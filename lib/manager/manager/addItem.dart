@@ -640,6 +640,7 @@ class MyTextFormField extends StatelessWidget {
   final bool isMultiLine;
   final bool isEmail;
   final String labelText;
+  final bool limitText;
   final TextEditingController editingController;
   MyTextFormField({
     this.hintText,
@@ -650,6 +651,7 @@ class MyTextFormField extends StatelessWidget {
     this.isMultiLine = false,
     this.isEmail = false,
     this.labelText,
+    this.limitText = false,
   });
   @override
   Widget build(BuildContext context) {
@@ -668,6 +670,7 @@ class MyTextFormField extends StatelessWidget {
         ),
         obscureText: isPassword ? true : false,
         maxLines: null,
+        maxLength: limitText ? 120 : null,
         keyboardType: isNumber
             ? TextInputType.number
             : isMultiLine

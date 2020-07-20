@@ -1,13 +1,22 @@
+import 'dart:io';
+
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meet_network_image/meet_network_image.dart';
+import 'package:mobile_number/mobile_number.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
+import 'package:shop_app/manager/manager/addItem.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
+import 'package:shop_app/widgets/user/categoryScreen/categoroesWidget.dart';
 import 'package:shop_app/widgets/user/homeWidget.dart';
 import 'package:shop_app/widgets/widgets.dart';
+import 'package:intl/intl.dart' as intl;
 
 class ShowItem extends StatefulWidget {
   final Function onThemeChanged;
@@ -46,14 +55,6 @@ class _ShowItemState extends State<ShowItem>
 
   String sizeChose = '';
   int quantity;
-  @override
-  void initState() {
-    getImagesToShowItems();
-    super.initState();
-
-    fetchToMyCart();
-    getQuantityForThis();
-  }
 
   getQuantityForThis() async {
     await Firestore.instance
@@ -69,6 +70,68 @@ class _ShowItemState extends State<ShowItem>
             },
           ),
         );
+  }
+
+  AndroidDeviceInfo androidInfo;
+  IosDeviceInfo iosDeviceInfo;
+  String device;
+  void deviceID() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      androidInfo = await deviceInfo.androidInfo;
+      device = androidInfo.androidId;
+    } else if (Platform.isIOS) {
+      iosDeviceInfo = await deviceInfo.iosInfo;
+      device = iosDeviceInfo.identifierForVendor;
+    }
+  }
+
+  String _mobileNumber = '';
+  Future<void> initMobileNumberState() async {
+    if (!await MobileNumber.hasPhonePermission) {
+      await MobileNumber.requestPhonePermission;
+      return;
+    }
+    String mobileNumber = '';
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      mobileNumber = await MobileNumber.mobileNumber;
+    } on PlatformException catch (e) {
+      debugPrint("Failed to get mobile number because of '${e.message}'");
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _mobileNumber = mobileNumber;
+    });
+    List<String> numberList = _mobileNumber.split('');
+    bool getNum = false;
+    for (var i = 0; i < numberList.length; i++) {
+      if (numberList[i] == '5' && !getNum) {
+        setState(() {
+          getNum = true;
+          _mobileNumber = '0';
+        });
+      }
+      if (getNum) {
+        _mobileNumber += numberList[i];
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    getImagesToShowItems();
+    super.initState();
+
+    fetchToMyCart();
+    getQuantityForThis();
+    deviceID();
+    initMobileNumberState();
   }
 
   @override
@@ -305,13 +368,22 @@ class _ShowItemState extends State<ShowItem>
                                                 SizedBox(
                                                   height: 20,
                                                 ),
-                                                Text(
-                                                  widget.des,
-                                                  textDirection:
-                                                      TextDirection.rtl,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                                Container(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: Colors.grey[300],
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    widget.des,
+                                                    textDirection:
+                                                        TextDirection.rtl,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -319,6 +391,473 @@ class _ShowItemState extends State<ShowItem>
                                         ),
                                       ),
                                     ),
+                                    Divider(
+                                      thickness: 3,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          "أراء العملاء",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 20,
+                                              fontFamily: "MainFont"),
+                                        ),
+                                        InkWell(
+                                          splashColor: Colors.transparent,
+                                          onTap: () async {
+                                            bool isBuyer = false;
+                                            await Firestore.instance
+                                                .collection('order')
+                                                .where('userID',
+                                                    isEqualTo: device)
+                                                .getDocuments()
+                                                .then((v) {
+                                              v.documents.forEach((e) {
+                                                for (var i = 0;
+                                                    i < e['items'].length;
+                                                    i++) {
+                                                  if (e['items'][i]
+                                                          ['productID'] ==
+                                                      widget.imageID) {
+                                                    setState(() {
+                                                      isBuyer = true;
+                                                    });
+                                                  }
+                                                }
+                                              });
+                                            });
+
+                                            int countStars = 0;
+                                            FaIcon emptyStar = FaIcon(
+                                              FontAwesomeIcons.star,
+                                              color: Colors.grey,
+                                            );
+                                            FaIcon solidStar = FaIcon(
+                                              FontAwesomeIcons.solidStar,
+                                              color: Colors.yellow[700],
+                                            );
+                                            bool first = false;
+                                            bool second = false;
+                                            bool third = false;
+                                            bool forth = false;
+                                            bool fifth = false;
+                                            TextEditingController name =
+                                                TextEditingController();
+                                            TextEditingController phone =
+                                                TextEditingController();
+                                            TextEditingController text =
+                                                TextEditingController();
+                                            if (_mobileNumber != null) {
+                                              phone.text = _mobileNumber;
+                                            }
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  StatefulBuilder(builder:
+                                                      (context, setState) {
+                                                return Dialog(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      10.0,
+                                                    ),
+                                                  ),
+                                                  child: SingleChildScrollView(
+                                                    child: Container(
+                                                      height: height * 0.7,
+                                                      width: width,
+                                                      child: Column(
+                                                        children: [
+                                                          Text(
+                                                            "(سوف يتم عرض رأيك بكل شفافيه)",
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  "MainFont",
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 20,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              //First
+                                                              IconButton(
+                                                                icon: first
+                                                                    ? solidStar
+                                                                    : emptyStar,
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    first =
+                                                                        !first;
+                                                                    if (!first) {
+                                                                      second =
+                                                                          false;
+                                                                      third =
+                                                                          false;
+                                                                      forth =
+                                                                          false;
+                                                                      fifth =
+                                                                          false;
+                                                                    } else {
+                                                                      countStars =
+                                                                          1;
+                                                                    }
+                                                                  });
+                                                                },
+                                                              ),
+                                                              //Second
+                                                              IconButton(
+                                                                icon: second
+                                                                    ? solidStar
+                                                                    : emptyStar,
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    second =
+                                                                        !second;
+                                                                    if (!second) {
+                                                                      third =
+                                                                          false;
+                                                                      forth =
+                                                                          false;
+                                                                      fifth =
+                                                                          false;
+                                                                    } else {
+                                                                      first =
+                                                                          true;
+                                                                      second =
+                                                                          true;
+                                                                      countStars =
+                                                                          2;
+                                                                    }
+                                                                  });
+                                                                },
+                                                              ),
+                                                              //Third
+                                                              IconButton(
+                                                                icon: third
+                                                                    ? solidStar
+                                                                    : emptyStar,
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    third =
+                                                                        !third;
+                                                                    if (!third) {
+                                                                      forth =
+                                                                          false;
+                                                                      fifth =
+                                                                          false;
+                                                                    } else {
+                                                                      first =
+                                                                          true;
+                                                                      second =
+                                                                          true;
+                                                                      third =
+                                                                          true;
+                                                                      countStars =
+                                                                          3;
+                                                                    }
+                                                                  });
+                                                                },
+                                                              ),
+                                                              //Forth
+                                                              IconButton(
+                                                                icon: forth
+                                                                    ? solidStar
+                                                                    : emptyStar,
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    forth =
+                                                                        !forth;
+                                                                    if (!forth) {
+                                                                      fifth =
+                                                                          false;
+                                                                    } else {
+                                                                      first =
+                                                                          true;
+                                                                      second =
+                                                                          true;
+                                                                      third =
+                                                                          true;
+                                                                      countStars =
+                                                                          4;
+                                                                    }
+                                                                  });
+                                                                },
+                                                              ),
+                                                              //Fifth
+                                                              IconButton(
+                                                                icon: fifth
+                                                                    ? solidStar
+                                                                    : emptyStar,
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    fifth =
+                                                                        !fifth;
+                                                                    if (fifth) {
+                                                                      first =
+                                                                          true;
+                                                                      second =
+                                                                          true;
+                                                                      third =
+                                                                          true;
+                                                                      forth =
+                                                                          true;
+                                                                      countStars =
+                                                                          5;
+                                                                    }
+                                                                  });
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          MyTextFormField(
+                                                            editingController:
+                                                                name,
+                                                            labelText: "الأسم",
+                                                          ),
+                                                          MyTextFormField(
+                                                            editingController:
+                                                                phone,
+                                                            isNumber: true,
+                                                            labelText:
+                                                                "رقم الجوال لن يتم عرضه",
+                                                          ),
+                                                          MyTextFormField(
+                                                            limitText: true,
+                                                            editingController:
+                                                                text,
+                                                            isMultiLine: true,
+                                                            labelText:
+                                                                "رأيك يهمنا",
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Container(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              width: double
+                                                                  .infinity,
+                                                              height: 50,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .all(
+                                                                        Radius
+                                                                            .circular(
+                                                                          10,
+                                                                        ),
+                                                                      ),
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .unselectedWidgetColor),
+                                                              child: InkWell(
+                                                                onTap:
+                                                                    () async {
+                                                                  Map<String,
+                                                                          dynamic>
+                                                                      reviewMap =
+                                                                      {
+                                                                    'name': name
+                                                                        .text,
+                                                                    'phone': phone
+                                                                        .text,
+                                                                    'text': text
+                                                                        .text,
+                                                                    'stars':
+                                                                        countStars
+                                                                            .toString(),
+                                                                    'date': DateTime
+                                                                            .now()
+                                                                        .toString(),
+                                                                    'isBuyer':
+                                                                        isBuyer,
+                                                                  };
+                                                                  await Firestore
+                                                                      .instance
+                                                                      .collection(
+                                                                          "reviews")
+                                                                      .where(
+                                                                          'itemID',
+                                                                          isEqualTo: widget
+                                                                              .imageID)
+                                                                      .getDocuments()
+                                                                      .then(
+                                                                        (value) => value
+                                                                            .documents
+                                                                            .forEach(
+                                                                          (e) async {
+                                                                            await Firestore.instance.collection('reviews').document(e.documentID).updateData({
+                                                                              'review': FieldValue.arrayUnion([
+                                                                                reviewMap
+                                                                              ])
+                                                                            });
+                                                                          },
+                                                                        ),
+                                                                      )
+                                                                      .then(
+                                                                          (value) {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    addCartToast(
+                                                                        "تم نشر تعليقك");
+                                                                  });
+                                                                },
+                                                                child: Text(
+                                                                  "أرسل",
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          "MainFont",
+                                                                      fontSize:
+                                                                          18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
+                                            );
+                                          },
+                                          child:
+                                              FaIcon(FontAwesomeIcons.feather),
+                                        )
+                                      ],
+                                    ),
+                                    Container(
+                                      height: 350,
+                                      width: double.infinity,
+                                      child: StreamBuilder(
+                                          stream: Firestore.instance
+                                              .collection('reviews')
+                                              .where('itemID',
+                                                  isEqualTo: widget.imageID)
+                                              .snapshots(),
+                                          builder: (context, snapshot) {
+                                            if (!snapshot.hasData) {
+                                              return Text("...");
+                                            } else if (snapshot.hasError) {
+                                              return Text("Error");
+                                            } else {
+                                              return ListView.builder(
+                                                  itemCount: snapshot
+                                                      .data
+                                                      .documents[0]
+                                                      .data['review']
+                                                      .length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    String name = snapshot
+                                                            .data
+                                                            .documents[0]
+                                                            .data['review']
+                                                        [index]['name'];
+                                                    String stars = snapshot
+                                                            .data
+                                                            .documents[0]
+                                                            .data['review']
+                                                        [index]['stars'];
+                                                    String text = snapshot
+                                                            .data
+                                                            .documents[0]
+                                                            .data['review']
+                                                        [index]['text'];
+                                                    String date = snapshot
+                                                            .data
+                                                            .documents[0]
+                                                            .data['review']
+                                                        [index]['date'];
+                                                    bool isBuyer = snapshot
+                                                            .data
+                                                            .documents[0]
+                                                            .data['review']
+                                                        [index]['isBuyer'];
+
+                                                    DateTime reviewDate =
+                                                        DateTime.parse(date);
+                                                    var formatter =
+                                                        new intl.DateFormat(
+                                                            'dd/MM/yyyy');
+                                                    String formatDate =
+                                                        formatter
+                                                            .format(reviewDate);
+                                                    return Container(
+                                                        margin:
+                                                            EdgeInsets.all(8.0),
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                            color: Colors
+                                                                .grey[300],
+                                                          ),
+                                                        ),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  "$name",
+                                                                ),
+                                                                Text(
+                                                                  "${isBuyer ? "تم الشراء" : "لم يتم الشراء"}",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: isBuyer
+                                                                        ? Colors
+                                                                            .green
+                                                                        : Colors
+                                                                            .red,
+                                                                  ),
+                                                                ),
+                                                                starsWidget(
+                                                                  int.parse(
+                                                                      stars),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Text(
+                                                              text,
+                                                              style: TextStyle(
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              formatDate,
+                                                              style: TextStyle(
+                                                                  fontSize: 12),
+                                                            ),
+                                                          ],
+                                                        ));
+                                                  });
+                                            }
+                                          }),
+                                    )
                                   ],
                                 ),
                               ),
@@ -479,6 +1018,68 @@ class _ShowItemState extends State<ShowItem>
         ),
       ),
     );
+  }
+
+  Widget starsWidget(int stars) {
+    FaIcon solidStar = FaIcon(
+      FontAwesomeIcons.solidStar,
+      color: Colors.yellow[700],
+    );
+    FaIcon emptyStar = FaIcon(
+      FontAwesomeIcons.star,
+      color: Colors.grey,
+    );
+    if (stars == 5) {
+      return Row(
+        children: [
+          solidStar,
+          solidStar,
+          solidStar,
+          solidStar,
+          solidStar,
+        ],
+      );
+    } else if (stars == 4) {
+      return Row(
+        children: [
+          solidStar,
+          solidStar,
+          solidStar,
+          solidStar,
+          emptyStar,
+        ],
+      );
+    } else if (stars == 3) {
+      return Row(
+        children: [
+          solidStar,
+          solidStar,
+          solidStar,
+          emptyStar,
+          emptyStar,
+        ],
+      );
+    } else if (stars == 2) {
+      return Row(
+        children: [
+          solidStar,
+          solidStar,
+          emptyStar,
+          emptyStar,
+          emptyStar,
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          solidStar,
+          emptyStar,
+          emptyStar,
+          emptyStar,
+          emptyStar,
+        ],
+      );
+    }
   }
 
   Widget imageCarouselItemShow(double height) {
