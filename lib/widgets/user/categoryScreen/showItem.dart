@@ -51,8 +51,6 @@ class ShowItem extends StatefulWidget {
 
 class _ShowItemState extends State<ShowItem>
     with TickerProviderStateMixin<ShowItem> {
-  ScrollController controller;
-
   String sizeChose = '';
   int quantity;
 
@@ -123,6 +121,26 @@ class _ShowItemState extends State<ShowItem>
     }
   }
 
+  ScrollController _controllerGridViewCatgories, scrollController;
+  _scrollListener() {
+    if (_controllerGridViewCatgories.offset >=
+            _controllerGridViewCatgories.position.maxScrollExtent &&
+        !_controllerGridViewCatgories.position.outOfRange) {
+      setState(() {
+        print("reach the bottom");
+      });
+    }
+    if (_controllerGridViewCatgories.offset <=
+            _controllerGridViewCatgories.position.minScrollExtent &&
+        !_controllerGridViewCatgories.position.outOfRange) {
+      setState(() {
+        print("reach the top");
+        scrollController.animateTo(180.0,
+            duration: Duration(milliseconds: 500), curve: Curves.ease);
+      });
+    }
+  }
+
   @override
   void initState() {
     getImagesToShowItems();
@@ -132,6 +150,9 @@ class _ShowItemState extends State<ShowItem>
     getQuantityForThis();
     deviceID();
     initMobileNumberState();
+    _controllerGridViewCatgories = ScrollController();
+    _controllerGridViewCatgories.addListener(_scrollListener);
+    scrollController = ScrollController();
   }
 
   @override
@@ -151,7 +172,7 @@ class _ShowItemState extends State<ShowItem>
                   children: [
                     Expanded(
                       child: CustomScrollView(
-                        controller: controller,
+                        controller: scrollController,
                         slivers: <Widget>[
                           SliverAppBar(
                             expandedHeight:
@@ -182,19 +203,51 @@ class _ShowItemState extends State<ShowItem>
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
-                                    Container(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: 16.0),
-                                      width: double.infinity,
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        isEnglish ? widget.nameEn : widget.name,
-                                        style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: "MainFont",
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 16.0),
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              isEnglish
+                                                  ? widget.nameEn
+                                                  : widget.name,
+                                              style: TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: "MainFont",
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                        InkWell(
+                                          splashColor: Colors.transparent,
+                                          onTap: () {
+                                            scrollController.animateTo(700.0,
+                                                duration: Duration(
+                                                    milliseconds: 1000),
+                                                curve: Curves.easeInOutCirc);
+                                          },
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: Colors.orange
+                                                  .withOpacity(0.5),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10)),
+                                            ),
+                                            width: 75,
+                                            child: Text(
+                                              "أراء العملاء",
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
                                     ),
                                     quantity < 5
                                         ? Container(
@@ -754,48 +807,97 @@ class _ShowItemState extends State<ShowItem>
                                             } else if (snapshot.hasError) {
                                               return Text("Error");
                                             } else {
-                                              return ListView.builder(
-                                                  itemCount: snapshot
-                                                      .data
-                                                      .documents[0]
-                                                      .data['review']
-                                                      .length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    String name = snapshot
-                                                            .data
-                                                            .documents[0]
-                                                            .data['review']
-                                                        [index]['name'];
-                                                    String stars = snapshot
-                                                            .data
-                                                            .documents[0]
-                                                            .data['review']
-                                                        [index]['stars'];
-                                                    String text = snapshot
-                                                            .data
-                                                            .documents[0]
-                                                            .data['review']
-                                                        [index]['text'];
-                                                    String date = snapshot
-                                                            .data
-                                                            .documents[0]
-                                                            .data['review']
-                                                        [index]['date'];
-                                                    bool isBuyer = snapshot
-                                                            .data
-                                                            .documents[0]
-                                                            .data['review']
-                                                        [index]['isBuyer'];
+                                              List<Reviews> listReviews = [];
+                                              for (var i = 0;
+                                                  i <
+                                                      snapshot
+                                                          .data
+                                                          .documents[0]
+                                                          .data['review']
+                                                          .length;
+                                                  i++) {
+                                                String name = snapshot
+                                                    .data
+                                                    .documents[0]
+                                                    .data['review'][i]['name'];
+                                                String stars = snapshot
+                                                    .data
+                                                    .documents[0]
+                                                    .data['review'][i]['stars'];
+                                                String text = snapshot
+                                                    .data
+                                                    .documents[0]
+                                                    .data['review'][i]['text'];
+                                                String date = snapshot
+                                                    .data
+                                                    .documents[0]
+                                                    .data['review'][i]['date'];
+                                                bool isBuyer = snapshot
+                                                        .data
+                                                        .documents[0]
+                                                        .data['review'][i]
+                                                    ['isBuyer'];
 
-                                                    DateTime reviewDate =
-                                                        DateTime.parse(date);
-                                                    var formatter =
-                                                        new intl.DateFormat(
-                                                            'dd/MM/yyyy');
-                                                    String formatDate =
-                                                        formatter
-                                                            .format(reviewDate);
+                                                DateTime reviewDate =
+                                                    DateTime.parse(date);
+                                                var formatter =
+                                                    new intl.DateFormat(
+                                                        'dd/MM/yyyy');
+                                                String formatDate = formatter
+                                                    .format(reviewDate);
+
+                                                listReviews.add(Reviews(
+                                                  name: name,
+                                                  date: formatDate,
+                                                  isBuyer: isBuyer,
+                                                  stars: int.parse(stars),
+                                                  text: text,
+                                                ));
+                                              }
+
+                                              listReviews.sort((b, a) =>
+                                                  a.date.compareTo(b.date));
+
+                                              return ListView.builder(
+                                                  itemCount: listReviews.length,
+                                                  itemBuilder: (context, i) {
+                                                    List<String> dateList =
+                                                        listReviews[i]
+                                                            .date
+                                                            .split('/');
+                                                    DateTime dateReview;
+                                                    for (var j = 0;
+                                                        j < dateList.length;
+                                                        j++) {
+                                                      dateReview = DateTime(
+                                                        int.parse(dateList[2]),
+                                                        int.parse(dateList[1]),
+                                                        int.parse(dateList[0]),
+                                                      );
+                                                    }
+                                                    final date2 =
+                                                        DateTime.now();
+
+                                                    final difference = date2
+                                                        .difference(dateReview)
+                                                        .inDays;
+                                                    print(difference);
+                                                    String dateShow;
+                                                    if (difference == 0) {
+                                                      dateShow = "اليوم";
+                                                    } else if (difference ==
+                                                        1) {
+                                                      dateShow = "أمس";
+                                                    } else if (difference ==
+                                                        2) {
+                                                      dateShow = "قبل أمس";
+                                                    } else if (difference ==
+                                                        3) {
+                                                      dateShow = "قبل يومين";
+                                                    } else {
+                                                      dateShow =
+                                                          listReviews[i].date;
+                                                    }
                                                     return Container(
                                                         margin:
                                                             EdgeInsets.all(8.0),
@@ -819,13 +921,15 @@ class _ShowItemState extends State<ShowItem>
                                                                       .spaceBetween,
                                                               children: [
                                                                 Text(
-                                                                  "$name",
+                                                                  "${listReviews[i].name}",
                                                                 ),
                                                                 Text(
-                                                                  "${isBuyer ? "تم الشراء" : "لم يتم الشراء"}",
+                                                                  "${listReviews[i].isBuyer ? "تم الشراء" : "لم يتم الشراء"}",
                                                                   style:
                                                                       TextStyle(
-                                                                    color: isBuyer
+                                                                    color: listReviews[
+                                                                                i]
+                                                                            .isBuyer
                                                                         ? Colors
                                                                             .green
                                                                         : Colors
@@ -833,13 +937,14 @@ class _ShowItemState extends State<ShowItem>
                                                                   ),
                                                                 ),
                                                                 starsWidget(
-                                                                  int.parse(
-                                                                      stars),
+                                                                  listReviews[i]
+                                                                      .stars,
                                                                 ),
                                                               ],
                                                             ),
                                                             Text(
-                                                              text,
+                                                              listReviews[i]
+                                                                  .text,
                                                               style: TextStyle(
                                                                 fontSize: 15,
                                                                 fontWeight:
@@ -848,7 +953,7 @@ class _ShowItemState extends State<ShowItem>
                                                               ),
                                                             ),
                                                             Text(
-                                                              formatDate,
+                                                              dateShow,
                                                               style: TextStyle(
                                                                   fontSize: 12),
                                                             ),
@@ -1203,3 +1308,13 @@ class _ShowItemState extends State<ShowItem>
 
 List<NetworkImage> networkItemShow = [];
 List<ItemShow> cartToCheck = new List();
+
+class Reviews {
+  final String name;
+  final String text;
+  final int stars;
+  final String date;
+  final bool isBuyer;
+
+  Reviews({this.name, this.text, this.stars, this.date, this.isBuyer});
+}
