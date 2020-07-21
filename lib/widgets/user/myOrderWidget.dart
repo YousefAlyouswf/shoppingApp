@@ -249,141 +249,141 @@ Widget orderScreen(BuildContext context, String userID) {
                                             }),
                                       ),
                                       //Delete order
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            border:
-                                                Border.all(color: Colors.red),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10))),
-                                        child: FlatButton.icon(
-                                          icon: Icon(
-                                            Icons.delete,
-                                            color: Colors.red[300],
-                                          ),
-                                          onPressed: () {
-                                            if (status == "0") {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        Dialog(
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            12.0),
-                                                  ),
-                                                  child: Container(
-                                                    height: 300.0,
-                                                    width: 300.0,
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: <Widget>[
-                                                        Center(
-                                                          child: Text(
-                                                            word("cancel",
-                                                                context),
-                                                            style: TextStyle(
-                                                                fontSize: 20),
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      16.0),
-                                                          child: Container(
-                                                            child: Text(
-                                                              word("cancel_msg",
-                                                                  context),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceAround,
-                                                          children: [
-                                                            FlatButton(
-                                                              onPressed: () {
-                                                                // Firestore
-                                                                //     .instance
-                                                                //     .collection(
-                                                                //         'order')
-                                                                //     .where(
-                                                                //         'orderID',
-                                                                //         isEqualTo: ds[
-                                                                //             'orderID'])
-                                                                //     .where(
-                                                                //         'userID',
-                                                                //         isEqualTo: ds[
-                                                                //             'userID'])
-                                                                //     .getDocuments()
-                                                                //     .then(
-                                                                //         (value) {
-                                                                //   value
-                                                                //       .documents
-                                                                //       .forEach(
-                                                                //           (element) {
-                                                                //     Firestore
-                                                                //         .instance
-                                                                //         .collection(
-                                                                //             'order')
-                                                                //         .document(
-                                                                //             element.documentID)
-                                                                //         .delete();
-                                                                //   });
-                                                                // });
-                                                                // Navigator.pop(
-                                                                //     context);
-                                                                // Navigator.pop(
-                                                                //     context);
-                                                              },
-                                                              child: Text(
-                                                                word("sure",
-                                                                    context),
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .purple,
-                                                                    fontSize:
-                                                                        18.0),
-                                                              ),
-                                                            ),
-                                                            FlatButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: Text(
-                                                                word("exit",
-                                                                    context),
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .purple,
-                                                                    fontSize:
-                                                                        18.0),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            } else {
-                                              errorToast(
-                                                word("cant_cancel", context),
-                                              );
-                                            }
-                                          },
-                                          label: Text(
-                                            word("cancel", context),
-                                          ),
-                                        ),
-                                      ),
+                                      // Container(
+                                      //   decoration: BoxDecoration(
+                                      //       border:
+                                      //           Border.all(color: Colors.red),
+                                      //       borderRadius: BorderRadius.all(
+                                      //           Radius.circular(10))),
+                                      //   child: FlatButton.icon(
+                                      //     icon: Icon(
+                                      //       Icons.delete,
+                                      //       color: Colors.red[300],
+                                      //     ),
+                                      //     onPressed: () {
+                                      //       if (status == "0") {
+                                      //         showDialog(
+                                      //           context: context,
+                                      //           builder:
+                                      //               (BuildContext context) =>
+                                      //                   Dialog(
+                                      //             shape: RoundedRectangleBorder(
+                                      //               borderRadius:
+                                      //                   BorderRadius.circular(
+                                      //                       12.0),
+                                      //             ),
+                                      //             child: Container(
+                                      //               height: 300.0,
+                                      //               width: 300.0,
+                                      //               child: Column(
+                                      //                 mainAxisAlignment:
+                                      //                     MainAxisAlignment
+                                      //                         .spaceAround,
+                                      //                 children: <Widget>[
+                                      //                   Center(
+                                      //                     child: Text(
+                                      //                       word("cancel",
+                                      //                           context),
+                                      //                       style: TextStyle(
+                                      //                           fontSize: 20),
+                                      //                     ),
+                                      //                   ),
+                                      //                   Padding(
+                                      //                     padding:
+                                      //                         const EdgeInsets
+                                      //                                 .symmetric(
+                                      //                             horizontal:
+                                      //                                 16.0),
+                                      //                     child: Container(
+                                      //                       child: Text(
+                                      //                         word("cancel_msg",
+                                      //                             context),
+                                      //                       ),
+                                      //                     ),
+                                      //                   ),
+                                      //                   Row(
+                                      //                     mainAxisAlignment:
+                                      //                         MainAxisAlignment
+                                      //                             .spaceAround,
+                                      //                     children: [
+                                      //                       FlatButton(
+                                      //                         onPressed: () {
+                                      //                           // Firestore
+                                      //                           //     .instance
+                                      //                           //     .collection(
+                                      //                           //         'order')
+                                      //                           //     .where(
+                                      //                           //         'orderID',
+                                      //                           //         isEqualTo: ds[
+                                      //                           //             'orderID'])
+                                      //                           //     .where(
+                                      //                           //         'userID',
+                                      //                           //         isEqualTo: ds[
+                                      //                           //             'userID'])
+                                      //                           //     .getDocuments()
+                                      //                           //     .then(
+                                      //                           //         (value) {
+                                      //                           //   value
+                                      //                           //       .documents
+                                      //                           //       .forEach(
+                                      //                           //           (element) {
+                                      //                           //     Firestore
+                                      //                           //         .instance
+                                      //                           //         .collection(
+                                      //                           //             'order')
+                                      //                           //         .document(
+                                      //                           //             element.documentID)
+                                      //                           //         .delete();
+                                      //                           //   });
+                                      //                           // });
+                                      //                           // Navigator.pop(
+                                      //                           //     context);
+                                      //                           // Navigator.pop(
+                                      //                           //     context);
+                                      //                         },
+                                      //                         child: Text(
+                                      //                           word("sure",
+                                      //                               context),
+                                      //                           style: TextStyle(
+                                      //                               color: Colors
+                                      //                                   .purple,
+                                      //                               fontSize:
+                                      //                                   18.0),
+                                      //                         ),
+                                      //                       ),
+                                      //                       FlatButton(
+                                      //                         onPressed: () {
+                                      //                           Navigator.pop(
+                                      //                               context);
+                                      //                         },
+                                      //                         child: Text(
+                                      //                           word("exit",
+                                      //                               context),
+                                      //                           style: TextStyle(
+                                      //                               color: Colors
+                                      //                                   .purple,
+                                      //                               fontSize:
+                                      //                                   18.0),
+                                      //                         ),
+                                      //                       ),
+                                      //                     ],
+                                      //                   ),
+                                      //                 ],
+                                      //               ),
+                                      //             ),
+                                      //           ),
+                                      //         );
+                                      //       } else {
+                                      //         errorToast(
+                                      //           word("cant_cancel", context),
+                                      //         );
+                                      //       }
+                                      //     },
+                                      //     label: Text(
+                                      //       word("cancel", context),
+                                      //     ),
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),
