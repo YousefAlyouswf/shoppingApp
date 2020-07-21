@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/helper/HelperFunction.dart';
 import 'package:shop_app/manager/mainPage.dart';
 import 'package:shop_app/manager/signin_screen.dart';

@@ -209,8 +209,7 @@ class _CartWidgetState extends State<CartWidget> {
                             width: 100,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: AssetImage(
-                                    'assets/images/logoBigTrans.png'),
+                                image: AssetImage('assets/images/logo.png'),
                               ),
                             ),
                           ),

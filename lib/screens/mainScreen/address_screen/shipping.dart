@@ -128,7 +128,7 @@ Widget addAddress(
   String cityFromSa,
   String mobileNumber,
 ) {
-  if (mobileNumber != null) {
+  if (mobileNumber != '') {
     phone.text = mobileNumber;
   }
 
@@ -352,7 +352,7 @@ Widget buttonsBoth(
         )
       : InkWell(
           onTap: () async {
-            spiltName();
+            await spiltName();
             bool emailValid = RegExp(
                     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                 .hasMatch(email.text);

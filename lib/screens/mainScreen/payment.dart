@@ -92,6 +92,12 @@ class _PaymentState extends State<Payment> {
   Future<void> addThisOrderToFirestore() async {
     double total =
         double.parse(widget.totalAfterTax) + double.parse(widget.delvierCost);
+    String userIDPhone;
+    if (androidInfo == null) {
+      userIDPhone = iosDeviceInfo.identifierForVendor;
+    } else {
+      userIDPhone = androidInfo.androidId;
+    }
     await Firestore.instance.collection('order').add({
       'payment': '100',
       'driverID': '',
@@ -114,9 +120,7 @@ class _PaymentState extends State<Payment> {
       'priceForSell': widget.price,
       'priceForBuy': widget.buyPrice,
       'items': FieldValue.arrayUnion(mapItems),
-      'userID': androidInfo.androidId == null
-          ? iosDeviceInfo.identifierForVendor
-          : androidInfo.androidId,
+      'userID': userIDPhone,
     });
   }
 
@@ -202,7 +206,7 @@ class _PaymentState extends State<Payment> {
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     var first = addresses.first;
     city = first.locality;
-    if (city == "Riyadh" || city == "الرياض") {
+    if (city == "Riyadh" || city == "الرياض" || city == "RIYADH,الرياض") {
       setState(() {
         paymentMethodForRiyadh = true;
       });
@@ -266,6 +270,7 @@ class _PaymentState extends State<Payment> {
 
   AndroidDeviceInfo androidInfo;
   IosDeviceInfo iosDeviceInfo;
+  String userIDPhone2;
   void deviceID() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     if (Platform.isAndroid) {
@@ -447,24 +452,23 @@ class _PaymentState extends State<Payment> {
                   initialUrl: webviewUrl,
                   javascriptMode: JavascriptMode.unrestricted,
                   onPageFinished: (url) async {
+                    print('~~~~~~~~~~~~~>>>>> $url');
                     if (url == "http://geniusloop.co/payment/succed.php") {
-                      if (!addFirestore) {
-                        await addThisOrderToFirestore().then((value) {
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          twilioFlutter.sendSMS(
-                              toNumber: phone,
-                              messageBody:
-                                  'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
-                          //sendEmailToCustomer();
-                          addCartToast(word("Succssful", context));
-                          navIndex = 4;
-                          DBHelper.deleteAllItem("cart");
-                          Navigator.popUntil(context, (route) => route.isFirst);
-                        });
-                        setState(() {
-                          addFirestore = true;
-                        });
-                      }
+                      await addThisOrderToFirestore().then((value) {
+                        takeOffFromSubcatgory();
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        twilioFlutter.sendSMS(
+                            toNumber: phone,
+                            messageBody:
+                                'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
+                        //sendEmailToCustomer();
+                        addCartToast(word("Succssful", context));
+                        navIndex = 4;
+                        DBHelper.deleteAllItem("cart");
+                        Navigator.popUntil(context, (route) => route.isFirst);
+                      }).catchError((e) {
+                        print(e);
+                      });
                     } else if (url ==
                         "http://geniusloop.co/payment/failed.php") {
                       FocusScope.of(context).requestFocus(FocusNode());
