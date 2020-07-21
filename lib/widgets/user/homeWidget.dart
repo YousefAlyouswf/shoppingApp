@@ -45,7 +45,19 @@ class _HomeWidgetState extends State<HomeWidget> {
   imageOnTap(int i) async {
     await getQuantityForThis(itemShow[i].imageID).then((value) {
       if (quantity <= 1) {
-        errorToast(word("outOfStock", context));
+        if (showMsg) {
+          errorToast(word("outOfStock", context));
+          setState(() {
+            showMsg = false;
+            checkI = i;
+          });
+        } else if (checkI != i) {
+          setState(() {
+            showMsg = true;
+            checkI = i;
+            errorToast(word("outOfStock", context));
+          });
+        }
       } else {
         Navigator.push(
           context,

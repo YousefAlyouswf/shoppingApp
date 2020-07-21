@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shop_app/models/appInfo.dart';
 import 'package:shop_app/models/itemShow.dart';
@@ -22,6 +24,24 @@ class FirestoreFunctions {
       await Firestore.instance.collection('images').document().setData({
         'imageID': imageID,
         'images': [url],
+      }).whenComplete(() async {
+        final _random = new Random();
+        var name = names[_random.nextInt(names.length)];
+        var text = texts[_random.nextInt(texts.length)];
+        var star = stars[_random.nextInt(stars.length)];
+        var isBuyer = buyer[_random.nextInt(buyer.length)];
+        await Firestore.instance.collection('reviews').document().setData({
+          'itemID': imageID,
+          'review': [
+            {
+              'date': DateTime.now().toString(),
+              'name': name,
+              'text': text,
+              'stars': star,
+              'isBuyer': isBuyer,
+            }
+          ],
+        });
       });
     });
   }
@@ -39,6 +59,24 @@ class FirestoreFunctions {
       await Firestore.instance.collection('images').document().setData({
         'imageID': imageID,
         'images': [url],
+      }).whenComplete(() async {
+        final _random = new Random();
+        var name = names[_random.nextInt(names.length)];
+        var text = texts[_random.nextInt(texts.length)];
+        var star = stars[_random.nextInt(stars.length)];
+        var isBuyer = buyer[_random.nextInt(buyer.length)];
+        await Firestore.instance.collection('reviews').document().setData({
+          'itemID': imageID,
+          'review': [
+            {
+              'date': DateTime.now().toString(),
+              'name': name,
+              'text': text,
+              'stars': star,
+              'isBuyer': isBuyer,
+            }
+          ],
+        });
       });
     });
   }
@@ -260,3 +298,58 @@ class FirestoreFunctions {
     });
   }
 }
+
+List<String> names = [
+  'LOLO',
+  'حصه',
+  'عمشة',
+  'Yara',
+  'Mona',
+  'Amal',
+  'سارة',
+  'منال',
+  'ليلى',
+  'شذى',
+  'Shahad',
+  'الرياض',
+  'نورة',
+  'لمياء',
+  'Abeer',
+  'مشاعل',
+  'أشواق',
+  'لينا',
+  'منيره',
+  'هيله',
+];
+
+List<String> texts = [
+  'I like it',
+  'روووعه مرررره',
+  'سعرها حلو',
+  'ابغى كوبون',
+  'حلوة أعجبتني',
+  'لو بغيت كميات منها بكم تصير',
+  'مافي ألوان منها؟؟',
+  'كم مقاسها',
+  'ياليت لو فيه خيارات اكثر',
+  'أشيائكم حلوه',
+  'يارب يجيني كوبون خصم',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+  '',
+];
+List<String> stars = [
+  '3',
+  '4',
+  '5',
+];
+List<bool> buyer = [
+  true,
+  false,
+];
