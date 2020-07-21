@@ -86,10 +86,8 @@ flutter:
   assets:
     - assets/images/
     - assets/images/logo.png
-    - assets/images/logoBigTrans.png
     - assets/lang/
-    - assets/like.flr
-    - assets/moon.flr
+
     - assets/maps.flr
     - assets/tabs.flr
     - assets/dokan.flr

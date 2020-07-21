@@ -242,7 +242,7 @@ class _ShowItemState extends State<ShowItem>
                                             child: Text(
                                               "أراء العملاء",
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.green,
                                               ),
                                             ),
                                           ),

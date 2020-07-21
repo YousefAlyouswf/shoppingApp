@@ -67,11 +67,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                     widget.goToCategoryPage(choseCategory, i);
                                     widget.darwerPressdAnimation();
                                   },
-                                  leading: FaIcon(
-                                    isEnglish
-                                        ? FontAwesomeIcons.arrowAltCircleRight
-                                        : FontAwesomeIcons.arrowAltCircleLeft,
-                                    color: Colors.black45,
+                                  leading: Image.asset(
+                                    'assets/images/logo.png',
+                                    width: 35,
                                   ),
                                   title: Text(
                                     categoryName,
