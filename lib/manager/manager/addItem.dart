@@ -660,6 +660,9 @@ class MyTextFormField extends StatelessWidget {
       child: TextField(
         onChanged: isChanged,
         autocorrect: false,
+        inputFormatters: isNumber
+            ? [new WhitelistingTextInputFormatter(RegExp("[0-9]"))]
+            : null,
         controller: editingController,
         decoration: InputDecoration(
           labelText: labelText,
