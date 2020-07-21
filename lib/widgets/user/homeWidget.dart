@@ -25,38 +25,50 @@ class HomeWidget extends StatefulWidget {
 List<ItemShow> itemShow = new List();
 
 class _HomeWidgetState extends State<HomeWidget> {
-  imageOnTap(int i) {
-    Map<String, dynamic> test = {
-      'image': itemShow[i].image,
-      'name': itemShow[i].itemName,
-      'nameEn': itemShow[i].nameEn,
-      'des': itemShow[i].itemDes,
-      'price': itemShow[i].itemPrice,
-      'priceOld': itemShow[i].preiceOld,
-      'imageID': itemShow[i].imageID,
-      'buyPrice': itemShow[i].buyPrice,
-      'size': itemShow[i].size,
-    };
-    print(test);
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ShowItem(
-          image: itemShow[i].image,
-          name: itemShow[i].itemName,
-          nameEn: itemShow[i].nameEn,
-          des: itemShow[i].itemDes,
-          price: itemShow[i].itemPrice,
-          priceOld: itemShow[i].preiceOld,
-          imageID: itemShow[i].imageID,
-          buyPrice: itemShow[i].buyPrice,
-          size: itemShow[i].size,
-        ),
-      ),
-    );
+  int quantity = 0;
+  Future<void> getQuantityForThis(imageID) async {
+    await Firestore.instance
+        .collection('quantityItem')
+        .where('id', isEqualTo: imageID)
+        .getDocuments()
+        .then(
+          (value) => value.documents.forEach(
+            (e) {
+              setState(() {
+                quantity = int.parse(e['number']);
+              });
+            },
+          ),
+        );
   }
 
+  imageOnTap(int i) async {
+    await getQuantityForThis(itemShow[i].imageID).then((value) {
+      if (quantity <= 1) {
+        errorToast(word("outOfStock", context));
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ShowItem(
+              image: itemShow[i].image,
+              name: itemShow[i].itemName,
+              nameEn: itemShow[i].nameEn,
+              des: itemShow[i].itemDes,
+              price: itemShow[i].itemPrice,
+              priceOld: itemShow[i].preiceOld,
+              imageID: itemShow[i].imageID,
+              buyPrice: itemShow[i].buyPrice,
+              size: itemShow[i].size,
+            ),
+          ),
+        );
+      }
+    });
+  }
+
+  bool showMsg = true;
+  int checkI = 999;
   ScrollController _controllerGridViewCatgories, scrollController;
   @override
   void initState() {
@@ -220,8 +232,6 @@ class _HomeWidgetState extends State<HomeWidget> {
                         price: price,
                         priceOld: priceOld,
                         size: sizes,
-                        // totalQuantity: snapshot.data.documents[i].data['items']
-                        //     [j]['totalQuantity'],
                         percentage: percentage,
                       ));
                     }
@@ -251,39 +261,43 @@ class _HomeWidgetState extends State<HomeWidget> {
                         child: Stack(
                           children: [
                             InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ShowItem(
-                                      image: discountOffer[i].image,
-                                      name: discountOffer[i].name,
-                                      nameEn: discountOffer[i].nameEn,
-                                      des: discountOffer[i].description,
-                                      price: discountOffer[i].price,
-                                      imageID: discountOffer[i].imageID,
-                                      buyPrice: discountOffer[i].buyPrice,
-                                      size: discountOffer[i].size,
-                                      priceOld: discountOffer[i].priceOld,
-                                    ),
-                                  ),
-                                );
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => ShowItem(
-                                //       image: discountOffer[i].image,
-                                //       name: discountOffer[i].name,
-                                //       nameEn: discountOffer[i].nameEn,
-                                //       des: discountOffer[i].description,
-                                //       price: discountOffer[i].price,
-                                //       priceOld: discountOffer[i].priceOld,
-                                //       imageID: discountOffer[i].imageID,
-                                //       buyPrice: discountOffer[i].buyPrice,
-                                //       size: discountOffer[i].size,
-                                //     ),
-                                //   ),
-                                // );
+                              onTap: () async {
+                                await getQuantityForThis(
+                                        discountOffer[i].imageID)
+                                    .then((value) {
+                                  if (quantity <= 1) {
+                                    if (showMsg) {
+                                      errorToast(word("outOfStock", context));
+                                      setState(() {
+                                        showMsg = false;
+                                        checkI = i;
+                                      });
+                                    } else if (checkI != i) {
+                                      setState(() {
+                                        showMsg = true;
+                                        checkI = i;
+                                        errorToast(word("outOfStock", context));
+                                      });
+                                    }
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ShowItem(
+                                          image: discountOffer[i].image,
+                                          name: discountOffer[i].name,
+                                          nameEn: discountOffer[i].nameEn,
+                                          des: discountOffer[i].description,
+                                          price: discountOffer[i].price,
+                                          imageID: discountOffer[i].imageID,
+                                          buyPrice: discountOffer[i].buyPrice,
+                                          size: discountOffer[i].size,
+                                          priceOld: discountOffer[i].priceOld,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                });
                               },
                               child: Column(
                                 children: [

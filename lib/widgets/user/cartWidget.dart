@@ -128,6 +128,7 @@ class _CartWidgetState extends State<CartWidget> {
     fetchToMyCart();
   }
 
+  bool showMsg = true;
   @override
   void initState() {
     super.initState();
@@ -557,6 +558,9 @@ class _CartWidgetState extends State<CartWidget> {
 
                                                     if (q == 1) {
                                                     } else {
+                                                      setState(() {
+                                                        showMsg = true;
+                                                      });
                                                       q--;
                                                       DBHelper.updateData(
                                                           "cart",
@@ -593,9 +597,14 @@ class _CartWidgetState extends State<CartWidget> {
                                                       cart[i].totalQuantity,
                                                     );
                                                     if (q >= totalQ) {
-                                                      errorToast(word(
-                                                          "outOfStock",
-                                                          context));
+                                                      if (showMsg) {
+                                                        errorToast(word(
+                                                            "outOfStock",
+                                                            context));
+                                                        setState(() {
+                                                          showMsg = false;
+                                                        });
+                                                      }
                                                     } else {
                                                       q++;
                                                     }

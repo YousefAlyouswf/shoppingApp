@@ -330,9 +330,15 @@ Widget buttonsBoth(
       ? InkWell(
           onTap: toggelToAddAddress,
           child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 8.0),
             height: 50,
-            width: MediaQuery.of(context).size.width / 2,
-            color: Theme.of(context).unselectedWidgetColor,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Theme.of(context).unselectedWidgetColor,
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
             child: Center(
               child: Text(
                 word("new_address_botton", context),

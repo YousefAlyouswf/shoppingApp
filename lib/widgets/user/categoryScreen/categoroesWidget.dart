@@ -284,7 +284,6 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                       await getQuantityForThis(
                                         listImages[index].imageID,
                                       );
-                                      print(quantity);
                                       if (quantity <= 1) {
                                         errorToast(word("outOfStock", context));
                                       } else {

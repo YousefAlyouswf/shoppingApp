@@ -396,7 +396,7 @@ class _PaymentState extends State<Payment> {
                               sendEmailToCustomer();
                               addCartToast(
                                   "تمت علمية الشراء يمكنك متابعه طلبك من هنا");
-                              navIndex = 3;
+                              navIndex = 4;
                               DBHelper.deleteAllItem("cart");
                               Navigator.popUntil(
                                   context, (route) => route.isFirst);
@@ -469,23 +469,6 @@ class _PaymentState extends State<Payment> {
                         "http://geniusloop.co/payment/failed.php") {
                       FocusScope.of(context).requestFocus(FocusNode());
                       errorToast(word("Failed", context));
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => Payment(
-                      //       totalAfterTax: widget.totalAfterTax,
-                      //       price: widget.price,
-                      //       buyPrice: widget.buyPrice,
-                      //       onThemeChanged: widget.onThemeChanged,
-                      //       changeLangauge: widget.changeLangauge,
-                      //       firstName: widget.firstName,
-                      //       lastName: widget.lastName,
-                      //       phone: widget.phone,
-                      //       lat: widget.lat,
-                      //       long: widget.long,
-                      //     ),
-                      //   ),
-                      // );
                     }
                   },
                 ),
