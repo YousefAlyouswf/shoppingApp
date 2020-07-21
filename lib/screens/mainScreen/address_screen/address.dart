@@ -225,7 +225,26 @@ class _AddressState extends State<Address> {
   String cityFromSa = "";
   @override
   Widget build(BuildContext context) {
+    var keyboard = MediaQuery.of(context).viewInsets.bottom;
+
+    if (keyboard != 0.0) {
+      print("keyboard open");
+    } else {
+      print("keyboard closed");
+    }
     return new Scaffold(
+        floatingActionButton: keyboard != 0.0
+            ? FloatingActionButton(
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white,
+                ),
+                backgroundColor: Colors.black,
+              )
+            : null,
         backgroundColor: Colors.white,
         appBar: new AppBar(
           backgroundColor: Colors.grey[200],
