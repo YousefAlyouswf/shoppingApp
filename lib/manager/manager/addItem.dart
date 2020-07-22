@@ -661,7 +661,7 @@ class MyTextFormField extends StatelessWidget {
         onChanged: isChanged,
         autocorrect: false,
         inputFormatters: isNumber
-            ? [new WhitelistingTextInputFormatter(RegExp("[0-9]"))]
+            ? [new FilteringTextInputFormatter.allow(RegExp("[0-9]"))]
             : null,
         controller: editingController,
         decoration: InputDecoration(

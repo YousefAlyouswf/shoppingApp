@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:mailer/mailer.dart' as mail;
 import 'package:mailer/smtp_server.dart';
+import 'package:share/share.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
@@ -299,6 +300,8 @@ class _PaymentState extends State<Payment> {
               icon: Icon(Icons.share),
               onPressed: () {
                 print(webviewUrl);
+
+                Share.share(webviewUrl);
               })
         ],
       ),

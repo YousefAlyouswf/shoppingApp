@@ -128,10 +128,6 @@ Widget addAddress(
   String cityFromSa,
   String mobileNumber,
 ) {
-  if (mobileNumber != '') {
-    phone.text = mobileNumber;
-  }
-
   return Visibility(
     visible: !preAddress,
     child: Container(

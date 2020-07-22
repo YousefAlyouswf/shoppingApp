@@ -74,6 +74,7 @@ class _AddressState extends State<Address> {
   String twilioNumber;
   tw.TwilioFlutter twilioFlutter;
   String _mobileNumber = '';
+  bool mobileChange = false;
   Future<void> initMobileNumberState() async {
     if (!await MobileNumber.hasPhonePermission) {
       await MobileNumber.requestPhonePermission;
@@ -107,6 +108,13 @@ class _AddressState extends State<Address> {
       if (getNum) {
         _mobileNumber += numberList[i];
       }
+    }
+
+    if (mobileNumber != '' && !mobileChange) {
+      phone.text = mobileNumber;
+      setState(() {
+        mobileChange = true;
+      });
     }
   }
 
@@ -227,11 +235,6 @@ class _AddressState extends State<Address> {
   Widget build(BuildContext context) {
     var keyboard = MediaQuery.of(context).viewInsets.bottom;
 
-    if (keyboard != 0.0) {
-      print("keyboard open");
-    } else {
-      print("keyboard closed");
-    }
     return new Scaffold(
         floatingActionButton: keyboard != 0.0
             ? FloatingActionButton(
