@@ -374,8 +374,8 @@ Widget buttonsBoth(
                     }
                   }
                 }
-                signCode = await SmsAutoFill().getAppSignature;
-                formatPhoneNumber();
+                //signCode = await SmsAutoFill().getAppSignature;
+                // formatPhoneNumber();
                 print("--------------->>>$codeID");
 
                 showDialog(

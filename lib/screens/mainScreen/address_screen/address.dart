@@ -205,6 +205,9 @@ class _AddressState extends State<Address> {
       postalCoseSa = "";
       cityFromSa = "";
     });
+    final coordinates = new Coordinates(double.parse(lat), double.parse(long));
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
     String url =
         "https://apina.address.gov.sa/NationalAddress/v3.1/Address/address-geocode?lat=$lat&long=$long&language=A&format=json&encode=utf8";
     String urlEN =
@@ -214,16 +217,28 @@ class _AddressState extends State<Address> {
         headers: {"api_key": "f2dae307076b4f79b4778f89807d4801"});
     setState(() {
       final jsonData = json.decode(response.body);
-      try {
-        addressLineFromSa = jsonData['Addresses'][0]['Address1'];
-        postalCoseSa = jsonData['Addresses'][0]['PostCode'];
-        cityFromSa = jsonData['Addresses'][0]['City'];
+
+      if (jsonData['statusCode'] == 500) {
+        var first = addresses.first;
+        addressLineFromSa = first.addressLine;
+        postalCoseSa = first.postalCode;
+        cityFromSa = first.locality;
+        if (postalCoseSa == null) {
+          postalCoseSa = " ";
+        }
         isLoading = false;
-      } catch (e) {
-        print("--------------------->>>>>$e");
-        errorMapChosen(
-            "لم يتم تحديد موقع التوصيل أرجو أختيار الموقع بدقه أكثر");
-        isLoading = false;
+      } else {
+        try {
+          addressLineFromSa = jsonData['Addresses'][0]['Address1'];
+          postalCoseSa = jsonData['Addresses'][0]['PostCode'];
+          cityFromSa = jsonData['Addresses'][0]['City'];
+          isLoading = false;
+        } catch (e) {
+          print("--------------------->>>>>$e");
+          errorMapChosen(
+              "لم يتم تحديد موقع التوصيل أرجو أختيار الموقع بدقه أكثر");
+          isLoading = false;
+        }
       }
     });
   }
@@ -291,12 +306,13 @@ class _AddressState extends State<Address> {
                               costOutRiyadh.toString(),
                             ),
                             addAddress(
-                                context,
-                                moveToMapScreen,
-                                addressLineFromSa,
-                                postalCoseSa,
-                                cityFromSa,
-                                _mobileNumber),
+                              context,
+                              moveToMapScreen,
+                              addressLineFromSa,
+                              postalCoseSa,
+                              cityFromSa,
+                              _mobileNumber,
+                            ),
                           ],
                         ),
                       ),
