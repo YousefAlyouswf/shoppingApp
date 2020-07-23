@@ -125,16 +125,11 @@ class _ShowItemState extends State<ShowItem>
   _scrollListener() {
     if (_controllerGridViewCatgories.offset >=
             _controllerGridViewCatgories.position.maxScrollExtent &&
-        !_controllerGridViewCatgories.position.outOfRange) {
-      setState(() {
-        print("reach the bottom");
-      });
-    }
+        !_controllerGridViewCatgories.position.outOfRange) {}
     if (_controllerGridViewCatgories.offset <=
             _controllerGridViewCatgories.position.minScrollExtent &&
         !_controllerGridViewCatgories.position.outOfRange) {
       setState(() {
-        print("reach the top");
         scrollController.animateTo(180.0,
             duration: Duration(milliseconds: 500), curve: Curves.ease);
       });
@@ -209,7 +204,6 @@ class _ShowItemState extends State<ShowItem>
                                           child: Container(
                                             margin: EdgeInsets.symmetric(
                                                 horizontal: 16.0),
-                                            alignment: Alignment.centerRight,
                                             child: Text(
                                               isEnglish
                                                   ? widget.nameEn
@@ -233,14 +227,13 @@ class _ShowItemState extends State<ShowItem>
                                           child: Container(
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
-                                              color: Colors.orange
-                                                  .withOpacity(0.5),
+                                              border: Border.all(),
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(10)),
                                             ),
                                             width: 75,
                                             child: Text(
-                                              "أراء العملاء",
+                                              word("reviews", context),
                                               style: TextStyle(
                                                 color: Colors.green,
                                               ),
@@ -258,7 +251,6 @@ class _ShowItemState extends State<ShowItem>
                                                       ? word("lastTwo", context)
                                                       : word("almostOutOfStock",
                                                           context),
-                                              textDirection: TextDirection.rtl,
                                               style:
                                                   TextStyle(color: Colors.red),
                                             ),
@@ -271,7 +263,9 @@ class _ShowItemState extends State<ShowItem>
                                         ? Container(
                                             margin: EdgeInsets.symmetric(
                                                 horizontal: 16.0),
-                                            alignment: Alignment.centerRight,
+                                            alignment: isEnglish
+                                                ? Alignment.centerLeft
+                                                : Alignment.centerRight,
                                             child: Text.rich(
                                               TextSpan(
                                                 children: <TextSpan>[
@@ -293,7 +287,6 @@ class _ShowItemState extends State<ShowItem>
                                       margin: EdgeInsets.symmetric(
                                           horizontal: 16.0),
                                       width: double.infinity,
-                                      alignment: Alignment.centerRight,
                                       child: Text(
                                         "${widget.price} ${word("currancy", context)}",
                                         style: TextStyle(
@@ -520,7 +513,7 @@ class _ShowItemState extends State<ShowItem>
                                                   ),
                                                   child: SingleChildScrollView(
                                                     child: Container(
-                                                      height: height * 0.7,
+                                                      height: 450,
                                                       width: width,
                                                       child: Column(
                                                         children: [
@@ -794,6 +787,14 @@ class _ShowItemState extends State<ShowItem>
                                     ),
                                     Container(
                                       height: 350,
+                                      padding: EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                          color:
+                                              Colors.orange.withOpacity(0.05),
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15))),
                                       width: double.infinity,
                                       child: StreamBuilder(
                                           stream: Firestore.instance
@@ -881,7 +882,6 @@ class _ShowItemState extends State<ShowItem>
                                                     final difference = date2
                                                         .difference(dateReview)
                                                         .inDays;
-                                                    print(difference);
                                                     String dateShow;
                                                     if (difference == 0) {
                                                       dateShow = "اليوم";

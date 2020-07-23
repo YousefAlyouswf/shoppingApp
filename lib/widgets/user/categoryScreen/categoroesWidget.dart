@@ -880,7 +880,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                               ),
                                               child: Center(
                                                 child: Text(
-                                                  "تسوق سريع",
+                                                  word("fast", context),
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     fontSize: width * 0.03,

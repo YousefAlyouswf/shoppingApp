@@ -339,9 +339,11 @@ Widget buttonsBoth(
               child: Text(
                 word("new_address_botton", context),
                 style: TextStyle(
-                    fontSize: 22,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
+                  fontSize: 22,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "MainFont",
+                ),
               ),
             ),
           ),

@@ -75,5 +75,7 @@
     "total": "Total",
     "city": "City",
     "post": "Postal code",
-    "offer": "OFFER"
+    "offer": "OFFER",
+    "reviews": "Reviews",
+    "fast": "Fast show"
 }

@@ -269,6 +269,7 @@ class _AddressState extends State<Address> {
           elevation: 0,
           title: Text(
             word("address_appBar", context),
+            style: TextStyle(fontFamily: "MainFont"),
           ),
         ),
         body: isLoading
