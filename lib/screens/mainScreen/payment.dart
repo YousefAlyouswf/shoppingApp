@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:http/http.dart';
 import 'package:mailer/mailer.dart' as mail;
 import 'package:mailer/smtp_server.dart';
 import 'package:share/share.dart';
@@ -297,8 +298,10 @@ class _PaymentState extends State<Payment> {
   double total;
   double totalBeforeDiscount;
   bool cardSelected = false;
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -310,15 +313,6 @@ class _PaymentState extends State<Payment> {
             fontFamily: isEnglish ? 'EN' : "MainFont",
           ),
         ),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.share),
-              onPressed: () {
-                print(webviewUrl);
-
-                Share.share(webviewUrl);
-              })
-        ],
       ),
       body: cardSelected
           ? WebView(
@@ -349,227 +343,310 @@ class _PaymentState extends State<Payment> {
                 }
               },
             )
-          : Container(
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Container(
-                  height: MediaQuery.of(context).size.height * .6,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      Image.asset(
-                        'assets/images/logo.png',
-                        height: MediaQuery.of(context).size.height * .1,
-                      ),
-                      Text(
-                        word("appName", context),
-                        style: TextStyle(fontFamily: "MainFont"),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text("السعر:"),
-                          Text(
-                              " $totalBeforeDiscount ${word('currancy', context)}"),
-                        ],
-                      ),
-                      widget.discount == '0.0'
-                          ? Container()
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text("الخصم:"),
-                                Text(
-                                    "${widget.discount} ${word('currancy', context)}"),
-                              ],
-                            ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text("التوصيل:"),
-                          Text(
-                              "${widget.delvierCost}.0 ${word('currancy', context)}"),
-                        ],
-                      ),
-                      Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text("الإجمالي:"),
-                          Text("$total ${word('currancy', context)}"),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                border: cash ? Border.all() : null,
-                                color: cash ? Colors.green[200] : null,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: FlatButton.icon(
-                                label: Text(
-                                  "دفع نقدي",
-                                  style: TextStyle(fontFamily: "MainFont"),
-                                ),
-                                icon: FaIcon(FontAwesomeIcons.moneyBillWave),
-                                onPressed: () {
-                                  if (!paymentMethodForRiyadh) {
-                                    errorToast("الدفع نقدي داخل الرياض فقط");
-                                  } else {
-                                    setState(() {
-                                      cash = true;
-                                      credit = false;
-                                    });
-                                  }
-                                }),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              border: credit ? Border.all() : null,
-                              color: credit ? Colors.green[200] : null,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                            child: FlatButton.icon(
-                                label: Text(
-                                  "بطاقة",
-                                  style: TextStyle(fontFamily: "MainFont"),
-                                ),
-                                icon: FaIcon(FontAwesomeIcons.creditCard),
-                                onPressed: () {
-                                  setState(() {
-                                    cash = false;
-                                    credit = true;
-                                  });
-                                }),
-                          ),
-                        ],
-                      ),
-                      credit
-                          ? Image.network(
-                              "https://probot.io/static/payments-cards.png",
-                              height: 50,
-                            )
-                          : cash
-                              ? Image.network(
-                                  "https://img.icons8.com/bubbles/2x/cash-in-hand.png",
-                                  height: 70,
-                                )
-                              : Container(),
-                      Spacer(),
-                      InkWell(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Container(
-                            width: double.infinity,
-                            height: 50,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).unselectedWidgetColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Text(
-                              credit
-                                  ? "أدخل بيانات البطاقه"
-                                  : cash ? "إتمام الشراء" : "أختر طريقة الدفع",
-                              style: TextStyle(
-                                  fontFamily: "MainFont",
-                                  color: Colors.white,
-                                  fontSize: 22),
-                            ),
-                          ),
+          : Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * .6,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
                         ),
-                        onTap: () async {
-                          if (cash) {
-                            try {
-                              double total =
-                                  double.parse(widget.totalAfterTax) +
-                                      double.parse(widget.delvierCost);
-
-                              String userIDPhone;
-                              if (androidInfo == null) {
-                                userIDPhone = iosDeviceInfo.identifierForVendor;
-                              } else {
-                                userIDPhone = androidInfo.androidId;
-                              }
-                              await Firestore.instance.collection('order').add({
-                                'payment': 'cash',
-                                'driverID': '',
-                                'driverName': '',
-                                'orderID': orderID,
-                                'date': DateTime.now().toString(),
-                                'status': '0',
-                                'address': widget.address,
-                                'city': widget.city,
-                                'postCode': zipCode,
-                                'discount': widget.discount,
-                                'total': total,
-                                'lat': widget.lat,
-                                'long': widget.long,
-                                'firstName': widget.firstName,
-                                'lastName': widget.lastName,
-                                'phone': widget.phone,
-                                'deliverCost': widget.delvierCost,
-                                'email': widget.email,
-                                'priceForSell': widget.price,
-                                'priceForBuy': widget.buyPrice,
-                                'items': FieldValue.arrayUnion(mapItems),
-                                'userID': userIDPhone,
-                              }).then((value) {
-                                takeOffFromSubcatgory();
-                                FocusScope.of(context)
-                                    .requestFocus(FocusNode());
-                                twilioFlutter.sendSMS(
-                                    toNumber: phone,
-                                    messageBody:
-                                        'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
-                                sendEmailToCustomer();
-                                addCartToast(
-                                    "تمت علمية الشراء يمكنك متابعه طلبك من هنا");
-                                navIndex = 4;
-                                DBHelper.deleteAllItem("cart");
-                                Navigator.popUntil(
-                                    context, (route) => route.isFirst);
-                              });
-                            } catch (e) {
-                              print(e);
-                            }
-                          } else if (credit) {
-                            setState(() {
-                              cardSelected = true;
-                            });
-                          } else {
-                            errorToast("أختر طريقه الدفع");
-                          }
-                        },
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
                       ),
-                    ],
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset(
+                            'assets/images/logo.png',
+                            height: MediaQuery.of(context).size.height * .05,
+                          ),
+                          Text(
+                            word("appName", context),
+                            style: TextStyle(fontFamily: "MainFont"),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text("السعر:"),
+                              Text(
+                                  " $totalBeforeDiscount ${word('currancy', context)}"),
+                            ],
+                          ),
+                          widget.discount == '0.0'
+                              ? Container()
+                              : Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text("الخصم:"),
+                                    Text(
+                                        "${widget.discount} ${word('currancy', context)}"),
+                                  ],
+                                ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text("التوصيل:"),
+                              Text(
+                                  "${widget.delvierCost}.0 ${word('currancy', context)}"),
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text("الإجمالي:"),
+                              Text("$total ${word('currancy', context)}"),
+                            ],
+                          ),
+                          height < 600
+                              ? Container()
+                              : SizedBox(
+                                  height: 25,
+                                ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    border: cash ? Border.all() : null,
+                                    color: cash ? Colors.green[200] : null,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: FlatButton.icon(
+                                    label: Text(
+                                      "دفع نقدي",
+                                      style: TextStyle(fontFamily: "MainFont"),
+                                    ),
+                                    icon:
+                                        FaIcon(FontAwesomeIcons.moneyBillWave),
+                                    onPressed: () {
+                                      if (!paymentMethodForRiyadh) {
+                                        errorToast(
+                                            "الدفع نقدي داخل الرياض فقط");
+                                      } else {
+                                        setState(() {
+                                          cash = true;
+                                          credit = false;
+                                        });
+                                      }
+                                    }),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: credit ? Border.all() : null,
+                                  color: credit ? Colors.green[200] : null,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                                child: FlatButton.icon(
+                                    label: Text(
+                                      "بطاقة",
+                                      style: TextStyle(fontFamily: "MainFont"),
+                                    ),
+                                    icon: FaIcon(FontAwesomeIcons.creditCard),
+                                    onPressed: () {
+                                      setState(() {
+                                        cash = false;
+                                        credit = true;
+                                      });
+                                    }),
+                              ),
+                            ],
+                          ),
+                          height < 600
+                              ? Container()
+                              : SizedBox(
+                                  height: 25,
+                                ),
+                          credit
+                              ? Image.network(
+                                  "https://probot.io/static/payments-cards.png",
+                                  height: 50,
+                                )
+                              : cash
+                                  ? Image.network(
+                                      "https://img.icons8.com/bubbles/2x/cash-in-hand.png",
+                                      height: 70,
+                                    )
+                                  : Container(),
+                          Spacer(),
+                          InkWell(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Container(
+                                width: double.infinity,
+                                height: 50,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).unselectedWidgetColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Text(
+                                  credit
+                                      ? "أدخل بيانات البطاقه"
+                                      : cash
+                                          ? "إتمام الشراء"
+                                          : "أختر طريقة الدفع",
+                                  style: TextStyle(
+                                      fontFamily: "MainFont",
+                                      color: Colors.white,
+                                      fontSize: 22),
+                                ),
+                              ),
+                            ),
+                            onTap: () async {
+                              if (cash) {
+                                try {
+                                  double total =
+                                      double.parse(widget.totalAfterTax) +
+                                          double.parse(widget.delvierCost);
+
+                                  String userIDPhone;
+                                  if (androidInfo == null) {
+                                    userIDPhone =
+                                        iosDeviceInfo.identifierForVendor;
+                                  } else {
+                                    userIDPhone = androidInfo.androidId;
+                                  }
+                                  await Firestore.instance
+                                      .collection('order')
+                                      .add({
+                                    'payment': 'cash',
+                                    'driverID': '',
+                                    'driverName': '',
+                                    'orderID': orderID,
+                                    'date': DateTime.now().toString(),
+                                    'status': '0',
+                                    'address': widget.address,
+                                    'city': widget.city,
+                                    'postCode': zipCode,
+                                    'discount': widget.discount,
+                                    'total': total,
+                                    'lat': widget.lat,
+                                    'long': widget.long,
+                                    'firstName': widget.firstName,
+                                    'lastName': widget.lastName,
+                                    'phone': widget.phone,
+                                    'deliverCost': widget.delvierCost,
+                                    'email': widget.email,
+                                    'priceForSell': widget.price,
+                                    'priceForBuy': widget.buyPrice,
+                                    'items': FieldValue.arrayUnion(mapItems),
+                                    'userID': userIDPhone,
+                                  }).then((value) {
+                                    takeOffFromSubcatgory();
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+                                    twilioFlutter.sendSMS(
+                                        toNumber: phone,
+                                        messageBody:
+                                            'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
+                                    sendEmailToCustomer();
+                                    addCartToast(
+                                        "تمت علمية الشراء يمكنك متابعه طلبك من هنا");
+                                    navIndex = 4;
+                                    DBHelper.deleteAllItem("cart");
+                                    Navigator.popUntil(
+                                        context, (route) => route.isFirst);
+                                  });
+                                } catch (e) {
+                                  print(e);
+                                }
+                              } else if (credit) {
+                                setState(() {
+                                  cardSelected = true;
+                                });
+                              } else {
+                                errorToast("أختر طريقه الدفع");
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Spacer(),
+                Text(
+                  "هل تريد أحد من عائلتك أو صديقك يدفع الفاتوره؟",
+                  style: TextStyle(
+                    fontFamily: "MainFont",
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "يمكنك مشاركة صفحة الدفع معهم أضغط على الزر التالي",
+                    style: TextStyle(
+                      fontFamily: "MainFont",
+                      color: Colors.black,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                loading
+                    ? Image.network(
+                        "https://flevix.com/wp-content/uploads/2019/07/Curve-Loading.gif",
+                        height: 100,
+                      )
+                    : InkWell(
+                        splashColor: Colors.transparent,
+                        onTap: () async {
+                          setState(() {
+                            loading = true;
+                          });
+                          Response response = await post(
+                              "http://geniusloop.co/shortlink/",
+                              body: {
+                                "link": webviewUrl,
+                              });
+                          print(response.statusCode);
+                          if (response.statusCode == 200) {
+                            Share.share(response.body);
+                          }
+                          setState(() {
+                            loading = false;
+                          });
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          margin: EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .unselectedWidgetColor
+                                .withOpacity(0.6),
+                            border: Border.all(),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                          ),
+                          child: Text(
+                            "مشاركة",
+                            style: TextStyle(
+                                fontFamily: "MainFont",
+                                color: Colors.white,
+                                fontSize: 15),
+                          ),
+                        ),
+                      )
+              ],
             ),
     );
   }
