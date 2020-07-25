@@ -117,64 +117,89 @@ class _LunchAppState extends State<LunchApp> {
         body: Stack(
       children: [
         Container(
-          width: double.infinity,
-          child: firstTime
-              ? ispressed
-                  ? Center(
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  : Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              widget.changeLangauge(chooseOne: 'ar');
-                              HelperFunction.firstTimeChooseLang(false);
-                              mock().then((value) {
-                                if (value) {
-                                  navgateToHome();
-                                }
-                              });
-                              if (mounted) {
-                                setState(() {
-                                  ispressed = true;
+            width: double.infinity,
+            child: firstTime
+                ? ispressed
+                    ? Center(
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                widget.changeLangauge(chooseOne: 'ar');
+                                HelperFunction.firstTimeChooseLang(false);
+                                mock().then((value) {
+                                  if (value) {
+                                    navgateToHome();
+                                  }
                                 });
-                              }
-                            },
-                            child: flagLanguage("عربي"),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              widget.changeLangauge(chooseOne: 'en');
-                              HelperFunction.firstTimeChooseLang(false);
-                              mock().then((value) {
-                                if (value) {
-                                  navgateToHome();
+                                if (mounted) {
+                                  setState(() {
+                                    ispressed = true;
+                                  });
                                 }
-                              });
+                              },
+                              child: flagLanguage("عربي"),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                widget.changeLangauge(chooseOne: 'en');
+                                HelperFunction.firstTimeChooseLang(false);
+                                mock().then((value) {
+                                  if (value) {
+                                    navgateToHome();
+                                  }
+                                });
 
-                              if (mounted) {
-                                setState(() {
-                                  ispressed = true;
-                                });
-                              }
-                            },
-                            child: flagLanguage("English"),
+                                if (mounted) {
+                                  setState(() {
+                                    ispressed = true;
+                                  });
+                                }
+                              },
+                              child: flagLanguage("English"),
+                            ),
+                          ],
+                        ),
+                      )
+                : Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "uvan",
+                          style: TextStyle(
+                            fontFamily: 'modular',
+                            fontSize: 70,
                           ),
-                        ],
-                      ),
-                    )
-              : FlareActor(
-                  'assets/dokan.flr',
-                  fit: BoxFit.fill,
-                  animation: "splash",
-                ),
-        ),
+                        ),
+                        Text(
+                          "T",
+                          style: TextStyle(
+                            fontFamily: 'modular',
+                            fontSize: 70,
+                            color: Colors.indigo,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+
+            //  FlareActor(
+            //     'assets/dokan.flr',
+            //     fit: BoxFit.fill,
+            //     animation: "splash",
+            //   ),
+            ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Align(

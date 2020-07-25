@@ -20,6 +20,8 @@ import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';
 
+import 'gatewayPayment/PaypalPayment.dart';
+
 class Payment extends StatefulWidget {
   final Function onThemeChanged;
   final Function changeLangauge;
@@ -96,7 +98,7 @@ class _PaymentState extends State<Payment> {
         double.parse(widget.totalAfterTax) + double.parse(widget.discount);
   }
 
-  Future<void> addThisOrderToFirestore() async {
+  Future<void> addThisOrderToFirestore(String collection) async {
     double total =
         double.parse(widget.totalAfterTax) + double.parse(widget.delvierCost);
     String userIDPhone;
@@ -105,7 +107,7 @@ class _PaymentState extends State<Payment> {
     } else {
       userIDPhone = androidInfo.androidId;
     }
-    await Firestore.instance.collection('order').add({
+    await Firestore.instance.collection(collection).add({
       'payment': '100',
       'driverID': '',
       'driverName': '',
@@ -193,6 +195,9 @@ class _PaymentState extends State<Payment> {
       };
       print(map);
       final response = await http.post(ROOT, body: map);
+
+      print("--------------> ${response.body}");
+      print("--------------> ${response.statusCode}");
       if (200 == response.statusCode) {
         setState(() {
           webviewUrl = response.body;
@@ -294,6 +299,7 @@ class _PaymentState extends State<Payment> {
 
   bool cash = false;
   bool credit = false;
+  bool paypal = false;
   bool addFirestore = false;
   double total;
   double totalBeforeDiscount;
@@ -302,6 +308,8 @@ class _PaymentState extends State<Payment> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    print(width);
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -316,13 +324,14 @@ class _PaymentState extends State<Payment> {
       ),
       body: cardSelected
           ? WebView(
-              key: UniqueKey(),
+              // key: UniqueKey(),
               initialUrl: webviewUrl,
               javascriptMode: JavascriptMode.unrestricted,
               onPageFinished: (url) async {
                 print('~~~~~~~~~~~~~>>>>> $url');
-                if (url == "http://geniusloop.co/payment/succed.php") {
-                  await addThisOrderToFirestore().then((value) {
+                if (url ==
+                    "http://geniusloop.co/payment/succed.php?id=$orderID") {
+                  await addThisOrderToFirestore('order').then((value) {
                     takeOffFromSubcatgory();
                     FocusScope.of(context).requestFocus(FocusNode());
                     twilioFlutter.sendSMS(
@@ -421,17 +430,18 @@ class _PaymentState extends State<Payment> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                    border: cash ? Border.all() : null,
-                                    color: cash ? Colors.green[200] : null,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: FlatButton.icon(
-                                    label: Text(
+                                  border: Border.all(),
+                                  color: cash ? Colors.green[200] : null,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                ),
+                                child: FlatButton(
+                                    child: Text(
                                       "دفع نقدي",
-                                      style: TextStyle(fontFamily: "MainFont"),
+                                      style: TextStyle(
+                                          fontFamily: "MainFont", fontSize: 12),
                                     ),
-                                    icon:
-                                        FaIcon(FontAwesomeIcons.moneyBillWave),
                                     onPressed: () {
                                       if (!paymentMethodForRiyadh) {
                                         errorToast(
@@ -440,26 +450,51 @@ class _PaymentState extends State<Payment> {
                                         setState(() {
                                           cash = true;
                                           credit = false;
+                                          paypal = false;
                                         });
                                       }
                                     }),
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                  border: credit ? Border.all() : null,
-                                  color: credit ? Colors.green[200] : null,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
+                                  border: Border.all(),
+                                  color: paypal ? Colors.green[200] : null,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
                                 ),
-                                child: FlatButton.icon(
-                                    label: Text(
-                                      "بطاقة",
-                                      style: TextStyle(fontFamily: "MainFont"),
+                                child: FlatButton(
+                                    child: Text(
+                                      "باي بال",
+                                      style: TextStyle(
+                                          fontFamily: "MainFont", fontSize: 12),
                                     ),
-                                    icon: FaIcon(FontAwesomeIcons.creditCard),
                                     onPressed: () {
                                       setState(() {
                                         cash = false;
+                                        credit = false;
+                                        paypal = true;
+                                      });
+                                    }),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(),
+                                  color: credit ? Colors.green[200] : null,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                ),
+                                child: FlatButton(
+                                    child: Text(
+                                      "بطاقة",
+                                      style: TextStyle(
+                                          fontFamily: "MainFont", fontSize: 12),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        cash = false;
+                                        paypal = false;
                                         credit = true;
                                       });
                                     }),
@@ -479,9 +514,14 @@ class _PaymentState extends State<Payment> {
                               : cash
                                   ? Image.network(
                                       "https://img.icons8.com/bubbles/2x/cash-in-hand.png",
-                                      height: 70,
+                                      height: 50,
                                     )
-                                  : Container(),
+                                  : paypal
+                                      ? Image.network(
+                                          "https://iconarchive.com/icons/designbolts/credit-card-payment/256/Paypal-icon.png",
+                                          height: 50,
+                                        )
+                                      : Container(),
                           Spacer(),
                           InkWell(
                             child: Padding(
@@ -500,7 +540,9 @@ class _PaymentState extends State<Payment> {
                                       ? "أدخل بيانات البطاقه"
                                       : cash
                                           ? "إتمام الشراء"
-                                          : "أختر طريقة الدفع",
+                                          : paypal
+                                              ? "دخول باي بال"
+                                              : "أختر طريقة الدفع",
                                   style: TextStyle(
                                       fontFamily: "MainFont",
                                       color: Colors.white,
@@ -570,6 +612,13 @@ class _PaymentState extends State<Payment> {
                                 setState(() {
                                   cardSelected = true;
                                 });
+                              } else if (paypal) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        PaypalPayment(),
+                                  ),
+                                );
                               } else {
                                 errorToast("أختر طريقه الدفع");
                               }
@@ -623,6 +672,8 @@ class _PaymentState extends State<Payment> {
                           setState(() {
                             loading = false;
                           });
+
+                          await addThisOrderToFirestore('sharePayment');
                         },
                         child: Container(
                           alignment: Alignment.center,

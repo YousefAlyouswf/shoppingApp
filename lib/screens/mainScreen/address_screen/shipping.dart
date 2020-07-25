@@ -361,7 +361,7 @@ Widget buttonsBoth(
             } else if (!emailValid) {
               errorToast(word("email_error", context));
             } else {
-              if (addressLineFromSa != "") {
+              if (true) {
                 Uuid uid = Uuid();
                 codeID = uid.v1();
                 List<String> list = codeID.split('');
