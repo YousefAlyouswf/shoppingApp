@@ -6,6 +6,9 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mailer/mailer.dart' as mail;
+import 'package:mailer/smtp_server.dart';
+import 'package:mailer/smtp_server/gmail.dart';
 import 'package:meet_network_image/meet_network_image.dart';
 import 'package:mobile_number/mobile_number.dart';
 import 'package:shop_app/database/firestore.dart';
@@ -499,6 +502,7 @@ class _ShowItemState extends State<ShowItem>
                                             if (_mobileNumber != null) {
                                               phone.text = _mobileNumber;
                                             }
+
                                             showDialog(
                                               context: context,
                                               builder: (BuildContext context) =>
@@ -686,78 +690,94 @@ class _ShowItemState extends State<ShowItem>
                                                             padding:
                                                                 const EdgeInsets
                                                                     .all(8.0),
-                                                            child: Container(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              width: double
-                                                                  .infinity,
-                                                              height: 50,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .all(
-                                                                        Radius
-                                                                            .circular(
-                                                                          10,
-                                                                        ),
+                                                            child: InkWell(
+                                                              onTap: () async {
+                                                                Map<String,
+                                                                        dynamic>
+                                                                    reviewMap =
+                                                                    {
+                                                                  'name':
+                                                                      name.text,
+                                                                  'phone': phone
+                                                                      .text,
+                                                                  'text':
+                                                                      text.text,
+                                                                  'stars':
+                                                                      countStars
+                                                                          .toString(),
+                                                                  'date': DateTime
+                                                                          .now()
+                                                                      .toString(),
+                                                                  'isBuyer':
+                                                                      isBuyer,
+                                                                };
+                                                                await Firestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        "reviews")
+                                                                    .where(
+                                                                        'itemID',
+                                                                        isEqualTo:
+                                                                            widget
+                                                                                .imageID)
+                                                                    .getDocuments()
+                                                                    .then(
+                                                                      (value) => value
+                                                                          .documents
+                                                                          .forEach(
+                                                                        (e) async {
+                                                                          await Firestore
+                                                                              .instance
+                                                                              .collection('reviews')
+                                                                              .document(e.documentID)
+                                                                              .updateData({
+                                                                            'review':
+                                                                                FieldValue.arrayUnion([
+                                                                              reviewMap
+                                                                            ])
+                                                                          });
+                                                                        },
                                                                       ),
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .unselectedWidgetColor),
-                                                              child: InkWell(
-                                                                onTap:
-                                                                    () async {
-                                                                  Map<String,
-                                                                          dynamic>
-                                                                      reviewMap =
-                                                                      {
-                                                                    'name': name
+                                                                    )
+                                                                    .then(
+                                                                        (value) {
+                                                                  sendEmailToCustomer(
+                                                                    name: name
                                                                         .text,
-                                                                    'phone': phone
+                                                                    text: text
                                                                         .text,
-                                                                    'text': text
+                                                                    number: phone
                                                                         .text,
-                                                                    'stars':
-                                                                        countStars
-                                                                            .toString(),
-                                                                    'date': DateTime
-                                                                            .now()
+                                                                    stars: countStars
                                                                         .toString(),
-                                                                    'isBuyer':
-                                                                        isBuyer,
-                                                                  };
-                                                                  await Firestore
-                                                                      .instance
-                                                                      .collection(
-                                                                          "reviews")
-                                                                      .where(
-                                                                          'itemID',
-                                                                          isEqualTo: widget
-                                                                              .imageID)
-                                                                      .getDocuments()
-                                                                      .then(
-                                                                        (value) => value
-                                                                            .documents
-                                                                            .forEach(
-                                                                          (e) async {
-                                                                            await Firestore.instance.collection('reviews').document(e.documentID).updateData({
-                                                                              'review': FieldValue.arrayUnion([
-                                                                                reviewMap
-                                                                              ])
-                                                                            });
-                                                                          },
+                                                                    image: widget
+                                                                        .image,
+                                                                  );
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  addCartToast(
+                                                                      "تم نشر تعليقك");
+                                                                });
+                                                              },
+                                                              child: Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: double
+                                                                    .infinity,
+                                                                height: 50,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius
+                                                                                .all(
+                                                                          Radius
+                                                                              .circular(
+                                                                            10,
+                                                                          ),
                                                                         ),
-                                                                      )
-                                                                      .then(
-                                                                          (value) {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    addCartToast(
-                                                                        "تم نشر تعليقك");
-                                                                  });
-                                                                },
+                                                                        color: Theme.of(context)
+                                                                            .unselectedWidgetColor),
                                                                 child: Text(
                                                                   "أرسل",
                                                                   style: TextStyle(
@@ -1213,6 +1233,36 @@ class _ShowItemState extends State<ShowItem>
               dotIncreasedColor: Theme.of(context).unselectedWidgetColor,
             ),
           );
+  }
+
+  void sendEmailToCustomer({
+    String name,
+    String stars,
+    String text,
+    String number,
+    String image,
+  }) async {
+    String username = "help@tuvan.shop";
+    String password = "Yy147963!";
+
+    // Create our email message.
+    final message = mail.Message()
+      ..from = mail.Address(username, '$name')
+      ..recipients.add("help@tuvan.shop") //recipent email
+
+      ..subject = "النجمات -> ($stars)" //subject of the email
+      ..html =
+          '<img src="$image" width="100" height="150" data-original-src="$image"> <br><h1>$text</h1> <br> $number';
+
+    try {
+      final sendReport = await mail.send(message,
+          SmtpServer("smtp.ionos.com", username: username, password: password));
+      print('Message sent: ' +
+          sendReport.toString()); //print if the email is sent
+    } on mail.MailerException catch (e) {
+      print('Message not sent. \n' +
+          e.toString()); //print if the email is not sent
+    }
   }
 
   List<ItemShow> itemShow = new List();
