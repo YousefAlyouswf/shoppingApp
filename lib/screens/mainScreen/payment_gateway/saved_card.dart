@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/screens/mainScreen/payment.dart';
@@ -76,6 +77,7 @@ class _SavedCardState extends State<SavedCard> {
     setState(() {
       cards = dataList
           .map((item) => {
+                'id': item['id'],
                 'cardNumber': item['cardNumber'],
                 'expiryDate': item['expiryDate'],
                 'cardHolderName': item['cardHolderName'],
@@ -97,6 +99,7 @@ class _SavedCardState extends State<SavedCard> {
         100;
   }
 
+  bool delete = false;
   bool sendToWeb = false;
   String webviewUrl = '';
   @override
@@ -134,6 +137,21 @@ class _SavedCardState extends State<SavedCard> {
             style: TextStyle(
                 fontFamily: isEnglish ? 'EN' : "MainFont", color: Colors.white),
           ),
+          actions: [
+            !sendToWeb
+                ? IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        delete = !delete;
+                      });
+                    })
+                : Container(),
+          ],
         ),
         body: sendToWeb
             ? WebView(
@@ -196,12 +214,200 @@ class _SavedCardState extends State<SavedCard> {
                                 sendToWeb = true;
                               });
                             },
-                            child: CreditCardWidget(
-                              cardNumber: cards[i]['cardNumber'],
-                              expiryDate: cards[i]['expiryDate'],
-                              cardHolderName: cards[i]['cardHolderName'],
-                              cvvCode: cards[i]['cvvCode'],
-                              showBackView: false,
+                            child: Stack(
+                              children: [
+                                CreditCardWidget(
+                                  width: double.infinity,
+                                  cardNumber: cards[i]['cardNumber'],
+                                  expiryDate: cards[i]['expiryDate'],
+                                  cardHolderName: cards[i]['cardHolderName'],
+                                  cvvCode: cards[i]['cvvCode'],
+                                  showBackView: false,
+                                ),
+                                delete
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Container(
+                                            height: 65,
+                                            width: 65,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(50)),
+                                              image: DecorationImage(
+                                                fit: BoxFit.fill,
+                                                image: NetworkImage(
+                                                    "https://images.squarespace-cdn.com/content/v1/51abe1dae4b08f6a770bf7d0/1569943355220-16CIDPEPYIKJX10EW2ZC/ke17ZwdGBToddI8pDm48kLxnK526YWAH1qleWz-y7AFZw-zPPgdn4jUwVcJE1ZvWEtT5uBSRWt4vQZAgTJucoTqqXjS3CfNDSuuf31e0tVH-2yKxPTYak0SCdSGNKw8A2bnS_B4YtvNSBisDMT-TGt1lH3P2bFZvTItROhWrBJ0/delete.gif"),
+                                              ),
+                                            ),
+                                            child: InkWell(
+                                              onTap: () {
+                                                int x = cards[i]['id'];
+                                                print(x);
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          Dialog(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12.0),
+                                                    ),
+                                                    child: Container(
+                                                      height: 300.0,
+                                                      width: double.infinity,
+                                                      child: Column(
+                                                        children: <Widget>[
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    right: 16.0,
+                                                                    top: 8.0),
+                                                            child: Row(
+                                                              children: [
+                                                                FaIcon(
+                                                                  FontAwesomeIcons
+                                                                      .trashAlt,
+                                                                  size: 30,
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Text(
+                                                                  "حذف البطاقه",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontFamily:
+                                                                        "MainFont",
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Divider(
+                                                            thickness: 2,
+                                                            color: Colors
+                                                                .grey[200],
+                                                          ),
+                                                          Expanded(
+                                                            child: Center(
+                                                              child: Text(
+                                                                "هل أنت متأكد من الحذف؟",
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 15,
+                                                                  fontFamily:
+                                                                      "MainFont",
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: InkWell(
+                                                              onTap: () {
+                                                                DBHelper
+                                                                    .deleteCard(
+                                                                        "card",
+                                                                        x);
+                                                                fetchCards();
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Container(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: double
+                                                                    .infinity,
+                                                                height: 50,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              5)),
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .unselectedWidgetColor,
+                                                                ),
+                                                                child: Text(
+                                                                  "حذف",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      fontFamily:
+                                                                          "MainFont",
+                                                                      color: Colors
+                                                                          .white),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: InkWell(
+                                                              onTap: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Container(
+                                                                height: 50,
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                width: double
+                                                                    .infinity,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  border: Border
+                                                                      .all(),
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              5)),
+                                                                ),
+                                                                child: Text(
+                                                                  "إلغاء",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                    fontFamily:
+                                                                        "MainFont",
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
+                              ],
                             ),
                           );
                         }),

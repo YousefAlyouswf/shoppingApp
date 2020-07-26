@@ -156,37 +156,51 @@ class _MoyasserState extends State<Moyasser> {
                           List<String> date = expiryDate.split('/');
                           String cardNoSpaces = cardNumber.replaceAll(
                               new RegExp(r"\s+\b|\b\s"), "");
+                          int month = 0;
+                          print(cardNoSpaces.length);
+                          try {
+                            month = int.parse(date[0]);
+                          } catch (e) {
+                            errorToast("يوجد خطأ في معلومات البطاقه");
+                          }
 
-                          Response response = await post(
-                              "https://api.moyasar.com/v1/payments.html/",
-                              body: {
-                                'source[name]': cardHolderName,
-                                'source[number]': cardNoSpaces,
-                                'source[cvc]': cvvCode,
-                                'source[month]': date[0],
-                                'source[year]': '20${date[1]}',
-                                'source[type]': 'creditcard',
-                                'amount': total.toInt().toString(),
-                                'publishable_api_key':
-                                    'pk_test_syTNfUUcx3UeXamEA848gchRP3rXAeMjj7o5cCa8',
-                                'callback_url':
-                                    'https://www.tuvan.shop/payment',
-                              });
+                          if (month > 12 ||
+                              cardNoSpaces.length < 16 ||
+                              cvvCode.isEmpty ||
+                              cardHolderName.isEmpty) {
+                            errorToast("يوجد خطأ في معلومات البطاقه");
+                          } else {
+                            Response response = await post(
+                                "https://api.moyasar.com/v1/payments.html/",
+                                body: {
+                                  'source[name]': cardHolderName,
+                                  'source[number]': cardNoSpaces,
+                                  'source[cvc]': cvvCode,
+                                  'source[month]': date[0],
+                                  'source[year]': '20${date[1]}',
+                                  'source[type]': 'creditcard',
+                                  'amount': total.toInt().toString(),
+                                  'publishable_api_key':
+                                      'pk_test_syTNfUUcx3UeXamEA848gchRP3rXAeMjj7o5cCa8',
+                                  'callback_url':
+                                      'https://www.tuvan.shop/payment',
+                                });
 
-                          // print("------->>>${response.body}");
-                          String htmlResponce = response.body;
-                          List<String> urlAuth = htmlResponce.split('"');
-                          Map<String, dynamic> data = {
-                            'cardNumber': cardNumber,
-                            'expiryDate': expiryDate,
-                            'cardHolderName': cardHolderName,
-                            'cvvCode': cvvCode,
-                          };
-                          DBHelper.insertCards('card', data);
-                          setState(() {
-                            webviewUrl = urlAuth[1];
-                            sendToWeb = true;
-                          });
+                            // print("------->>>${response.body}");
+                            String htmlResponce = response.body;
+                            List<String> urlAuth = htmlResponce.split('"');
+                            Map<String, dynamic> data = {
+                              'cardNumber': cardNumber,
+                              'expiryDate': expiryDate,
+                              'cardHolderName': cardHolderName,
+                              'cvvCode': cvvCode,
+                            };
+                            DBHelper.insertCards('card', data);
+                            setState(() {
+                              webviewUrl = urlAuth[1];
+                              sendToWeb = true;
+                            });
+                          }
                         },
                         child: Container(
                           height: 50,
