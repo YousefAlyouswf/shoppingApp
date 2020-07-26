@@ -7,6 +7,7 @@ import 'package:shop_app/manager/manager/addItem.dart';
 import 'package:shop_app/models/addressModel.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/screens/mainScreen/payment.dart';
+import 'package:shop_app/screens/mainScreen/payment_gateway/saved_card.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:uuid/uuid.dart';
@@ -58,7 +59,9 @@ Widget storedAddress(
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
                     child: ListTile(
-                      onTap: () {
+                      onTap: () async {
+                        final dataList = await DBHelper.getDataCards('card');
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -376,8 +379,8 @@ Widget buttonsBoth(
                     }
                   }
                 }
-                //signCode = await SmsAutoFill().getAppSignature;
-                // formatPhoneNumber();
+                signCode = await SmsAutoFill().getAppSignature;
+                formatPhoneNumber();
                 print("--------------->>>$codeID");
 
                 showDialog(
@@ -436,7 +439,7 @@ Widget buttonsBoth(
                                       'address': addressLineFromSa,
                                       'city': cityFromSa,
                                       'postCode': postCodeFromSa,
-                                    }).then((v) {
+                                    }).then((v) async {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

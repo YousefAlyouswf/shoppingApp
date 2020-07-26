@@ -1,14 +1,68 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart';
+import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/widgets/lang/appLocale.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../homePage.dart';
+
 class Moyasser extends StatefulWidget {
+  final Function onThemeChanged;
+  final Function changeLangauge;
+  final String firstName;
+  final String lastName;
+  final String phone;
+  final String address;
+  final String city;
+  final String postCose;
+  final String lat;
+  final String long;
+  final String buyPrice;
+  final String price;
+  final String totalAfterTax;
+  final String email;
+  final String delvierCost;
+  final String discount;
+  final String orderID;
+  final String userIDPhone;
+  final String zipCode;
+  final String phonesms;
+  final List<Map<String, dynamic>> mapItems;
+  final Function takeOffFromSubcatgory;
+  final Function sendSms;
+
+  const Moyasser(
+      {Key key,
+      this.onThemeChanged,
+      this.changeLangauge,
+      this.firstName,
+      this.lastName,
+      this.phone,
+      this.address,
+      this.city,
+      this.postCose,
+      this.lat,
+      this.long,
+      this.buyPrice,
+      this.price,
+      this.totalAfterTax,
+      this.email,
+      this.delvierCost,
+      this.discount,
+      this.orderID,
+      this.userIDPhone,
+      this.zipCode,
+      this.phonesms,
+      this.mapItems,
+      this.takeOffFromSubcatgory,
+      this.sendSms})
+      : super(key: key);
   @override
   _MoyasserState createState() => _MoyasserState();
 }
@@ -19,13 +73,16 @@ class _MoyasserState extends State<Moyasser> {
   String cardHolderName = '';
   String cvvCode = '';
   bool isCvvFocused = false;
-
+  double total;
   @override
   void initState() {
     super.initState();
     setState(() {
       isEnglish = true;
     });
+    total = (double.parse(widget.totalAfterTax) +
+            double.parse(widget.delvierCost)) *
+        100;
   }
 
   bool sendToWeb = false;
@@ -58,6 +115,19 @@ class _MoyasserState extends State<Moyasser> {
                   onPageFinished: (url) async {
                     if (url.contains("Succeeded")) {
                       print("YEEEEESSS");
+
+                      addThisOrderToFirestore('order').then((value) {
+                        widget.takeOffFromSubcatgory();
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        widget.sendSms();
+                        //sendEmailToCustomer();
+                        addCartToast(word("Succssful", context));
+                        navIndex = 4;
+                        DBHelper.deleteAllItem("cart");
+                        Navigator.popUntil(context, (route) => route.isFirst);
+                      }).catchError((e) {
+                        print(e);
+                      });
                     } else {
                       print("NOOOOOOO");
                     }
@@ -90,13 +160,13 @@ class _MoyasserState extends State<Moyasser> {
                           Response response = await post(
                               "https://api.moyasar.com/v1/payments.html/",
                               body: {
-                                'source[name]': 'Yousef Al Youswf',
-                                'source[number]': "5204730000002514",
-                                'source[cvc]': "123",
-                                'source[month]': '12',
-                                'source[year]': '2021',
+                                'source[name]': cardHolderName,
+                                'source[number]': cardNoSpaces,
+                                'source[cvc]': cvvCode,
+                                'source[month]': date[0],
+                                'source[year]': '20${date[1]}',
                                 'source[type]': 'creditcard',
-                                'amount': '30000',
+                                'amount': total.toInt().toString(),
                                 'publishable_api_key':
                                     'pk_test_syTNfUUcx3UeXamEA848gchRP3rXAeMjj7o5cCa8',
                                 'callback_url':
@@ -106,6 +176,13 @@ class _MoyasserState extends State<Moyasser> {
                           // print("------->>>${response.body}");
                           String htmlResponce = response.body;
                           List<String> urlAuth = htmlResponce.split('"');
+                          Map<String, dynamic> data = {
+                            'cardNumber': cardNumber,
+                            'expiryDate': expiryDate,
+                            'cardHolderName': cardHolderName,
+                            'cvvCode': cvvCode,
+                          };
+                          DBHelper.insertCards('card', data);
                           setState(() {
                             webviewUrl = urlAuth[1];
                             sendToWeb = true;
@@ -140,6 +217,36 @@ class _MoyasserState extends State<Moyasser> {
       cardHolderName = creditCardModel.cardHolderName;
       cvvCode = creditCardModel.cvvCode;
       isCvvFocused = creditCardModel.isCvvFocused;
+    });
+  }
+
+  Future<void> addThisOrderToFirestore(String collection) async {
+    double total =
+        double.parse(widget.totalAfterTax) + double.parse(widget.delvierCost);
+
+    await Firestore.instance.collection(collection).add({
+      'payment': '100',
+      'driverID': '',
+      'driverName': '',
+      'orderID': widget.orderID,
+      'date': DateTime.now().toString(),
+      'status': '0',
+      'address': widget.address,
+      'city': widget.city,
+      'postCode': widget.zipCode,
+      'discount': widget.discount,
+      'total': total,
+      'lat': widget.lat,
+      'long': widget.long,
+      'firstName': widget.firstName,
+      'lastName': widget.lastName,
+      'phone': widget.phone,
+      'deliverCost': widget.delvierCost,
+      'email': widget.email,
+      'priceForSell': widget.price,
+      'priceForBuy': widget.buyPrice,
+      'items': FieldValue.arrayUnion(widget.mapItems),
+      'userID': widget.userIDPhone,
     });
   }
 }
@@ -338,7 +445,7 @@ class _CreditCardForm2State extends State<CreditCardForm2> {
                   border: OutlineInputBorder(),
                   labelText: 'أسم حامل البطاقه',
                 ),
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.next,
               ),
             ),

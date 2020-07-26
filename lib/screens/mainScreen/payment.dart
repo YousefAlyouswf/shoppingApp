@@ -15,6 +15,7 @@ import 'package:share/share.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
+import 'package:shop_app/screens/mainScreen/payment_gateway/saved_card.dart';
 import 'package:shop_app/widgets/lang/appLocale.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
@@ -138,7 +139,7 @@ class _PaymentState extends State<Payment> {
   String accountSid;
   String authToken;
   String twilioNumber;
-  String phone;
+  String phonesms;
   TwilioFlutter twilioFlutter;
   twilioInfo() async {
     await Firestore.instance.collection("twilio").getDocuments().then((v) {
@@ -156,13 +157,13 @@ class _PaymentState extends State<Payment> {
       twilioNumber: '+12054966662',
     );
 
-    phone = widget.phone;
-    if (phone.substring(0, 2) == "05") {
-      phone = phone.substring(1);
+    phonesms = widget.phone;
+    if (phonesms.substring(0, 2) == "05") {
+      phonesms = phonesms.substring(1);
 
-      phone = "+966$phone";
+      phonesms = "+966$phonesms";
     } else {
-      phone = "+1$phone";
+      phonesms = "+1$phonesms";
     }
   }
 
@@ -306,11 +307,11 @@ class _PaymentState extends State<Payment> {
   double totalBeforeDiscount;
   bool cardSelected = false;
   bool loading = false;
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    print(width);
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -326,17 +327,16 @@ class _PaymentState extends State<Payment> {
         Locale('ar', ''),
         Locale('en', ''),
       ],
-      locale: isEnglish ? Locale('ar', '') : Locale('en', ''),
+      locale: isEnglish ? Locale('en', '') : Locale('ar', ''),
       home: Scaffold(
         backgroundColor: Colors.grey[300],
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColorLight,
+          backgroundColor: Color(0xFFFF834F),
           elevation: 0,
           title: Text(
             word("appName", context),
             style: TextStyle(
-              fontFamily: isEnglish ? 'EN' : "MainFont",
-            ),
+                fontFamily: isEnglish ? 'EN' : "MainFont", color: Colors.black),
           ),
         ),
         body: cardSelected
@@ -351,10 +351,7 @@ class _PaymentState extends State<Payment> {
                     await addThisOrderToFirestore('order').then((value) {
                       takeOffFromSubcatgory();
                       FocusScope.of(context).requestFocus(FocusNode());
-                      twilioFlutter.sendSMS(
-                          toNumber: phone,
-                          messageBody:
-                              'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
+                      sendSms();
                       //sendEmailToCustomer();
                       addCartToast(word("Succssful", context));
                       navIndex = 4;
@@ -538,7 +535,7 @@ class _PaymentState extends State<Payment> {
                                       )
                                     : paypal
                                         ? Image.network(
-                                            "https://iconarchive.com/icons/designbolts/credit-card-payment/256/Paypal-icon.png",
+                                            "https://probot.io/static/payments-cards.png",
                                             height: 50,
                                           )
                                         : Container(),
@@ -561,7 +558,7 @@ class _PaymentState extends State<Payment> {
                                         : cash
                                             ? "إتمام الشراء"
                                             : paypal
-                                                ? "دخول باي بال"
+                                                ? "أدخل بيانات البطاقه"
                                                 : "أختر طريقة الدفع",
                                     style: TextStyle(
                                         fontFamily: "MainFont",
@@ -614,7 +611,7 @@ class _PaymentState extends State<Payment> {
                                       FocusScope.of(context)
                                           .requestFocus(FocusNode());
                                       twilioFlutter.sendSMS(
-                                          toNumber: phone,
+                                          toNumber: phonesms,
                                           messageBody:
                                               'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
                                       sendEmailToCustomer();
@@ -633,12 +630,80 @@ class _PaymentState extends State<Payment> {
                                     cardSelected = true;
                                   });
                                 } else if (paypal) {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          Moyasser(),
-                                    ),
-                                  );
+                                  final cardList =
+                                      await DBHelper.getDataCards('card');
+                                  String userIDPhone;
+                                  if (androidInfo == null) {
+                                    userIDPhone =
+                                        iosDeviceInfo.identifierForVendor;
+                                  } else {
+                                    userIDPhone = androidInfo.androidId;
+                                  }
+                                  if (cardList.length > 0) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SavedCard(
+                                          totalAfterTax: widget.totalAfterTax,
+                                          price: widget.price,
+                                          sendSms: sendSms,
+                                          orderID: orderID,
+                                          phonesms: phonesms,
+                                          userIDPhone: userIDPhone,
+                                          buyPrice: widget.buyPrice,
+                                          onThemeChanged: widget.onThemeChanged,
+                                          changeLangauge: widget.changeLangauge,
+                                          firstName: widget.firstName,
+                                          lastName: widget.lastName,
+                                          email: widget.email,
+                                          phone: widget.phone,
+                                          lat: widget.lat,
+                                          long: widget.long,
+                                          delvierCost: widget.delvierCost,
+                                          discount: widget.discount,
+                                          address: widget.address,
+                                          city: widget.city,
+                                          postCose: widget.postCose,
+                                          zipCode: zipCode,
+                                          mapItems: mapItems,
+                                          takeOffFromSubcatgory:
+                                              takeOffFromSubcatgory,
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            Moyasser(
+                                          totalAfterTax: widget.totalAfterTax,
+                                          price: widget.price,
+                                          sendSms: sendSms,
+                                          orderID: orderID,
+                                          phonesms: phonesms,
+                                          userIDPhone: userIDPhone,
+                                          buyPrice: widget.buyPrice,
+                                          onThemeChanged: widget.onThemeChanged,
+                                          changeLangauge: widget.changeLangauge,
+                                          firstName: widget.firstName,
+                                          lastName: widget.lastName,
+                                          email: widget.email,
+                                          phone: widget.phone,
+                                          lat: widget.lat,
+                                          long: widget.long,
+                                          delvierCost: widget.delvierCost,
+                                          discount: widget.discount,
+                                          address: widget.address,
+                                          city: widget.city,
+                                          postCose: widget.postCose,
+                                          zipCode: zipCode,
+                                          mapItems: mapItems,
+                                          takeOffFromSubcatgory:
+                                              takeOffFromSubcatgory,
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 } else {
                                   errorToast("أختر طريقه الدفع");
                                 }
@@ -721,6 +786,13 @@ class _PaymentState extends State<Payment> {
               ),
       ),
     );
+  }
+
+  sendSms() {
+    twilioFlutter.sendSMS(
+        toNumber: phonesms,
+        messageBody:
+            'توفان\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
   }
 
   takeOffFromSubcatgory() async {

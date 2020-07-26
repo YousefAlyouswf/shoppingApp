@@ -15,6 +15,9 @@ class DBHelper {
             "CREATE TABLE cart(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, nameEn TEXT,  price TEXT, image TEXT, des TEXT, q TEXT, buyPrice TEXT, size TEXT, productID TEXT, totalQ TEXT, priceOld TEXT)");
         await db.execute(
             "CREATE TABLE address(id INTEGER PRIMARY KEY AUTOINCREMENT, Firstname TEXT, LastName TEXT,email TEXT, phone TEXT, address TEXT, city TEXT, postCode TEXT, lat TEXT, long TEXT, deliverCost TEXT)");
+
+        await db.execute(
+            "CREATE TABLE card(id INTEGER PRIMARY KEY AUTOINCREMENT, cardNumber TEXT, expiryDate TEXT,cardHolderName TEXT, cvvCode TEXT)");
       },
       version: 1,
     );
@@ -88,5 +91,23 @@ class DBHelper {
     final db = await DBHelper.database();
 
     db.delete(table, where: 'id = ?', whereArgs: [id]);
+  }
+
+  ////////////Cards
+  ///
+  static Future<void> insertCards(
+      String table, Map<String, Object> data) async {
+    final db = await DBHelper.database();
+    db
+        .insert(
+          table,
+          data,
+        )
+        .catchError((e) {});
+  }
+
+  static Future<List<Map<String, dynamic>>> getDataCards(String table) async {
+    final db = await DBHelper.database();
+    return db.query(table);
   }
 }
