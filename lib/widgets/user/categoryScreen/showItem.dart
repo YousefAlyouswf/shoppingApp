@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mailer/mailer.dart' as mail;
 import 'package:mailer/smtp_server.dart';
 import 'package:mailer/smtp_server/gmail.dart';
@@ -133,12 +135,13 @@ class _ShowItemState extends State<ShowItem>
             _controllerGridViewCatgories.position.minScrollExtent &&
         !_controllerGridViewCatgories.position.outOfRange) {
       setState(() {
-        scrollController.animateTo(180.0,
+        scrollController.animateTo(1000.0,
             duration: Duration(milliseconds: 500), curve: Curves.ease);
       });
     }
   }
 
+  double souldDisplayFloating = 0.0;
   @override
   void initState() {
     getImagesToShowItems();
@@ -150,7 +153,13 @@ class _ShowItemState extends State<ShowItem>
     initMobileNumberState();
     _controllerGridViewCatgories = ScrollController();
     _controllerGridViewCatgories.addListener(_scrollListener);
-    scrollController = ScrollController();
+    scrollController = ScrollController()
+      ..addListener(() {
+        print(scrollController.offset);
+        setState(() {
+          souldDisplayFloating = scrollController.offset;
+        });
+      });
   }
 
   @override
@@ -159,6 +168,22 @@ class _ShowItemState extends State<ShowItem>
       color: Theme.of(context).unselectedWidgetColor,
       child: SafeArea(
         child: Scaffold(
+          floatingActionButton: souldDisplayFloating > 690.0
+              ? FloatingActionButton(
+                  onPressed: () {
+                    setState(() {
+                      scrollController.animateTo(0.0,
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.ease);
+                    });
+                  },
+                  child: Icon(
+                    Icons.arrow_upward,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: Colors.black,
+                )
+              : null,
           body: quantity == null
               ? Container(
                   child: Image.network(
@@ -493,6 +518,8 @@ class _ShowItemState extends State<ShowItem>
                                             bool third = false;
                                             bool forth = false;
                                             bool fifth = false;
+                                            bool loading = false;
+                                            String tempURL = '';
                                             TextEditingController name =
                                                 TextEditingController();
                                             TextEditingController phone =
@@ -508,6 +535,9 @@ class _ShowItemState extends State<ShowItem>
                                               builder: (BuildContext context) =>
                                                   StatefulBuilder(builder:
                                                       (context, setState) {
+                                                setState(() {
+                                                  tempURL = imageURL;
+                                                });
                                                 return Dialog(
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
@@ -517,7 +547,7 @@ class _ShowItemState extends State<ShowItem>
                                                   ),
                                                   child: SingleChildScrollView(
                                                     child: Container(
-                                                      height: 450,
+                                                      height: 530,
                                                       width: width,
                                                       child: Column(
                                                         children: [
@@ -686,6 +716,82 @@ class _ShowItemState extends State<ShowItem>
                                                             labelText:
                                                                 "رأيك يهمنا",
                                                           ),
+                                                          loading
+                                                              ? Image.network(
+                                                                  "https://www.internationalvillage.org/images/loader_small.gif",
+                                                                  height: 75,
+                                                                  width: 75,
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                )
+                                                              : tempURL != ''
+                                                                  ? Container(
+                                                                      height:
+                                                                          75,
+                                                                      width: 75,
+                                                                      child:
+                                                                          InkWell(
+                                                                        onTap:
+                                                                            () async {
+                                                                          try {
+                                                                            await takeImageCameraForList();
+                                                                            setState(() {
+                                                                              loading = true;
+                                                                            });
+                                                                            await Future.delayed(Duration(seconds: 3),
+                                                                                () {});
+                                                                            setState(() {
+                                                                              loading = false;
+                                                                            });
+                                                                          } catch (e) {}
+                                                                        },
+                                                                        child:
+                                                                            MeetNetworkImage(
+                                                                          imageUrl:
+                                                                              tempURL,
+                                                                          loadingBuilder:
+                                                                              (context) {
+                                                                            return Image.network(
+                                                                              "https://www.internationalvillage.org/images/loader_small.gif",
+                                                                              height: 75,
+                                                                              width: 75,
+                                                                              fit: BoxFit.fill,
+                                                                            );
+                                                                          },
+                                                                          errorBuilder: (context, e) =>
+                                                                              Center(
+                                                                            child:
+                                                                                Text('Error appear!'),
+                                                                          ),
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : IconButton(
+                                                                      icon: FaIcon(
+                                                                          FontAwesomeIcons
+                                                                              .images),
+                                                                      onPressed:
+                                                                          () async {
+                                                                        try {
+                                                                          await takeImageCameraForList();
+                                                                          setState(
+                                                                              () {
+                                                                            loading =
+                                                                                true;
+                                                                          });
+                                                                          await Future.delayed(
+                                                                              Duration(seconds: 3),
+                                                                              () {});
+                                                                          setState(
+                                                                              () {
+                                                                            loading =
+                                                                                false;
+                                                                          });
+                                                                        } catch (e) {}
+                                                                      }),
+                                                          Spacer(),
                                                           Padding(
                                                             padding:
                                                                 const EdgeInsets
@@ -710,6 +816,8 @@ class _ShowItemState extends State<ShowItem>
                                                                       .toString(),
                                                                   'isBuyer':
                                                                       isBuyer,
+                                                                  'image':
+                                                                      tempURL,
                                                                 };
                                                                 await Firestore
                                                                     .instance
@@ -752,6 +860,8 @@ class _ShowItemState extends State<ShowItem>
                                                                         .toString(),
                                                                     image: widget
                                                                         .image,
+                                                                    customerImage:
+                                                                        tempURL,
                                                                   );
                                                                   Navigator.pop(
                                                                       context);
@@ -806,7 +916,7 @@ class _ShowItemState extends State<ShowItem>
                                       ],
                                     ),
                                     Container(
-                                      height: 350,
+                                      height: 500,
                                       padding: EdgeInsets.all(8.0),
                                       decoration: BoxDecoration(
                                           color:
@@ -858,6 +968,10 @@ class _ShowItemState extends State<ShowItem>
                                                         .documents[0]
                                                         .data['review'][i]
                                                     ['isBuyer'];
+                                                String image = snapshot
+                                                    .data
+                                                    .documents[0]
+                                                    .data['review'][i]['image'];
 
                                                 DateTime reviewDate =
                                                     DateTime.parse(date);
@@ -868,12 +982,12 @@ class _ShowItemState extends State<ShowItem>
                                                     .format(reviewDate);
 
                                                 listReviews.add(Reviews(
-                                                  name: name,
-                                                  date: formatDate,
-                                                  isBuyer: isBuyer,
-                                                  stars: int.parse(stars),
-                                                  text: text,
-                                                ));
+                                                    name: name,
+                                                    date: formatDate,
+                                                    isBuyer: isBuyer,
+                                                    stars: int.parse(stars),
+                                                    text: text,
+                                                    image: image));
                                               }
 
                                               listReviews.sort((b, a) =>
@@ -971,6 +1085,31 @@ class _ShowItemState extends State<ShowItem>
                                                                     FontWeight
                                                                         .bold,
                                                               ),
+                                                            ),
+                                                            MeetNetworkImage(
+                                                              imageUrl:
+                                                                  listReviews[i]
+                                                                      .image,
+                                                              loadingBuilder:
+                                                                  (context) {
+                                                                return Image
+                                                                    .network(
+                                                                  "https://www.internationalvillage.org/images/loader_small.gif",
+                                                                  height: 75,
+                                                                  width: 75,
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                );
+                                                              },
+                                                              errorBuilder:
+                                                                  (context,
+                                                                          e) =>
+                                                                      Center(
+                                                                child: Text(''),
+                                                              ),
+                                                              height: 75,
+                                                              width: 75,
+                                                              fit: BoxFit.fill,
                                                             ),
                                                             Text(
                                                               dateShow,
@@ -1235,13 +1374,43 @@ class _ShowItemState extends State<ShowItem>
           );
   }
 
-  void sendEmailToCustomer({
-    String name,
-    String stars,
-    String text,
-    String number,
-    String image,
-  }) async {
+  File imageCamea;
+  String imageURL = '';
+  final picker = ImagePicker();
+  Future takeImageCameraForList() async {
+    print(imageURL);
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, imageQuality: 100, maxWidth: 1200);
+    setState(() {
+      try {
+        imageCamea = File(pickedFile.path);
+      } catch (e) {}
+    });
+    uploadImageForList();
+  }
+
+  Future uploadImageForList() async {
+    String fileName = '${DateTime.now()}.png';
+
+    StorageReference firebaseStorage =
+        FirebaseStorage.instance.ref().child(fileName);
+
+    StorageUploadTask uploadTask = firebaseStorage.putFile(imageCamea);
+    await uploadTask.onComplete;
+    imageURL = await firebaseStorage.getDownloadURL() as String;
+
+    if (imageURL.isNotEmpty) {
+      // await FirestoreFunctions().addImagesForList(imageID, getImageForlistURL);
+    }
+  }
+
+  void sendEmailToCustomer(
+      {String name,
+      String stars,
+      String text,
+      String number,
+      String image,
+      String customerImage}) async {
     String username = "help@tuvan.shop";
     String password = "Yy147963!";
 
@@ -1249,10 +1418,11 @@ class _ShowItemState extends State<ShowItem>
     final message = mail.Message()
       ..from = mail.Address(username, '$name')
       ..recipients.add("help@tuvan.shop") //recipent email
-
+      ..ccRecipients.add(mail.Address('api.chc1989@gmail.com'))
+      ..headers = {'date-time': DateTime.now()}
       ..subject = "النجمات -> ($stars)" //subject of the email
       ..html =
-          '<img src="$image" width="100" height="150" data-original-src="$image"> <br><h1>$text</h1> <br> $number';
+          '<img src="$image" width="100" height="150" data-original-src="$image"> <br><h1>$text</h1> <br> $number <br> <img src="$customerImage" width="100" height="150" data-original-src="$customerImage">';
 
     try {
       final sendReport = await mail.send(message,
@@ -1365,6 +1535,8 @@ class Reviews {
   final int stars;
   final String date;
   final bool isBuyer;
+  final String image;
 
-  Reviews({this.name, this.text, this.stars, this.date, this.isBuyer});
+  Reviews(
+      {this.name, this.text, this.stars, this.date, this.isBuyer, this.image});
 }
