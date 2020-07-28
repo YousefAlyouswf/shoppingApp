@@ -10,7 +10,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mailer/mailer.dart' as mail;
 import 'package:mailer/smtp_server.dart';
-import 'package:mailer/smtp_server/gmail.dart';
 import 'package:meet_network_image/meet_network_image.dart';
 import 'package:mobile_number/mobile_number.dart';
 import 'package:shop_app/database/firestore.dart';

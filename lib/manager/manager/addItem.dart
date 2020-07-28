@@ -800,8 +800,7 @@ Future uploadImageItems() async {
   if (urlImageItems.isNotEmpty) {}
 }
 
-Future<void> getImageForCatgory(
-    Function camera, Function gallery, BuildContext context) {
+getImageForCatgory(Function camera, Function gallery, BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) => Dialog(

@@ -373,7 +373,7 @@ class _PaymentState extends State<Payment> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
                       child: Container(
-                        height: MediaQuery.of(context).size.height * .6,
+                        height: MediaQuery.of(context).size.height * .55,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
@@ -745,12 +745,14 @@ class _PaymentState extends State<Payment> {
                             setState(() {
                               loading = true;
                             });
+
                             Response response = await post(
                                 "http://geniusloop.co/shortlink/",
                                 body: {
-                                  "link": webviewUrl,
+                                  "link":
+                                      "https://tuvan.shop/payment/pay.php?orderID=$orderID",
                                 });
-                            print(response.statusCode);
+
                             if (response.statusCode == 200) {
                               Share.share(response.body);
                             }

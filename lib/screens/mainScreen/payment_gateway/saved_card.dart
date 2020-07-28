@@ -6,7 +6,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart';
 import 'package:shop_app/database/local_db.dart';
-import 'package:shop_app/screens/mainScreen/payment.dart';
 import 'package:shop_app/widgets/lang/appLocale.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:webview_flutter/webview_flutter.dart';

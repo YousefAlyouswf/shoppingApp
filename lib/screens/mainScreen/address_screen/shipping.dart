@@ -7,7 +7,6 @@ import 'package:shop_app/manager/manager/addItem.dart';
 import 'package:shop_app/models/addressModel.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/screens/mainScreen/payment.dart';
-import 'package:shop_app/screens/mainScreen/payment_gateway/saved_card.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:uuid/uuid.dart';
@@ -60,8 +59,6 @@ Widget storedAddress(
                   child: Card(
                     child: ListTile(
                       onTap: () async {
-                        final dataList = await DBHelper.getDataCards('card');
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -364,7 +361,7 @@ Widget buttonsBoth(
             } else if (!emailValid) {
               errorToast(word("email_error", context));
             } else {
-              if (true) {
+              if (addressLineFromSa != "") {
                 Uuid uid = Uuid();
                 codeID = uid.v1();
                 List<String> list = codeID.split('');

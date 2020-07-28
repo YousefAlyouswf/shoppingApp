@@ -106,6 +106,15 @@ class _MoyasserState extends State<Moyasser> {
       locale: Locale('en', ''),
       home: Scaffold(
         resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          backgroundColor: Color(0xFFFF834F),
+          elevation: 0,
+          centerTitle: true,
+          title: Text(
+            sendToWeb ? "أدخل الرقم السري" : "أدخل معلومات البطاقه",
+            style: TextStyle(fontFamily: "MainFont", color: Colors.white),
+          ),
+        ),
         body: SafeArea(
           child: sendToWeb
               ? WebView(
@@ -186,20 +195,27 @@ class _MoyasserState extends State<Moyasser> {
                                       'https://www.tuvan.shop/payment',
                                 });
 
-                            // print("------->>>${response.body}");
+                            print("------->>>${response.body}");
+
                             String htmlResponce = response.body;
                             List<String> urlAuth = htmlResponce.split('"');
+                            print(urlAuth);
                             Map<String, dynamic> data = {
                               'cardNumber': cardNumber,
                               'expiryDate': expiryDate,
                               'cardHolderName': cardHolderName,
                               'cvvCode': cvvCode,
                             };
-                            DBHelper.insertCards('card', data);
-                            setState(() {
-                              webviewUrl = urlAuth[1];
-                              sendToWeb = true;
-                            });
+                            if (urlAuth[1].contains('https')) {
+                              DBHelper.insertCards('card', data);
+                              setState(() {
+                                print(urlAuth[1]);
+                                webviewUrl = urlAuth[1];
+                                sendToWeb = true;
+                              });
+                            } else {
+                              errorToast("يوجد خطأ في معلومات البطاقه");
+                            }
                           }
                         },
                         child: Container(
@@ -389,6 +405,23 @@ class _CreditCardForm2State extends State<CreditCardForm2> {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
+              margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
+              child: TextFormField(
+                controller: _cardHolderNameController,
+                cursorColor: widget.cursorColor ?? themeColor,
+                style: TextStyle(
+                  color: widget.textColor,
+                ),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'أسم حامل البطاقه',
+                ),
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.next,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               margin: const EdgeInsets.only(left: 16, top: 16, right: 16),
               child: TextFormField(
                 controller: _cardNumberController,
@@ -444,23 +477,6 @@ class _CreditCardForm2State extends State<CreditCardForm2> {
                     cvvCode = text;
                   });
                 },
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
-              child: TextFormField(
-                controller: _cardHolderNameController,
-                cursorColor: widget.cursorColor ?? themeColor,
-                style: TextStyle(
-                  color: widget.textColor,
-                ),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'أسم حامل البطاقه',
-                ),
-                keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.next,
               ),
             ),
           ],
