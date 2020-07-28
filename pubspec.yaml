@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+27
+version: 1.0.0+28
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -70,7 +70,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/logo.png"
+  image_path: "assets/images/logoapp.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -85,13 +85,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/images/logo.png
+    - assets/images/logoapp.png
     - assets/lang/
 
     - assets/maps.flr
     - assets/tabs.flr
-    - assets/dokan.flr
-    - assets/tovan.flr
+  
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -113,18 +112,11 @@ flutter:
     - family: EN
       fonts:
         - asset: assets/fonts/en.ttf
-    - family: summer
-      fonts:
-        - asset: assets/fonts/summer.ttf
-    - family: typo
-      fonts:
-        - asset: assets/fonts/typo.otf
+
     - family: modular
       fonts:
         - asset: assets/fonts/modular.ttf
-    - family: mussamim
-      fonts:
-        - asset: assets/fonts/mussamim.ttf
+  
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

@@ -168,44 +168,66 @@ class _LunchAppState extends State<LunchApp> {
                           ],
                         ),
                       )
-                : Container(
-                    height: MediaQuery.of(context).size.height,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "uvan",
-                          style: TextStyle(
-                            fontFamily: 'modular',
-                            fontSize: 70,
-                          ),
-                        ),
-                        Text(
-                          "T",
-                          style: TextStyle(
-                            fontFamily: 'modular',
-                            fontSize: 70,
-                            color: Colors.indigo,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
+                :
 
-            //  FlareActor(
-            //     'assets/dokan.flr',
-            //     fit: BoxFit.fill,
-            //     animation: "splash",
-            //   ),
-            ),
+                // FlareActor(
+                //     'assets/logoTuvan.flr',
+                //     fit: BoxFit.fill,
+                //     animation: "Untitled",
+                //   ),
+
+                Center(
+                    child: Container(
+                      height: 250,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 3, color: Colors.grey),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          bottomRight: Radius.circular(25),
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                "uvan",
+                                style: TextStyle(
+                                  fontFamily: 'modular',
+                                  fontSize: 70,
+                                ),
+                              ),
+                              Text(
+                                "T",
+                                style: TextStyle(
+                                  fontFamily: 'modular',
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  color: Colors.purple,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            "توفان للإزياء والموضة",
+                            style:
+                                TextStyle(fontSize: 20, fontFamily: "MainFont"),
+                          )
+                        ],
+                      ),
+                    ),
+                  )),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Align(
             alignment: Alignment.bottomLeft,
             child: Text(
-              "إصدار رقم: 0.0.27",
-              style: TextStyle(fontFamily: "MainFont", color: Colors.white),
+              "إصدار رقم: 0.0.28",
+              style: TextStyle(fontFamily: "MainFont", color: Colors.black),
             ),
           ),
         )

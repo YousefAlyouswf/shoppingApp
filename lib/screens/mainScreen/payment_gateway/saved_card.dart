@@ -150,6 +150,14 @@ class _SavedCardState extends State<SavedCard> {
                       });
                     })
                 : Container(),
+            IconButton(
+                icon: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                })
           ],
         ),
         body: sendToWeb

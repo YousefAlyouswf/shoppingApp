@@ -114,6 +114,16 @@ class _MoyasserState extends State<Moyasser> {
             sendToWeb ? "أدخل الرقم السري" : "أدخل معلومات البطاقه",
             style: TextStyle(fontFamily: "MainFont", color: Colors.white),
           ),
+          actions: [
+            IconButton(
+                icon: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                })
+          ],
         ),
         body: SafeArea(
           child: sendToWeb

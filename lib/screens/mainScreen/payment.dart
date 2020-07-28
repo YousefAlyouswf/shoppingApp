@@ -338,6 +338,16 @@ class _PaymentState extends State<Payment> {
             style: TextStyle(
                 fontFamily: isEnglish ? 'EN' : "MainFont", color: Colors.black),
           ),
+          actions: [
+            IconButton(
+                icon: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                })
+          ],
         ),
         body: cardSelected
             ? WebView(
