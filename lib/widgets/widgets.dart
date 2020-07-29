@@ -372,3 +372,30 @@ class Destination {
   final FaIcon icon;
   final MaterialColor color;
 }
+
+Map<String, dynamic> itemFunction(
+  name,
+  nameEn,
+  description,
+  price,
+  image,
+  show,
+  productID,
+  buyPrice,
+  size,
+  priceOld,
+) {
+  Map<String, dynamic> itemMap = {
+    "name": name,
+    "name_en": nameEn,
+    "description": description,
+    "price": price,
+    "image": image,
+    "show": show,
+    "productID": productID,
+    'buyPrice': buyPrice,
+    'size': size,
+    'priceOld': priceOld,
+  };
+  return itemMap;
+}

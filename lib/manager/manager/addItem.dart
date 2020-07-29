@@ -572,20 +572,19 @@ Widget addItem(
                         '41': s41,
                         '42': s42,
                       };
-                      Map<String, dynamic> itemMap = {
-                        "name": itemName.text,
-                        "name_en": nameEn.text,
-                        "description": itemDis.text,
-                        "price": itemPrice.text,
-                        "image": urlImageItems,
-                        "show": false,
-                        "productID": uui,
-                        'buyPrice': itemBuyPrice.text,
-                        'size': checkedSize
-                            ? sizeNum ? sizeNumMap : sizeWordMap
-                            : {},
-                        'priceOld': '',
-                      };
+                      Map<String, dynamic> itemMap = itemFunction(
+                        itemName.text,
+                        nameEn.text,
+                        itemDis.text,
+                        itemPrice.text,
+                        urlImageItems,
+                        false,
+                        uui,
+                        itemBuyPrice.text,
+                        checkedSize ? sizeNum ? sizeNumMap : sizeWordMap : {},
+                        '',
+                      );
+
                       Map<String, dynamic> itemMapForNew = {
                         "category": categoryName.text,
                         "items": FieldValue.arrayUnion([itemMap])

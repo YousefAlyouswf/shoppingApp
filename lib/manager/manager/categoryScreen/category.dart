@@ -286,15 +286,17 @@ Widget subCatgory(
                                                   color: Colors.white,
                                                 ),
                                                 onPressed: () async {
-                                                  await getImageForCatgory(
-                                                    takeImageCameraForList(
-                                                        listImages[index]
-                                                            .imageID),
-                                                    takeImageGalaryForList(
-                                                        listImages[index]
-                                                            .imageID),
-                                                    context,
-                                                  );
+                                                  try {
+                                                    await getImageForCatgory(
+                                                      takeImageCameraForList(
+                                                          listImages[index]
+                                                              .imageID),
+                                                      takeImageGalaryForList(
+                                                          listImages[index]
+                                                              .imageID),
+                                                      context,
+                                                    );
+                                                  } catch (e) {}
                                                 }),
                                             Row(
                                               mainAxisAlignment:
@@ -398,57 +400,40 @@ Widget subCatgory(
                                                                 e.value);
 
                                                     Map<String, dynamic>
-                                                        itemMapRemove = {
-                                                      "buyPrice":
-                                                          listImages[index]
-                                                              .buyPrice,
-                                                      "name": listImages[index]
-                                                          .name,
-                                                      "name_en":
-                                                          listImages[index]
-                                                              .nameEn,
-                                                      "description":
-                                                          listImages[index]
-                                                              .description,
-                                                      "price": listImages[index]
-                                                          .price,
-                                                      "image": listImages[index]
-                                                          .image,
-                                                      "show": false,
-                                                      "productID":
-                                                          listImages[index]
-                                                              .imageID,
-                                                      'size': sizingMap,
-                                                      'priceOld':
-                                                          listImages[index]
-                                                              .priceOld,
-                                                    };
+                                                        itemMapRemove =
+                                                        itemFunction(
+                                                      listImages[index].name,
+                                                      listImages[index].nameEn,
+                                                      listImages[index]
+                                                          .description,
+                                                      listImages[index].price,
+                                                      listImages[index].image,
+                                                      false,
+                                                      listImages[index].imageID,
+                                                      listImages[index]
+                                                          .buyPrice,
+                                                      sizingMap,
+                                                      listImages[index]
+                                                          .priceOld,
+                                                    );
+
                                                     Map<String, dynamic>
-                                                        itemMapAdd = {
-                                                      "buyPrice":
-                                                          listImages[index]
-                                                              .buyPrice,
-                                                      "name": listImages[index]
-                                                          .name,
-                                                      "name_en":
-                                                          listImages[index]
-                                                              .nameEn,
-                                                      "description":
-                                                          listImages[index]
-                                                              .description,
-                                                      "price": listImages[index]
-                                                          .price,
-                                                      "image": listImages[index]
-                                                          .image,
-                                                      "show": true,
-                                                      "productID":
-                                                          listImages[index]
-                                                              .imageID,
-                                                      'size': sizingMap,
-                                                      'priceOld':
-                                                          listImages[index]
-                                                              .priceOld,
-                                                    };
+                                                        itemMapAdd =
+                                                        itemFunction(
+                                                      listImages[index].name,
+                                                      listImages[index].nameEn,
+                                                      listImages[index]
+                                                          .description,
+                                                      listImages[index].price,
+                                                      listImages[index].image,
+                                                      true,
+                                                      listImages[index].imageID,
+                                                      listImages[index]
+                                                          .buyPrice,
+                                                      sizingMap,
+                                                      listImages[index]
+                                                          .priceOld,
+                                                    );
                                                     if (listImages[index]
                                                         .show) {
                                                       FirestoreFunctions()
@@ -527,19 +512,19 @@ Widget subCatgory(
                                   listImages[index].sizeModel,
                                   key: (e) => e.sizeName,
                                   value: (e) => e.value);
-                              Map<String, dynamic> itemMap = {
-                                'buyPrice': listImages[index].buyPrice,
-                                "name": listImages[index].name,
-                                "name_en": listImages[index].nameEn,
-                                "description": listImages[index].description,
-                                "price": listImages[index].price,
-                                "image": listImages[index].image,
-                                'show': listImages[index].show,
-                                'imageID': listImages[index].imageID,
-                                'priceOld': listImages[index].priceOld,
-                                'size': sizingMap,
-                                //'totalQuantity': listImages[index].totalQuantity
-                              };
+                              Map<String, dynamic> itemMap = itemFunction(
+                                listImages[index].name,
+                                listImages[index].nameEn,
+                                listImages[index].description,
+                                listImages[index].price,
+                                listImages[index].image,
+                                listImages[index].show,
+                                listImages[index].imageID,
+                                listImages[index].buyPrice,
+                                sizingMap,
+                                listImages[index].priceOld,
+                              );
+
                               deleteItemDialog(
                                 context,
                                 listImages[index].name,

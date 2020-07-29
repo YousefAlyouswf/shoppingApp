@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/models/sizeListModel.dart';
+import 'package:shop_app/widgets/widgets.dart';
 
 import '../addItem.dart';
 
@@ -335,32 +336,32 @@ class _EditItemState extends State<EditItem> {
                             widget.size,
                             key: (e) => e.sizeName,
                             value: (e) => e.value);
-                        Map<String, dynamic> itemMapRemove = {
-                          'buyPrice': widget.buyPrice,
-                          'description': widget.des,
-                          'image': widget.image,
-                          'productID': widget.imageID,
-                          'name': widget.name,
-                          'name_en': widget.nameEn,
-                          'price': widget.price,
-                          'show': widget.show,
-                          'size': sizingMap,
-                          'priceOld': widget.priceOld,
-                        };
-                        Map<String, dynamic> itemMapAdd = {
-                          'buyPrice': buyPrice.text,
-                          'description': des.text,
-                          'image': url == null ? widget.image : url,
-                          'productID': widget.imageID,
-                          'name': name.text,
-                          'name_en': nameEn.text,
-                          'price': price.text,
-                          'show': widget.show,
-                          'size': checkedSize
-                              ? sizeNum ? sizeNumMap : sizeWordMap
-                              : {},
-                          'priceOld': priceOld.text,
-                        };
+                        Map<String, dynamic> itemMapRemove = itemFunction(
+                          widget.name,
+                          widget.nameEn,
+                          widget.des,
+                          widget.price,
+                          widget.image,
+                          widget.show,
+                          widget.imageID,
+                          widget.buyPrice,
+                          sizingMap,
+                          widget.priceOld,
+                        );
+
+                        Map<String, dynamic> itemMapAdd = itemFunction(
+                          name.text,
+                          nameEn.text,
+                          des.text,
+                          price.text,
+                          url == null ? widget.image : url,
+                          widget.show,
+                          widget.imageID,
+                          buyPrice.text,
+                          checkedSize ? sizeNum ? sizeNumMap : sizeWordMap : {},
+                          priceOld.text,
+                        );
+
                         FirestoreFunctions()
                             .upDateItems(
                                 widget.category, itemMapRemove, itemMapAdd)
@@ -371,30 +372,32 @@ class _EditItemState extends State<EditItem> {
                                     widget.imageID, widget.image, url);
                         }).then((value) => Navigator.pop(context));
                       } else {
-                        Map<String, dynamic> itemMapRemove = {
-                          'buyPrice': widget.buyPrice,
-                          'description': widget.des,
-                          'image': widget.image,
-                          'productID': widget.imageID,
-                          'name': widget.name,
-                          'name_en': widget.nameEn,
-                          'price': widget.price,
-                          'show': widget.show,
-                          'size': {},
-                          'priceOld': widget.priceOld,
-                        };
-                        Map<String, dynamic> itemMapAdd = {
-                          'buyPrice': buyPrice.text,
-                          'description': des.text,
-                          'image': url == null ? widget.image : url,
-                          'productID': widget.imageID,
-                          'name': name.text,
-                          'name_en': nameEn.text,
-                          'price': price.text,
-                          'show': widget.show,
-                          'size': {},
-                          'priceOld': priceOld.text,
-                        };
+                        Map<String, dynamic> itemMapRemove = itemFunction(
+                          widget.name,
+                          widget.nameEn,
+                          widget.des,
+                          widget.price,
+                          widget.image,
+                          widget.show,
+                          widget.imageID,
+                          widget.buyPrice,
+                          {},
+                          widget.priceOld,
+                        );
+
+                        Map<String, dynamic> itemMapAdd = itemFunction(
+                          name.text,
+                          nameEn.text,
+                          des.text,
+                          price.text,
+                          url == null ? widget.image : url,
+                          widget.show,
+                          widget.imageID,
+                          buyPrice.text,
+                          {},
+                          priceOld.text,
+                        );
+
                         await FirestoreFunctions()
                             .upDateItems(
                                 widget.category, itemMapRemove, itemMapAdd)
