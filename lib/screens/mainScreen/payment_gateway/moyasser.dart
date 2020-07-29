@@ -93,159 +93,150 @@ class _MoyasserState extends State<Moyasser> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: [
-        AppLocale.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [
-        Locale('en', ''),
-      ],
-      locale: Locale('en', ''),
-      home: Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          backgroundColor: Color(0xFFFF834F),
-          elevation: 0,
-          centerTitle: true,
-          title: Text(
-            sendToWeb ? "أدخل الرقم السري" : "أدخل معلومات البطاقه",
-            style: TextStyle(fontFamily: "MainFont", color: Colors.white),
-          ),
-          actions: [
-            IconButton(
-                icon: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                })
-          ],
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        backgroundColor: Color(0xFFFF834F),
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          sendToWeb ? "أدخل الرقم السري" : "أدخل معلومات البطاقه",
+          style: TextStyle(fontFamily: "MainFont", color: Colors.white),
         ),
-        body: SafeArea(
-          child: sendToWeb
-              ? WebView(
-                  // key: UniqueKey(),
-                  initialUrl: webviewUrl,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  onPageFinished: (url) async {
-                    if (url.contains("Succeeded")) {
-                      print("YEEEEESSS");
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              })
+        ],
+      ),
+      body: SafeArea(
+        child: sendToWeb
+            ? WebView(
+                // key: UniqueKey(),
+                initialUrl: webviewUrl,
+                javascriptMode: JavascriptMode.unrestricted,
+                onPageFinished: (url) async {
+                  if (url.contains("Succeeded")) {
+                    print("YEEEEESSS");
 
-                      addThisOrderToFirestore('order').then((value) {
-                        widget.takeOffFromSubcatgory();
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        widget.sendSms();
-                        //sendEmailToCustomer();
-                        addCartToast(word("Succssful", context));
-                        navIndex = 4;
-                        DBHelper.deleteAllItem("cart");
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                      }).catchError((e) {
-                        print(e);
-                      });
-                    } else {
-                      print("NOOOOOOO");
-                    }
-                  },
-                )
-              : Column(
-                  children: <Widget>[
-                    CreditCardWidget(
+                    addThisOrderToFirestore('order').then((value) {
+                      widget.takeOffFromSubcatgory();
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      widget.sendSms();
+                      //sendEmailToCustomer();
+                      addCartToast(word("Succssful", context));
+                      navIndex = 4;
+                      DBHelper.deleteAllItem("cart");
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    }).catchError((e) {
+                      print(e);
+                    });
+                  } else {
+                    print("NOOOOOOO");
+                  }
+                },
+              )
+            : Column(
+                children: <Widget>[
+                  Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: CreditCardWidget(
                       cardNumber: cardNumber,
                       expiryDate: expiryDate,
                       cardHolderName: cardHolderName,
                       cvvCode: cvvCode,
                       showBackView: isCvvFocused,
                     ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: CreditCardForm2(
-                          onCreditCardModelChange: onCreditCardModelChange,
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: CreditCardForm2(
+                        onCreditCardModelChange: onCreditCardModelChange,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () async {
+                        List<String> date = expiryDate.split('/');
+                        String cardNoSpaces = cardNumber.replaceAll(
+                            new RegExp(r"\s+\b|\b\s"), "");
+                        int month = 0;
+                        print(cardNoSpaces.length);
+                        try {
+                          month = int.parse(date[0]);
+                        } catch (e) {
+                          errorToast("يوجد خطأ في معلومات البطاقه");
+                        }
+
+                        if (month > 12 ||
+                            cardNoSpaces.length < 16 ||
+                            cvvCode.isEmpty ||
+                            cardHolderName.isEmpty) {
+                          errorToast("يوجد خطأ في معلومات البطاقه");
+                        } else {
+                          Response response = await post(
+                              "https://api.moyasar.com/v1/payments.html/",
+                              body: {
+                                'source[name]': cardHolderName,
+                                'source[number]': cardNoSpaces,
+                                'source[cvc]': cvvCode,
+                                'source[month]': date[0],
+                                'source[year]': '20${date[1]}',
+                                'source[type]': 'creditcard',
+                                'amount': total.toInt().toString(),
+                                'publishable_api_key':
+                                    'pk_test_syTNfUUcx3UeXamEA848gchRP3rXAeMjj7o5cCa8',
+                                'callback_url':
+                                    'https://www.tuvan.shop/payment',
+                              });
+
+                          print("------->>>${response.body}");
+
+                          String htmlResponce = response.body;
+                          List<String> urlAuth = htmlResponce.split('"');
+                          print(urlAuth);
+                          Map<String, dynamic> data = {
+                            'cardNumber': cardNumber,
+                            'expiryDate': expiryDate,
+                            'cardHolderName': cardHolderName,
+                            'cvvCode': cvvCode,
+                          };
+                          if (urlAuth[1].contains('https')) {
+                            DBHelper.insertCards('card', data);
+                            setState(() {
+                              print(urlAuth[1]);
+                              webviewUrl = urlAuth[1];
+                              sendToWeb = true;
+                            });
+                          } else {
+                            errorToast("يوجد خطأ في معلومات البطاقه");
+                          }
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        color: Theme.of(context).unselectedWidgetColor,
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        child: Text(
+                          'إتمام عملية الدفع',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "MainFont",
+                              color: Colors.white),
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: () async {
-                          List<String> date = expiryDate.split('/');
-                          String cardNoSpaces = cardNumber.replaceAll(
-                              new RegExp(r"\s+\b|\b\s"), "");
-                          int month = 0;
-                          print(cardNoSpaces.length);
-                          try {
-                            month = int.parse(date[0]);
-                          } catch (e) {
-                            errorToast("يوجد خطأ في معلومات البطاقه");
-                          }
-
-                          if (month > 12 ||
-                              cardNoSpaces.length < 16 ||
-                              cvvCode.isEmpty ||
-                              cardHolderName.isEmpty) {
-                            errorToast("يوجد خطأ في معلومات البطاقه");
-                          } else {
-                            Response response = await post(
-                                "https://api.moyasar.com/v1/payments.html/",
-                                body: {
-                                  'source[name]': cardHolderName,
-                                  'source[number]': cardNoSpaces,
-                                  'source[cvc]': cvvCode,
-                                  'source[month]': date[0],
-                                  'source[year]': '20${date[1]}',
-                                  'source[type]': 'creditcard',
-                                  'amount': total.toInt().toString(),
-                                  'publishable_api_key':
-                                      'pk_test_syTNfUUcx3UeXamEA848gchRP3rXAeMjj7o5cCa8',
-                                  'callback_url':
-                                      'https://www.tuvan.shop/payment',
-                                });
-
-                            print("------->>>${response.body}");
-
-                            String htmlResponce = response.body;
-                            List<String> urlAuth = htmlResponce.split('"');
-                            print(urlAuth);
-                            Map<String, dynamic> data = {
-                              'cardNumber': cardNumber,
-                              'expiryDate': expiryDate,
-                              'cardHolderName': cardHolderName,
-                              'cvvCode': cvvCode,
-                            };
-                            if (urlAuth[1].contains('https')) {
-                              DBHelper.insertCards('card', data);
-                              setState(() {
-                                print(urlAuth[1]);
-                                webviewUrl = urlAuth[1];
-                                sendToWeb = true;
-                              });
-                            } else {
-                              errorToast("يوجد خطأ في معلومات البطاقه");
-                            }
-                          }
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Theme.of(context).unselectedWidgetColor,
-                          alignment: Alignment.center,
-                          width: double.infinity,
-                          child: Text(
-                            'إتمام عملية الدفع',
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: "MainFont",
-                                color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-        ),
+                  )
+                ],
+              ),
       ),
     );
   }
