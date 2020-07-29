@@ -38,7 +38,8 @@ Widget heartsSmall(double x, double y, _animation) {
 AppBar appBar(
   int countCart,
   darwerPressdAnimation,
-  toogel, {
+  toogel,
+  enableSearch, {
   Function goToCartScreen,
   BuildContext context,
 }) {
@@ -64,14 +65,14 @@ AppBar appBar(
       ),
       onTap: darwerPressdAnimation,
     ),
-
-    //  IconButton(
-    //   icon: toogel
-    //       ? FaIcon(FontAwesomeIcons.times)
-    //       : FaIcon(FontAwesomeIcons.stream),
-    //   onPressed: darwerPressdAnimation,
-    // ),
     actions: <Widget>[
+      IconButton(
+        icon: Icon(
+          Icons.search,
+          size: 30,
+        ),
+        onPressed: enableSearch,
+      ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Stack(

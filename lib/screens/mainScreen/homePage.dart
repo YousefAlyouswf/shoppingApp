@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
+import 'package:shop_app/manager/manager/addItem.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/widgets/drawerScreen.dart';
 import 'package:shop_app/widgets/lang/appLocale.dart';
@@ -193,6 +194,7 @@ class _HomePageState extends State<HomePage>
   }
 
   int countCart = 0;
+
   @override
   Widget build(BuildContext context) {
     var keyboard = MediaQuery.of(context).viewInsets.bottom;
@@ -215,17 +217,10 @@ class _HomePageState extends State<HomePage>
         countCart,
         darwerPressdAnimation,
         toogel,
+        enableSearch,
         goToCartScreen: goToCartScreen,
         context: context,
       ),
-      // drawer: drawer(
-      //   context,
-      //   widget.onThemeChanged,
-      //   goToHome,
-      //   goToCategoryPage,
-      //   changeLangauge: widget.changeLangauge,
-      // ),
-
       body: Stack(
         children: [
           DrawerScreen(
@@ -239,6 +234,13 @@ class _HomePageState extends State<HomePage>
       ),
       bottomNavigationBar: bottomNavgation(bottomNavIndex, context),
     );
+  }
+
+  bool isSearching = false;
+  enableSearch() {
+    setState(() {
+      isSearching = !isSearching;
+    });
   }
 
   bool toogel = false;
@@ -276,15 +278,6 @@ class _HomePageState extends State<HomePage>
           darwerPressdAnimation();
         }
       },
-      // onHorizontalDragStart: (d) {
-      //   darwerPressdAnimation();
-      //   print(d.globalPosition);
-      // },
-      // onHorizontalDragUpdate: (d) {
-      //   // darwerPressdAnimation();
-      //   //print(d.globalPosition);
-      //   print(d.globalPosition);
-      // },
       child: AnimatedContainer(
         transform: Matrix4.translationValues(xOffest, yOffest, 0)
           ..scale(scaleFactor),
@@ -315,7 +308,20 @@ class _HomePageState extends State<HomePage>
                 ? Container(
                     color: Colors.grey.withOpacity(0.5),
                   )
-                : Container()
+                : Container(),
+            isSearching
+                ? Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: MyTextFormField(
+                      hintText: "بـــــحـــــث",
+                      labelText: "بحث",
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),
