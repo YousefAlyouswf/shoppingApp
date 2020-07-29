@@ -990,7 +990,7 @@ class _ShowItemState extends State<ShowItem>
                                               }
 
                                               listReviews.sort((b, a) =>
-                                                  a.date.compareTo(b.date));
+                                                  a.stars.compareTo(b.stars));
 
                                               return ListView.builder(
                                                   itemCount: listReviews.length,
@@ -1085,31 +1085,39 @@ class _ShowItemState extends State<ShowItem>
                                                                         .bold,
                                                               ),
                                                             ),
-                                                            MeetNetworkImage(
-                                                              imageUrl:
-                                                                  listReviews[i]
-                                                                      .image,
-                                                              loadingBuilder:
-                                                                  (context) {
-                                                                return Image
-                                                                    .network(
-                                                                  "https://www.internationalvillage.org/images/loader_small.gif",
-                                                                  height: 75,
-                                                                  width: 75,
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                );
-                                                              },
-                                                              errorBuilder:
-                                                                  (context,
-                                                                          e) =>
-                                                                      Center(
-                                                                child: Text(''),
-                                                              ),
-                                                              height: 75,
-                                                              width: 75,
-                                                              fit: BoxFit.fill,
-                                                            ),
+                                                            listReviews[i]
+                                                                        .image ==
+                                                                    ""
+                                                                ? Container()
+                                                                : MeetNetworkImage(
+                                                                    imageUrl:
+                                                                        listReviews[i]
+                                                                            .image,
+                                                                    loadingBuilder:
+                                                                        (context) {
+                                                                      return Image
+                                                                          .network(
+                                                                        "https://www.internationalvillage.org/images/loader_small.gif",
+                                                                        height:
+                                                                            75,
+                                                                        width:
+                                                                            75,
+                                                                        fit: BoxFit
+                                                                            .fill,
+                                                                      );
+                                                                    },
+                                                                    errorBuilder:
+                                                                        (context,
+                                                                                e) =>
+                                                                            Center(
+                                                                      child: Text(
+                                                                          ''),
+                                                                    ),
+                                                                    height: 75,
+                                                                    width: 75,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ),
                                                             Text(
                                                               dateShow,
                                                               style: TextStyle(

@@ -640,6 +640,9 @@ class MyTextFormField extends StatelessWidget {
   final bool isEmail;
   final String labelText;
   final bool limitText;
+  final bool search;
+  final Function searchFunction;
+  final Function searchFunctionKeyboard;
   final TextEditingController editingController;
   MyTextFormField({
     this.hintText,
@@ -651,6 +654,9 @@ class MyTextFormField extends StatelessWidget {
     this.isEmail = false,
     this.labelText,
     this.limitText = false,
+    this.search = false,
+    this.searchFunction,
+    this.searchFunctionKeyboard,
   });
   @override
   Widget build(BuildContext context) {
@@ -663,7 +669,23 @@ class MyTextFormField extends StatelessWidget {
             ? [new FilteringTextInputFormatter.allow(RegExp("[0-9]"))]
             : null,
         controller: editingController,
+        textInputAction: search ? TextInputAction.search : null,
+        onSubmitted: searchFunctionKeyboard,
         decoration: InputDecoration(
+          suffixIcon: IconButton(
+            onPressed: () => editingController.clear(),
+            icon: Icon(Icons.clear),
+          ),
+          prefixIcon: search
+              ? IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.green,
+                    size: 30,
+                  ),
+                  onPressed: searchFunction,
+                )
+              : null,
           labelText: labelText,
           hintText: hintText,
           contentPadding: EdgeInsets.all(15.0),

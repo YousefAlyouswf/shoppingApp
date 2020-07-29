@@ -13,6 +13,7 @@ import 'package:shop_app/widgets/user/categoryScreen/categoroesWidget.dart';
 import 'package:shop_app/widgets/user/homeWidget.dart';
 import 'package:shop_app/widgets/user/myOrderWidget.dart';
 import 'package:shop_app/widgets/user/offer.dart';
+import 'package:shop_app/widgets/user/search.dart';
 import 'package:shop_app/widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
@@ -194,7 +195,7 @@ class _HomePageState extends State<HomePage>
   }
 
   int countCart = 0;
-
+  TextEditingController searchText = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var keyboard = MediaQuery.of(context).viewInsets.bottom;
@@ -310,19 +311,47 @@ class _HomePageState extends State<HomePage>
                   )
                 : Container(),
             isSearching
-                ? Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: MyTextFormField(
-                      hintText: "بـــــحـــــث",
-                      labelText: "بحث",
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: MyTextFormField(
+                        editingController: searchText,
+                        labelText: "بحث",
+                        search: true,
+                        searchFunction: searchFunction,
+                        searchFunctionKeyboard: searchFunctionKeyboard,
+                      ),
                     ),
                   )
                 : Container(),
           ],
+        ),
+      ),
+    );
+  }
+
+  searchFunction() {
+    isSearching = false;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => Searching(
+          text: searchText.text,
+        ),
+      ),
+    );
+  }
+
+  searchFunctionKeyboard(text) {
+    isSearching = false;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => Searching(
+          text: text,
         ),
       ),
     );

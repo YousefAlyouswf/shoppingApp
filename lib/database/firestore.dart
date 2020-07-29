@@ -39,6 +39,7 @@ class FirestoreFunctions {
               'text': text,
               'stars': star,
               'isBuyer': isBuyer,
+              'image': ''
             }
           ],
         });
