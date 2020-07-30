@@ -122,7 +122,6 @@ class _AddressState extends State<Address> {
   void initState() {
     super.initState();
     fetchAddress();
-    print(widget.discount);
     twilioInfo();
     listenSMS();
     getDeliverPrice();

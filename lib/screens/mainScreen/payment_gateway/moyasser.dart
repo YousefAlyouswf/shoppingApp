@@ -153,8 +153,11 @@ class _MoyasserState extends State<Moyasser> {
                   ),
                   Expanded(
                     child: SingleChildScrollView(
-                      child: CreditCardForm2(
-                        onCreditCardModelChange: onCreditCardModelChange,
+                      child: Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: CreditCardForm2(
+                          onCreditCardModelChange: onCreditCardModelChange,
+                        ),
                       ),
                     ),
                   ),
@@ -166,18 +169,21 @@ class _MoyasserState extends State<Moyasser> {
                         String cardNoSpaces = cardNumber.replaceAll(
                             new RegExp(r"\s+\b|\b\s"), "");
                         int month = 0;
+                        int year = 0;
                         print(cardNoSpaces.length);
                         try {
                           month = int.parse(date[0]);
+                          year = int.parse(date[1]);
                         } catch (e) {
                           errorToast("يوجد خطأ في معلومات البطاقه");
                         }
 
-                        if (month > 12 ||
-                            cardNoSpaces.length < 16 ||
-                            cvvCode.isEmpty ||
-                            cardHolderName.isEmpty) {
-                          errorToast("يوجد خطأ في معلومات البطاقه");
+                        if (month > 12 || year < 20) {
+                          errorToast("خطأ في تاريخ الإنتهاء");
+                        } else if (cardNoSpaces.length < 16) {
+                          errorToast("عدد خانات رقم البطاقه غير صحيح");
+                        } else if (cvvCode.length < 3) {
+                          errorToast("رمز CVV خطأ");
                         } else {
                           Response response = await post(
                               "https://api.moyasar.com/v1/payments.html/",
@@ -214,7 +220,7 @@ class _MoyasserState extends State<Moyasser> {
                               sendToWeb = true;
                             });
                           } else {
-                            errorToast("يوجد خطأ في معلومات البطاقه");
+                            errorToast("يجب أن يكون الأسم بالإنجليزي");
                           }
                         }
                       },

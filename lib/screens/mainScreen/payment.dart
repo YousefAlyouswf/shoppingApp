@@ -169,49 +169,49 @@ class _PaymentState extends State<Payment> {
 
   String webviewUrl = "";
   static const ROOT = "http://geniusloop.co/payment/index.php";
-  Future<String> paymantPage() async {
-    double total = double.parse(widget.totalAfterTax) +
-        double.parse(widget.delvierCost) +
-        double.parse(widget.discount);
+  // Future<String> paymantPage() async {
+  //   double total = double.parse(widget.totalAfterTax) +
+  //       double.parse(widget.delvierCost) +
+  //       double.parse(widget.discount);
 
-    try {
-      Map<String, dynamic> map = {
-        'amount': total.toString(),
-        'items': items,
-        'quantity': quantity,
-        'unitPrice': unitPrice,
-        'city': widget.city,
-        'state': state,
-        'zipCode': zipCode,
-        'address': widget.address,
-        'phone': widget.phone,
-        'email': widget.email,
-        'orderID': orderID,
-        'discount': widget.discount,
-        'firstName': widget.firstName,
-        'lastName': widget.lastName,
-        'language': isEnglish ? "English" : "Arabic",
-        'country': country,
-        'ISO': isoCode,
-        'deliverCost': widget.delvierCost
-      };
-      print(map);
-      final response = await http.post(ROOT, body: map);
+  //   try {
+  //     Map<String, dynamic> map = {
+  //       'amount': total.toString(),
+  //       'items': items,
+  //       'quantity': quantity,
+  //       'unitPrice': unitPrice,
+  //       'city': widget.city,
+  //       'state': state,
+  //       'zipCode': zipCode,
+  //       'address': widget.address,
+  //       'phone': widget.phone,
+  //       'email': widget.email,
+  //       'orderID': orderID,
+  //       'discount': widget.discount,
+  //       'firstName': widget.firstName,
+  //       'lastName': widget.lastName,
+  //       'language': isEnglish ? "English" : "Arabic",
+  //       'country': country,
+  //       'ISO': isoCode,
+  //       'deliverCost': widget.delvierCost
+  //     };
+  //     print(map);
+  //     final response = await http.post(ROOT, body: map);
 
-      print("--------------> ${response.body}");
-      print("--------------> ${response.statusCode}");
-      if (200 == response.statusCode) {
-        setState(() {
-          webviewUrl = response.body;
-        });
-        print("--------------> ${response.body}");
-        return response.body;
-      } else {}
-    } catch (e) {
-      print(e);
-    }
-    return null;
-  }
+  //     print("--------------> ${response.body}");
+  //     print("--------------> ${response.statusCode}");
+  //     if (200 == response.statusCode) {
+  //       setState(() {
+  //         webviewUrl = response.body;
+  //       });
+  //       print("--------------> ${response.body}");
+  //       return response.body;
+  //     } else {}
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  //   return null;
+  // }
 
   findAddress() async {
     final coordinates =
@@ -236,7 +236,7 @@ class _PaymentState extends State<Payment> {
     isoCode = code.alpha3;
 
     setState(() {});
-    paymantPage();
+    // paymantPage();
   }
 
   List<ItemShow> cart = [];
@@ -721,7 +721,7 @@ class _PaymentState extends State<Payment> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "يمكنك مشاركة صفحة الدفع معهم أضغط على الزر التالي",
+                    "يمكنك مشاركة صفحة الدفع معهم",
                     style: TextStyle(
                       fontFamily: "MainFont",
                       color: Colors.black,
@@ -734,48 +734,51 @@ class _PaymentState extends State<Payment> {
                         "https://flevix.com/wp-content/uploads/2019/07/Curve-Loading.gif",
                         height: 100,
                       )
-                    : InkWell(
-                        splashColor: Colors.transparent,
-                        onTap: () async {
-                          setState(() {
-                            loading = true;
-                          });
+                    : Container(
+                        height: 60,
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          onTap: () async {
+                            setState(() {
+                              loading = true;
+                            });
 
-                          Response response = await post(
-                              "http://geniusloop.co/shortlink/",
-                              body: {
-                                "link":
-                                    "https://tuvan.shop/payment/pay.php?orderID=$orderID",
-                              });
+                            Response response = await post(
+                                "http://geniusloop.co/shortlink/",
+                                body: {
+                                  "link":
+                                      "https://tuvan.shop/payment/pay.php?orderID=$orderID",
+                                });
 
-                          if (response.statusCode == 200) {
-                            Share.share(response.body);
-                          }
-                          setState(() {
-                            loading = false;
-                          });
+                            if (response.statusCode == 200) {
+                              Share.share(response.body);
+                            }
+                            setState(() {
+                              loading = false;
+                            });
 
-                          await addThisOrderToFirestore('sharePayment');
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          margin: EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .unselectedWidgetColor
-                                .withOpacity(0.6),
-                            border: Border.all(),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(15),
+                            await addThisOrderToFirestore('sharePayment');
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            margin: EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .unselectedWidgetColor
+                                  .withOpacity(0.6),
+                              border: Border.all(),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            "مشاركة",
-                            style: TextStyle(
-                                fontFamily: "MainFont",
-                                color: Colors.white,
-                                fontSize: 15),
+                            child: Text(
+                              "مشاركة",
+                              style: TextStyle(
+                                  fontFamily: "MainFont",
+                                  color: Colors.white,
+                                  fontSize: 15),
+                            ),
                           ),
                         ),
                       )

@@ -29,6 +29,7 @@ class _LunchAppState extends State<LunchApp> {
 
   Future<bool> mock() async {
     await Future.delayed(Duration(seconds: 2), () {});
+
     return true;
   }
 
@@ -174,7 +175,14 @@ class _LunchAppState extends State<LunchApp> {
                         child: Container(
                           width: 100,
                           height: 100,
-                          child: CircularProgressIndicator(),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: NetworkImage(
+                                "https://static.wixstatic.com/media/332553_2c00ce4bd4e84416bae88ea4d1405950~mv2.gif",
+                              ),
+                            ),
+                          ),
                         ),
                       )
                     : Center(
@@ -277,7 +285,7 @@ class _LunchAppState extends State<LunchApp> {
           child: Align(
             alignment: Alignment.bottomLeft,
             child: Text(
-              "إصدار رقم: 0.0.28",
+              "إصدار رقم: 0.0.29",
               style: TextStyle(fontFamily: "MainFont", color: Colors.black),
             ),
           ),

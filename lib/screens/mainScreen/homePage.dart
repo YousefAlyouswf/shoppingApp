@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mobile_number/mobile_number.dart';
 import 'package:shop_app/database/firestore.dart';
 import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/manager/manager/addItem.dart';
@@ -71,6 +72,9 @@ class _HomePageState extends State<HomePage>
         countCart = value;
       });
     });
+    if (!await MobileNumber.hasPhonePermission) {
+      await MobileNumber.requestPhonePermission;
+    }
   }
 
   FirebaseMessaging _fcm = FirebaseMessaging();
