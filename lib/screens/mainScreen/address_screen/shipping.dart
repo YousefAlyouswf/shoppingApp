@@ -214,86 +214,85 @@ Widget addAddress(
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-              padding: EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
+            child: InkWell(
+              splashColor: Colors.transparent,
+              onTap: () {
+                moveToMapScreen(context);
+              },
+              child: Container(
+                padding: EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color:
+                      addressLineFromSa == "" ? Colors.white : Colors.grey[200],
+                  border: Border.all(),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
                 ),
-              ),
-              width: double.infinity,
-              child: Column(
-                children: [
-                  InkWell(
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      moveToMapScreen(context);
-                    },
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      child: FlareActor(
-                        'assets/maps.flr',
-                        alignment: Alignment.center,
-                        fit: BoxFit.fitWidth,
-                        animation: "anim",
-                      ),
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    addressLineFromSa == ""
+                        ? Container(
+                            height: MediaQuery.of(context).size.height * 0.15,
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Image.network(
+                                "https://mobilemarketingwatch.com/wp-content/uploads/2016/04/location.gif"),
+                          )
+                        : Container(),
+                    SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  addressLineFromSa == "" ||
-                          customerLocation == null ||
-                          cityFromSa == "" ||
-                          postalCoseSa == ""
-                      ? Container()
-                      : Column(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Container(
-                                padding: EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(border: Border.all()),
-                                child: Text(
-                                  "${word("address_info", context)}: $addressLineFromSa\n${word('city', context)}: $cityFromSa \n${word('post', context)}: $postalCoseSa",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                    addressLineFromSa == "" ||
+                            customerLocation == null ||
+                            cityFromSa == "" ||
+                            postalCoseSa == ""
+                        ? Container()
+                        : Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "${word("address_info", context)}: $addressLineFromSa\n${word('city', context)}: $cityFromSa \n${word('post', context)}: $postalCoseSa",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "${word("deliverCost", context)}: $deliverCost",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+                              SizedBox(
+                                height: 10,
                               ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.all(16.0),
-                              padding: EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                              child: Text(
-                                "${word("total", context)}: $total ${word("currancy", context)}",
+                              Text(
+                                "${word("deliverCost", context)}: $deliverCost",
                                 style: TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                ],
+                              // Container(
+                              //   margin: EdgeInsets.all(16.0),
+                              //   padding: EdgeInsets.all(16.0),
+                              //   decoration: BoxDecoration(
+                              //       border: Border.all(),
+                              //       borderRadius:
+                              //           BorderRadius.all(Radius.circular(10))),
+                              //   child: Text(
+                              //     "${word("total", context)}: $total ${word("currancy", context)}",
+                              //     style: TextStyle(
+                              //       fontSize: 15,
+                              //       fontWeight: FontWeight.bold,
+                              //     ),
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                  ],
+                ),
               ),
             ),
           ),

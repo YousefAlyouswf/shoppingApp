@@ -97,7 +97,7 @@ class _OfferState extends State<Offer> {
               : GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 0.5,
+                    childAspectRatio: 0.6,
                     mainAxisSpacing: 2.0,
                   ),
                   itemCount: discountOffer.length,
@@ -142,27 +142,34 @@ class _OfferState extends State<Offer> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   Container(
-                                    height: heigh < 700 ? 180 : 240,
+                                    height: heigh < 700 ? 110 : 170,
                                     width: 175,
                                     child: Image.network(
                                       discountOffer[i].image,
-                                      fit: BoxFit.fitHeight,
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: <TextSpan>[
-                                        new TextSpan(
-                                          text:
-                                              '${discountOffer[i].priceOld} ${word("currancy", context)}',
-                                          style: new TextStyle(
-                                            color: Colors.grey,
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                          ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text(discountOffer[i].name),
+                                      Text.rich(
+                                        TextSpan(
+                                          children: <TextSpan>[
+                                            new TextSpan(
+                                              text:
+                                                  '${discountOffer[i].priceOld} ${word("currancy", context)}',
+                                              style: new TextStyle(
+                                                color: Colors.grey,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                   Text(
                                     "${discountOffer[i].price} ${word("currancy", context)} ${discountOffer[i].percentage > 19 ? '🔥' : ''}",

@@ -77,9 +77,7 @@ class _MoyasserState extends State<Moyasser> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      isEnglish = true;
-    });
+
     total = (double.parse(widget.totalAfterTax) +
             double.parse(widget.delvierCost)) *
         100;

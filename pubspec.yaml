@@ -118,6 +118,10 @@ flutter:
     - family: modular
       fonts:
         - asset: assets/fonts/modular.ttf
+    
+    - family: afsaneh
+      fonts:
+        - asset: assets/fonts/afsaneh.ttf
   
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -121,12 +122,53 @@ class _HomeWidgetState extends State<HomeWidget> {
       controller: scrollController,
       child: Column(
         children: [
+          message(),
           ourNewProduct(imageShowSize, widget.darwerPressdAnimation),
           discountShow(context),
           labelAllCategories(),
           categories(),
         ],
       ),
+    );
+  }
+
+  Widget message() {
+    return Container(
+      child: StreamBuilder(
+          stream: Firestore.instance.collection('header').snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Text('No data');
+            } else {
+              return snapshot.data.documents[0].data['image'] == ""
+                  ? Container()
+                  : Container(
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                      snapshot.data.documents[0].data['image']),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              snapshot.data.documents[0].data['text'],
+                              style: TextStyle(
+                                  fontFamily: "afsaneh", fontSize: 35),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+            }
+          }),
     );
   }
 
@@ -171,7 +213,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             ),
           ),
           Container(
-            height: heigh < 700 ? heigh * .48 : heigh * .42,
+            height: heigh < 700 ? 220 : 300,
             width: double.infinity,
             child: StreamBuilder(
               stream: Firestore.instance.collection('subCategory').snapshots(),
@@ -312,29 +354,41 @@ class _HomeWidgetState extends State<HomeWidget> {
                                 });
                               },
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    height: heigh < 700 ? 180 : 240,
+                                    height: heigh < 700 ? 110 : 170,
                                     width: 175,
                                     child: Image.network(
                                       discountOffer[i].image,
-                                      fit: BoxFit.fitWidth,
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: <TextSpan>[
-                                        new TextSpan(
-                                          text:
-                                              '${discountOffer[i].priceOld} ${word("currancy", context)}',
-                                          style: new TextStyle(
-                                            color: Colors.grey,
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                          ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      AutoSizeText(
+                                        discountOffer[i].name,
+                                        maxFontSize: 12,
+                                      ),
+                                      AutoSizeText.rich(
+                                        TextSpan(
+                                          children: <TextSpan>[
+                                            new TextSpan(
+                                              text:
+                                                  '${discountOffer[i].priceOld} ${word("currancy", context)}',
+                                              style: new TextStyle(
+                                                color: Colors.grey,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
+                                        maxFontSize: 12,
+                                      ),
+                                    ],
                                   ),
                                   Text(
                                     "${discountOffer[i].price} ${word("currancy", context)}",

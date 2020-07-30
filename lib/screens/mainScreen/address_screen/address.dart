@@ -275,12 +275,12 @@ class _AddressState extends State<Address> {
         body: isLoading
             ? Center(
                 child: Container(
-                  width: 100,
-                  height: 100,
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: MediaQuery.of(context).size.width * 0.5,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: NetworkImage(
-                        "https://gifimage.net/wp-content/uploads/2018/11/map-icon-gif-5.gif",
+                        "https://mk0analyticsindf35n9.kinstacdn.com/wp-content/uploads/2019/04/d7ae0170d3d5ffcbaa7f02fdda387a3b.gif",
                       ),
                     ),
                   ),

@@ -255,7 +255,7 @@ class _SearchingState extends State<Searching> {
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
-                              childAspectRatio: 0.5,
+                              childAspectRatio: 0.6,
                               mainAxisSpacing: 2.0,
                             ),
                             itemCount: listImages.length,
@@ -310,17 +310,19 @@ class _SearchingState extends State<Searching> {
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
                                               new Container(
                                                 height: height < 700
-                                                    ? height * 0.35
-                                                    : height * 0.33,
+                                                    ? height * 0.26
+                                                    : height * 0.23,
                                                 decoration: new BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.all(
                                                           Radius.circular(8)),
                                                   image: new DecorationImage(
-                                                    fit: BoxFit.fitHeight,
+                                                    fit: BoxFit.fill,
                                                     image: new NetworkImage(
                                                         listImages[index]
                                                             .image),
