@@ -117,38 +117,38 @@ class _DrawerScreenState extends State<DrawerScreen> {
                         ),
                       ),
                       child: Container(
-                        height: MediaQuery.of(context).size.height / 2,
+                        height: MediaQuery.of(context).size.height * 0.2,
                         child: Column(
                           children: [
                             SizedBox(
                               height: 50,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: InkWell(
-                                onTap: () {
-                                  widget.darwerPressdAnimation();
-                                  widget.changeLangauge();
-                                  Navigator.pop(context);
-                                },
-                                child: Container(
-                                  height: 50,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black26,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      word("arabic", context),
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.all(8.0),
+                            //   child: InkWell(
+                            //     onTap: () {
+                            //       widget.darwerPressdAnimation();
+                            //       widget.changeLangauge();
+                            //       Navigator.pop(context);
+                            //     },
+                            //     child: Container(
+                            //       height: 50,
+                            //       width: double.infinity,
+                            //       decoration: BoxDecoration(
+                            //         color: Colors.black26,
+                            //         borderRadius: BorderRadius.all(
+                            //           Radius.circular(10),
+                            //         ),
+                            //       ),
+                            //       child: Center(
+                            //         child: Text(
+                            //           word("arabic", context),
+                            //           style: TextStyle(fontSize: 20),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: InkWell(
@@ -196,6 +196,18 @@ class _DrawerScreenState extends State<DrawerScreen> {
           //   onTap: widget.onThemeChanged,
           // ),
           ListTile(
+              title: Text(
+                word("arabic", context),
+                style: bottomsSettings,
+              ),
+              leading: Icon(
+                Icons.lightbulb_outline,
+              ),
+              onTap: () {
+                widget.darwerPressdAnimation();
+                widget.changeLangauge();
+              }),
+          ListTile(
             title: Text(
               word("info", context),
               style: bottomsSettings,
@@ -206,9 +218,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
             onTap: () {
               showAboutDialog(
                 context: context,
-                applicationName: "ألوان ولمسات",
-                applicationVersion: "0.0.29",
-                applicationLegalese: "Developed by Yousef Al Yousef",
+                applicationName: word("appName", context),
+                applicationVersion: word("version", context),
+                applicationLegalese: word("developer", context),
                 useRootNavigator: false,
                 children: [Icon(Icons.developer_board)],
                 applicationIcon: InkWell(

@@ -3,6 +3,7 @@ import 'package:meet_network_image/meet_network_image.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/widgets/user/homeWidget.dart';
+import 'package:shop_app/widgets/widgets.dart';
 import 'database/firestore.dart';
 import 'helper/HelperFunction.dart';
 
@@ -249,28 +250,53 @@ class _LunchAppState extends State<LunchApp> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "uvan",
-                                style: TextStyle(
-                                  fontFamily: 'modular',
-                                  fontSize: 70,
+                          isEnglish
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "T",
+                                      style: TextStyle(
+                                        fontFamily: 'modular',
+                                        fontSize:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        color: Colors.purple,
+                                      ),
+                                    ),
+                                    Text(
+                                      "uvan",
+                                      style: TextStyle(
+                                        fontFamily: 'modular',
+                                        fontSize: 70,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "uvan",
+                                      style: TextStyle(
+                                        fontFamily: 'modular',
+                                        fontSize: 70,
+                                      ),
+                                    ),
+                                    Text(
+                                      "T",
+                                      style: TextStyle(
+                                        fontFamily: 'modular',
+                                        fontSize:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        color: Colors.purple,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              Text(
-                                "T",
-                                style: TextStyle(
-                                  fontFamily: 'modular',
-                                  fontSize:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  color: Colors.purple,
-                                ),
-                              ),
-                            ],
-                          ),
                           Text(
                             "توفان للإزياء والموضة",
                             style:
@@ -285,7 +311,7 @@ class _LunchAppState extends State<LunchApp> {
           child: Align(
             alignment: Alignment.bottomLeft,
             child: Text(
-              "إصدار رقم: 0.0.29",
+              word("version", context),
               style: TextStyle(fontFamily: "MainFont", color: Colors.black),
             ),
           ),

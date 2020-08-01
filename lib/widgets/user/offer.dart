@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shop_app/models/listHirzontalImage.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
+import 'package:shop_app/widgets/widgets.dart';
 
 import 'categoryScreen/showItem.dart';
 
@@ -153,7 +154,9 @@ class _OfferState extends State<Offer> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
                                     children: [
-                                      Text(discountOffer[i].name),
+                                      Text(isEnglish
+                                          ? discountOffer[i].nameEn
+                                          : discountOffer[i].name),
                                       Text.rich(
                                         TextSpan(
                                           children: <TextSpan>[

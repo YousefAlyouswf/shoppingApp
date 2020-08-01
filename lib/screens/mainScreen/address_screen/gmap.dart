@@ -26,8 +26,7 @@ class _GmapState extends State<Gmap> {
         markerId: markerId,
         position: latLng,
         infoWindow: InfoWindow(
-            title: "سوف يتم شحن الطلبية الى هذا الموقع",
-            snippet: 'ألوان ولمسات'),
+            title: word('mapTip', context), snippet: word("appName", context)),
         onTap: () {},
       );
 
@@ -83,9 +82,7 @@ class _GmapState extends State<Gmap> {
         located = true;
       });
     } catch (e) {
-      print("PERMISSION_DENIED");
-      errorToast(
-          "تطبيق ألوان ولمسات يريد منك السماح بتحديد موقعك من إعدادات جهازك");
+      errorToast(word("noPremission", context));
       setState(() {
         long = 46.674976;
         lat = 24.711906;
@@ -166,7 +163,9 @@ class _GmapState extends State<Gmap> {
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   width: 100,
                   child: Text(
-                    !isNormalType ? "قمر صناعي" : "خريطة",
+                    !isNormalType
+                        ? word("Satellite", context)
+                        : word("map", context),
                     style: TextStyle(
                       color: isNormalType ? Colors.orange : Colors.black,
                       fontSize: 15,
@@ -194,7 +193,7 @@ class _GmapState extends State<Gmap> {
                                 BorderRadius.all(Radius.circular(20))),
                         width: 100,
                         child: Text(
-                          "حدد موقعي",
+                          word("location", context),
                           style: TextStyle(
                             color: isNormalType ? Colors.orange : Colors.black,
                             fontSize: 15,
@@ -216,7 +215,7 @@ class _GmapState extends State<Gmap> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "ضع الدبوس على منتصف موقع التوصيل ليتم تحديد عنوانك بدقة أكثر ولتجنب الأخطاء يمكنك أستخدام وضع القمر الصناعي لتحديد المكان بوضوح",
+                          word("mapMsg", context),
                           style:
                               TextStyle(fontFamily: "MainFont", fontSize: 12),
                         ),
@@ -232,7 +231,7 @@ class _GmapState extends State<Gmap> {
                       onTap: () {
                         try {
                           if (customerLocation == null) {
-                            errorToast("أختر موقع المنزل من الخريطة");
+                            errorToast(word("errorSelection", context));
                           } else {
                             Navigator.pop(context, customerLocation);
                           }
@@ -250,7 +249,7 @@ class _GmapState extends State<Gmap> {
                         ),
                         child: Center(
                           child: Text(
-                            "أرسل هذا الموقع",
+                            word("sendLocation", context),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 22,

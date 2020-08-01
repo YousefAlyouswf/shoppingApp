@@ -5,7 +5,6 @@ import 'package:country_code/country_code.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:http/http.dart';
@@ -16,11 +15,9 @@ import 'package:shop_app/database/local_db.dart';
 import 'package:shop_app/models/itemShow.dart';
 import 'package:shop_app/screens/mainScreen/homePage.dart';
 import 'package:shop_app/screens/mainScreen/payment_gateway/saved_card.dart';
-import 'package:shop_app/widgets/lang/appLocale.dart';
 import 'package:shop_app/widgets/widgets.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
 import 'package:uuid/uuid.dart';
-import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';
 import 'payment_gateway/moyasser.dart';
 
@@ -168,7 +165,7 @@ class _PaymentState extends State<Payment> {
   }
 
   String webviewUrl = "";
-  static const ROOT = "http://geniusloop.co/payment/index.php";
+//  static const ROOT = "http://geniusloop.co/payment/index.php";
   // Future<String> paymantPage() async {
   //   double total = double.parse(widget.totalAfterTax) +
   //       double.parse(widget.delvierCost) +

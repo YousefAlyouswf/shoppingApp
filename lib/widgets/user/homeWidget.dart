@@ -354,7 +354,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                                 });
                               },
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Container(
                                     height: heigh < 700 ? 110 : 170,
@@ -369,7 +370,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                                         MainAxisAlignment.spaceAround,
                                     children: [
                                       AutoSizeText(
-                                        discountOffer[i].name,
+                                        isEnglish
+                                            ? discountOffer[i].nameEn
+                                            : discountOffer[i].name,
                                         maxFontSize: 12,
                                       ),
                                       AutoSizeText.rich(
@@ -398,6 +401,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                                       fontSize: 20,
                                     ),
                                   ),
+                                  SizedBox(
+                                    height: 5,
+                                  )
                                 ],
                               ),
                             ),

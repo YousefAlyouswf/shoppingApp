@@ -1,5 +1,7 @@
 {
+    "version": "Version: 0.0.29",
     "appName": "Tuvan",
+    "developer":"Developed by Yousef Al Yousef",
     "discount": "SALE",
     "NEW_ARRIVAL": "NEW",
     "HOME": "HOME",
@@ -77,5 +79,13 @@
     "post": "Postal code",
     "offer": "OFFER",
     "reviews": "Reviews",
-    "fast": "Fast show"
+    "fast": "Fast show",
+    "mapTip": "We will ship to the location",
+    "noPremission": "We don't have a permission to get your location",
+    "Satellite": "Satellite",
+    "map": "Map",
+    "location": "My lcation",
+    "mapMsg": "Place the pin in the middle of the delivery location to get your address more accurately. To avoid errors, you can use the satellite mode to determine the location clearly",
+    "errorSelection": "Choose your location from map",
+    "sendLocation": "Send This Location"
 }
