@@ -210,6 +210,7 @@ class FirestoreFunctions {
                   nameEn: element.data['items'][i]['name_en'],
                   itemPrice: element.data['items'][i]['price'],
                   itemDes: element.data['items'][i]['description'],
+                  itemDesEn: element.data['items'][i]['descriptionEn'],
                   image: element.data['items'][i]['image'],
                   imageID: element.data['items'][i]['productID'],
                   productID: element.data['items'][i]['productID'],

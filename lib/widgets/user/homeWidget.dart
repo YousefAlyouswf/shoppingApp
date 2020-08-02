@@ -68,6 +68,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               name: itemShow[i].itemName,
               nameEn: itemShow[i].nameEn,
               des: itemShow[i].itemDes,
+              desEn: itemShow[i].itemDesEn,
               price: itemShow[i].itemPrice,
               priceOld: itemShow[i].preiceOld,
               imageID: itemShow[i].imageID,
@@ -275,6 +276,8 @@ class _HomeWidgetState extends State<HomeWidget> {
                         category: "",
                         description: snapshot.data.documents[i].data['items'][j]
                             ['description'],
+                        descriptionEn: snapshot.data.documents[i].data['items']
+                            [j]['descriptionEn'],
                         image: snapshot.data.documents[i].data['items'][j]
                             ['image'],
                         imageID: snapshot.data.documents[i].data['items'][j]
@@ -342,6 +345,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                           name: discountOffer[i].name,
                                           nameEn: discountOffer[i].nameEn,
                                           des: discountOffer[i].description,
+                                          desEn: discountOffer[i].descriptionEn,
                                           price: discountOffer[i].price,
                                           imageID: discountOffer[i].imageID,
                                           buyPrice: discountOffer[i].buyPrice,

@@ -75,6 +75,8 @@ class _OfferState extends State<Offer> {
                   category: "",
                   description: snapshot.data.documents[i].data['items'][j]
                       ['description'],
+                  descriptionEn: snapshot.data.documents[i].data['items'][j]
+                      ['descriptionEn'],
                   image: snapshot.data.documents[i].data['items'][j]['image'],
                   imageID: snapshot.data.documents[i].data['items'][j]
                       ['productID'],
@@ -129,6 +131,7 @@ class _OfferState extends State<Offer> {
                                       name: discountOffer[i].name,
                                       nameEn: discountOffer[i].nameEn,
                                       des: discountOffer[i].description,
+                                      desEn: discountOffer[i].descriptionEn,
                                       price: discountOffer[i].price,
                                       priceOld: discountOffer[i].priceOld,
                                       imageID: discountOffer[i].imageID,

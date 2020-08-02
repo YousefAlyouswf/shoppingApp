@@ -105,46 +105,46 @@ class _LunchAppState extends State<LunchApp> {
   @override
   void initState() {
     super.initState();
-    rateMyApp.init().then((_) {
-      if (rateMyApp.shouldOpenDialog) {
-        rateMyApp.showStarRateDialog(
-          context,
-          title: "أعجبك تطبيقنا؟",
-          message: "يمكنك تقييمنا الآن",
-          actionsBuilder: (context, stars) {
-            return [
-              // Return a list of actions (that will be shown at the bottom of the dialog).
-              FlatButton(
-                child: Text('OK'),
-                onPressed: () async {
-                  print('Thanks for the ' +
-                      (stars == null ? '0' : stars.round().toString()) +
-                      ' star(s) !');
-                  // You can handle the result as you want (for instance if the user puts 1 star then open your contact page, if he puts more then open the store page, etc...).
-                  // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
-                  await rateMyApp
-                      .callEvent(RateMyAppEventType.rateButtonPressed);
-                  Navigator.pop<RateMyAppDialogButton>(
-                      context, RateMyAppDialogButton.rate);
-                },
-              ),
-            ];
-          },
-          ignoreIOS:
-              false, // Set to false if you want to show the native Apple app rating dialog on iOS.
-          dialogStyle: DialogStyle(
-            // Custom dialog styles.
-            titleAlign: TextAlign.center,
-            messageAlign: TextAlign.center,
-            messagePadding: EdgeInsets.only(bottom: 20),
-          ),
-          starRatingOptions:
-              StarRatingOptions(), // Custom star bar rating options.
-          onDismissed: () => rateMyApp.callEvent(RateMyAppEventType
-              .laterButtonPressed), // Called when the user dismissed the dialog (either by taping outside or by pressing the "back" button).
-        );
-      }
-    });
+    // rateMyApp.init().then((_) {
+    //   if (rateMyApp.shouldOpenDialog) {
+    //     rateMyApp.showStarRateDialog(
+    //       context,
+    //       title: "أعجبك تطبيقنا؟",
+    //       message: "يمكنك تقييمنا الآن",
+    //       actionsBuilder: (context, stars) {
+    //         return [
+    //           // Return a list of actions (that will be shown at the bottom of the dialog).
+    //           FlatButton(
+    //             child: Text('OK'),
+    //             onPressed: () async {
+    //               print('Thanks for the ' +
+    //                   (stars == null ? '0' : stars.round().toString()) +
+    //                   ' star(s) !');
+    //               // You can handle the result as you want (for instance if the user puts 1 star then open your contact page, if he puts more then open the store page, etc...).
+    //               // This allows to mimic the behavior of the default "Rate" button. See "Advanced > Broadcasting events" for more information :
+    //               await rateMyApp
+    //                   .callEvent(RateMyAppEventType.rateButtonPressed);
+    //               Navigator.pop<RateMyAppDialogButton>(
+    //                   context, RateMyAppDialogButton.rate);
+    //             },
+    //           ),
+    //         ];
+    //       },
+    //       ignoreIOS:
+    //           false, // Set to false if you want to show the native Apple app rating dialog on iOS.
+    //       dialogStyle: DialogStyle(
+    //         // Custom dialog styles.
+    //         titleAlign: TextAlign.center,
+    //         messageAlign: TextAlign.center,
+    //         messagePadding: EdgeInsets.only(bottom: 20),
+    //       ),
+    //       starRatingOptions:
+    //           StarRatingOptions(), // Custom star bar rating options.
+    //       onDismissed: () => rateMyApp.callEvent(RateMyAppEventType
+    //           .laterButtonPressed), // Called when the user dismissed the dialog (either by taping outside or by pressing the "back" button).
+    //     );
+    //   }
+    // });
     getAllimagesFromFireStore().whenComplete(() {
       areYouFristTimeOpenApp().then((v) {
         if (!v) {
@@ -325,7 +325,7 @@ class _LunchAppState extends State<LunchApp> {
       margin: EdgeInsets.all(16.0),
       alignment: Alignment.bottomCenter,
       width: MediaQuery.of(context).size.width / 3,
-      height: MediaQuery.of(context).size.height / 5,
+      height: MediaQuery.of(context).size.height * 0.15,
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: BorderRadius.all(

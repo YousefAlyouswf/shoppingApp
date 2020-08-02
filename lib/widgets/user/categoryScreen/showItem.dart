@@ -29,6 +29,7 @@ class ShowItem extends StatefulWidget {
   final String name;
   final String nameEn;
   final String des;
+  final String desEn;
   final String price;
   final String imageID;
   final String buyPrice;
@@ -43,6 +44,7 @@ class ShowItem extends StatefulWidget {
     this.name,
     this.nameEn,
     this.des,
+    this.desEn,
     this.price,
     this.imageID,
     this.buyPrice,
@@ -450,7 +452,9 @@ class _ShowItemState extends State<ShowItem>
                                                     ),
                                                   ),
                                                   child: Text(
-                                                    widget.des,
+                                                    isEnglish
+                                                        ? widget.desEn
+                                                        : widget.des,
                                                     textDirection:
                                                         TextDirection.rtl,
                                                     style: TextStyle(
@@ -1180,6 +1184,7 @@ class _ShowItemState extends State<ShowItem>
                                     'price': widget.price,
                                     'image': widget.image,
                                     'des': widget.des,
+                                    'desEn': widget.desEn,
                                     'q': q.toString(),
                                     'buyPrice': widget.buyPrice,
                                     'size': '',
@@ -1203,6 +1208,7 @@ class _ShowItemState extends State<ShowItem>
                                             'price': widget.price,
                                             'image': widget.image,
                                             'des': widget.des,
+                                            'desEn': widget.desEn,
                                             'q': q.toString(),
                                             'buyPrice': widget.buyPrice,
                                             'size': '',
@@ -1241,6 +1247,7 @@ class _ShowItemState extends State<ShowItem>
                                       'price': widget.price,
                                       'image': widget.image,
                                       'des': widget.des,
+                                      'desEn': widget.desEn,
                                       'q': q.toString(),
                                       'buyPrice': widget.buyPrice,
                                       'size': sizeChose,
@@ -1264,6 +1271,7 @@ class _ShowItemState extends State<ShowItem>
                                               'price': widget.price,
                                               'image': widget.image,
                                               'des': widget.des,
+                                              'desEn': widget.desEn,
                                               'q': q.toString(),
                                               'buyPrice': widget.buyPrice,
                                               'size': sizeChose,

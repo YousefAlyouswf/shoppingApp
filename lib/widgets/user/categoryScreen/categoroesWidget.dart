@@ -223,6 +223,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           ['image'],
                       description: asyncSnapshot.data.documents[0].data['items']
                           [i]['description'],
+                      descriptionEn: asyncSnapshot
+                          .data.documents[0].data['items'][i]['descriptionEn'],
                       price: asyncSnapshot.data.documents[0].data['items'][i]
                           ['price'],
                       imageID: asyncSnapshot.data.documents[0].data['items'][i]
@@ -296,6 +298,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                               nameEn: listImages[index].nameEn,
                                               des:
                                                   listImages[index].description,
+                                              desEn: listImages[index]
+                                                  .descriptionEn,
                                               price: listImages[index].price,
                                               imageID:
                                                   listImages[index].imageID,
@@ -622,6 +626,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                                               listImages[index].image,
                                                                           'des':
                                                                               listImages[index].description,
+                                                                          'desEn':
+                                                                              listImages[index].descriptionEn,
                                                                           'q': q
                                                                               .toString(),
                                                                           'buyPrice':
@@ -657,6 +663,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                                                   'price': listImages[index].price,
                                                                                   'image': listImages[index].image,
                                                                                   'des': listImages[index].description,
+                                                                                  'desEn': listImages[index].descriptionEn,
                                                                                   'q': q.toString(),
                                                                                   'buyPrice': listImages[index].buyPrice,
                                                                                   'size': '',
@@ -709,6 +716,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                                                 listImages[index].image,
                                                                             'des':
                                                                                 listImages[index].description,
+                                                                            'desEn':
+                                                                                listImages[index].descriptionEn,
                                                                             'q':
                                                                                 q.toString(),
                                                                             'buyPrice':
@@ -743,6 +752,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                                                                     'price': listImages[index].price,
                                                                                     'image': listImages[index].image,
                                                                                     'des': listImages[index].description,
+                                                                                    'desEn': listImages[index].descriptionEn,
                                                                                     'q': q.toString(),
                                                                                     'buyPrice': listImages[index].buyPrice,
                                                                                     'size': sizeChose,

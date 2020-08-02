@@ -5,6 +5,7 @@ class ListHirezontalImage {
   String nameEn;
   String image;
   String description;
+  String descriptionEn;
   String price;
   String buyPrice;
   String category;
@@ -21,6 +22,7 @@ class ListHirezontalImage {
     this.nameEn,
     this.image,
     this.description,
+    this.descriptionEn,
     this.price,
     this.category,
     this.show,
