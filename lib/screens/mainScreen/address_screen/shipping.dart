@@ -167,7 +167,7 @@ Widget addAddress(
                     width: MediaQuery.of(context).size.width,
                     child: MyTextFormField(
                       editingController: name,
-                      hintText: "أسمك و أسم العائلة",
+                      hintText: word("firstnameAndLast", context),
                       labelText: word("full_name", context),
                     ),
                   ),

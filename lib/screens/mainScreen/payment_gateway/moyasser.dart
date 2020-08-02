@@ -96,7 +96,9 @@ class _MoyasserState extends State<Moyasser> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          sendToWeb ? "أدخل الرقم السري" : "أدخل معلومات البطاقه",
+          sendToWeb
+              ? "${word("typePass", context)}"
+              : "${word("cardData", context)}",
           style: TextStyle(fontFamily: "MainFont", color: Colors.white),
         ),
         actions: [
@@ -173,15 +175,15 @@ class _MoyasserState extends State<Moyasser> {
                           month = int.parse(date[0]);
                           year = int.parse(date[1]);
                         } catch (e) {
-                          errorToast("يوجد خطأ في معلومات البطاقه");
+                          errorToast(word("cardErr", context));
                         }
 
                         if (month > 12 || year < 20) {
-                          errorToast("خطأ في تاريخ الإنتهاء");
+                          errorToast(word("dateErr", context));
                         } else if (cardNoSpaces.length < 16) {
-                          errorToast("عدد خانات رقم البطاقه غير صحيح");
+                          errorToast(word("cardNumErr", context));
                         } else if (cvvCode.length < 3) {
-                          errorToast("رمز CVV خطأ");
+                          errorToast(word("cvvErr", context));
                         } else {
                           Response response = await post(
                               "https://api.moyasar.com/v1/payments.html/",
@@ -218,7 +220,7 @@ class _MoyasserState extends State<Moyasser> {
                               sendToWeb = true;
                             });
                           } else {
-                            errorToast("يجب أن يكون الأسم بالإنجليزي");
+                            errorToast(word("nameEnglish", context));
                           }
                         }
                       },
@@ -228,7 +230,7 @@ class _MoyasserState extends State<Moyasser> {
                         alignment: Alignment.center,
                         width: double.infinity,
                         child: Text(
-                          'إتمام عملية الدفع',
+                          '${word("purchase", context)}',
                           style: TextStyle(
                               fontSize: 20,
                               fontFamily: "MainFont",
@@ -417,7 +419,7 @@ class _CreditCardForm2State extends State<CreditCardForm2> {
                 ),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'أسم حامل البطاقه',
+                  labelText: '${word("holderName", context)}',
                 ),
                 keyboardType: TextInputType.visiblePassword,
                 textInputAction: TextInputAction.next,
@@ -434,7 +436,7 @@ class _CreditCardForm2State extends State<CreditCardForm2> {
                 ),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'رقم البطاقه',
+                  labelText: '${word("cardNumber", context)}',
                   hintText: 'xxxx xxxx xxxx xxxx',
                 ),
                 keyboardType: TextInputType.number,
@@ -452,7 +454,7 @@ class _CreditCardForm2State extends State<CreditCardForm2> {
                 ),
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'تاريخ الإنتهاء',
+                    labelText: '${word("dateExpire", context)}',
                     hintText: 'MM/YY'),
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
@@ -470,7 +472,7 @@ class _CreditCardForm2State extends State<CreditCardForm2> {
                 ),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: ' CVV رمز',
+                  labelText: ' CVV',
                   hintText: 'XXXX',
                 ),
                 keyboardType: TextInputType.number,

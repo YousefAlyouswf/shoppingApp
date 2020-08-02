@@ -380,7 +380,7 @@ class _HomePageState extends State<HomePage>
 
   goToCartScreen() {
     setState(() {
-      navIndex = 2;
+      navIndex = 3;
     });
   }
 

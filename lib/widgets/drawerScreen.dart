@@ -67,7 +67,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                     widget.darwerPressdAnimation();
                                   },
                                   leading: Image.asset(
-                                    'assets/images/logo.png',
+                                    'assets/images/logoapp.png',
                                     width: 35,
                                   ),
                                   title: Text(

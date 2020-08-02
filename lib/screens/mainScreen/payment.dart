@@ -323,16 +323,16 @@ class _PaymentState extends State<Payment> {
           style: TextStyle(
               fontFamily: isEnglish ? 'EN' : "MainFont", color: Colors.black),
         ),
-        actions: [
-          IconButton(
-              icon: Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              })
-        ],
+        // actions: [
+        //   IconButton(
+        //       icon: Icon(
+        //         Icons.arrow_forward_ios,
+        //         color: Colors.black,
+        //       ),
+        //       onPressed: () {
+        //         Navigator.pop(context);
+        //       })
+        // ],
       ),
       body: cardSelected
           ? WebView(
@@ -384,188 +384,254 @@ class _PaymentState extends State<Payment> {
                           ),
                         ],
                       ),
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset(
-                            'assets/images/logo.png',
-                            height: MediaQuery.of(context).size.height * .05,
-                          ),
-                          Text(
-                            word("appName", context),
-                            style: TextStyle(fontFamily: "MainFont"),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text("السعر:"),
-                              Text(
-                                  " $totalBeforeDiscount ${word('currancy', context)}"),
-                            ],
-                          ),
-                          widget.discount == '0.0'
-                              ? Container()
-                              : Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Text("الخصم:"),
-                                    Text(
-                                        "${widget.discount} ${word('currancy', context)}"),
-                                  ],
-                                ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text("التوصيل:"),
-                              Text(
-                                  "${widget.delvierCost}.0 ${word('currancy', context)}"),
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text("الإجمالي:"),
-                              Text("$total ${word('currancy', context)}"),
-                            ],
-                          ),
-                          height < 600
-                              ? Container()
-                              : SizedBox(
-                                  height: 25,
-                                ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  color: cash ? Colors.green[200] : null,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                child: FlatButton(
-                                    child: Text(
-                                      "دفع نقدي",
-                                      style: TextStyle(
-                                          fontFamily: "MainFont", fontSize: 12),
-                                    ),
-                                    onPressed: () {
-                                      if (!paymentMethodForRiyadh) {
-                                        errorToast(
-                                            "الدفع نقدي داخل الرياض فقط");
-                                      } else {
-                                        setState(() {
-                                          cash = true;
-                                          credit = false;
-                                          paypal = false;
-                                        });
-                                      }
-                                    }),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  color: paypal ? Colors.green[200] : null,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                child: FlatButton(
-                                    child: Text(
-                                      "دفع بالبطاقة",
-                                      style: TextStyle(
-                                          fontFamily: "MainFont", fontSize: 12),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        cash = false;
-                                        credit = false;
-                                        paypal = true;
-                                      });
-                                    }),
-                              ),
-                              // Container(
-                              //   decoration: BoxDecoration(
-                              //     border: Border.all(),
-                              //     color: credit ? Colors.green[200] : null,
-                              //     borderRadius: BorderRadius.all(
-                              //       Radius.circular(10),
-                              //     ),
-                              //   ),
-                              //   child: FlatButton(
-                              //       child: Text(
-                              //         "بطاقة",
-                              //         style: TextStyle(
-                              //             fontFamily: "MainFont", fontSize: 12),
-                              //       ),
-                              //       onPressed: () {
-                              //         setState(() {
-                              //           cash = false;
-                              //           paypal = false;
-                              //           credit = true;
-                              //         });
-                              //       }),
-                              // ),
-                            ],
-                          ),
-                          height < 600
-                              ? Container()
-                              : SizedBox(
-                                  height: 25,
-                                ),
-                          credit
-                              ? Image.network(
-                                  "https://probot.io/static/payments-cards.png",
-                                  height: 50,
-                                )
-                              : cash
-                                  ? Image.network(
-                                      "https://img.icons8.com/bubbles/2x/cash-in-hand.png",
-                                      height: 50,
-                                    )
-                                  : paypal
-                                      ? Image.network(
-                                          "https://probot.io/static/payments-cards.png",
-                                          height: 50,
-                                        )
-                                      : Container(),
-                          Spacer(),
-                          InkWell(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Container(
-                                width: double.infinity,
-                                height: 50,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    color:
-                                        Theme.of(context).unselectedWidgetColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                child: Text(
-                                  credit
-                                      ? "أدخل بيانات البطاقه"
-                                      : cash
-                                          ? "إتمام الشراء"
-                                          : paypal
-                                              ? "أدخل بيانات البطاقه"
-                                              : "أختر طريقة الدفع",
-                                  style: TextStyle(
-                                      fontFamily: "MainFont",
-                                      color: Colors.white,
-                                      fontSize: 22),
-                                ),
-                              ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: <Widget>[
+                            Image.asset(
+                              'assets/images/logo.png',
+                              height: MediaQuery.of(context).size.height * .05,
                             ),
-                            onTap: () async {
-                              if (cash) {
-                                try {
-                                  double total =
-                                      double.parse(widget.totalAfterTax) +
-                                          double.parse(widget.delvierCost);
+                            Text(
+                              word("appName", context),
+                              style: TextStyle(fontFamily: "MainFont"),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text("${word("price", context)}:"),
+                                Spacer(),
+                                Text(
+                                    " $totalBeforeDiscount ${word('currancy', context)}"),
+                              ],
+                            ),
+                            widget.discount == '0.0'
+                                ? Container()
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          "${word("discountReceipt", context)}:"),
+                                      Spacer(),
+                                      Text(
+                                          "${widget.discount} ${word('currancy', context)}"),
+                                    ],
+                                  ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text("${word("deliverCost", context)}:"),
+                                Spacer(),
+                                Text(
+                                    "${widget.delvierCost}.0 ${word('currancy', context)}"),
+                              ],
+                            ),
+                            Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text("${word("total", context)}:"),
+                                Spacer(),
+                                Text("$total ${word('currancy', context)}"),
+                              ],
+                            ),
+                            height < 600
+                                ? Container()
+                                : SizedBox(
+                                    height: 25,
+                                  ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    color: cash ? Colors.green[200] : null,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(2),
+                                    ),
+                                  ),
+                                  child: FlatButton(
+                                      child: Text(
+                                        word("cash", context),
+                                        style: TextStyle(
+                                            fontFamily: "MainFont",
+                                            fontSize: 12),
+                                      ),
+                                      onPressed: () {
+                                        if (!paymentMethodForRiyadh) {
+                                          errorToast(
+                                              word("cashOnlyRiyadh", context));
+                                        } else {
+                                          setState(() {
+                                            cash = true;
+                                            credit = false;
+                                            paypal = false;
+                                          });
+                                        }
+                                      }),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    color: paypal ? Colors.green[200] : null,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(2),
+                                    ),
+                                  ),
+                                  child: FlatButton(
+                                      child: Text(
+                                        word("creditCard", context),
+                                        style: TextStyle(
+                                            fontFamily: "MainFont",
+                                            fontSize: 12),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          cash = false;
+                                          credit = false;
+                                          paypal = true;
+                                        });
+                                      }),
+                                ),
+                                // Container(
+                                //   decoration: BoxDecoration(
+                                //     border: Border.all(),
+                                //     color: credit ? Colors.green[200] : null,
+                                //     borderRadius: BorderRadius.all(
+                                //       Radius.circular(10),
+                                //     ),
+                                //   ),
+                                //   child: FlatButton(
+                                //       child: Text(
+                                //         "بطاقة",
+                                //         style: TextStyle(
+                                //             fontFamily: "MainFont", fontSize: 12),
+                                //       ),
+                                //       onPressed: () {
+                                //         setState(() {
+                                //           cash = false;
+                                //           paypal = false;
+                                //           credit = true;
+                                //         });
+                                //       }),
+                                // ),
+                              ],
+                            ),
+                            height < 600
+                                ? Container()
+                                : SizedBox(
+                                    height: 25,
+                                  ),
+                            credit
+                                ? Image.network(
+                                    "https://probot.io/static/payments-cards.png",
+                                    height: 50,
+                                  )
+                                : cash
+                                    ? Image.network(
+                                        "https://img.icons8.com/bubbles/2x/cash-in-hand.png",
+                                        height: 50,
+                                      )
+                                    : paypal
+                                        ? Image.network(
+                                            "https://probot.io/static/payments-cards.png",
+                                            height: 50,
+                                          )
+                                        : Container(),
+                            Spacer(),
+                            InkWell(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 50,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .unselectedWidgetColor,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: Text(
+                                    credit
+                                        ? word("cardData", context)
+                                        : cash
+                                            ? word("purchase", context)
+                                            : paypal
+                                                ? word("cardData", context)
+                                                : word("chosePayment", context),
+                                    style: TextStyle(
+                                        fontFamily: "MainFont",
+                                        color: Colors.white,
+                                        fontSize: 18),
+                                  ),
+                                ),
+                              ),
+                              onTap: () async {
+                                if (cash) {
+                                  try {
+                                    double total =
+                                        double.parse(widget.totalAfterTax) +
+                                            double.parse(widget.delvierCost);
 
+                                    String userIDPhone;
+                                    if (androidInfo == null) {
+                                      userIDPhone =
+                                          iosDeviceInfo.identifierForVendor;
+                                    } else {
+                                      userIDPhone = androidInfo.androidId;
+                                    }
+                                    await Firestore.instance
+                                        .collection('order')
+                                        .add({
+                                      'payment': 'cash',
+                                      'driverID': '',
+                                      'driverName': '',
+                                      'orderID': orderID,
+                                      'date': DateTime.now().toString(),
+                                      'status': '0',
+                                      'address': widget.address,
+                                      'city': widget.city,
+                                      'postCode': zipCode,
+                                      'discount': widget.discount,
+                                      'total': total,
+                                      'lat': widget.lat,
+                                      'long': widget.long,
+                                      'firstName': widget.firstName,
+                                      'lastName': widget.lastName,
+                                      'phone': widget.phone,
+                                      'deliverCost': widget.delvierCost,
+                                      'email': widget.email,
+                                      'priceForSell': widget.price,
+                                      'priceForBuy': widget.buyPrice,
+                                      'items': FieldValue.arrayUnion(mapItems),
+                                      'userID': userIDPhone,
+                                    }).then((value) {
+                                      takeOffFromSubcatgory();
+                                      FocusScope.of(context)
+                                          .requestFocus(FocusNode());
+                                      twilioFlutter.sendSMS(
+                                          toNumber: phonesms,
+                                          messageBody:
+                                              '${word('hello', context)} ${widget.firstName} ${word('msgReceiveOrder', context)}\n${word('orderNumber', context)} $orderID');
+                                      sendEmailToCustomer();
+                                      addCartToast(
+                                          "${word('msgOrderComplete', context)}");
+                                      navIndex = 4;
+                                      DBHelper.deleteAllItem("cart");
+                                      Navigator.popUntil(
+                                          context, (route) => route.isFirst);
+                                    });
+                                  } catch (e) {
+                                    print(e);
+                                  }
+                                } else if (credit) {
+                                  setState(() {
+                                    cardSelected = true;
+                                  });
+                                } else if (paypal) {
+                                  final cardList =
+                                      await DBHelper.getDataCards('card');
                                   String userIDPhone;
                                   if (androidInfo == null) {
                                     userIDPhone =
@@ -573,142 +639,85 @@ class _PaymentState extends State<Payment> {
                                   } else {
                                     userIDPhone = androidInfo.androidId;
                                   }
-                                  await Firestore.instance
-                                      .collection('order')
-                                      .add({
-                                    'payment': 'cash',
-                                    'driverID': '',
-                                    'driverName': '',
-                                    'orderID': orderID,
-                                    'date': DateTime.now().toString(),
-                                    'status': '0',
-                                    'address': widget.address,
-                                    'city': widget.city,
-                                    'postCode': zipCode,
-                                    'discount': widget.discount,
-                                    'total': total,
-                                    'lat': widget.lat,
-                                    'long': widget.long,
-                                    'firstName': widget.firstName,
-                                    'lastName': widget.lastName,
-                                    'phone': widget.phone,
-                                    'deliverCost': widget.delvierCost,
-                                    'email': widget.email,
-                                    'priceForSell': widget.price,
-                                    'priceForBuy': widget.buyPrice,
-                                    'items': FieldValue.arrayUnion(mapItems),
-                                    'userID': userIDPhone,
-                                  }).then((value) {
-                                    takeOffFromSubcatgory();
-                                    FocusScope.of(context)
-                                        .requestFocus(FocusNode());
-                                    twilioFlutter.sendSMS(
-                                        toNumber: phonesms,
-                                        messageBody:
-                                            'الوان ولمسات\nمرحبا ${widget.firstName} لقد تم أستلام طلبك\nرقم طلبك هو $orderID');
-                                    sendEmailToCustomer();
-                                    addCartToast(
-                                        "تمت علمية الشراء يمكنك متابعه طلبك من هنا");
-                                    navIndex = 4;
-                                    DBHelper.deleteAllItem("cart");
-                                    Navigator.popUntil(
-                                        context, (route) => route.isFirst);
-                                  });
-                                } catch (e) {
-                                  print(e);
-                                }
-                              } else if (credit) {
-                                setState(() {
-                                  cardSelected = true;
-                                });
-                              } else if (paypal) {
-                                final cardList =
-                                    await DBHelper.getDataCards('card');
-                                String userIDPhone;
-                                if (androidInfo == null) {
-                                  userIDPhone =
-                                      iosDeviceInfo.identifierForVendor;
-                                } else {
-                                  userIDPhone = androidInfo.androidId;
-                                }
-                                if (cardList.length > 0) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SavedCard(
-                                        totalAfterTax: widget.totalAfterTax,
-                                        price: widget.price,
-                                        sendSms: sendSms,
-                                        orderID: orderID,
-                                        phonesms: phonesms,
-                                        userIDPhone: userIDPhone,
-                                        buyPrice: widget.buyPrice,
-                                        onThemeChanged: widget.onThemeChanged,
-                                        changeLangauge: widget.changeLangauge,
-                                        firstName: widget.firstName,
-                                        lastName: widget.lastName,
-                                        email: widget.email,
-                                        phone: widget.phone,
-                                        lat: widget.lat,
-                                        long: widget.long,
-                                        delvierCost: widget.delvierCost,
-                                        discount: widget.discount,
-                                        address: widget.address,
-                                        city: widget.city,
-                                        postCose: widget.postCose,
-                                        zipCode: zipCode,
-                                        mapItems: mapItems,
-                                        takeOffFromSubcatgory:
-                                            takeOffFromSubcatgory,
+                                  if (cardList.length > 0) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SavedCard(
+                                          totalAfterTax: widget.totalAfterTax,
+                                          price: widget.price,
+                                          sendSms: sendSms,
+                                          orderID: orderID,
+                                          phonesms: phonesms,
+                                          userIDPhone: userIDPhone,
+                                          buyPrice: widget.buyPrice,
+                                          onThemeChanged: widget.onThemeChanged,
+                                          changeLangauge: widget.changeLangauge,
+                                          firstName: widget.firstName,
+                                          lastName: widget.lastName,
+                                          email: widget.email,
+                                          phone: widget.phone,
+                                          lat: widget.lat,
+                                          long: widget.long,
+                                          delvierCost: widget.delvierCost,
+                                          discount: widget.discount,
+                                          address: widget.address,
+                                          city: widget.city,
+                                          postCose: widget.postCose,
+                                          zipCode: zipCode,
+                                          mapItems: mapItems,
+                                          takeOffFromSubcatgory:
+                                              takeOffFromSubcatgory,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                } else {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          Moyasser(
-                                        totalAfterTax: widget.totalAfterTax,
-                                        price: widget.price,
-                                        sendSms: sendSms,
-                                        orderID: orderID,
-                                        phonesms: phonesms,
-                                        userIDPhone: userIDPhone,
-                                        buyPrice: widget.buyPrice,
-                                        onThemeChanged: widget.onThemeChanged,
-                                        changeLangauge: widget.changeLangauge,
-                                        firstName: widget.firstName,
-                                        lastName: widget.lastName,
-                                        email: widget.email,
-                                        phone: widget.phone,
-                                        lat: widget.lat,
-                                        long: widget.long,
-                                        delvierCost: widget.delvierCost,
-                                        discount: widget.discount,
-                                        address: widget.address,
-                                        city: widget.city,
-                                        postCose: widget.postCose,
-                                        zipCode: zipCode,
-                                        mapItems: mapItems,
-                                        takeOffFromSubcatgory:
-                                            takeOffFromSubcatgory,
+                                    );
+                                  } else {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            Moyasser(
+                                          totalAfterTax: widget.totalAfterTax,
+                                          price: widget.price,
+                                          sendSms: sendSms,
+                                          orderID: orderID,
+                                          phonesms: phonesms,
+                                          userIDPhone: userIDPhone,
+                                          buyPrice: widget.buyPrice,
+                                          onThemeChanged: widget.onThemeChanged,
+                                          changeLangauge: widget.changeLangauge,
+                                          firstName: widget.firstName,
+                                          lastName: widget.lastName,
+                                          email: widget.email,
+                                          phone: widget.phone,
+                                          lat: widget.lat,
+                                          long: widget.long,
+                                          delvierCost: widget.delvierCost,
+                                          discount: widget.discount,
+                                          address: widget.address,
+                                          city: widget.city,
+                                          postCose: widget.postCose,
+                                          zipCode: zipCode,
+                                          mapItems: mapItems,
+                                          takeOffFromSubcatgory:
+                                              takeOffFromSubcatgory,
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  }
+                                } else {
+                                  errorToast(word("chosePayment", context));
                                 }
-                              } else {
-                                errorToast("أختر طريقه الدفع");
-                              }
-                            },
-                          ),
-                        ],
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
                 Spacer(),
                 Text(
-                  "هل تريد أحد من عائلتك أو صديقك يدفع الفاتوره؟",
+                  "${word("otherPay", context)}",
                   style: TextStyle(
                     fontFamily: "MainFont",
                     color: Colors.black,
@@ -718,7 +727,7 @@ class _PaymentState extends State<Payment> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "يمكنك مشاركة صفحة الدفع معهم",
+                    "${word("sharePayment", context)}",
                     style: TextStyle(
                       fontFamily: "MainFont",
                       color: Colors.black,
@@ -770,7 +779,7 @@ class _PaymentState extends State<Payment> {
                               ),
                             ),
                             child: Text(
-                              "مشاركة",
+                              "${word("share", context)}",
                               style: TextStyle(
                                   fontFamily: "MainFont",
                                   color: Colors.white,

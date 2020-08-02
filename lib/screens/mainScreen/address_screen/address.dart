@@ -234,8 +234,7 @@ class _AddressState extends State<Address> {
           isLoading = false;
         } catch (e) {
           print("--------------------->>>>>$e");
-          errorMapChosen(
-              "لم يتم تحديد موقع التوصيل أرجو أختيار الموقع بدقه أكثر");
+          errorMapChosen(word("maperror", context));
           isLoading = false;
         }
       }
@@ -393,7 +392,7 @@ class _AddressState extends State<Address> {
     print('PhoneSms ------>> $phoneSMS');
     twilioFlutter.sendSMS(
         toNumber: phoneSMS,
-        messageBody: ' ألوان ولمسات \n الكود هو $codeID \n $signCode');
+        messageBody: ' ${word("codeMsg", context)} $codeID \n $signCode');
   }
 
   spiltName() {
